@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="fragments/header :: head"></head>
+
+<body class="body">
+
+	<div class="sign section--bg" th:data-bg="@{/img/section/section.jpg}">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="sign__content">
+						<!-- authorization form -->
+						<form action="#" class="sign__form">
+							<a th:href="@{/}" class="sign__logo">
+								<img th:src="@{/img/logo.svg}" alt="logo">
+							</a>
+
+							<div class="sign__group">
+								<input type="text" class="sign__input" placeholder="Correo">
+							</div>
+
+							<div class="sign__group">
+								<input type="password" class="sign__input" placeholder="Contraseña">
+							</div>
+
+							<div class="sign__group sign__group--checkbox">
+								<input id="remember" name="remember" type="checkbox" checked="checked">
+								<label for="remember">Recuérdame</label>
+							</div>
+							
+							<button class="sign__btn" type="button">Ingresar</button>
+
+							<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/login/signup}">Regístrate</a></span>
+
+							<span class="sign__text"><a href="#">¿Olvidaste tu contraseña?</a></span>
+						</form>
+						<!-- end authorization form -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div th:replace="fragments/footer :: js"></div>
+</body>
+
+</html>

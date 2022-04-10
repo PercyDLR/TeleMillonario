@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="fragments/header :: head"></head>
+
+<body class="body">
+
+	<div class="page-404 section--bg" data-bg="img/section/section.jpg">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="page-404__wrap">
+						<div class="page-404__content">
+							<h1 class="page-404__title" th:text="${status}"></h1>
+							<p class="page-404__text" th:text="(${status} == 404) ? 'La página que buscas no está disponible' : ${error}"></p>
+							<a th:href="@{/}" class="page-404__btn">Página Principal</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JS -->
+    <div th:replace="/fragments/footer :: js"></div>
+</body>
+
+</html>
