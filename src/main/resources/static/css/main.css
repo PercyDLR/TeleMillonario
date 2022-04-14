@@ -38,6 +38,15 @@ Primary use:	FlixGo Template
 /*==============================
 	Common styles
 ==============================*/
+.navbar {
+  background-color: #28282d;
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  padding: 40px 0 30px;
+  -webkit-box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+}
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
