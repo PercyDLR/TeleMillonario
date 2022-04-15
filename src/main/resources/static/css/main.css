@@ -758,7 +758,7 @@ ul {
   bottom: 0;
   left: 0;
   display: block;
-  background: url("../img/home/home__bg.jpg") no-repeat center/cover;
+  background: url("../img/home/telon-abierto.jpg") no-repeat center/cover;
   opacity: 0.06;
 }
 @media (min-width: 576px) {

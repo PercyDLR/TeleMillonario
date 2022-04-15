@@ -8,7 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
     @GetMapping("")
-    public String inicio(){
+    public String modelo(){
+        return "index";
+    }
+
+    @GetMapping("/admin")
+    public String admin(){
         return "Administrador/Sede/listaSedes";
+    }
+
+    @GetMapping("/user")
+    public String usuario(){
+        return "usuario/vistaPrincipal";
     }
 }

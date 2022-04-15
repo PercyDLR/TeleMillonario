@@ -1,23 +1,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="fragments/header :: head"></head>
+<head th:replace="fragments/header :: head('Modelo')"></head>
 
 <body class="body">
 	
 	<!-- header -->
-	<header th:replace="fragments/header :: barra-principal"></header>
+	<header th:replace="fragments/navbar :: usuario"></header>
 
 	<!-- home -->
-	<section class="home">
-		<!-- home bg -->
-		<div class="owl-carousel home__bg">
-			<div class="item home__cover" data-bg="img/home/home__bg.jpg"></div>
-			<div class="item home__cover" data-bg="img/home/home__bg2.jpg"></div>
-			<div class="item home__cover" data-bg="img/home/home__bg3.jpg"></div>
-			<div class="item home__cover" data-bg="img/home/home__bg4.jpg"></div>
-		</div>
-		<!-- end home bg -->
+	<section class="home home--bg">
 
 		<div class="container">
 			<div class="row">
@@ -1342,7 +1334,6 @@
 	</section>
 	<!-- end expected premiere -->
 
-    <div th:replace="/fragments/footer :: partners"></div>
     <div th:replace="/fragments/footer :: footer"></div>
     <div th:replace="/fragments/footer :: js"></div>
 </body>
