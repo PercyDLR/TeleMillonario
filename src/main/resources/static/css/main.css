@@ -38,6 +38,187 @@ Primary use:	FlixGo Template
 /*==============================
 	Common styles
 ==============================*/
+.circulo_add{
+  width: 68px;
+  cursor: pointer;
+  height: 68px;
+  background: rgba(43, 43, 49, 0.98);
+  border-radius: 50%;
+  display: flex;
+  position: relative;
+}
+.circulo_add:hover{
+  background-color: black;
+}
+
+
+.circulo_botones{
+width: 50px;
+cursor: pointer;
+height: 50px;
+background: rgba(43, 43, 49, 0.98);
+border-radius: 50%;
+display: flex;
+position: relative;
+}
+
+.circulo_botones:hover{
+  background-color: black;
+}
+
+
+.mijs{
+  padding: 0;
+  border: none;
+  -webkit-transition: 0.4s ease;
+  -moz-transition: 0.4s ease;
+  transition: 0.4s ease;
+  cursor: pointer;
+  outline: none;
+  /*display: block;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -22px;
+  width: 24px;
+  height: 40px;
+  opacity: 0.8;*/
+
+}
+
+.mijs2{
+  opacity: 1;
+}
+
+.header__btn {
+  /*padding: 0;
+  border: none;
+  background-color: white;
+  -webkit-transition: 0.4s ease;
+  -moz-transition: 0.4s ease;
+  transition: 0.4s ease;
+  cursor: pointer;
+  outline: none;*/
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -22px;
+  width: 24px;
+  height: 40px;
+  opacity: 0.8;
+}
+
+
+.mifooter{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  margin-top: 57px;
+  /*display: block;*/
+  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
+  box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
+  box-sizing: inherit;
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+.nuevo_row{
+  position: relative;
+  width: 277px;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 27px;
+}
+
+.rowmio{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 101;
+  height: 59px;
+  display:-ms-flexbox;
+  display:flex;
+  -ms-flex-wrap:wrap;
+  flex-wrap:wrap;
+  margin-left: 15px;
+  /*margin-right:-15px;
+  margin-left:-15px;*/
+}
+
+
+input {
+  writing-mode: horizontal-tb !important;
+  text-rendering: auto;
+  color: -internal-light-dark(black, white);
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  appearance: auto;
+  -webkit-rtl-ordering: logical;
+  cursor: text;
+  background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
+  margin: 0em;
+  padding: 1px 2px;
+  border-width: 2px;
+  border-style: inset;
+  border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  border-image: initial;
+}
+
+.box {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+input{
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+input.src {
+  margin-top: 0px;
+  padding: 9px 10px 9px 32px;
+  font-size: 18px;
+  border-radius: 25px;
+  color: #908f8f;
+  border: 5px solid #343a40;
+  background: #fff url(../../img/search-icon.png) no-repeat 9px center;
+  width: 600px;
+  transition: all .5s;
+  outline: none;
+}
+input.src:hover{
+  width: 700px;
+  background-color: #fff;
+  border-color: #343a40;
+}
+
+.letra_admin {
+  margin-left: 50px;
+  font-size: 14px;
+  font-weight: 300;
+  /*text-transform: uppercase;*/
+  /*color: rgba(255,255,255,0.75);*/
+  color : white;
+  height: 20.5px;
+  /*letter-spacing: 0.2px;*/
+}
+
 .navbar {
   background-color: #28282d;
   display: block;
@@ -47,6 +228,7 @@ Primary use:	FlixGo Template
   -webkit-box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
   box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
 }
+/*---------------------------------------------------------------------------------------------------------------------*/
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -60,6 +242,7 @@ body {
   background-color: #2b2b31;
   font-weight: normal;
   -webkit-font-smoothing: antialiased;
+  width: 100%;
 }
 button {
   padding: 0;
@@ -209,6 +392,8 @@ ul {
   right: 0;
   bottom: 0;
   z-index: 99;
+  height: 100%;
+  width: 100%;
   background-color: rgba(43,43,49,0.75);
   opacity: 0;
   pointer-events: none;
@@ -226,12 +411,14 @@ ul {
 ==============================*/
 .header {
   display: block;
-  position: fixed;
+ /*position: fixed;*/
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  background-color: #2b2b31;
+ background-color: rgba(43, 43, 49, 0.98);
   z-index: 101;
+  height: 58px;
 }
 .header__logo {
   display: flex;
@@ -256,6 +443,7 @@ ul {
   justify-content: flex-start;
   align-items: flex-start;
   position: fixed;
+  height: 63px;
   top: 70px;
   right: 0;
   bottom: 0;
@@ -497,16 +685,7 @@ ul {
 .header__sign-in:hover {
   opacity: 1;
 }
-.header__btn {
-  display: block;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  margin-top: -22px;
-  width: 24px;
-  height: 40px;
-  opacity: 0.8;
-}
+
 .header__btn span {
   display: block;
   position: absolute;
@@ -1653,9 +1832,10 @@ ul {
   z-index: 3;
 }
 .details__title {
+  font-family: 'Open Sans';
   color: #fff;
-  font-weight: 300;
-  font-size: 28px;
+  font-weight: 900;
+  font-size: 100%;
   margin-bottom: 20px;
 }
 .details__title b {
@@ -1751,7 +1931,7 @@ ul {
 }
 @media (min-width: 576px) {
   .details__title {
-    font-size: 30px;
+    font-size: 70px;
   }
 }
 @media (min-width: 768px) {
@@ -1783,7 +1963,7 @@ ul {
     padding: 70px 0;
   }
   .details__title {
-    font-size: 36px;
+    font-size: 80px;
   }
 }
 /*==============================
@@ -2432,7 +2612,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   margin: 0;
 }
 .paginator__item a {
-  font-size: 16px;
+  font-size: 15px;
   height: 50px;
   width: 50px;
   display: block;
@@ -2963,7 +3143,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   color: rgba(255,255,255,0.7);
   font-size: 14px;
   font-weight: 400;
-  padding: 5px 10px;
+  padding: 13px 17px;
+  text-transform: uppercase;
+  background-color: #2b2b31;
   font-family: 'Open Sans', sans-serif;
 }
 .accordion__list tbody tr {
@@ -2978,9 +3160,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .accordion__list tbody th,
 .accordion__list tbody td {
-  color: rgba(255,255,255,0.5);
+ /* color: rgba(255,255,255,0.5);*/
+  color : white;
   font-size: 14px;
-  padding: 5px 10px 5px;
+  padding: 1px 20px 14px;
   font-family: 'Open Sans', sans-serif;
 }
 @media (min-width: 1200px) {
