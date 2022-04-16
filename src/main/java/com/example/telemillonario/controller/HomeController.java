@@ -21,4 +21,14 @@ public class HomeController {
     public String usuario(){
         return "usuario/vistaPrincipal";
     }
+
+    @GetMapping("/admin1")
+    public String directores(){
+        return "Administrador/Director/crearDirector";
+    }
+
+    @GetMapping("/admin2")
+    public String directores1(){
+        return "Administrador/Director/listaDirectores";
+    }
 }
