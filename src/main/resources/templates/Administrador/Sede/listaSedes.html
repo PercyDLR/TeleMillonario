@@ -29,9 +29,8 @@
         <meta name="author" content="Dmitry Volkov">
         <title>Lista de Sedes</title>
     </head>
-    <body class="body" style="background-image: url('../img/home/telon-abierto-opaco.jpg');background-repeat: no-repeat;
-     background-attachment: fixed; background-size: 100% 100%;">
-        <div class="header__wrap">
+    <body class="body" style="background: url('../img/home/telon-abierto-opaco.jpg') center center / cover no-repeat;float: left">
+        <div class="header__wrap " style="border-bottom: solid 3px #ff55a5">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -77,47 +76,228 @@
                 </div>
             </div>
         </div>
-        <!--header class="header">
-            <div class="rowmio">
-                <div class="col-3" style="height: 100%">
-                    <a href="#">
-                        <img style="cursor: pointer" src="img/tele.png">
-                    </a>
+        <!--div class="container" style="background-color: #0cb457;margin-top: 20px">
+            <div class="row " style="background-color: #1da1f2">
+                <div class="col-2  col-md-4 col-lg-4 col-xl-4" style="background-color: #4f5b5f">asd</div>
+                <div class="col-8 col-md-3 col-lg-3 col-xl-5" style="position: center;background-color: orange">
+                    <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px">
+                        Sedes
+                    </h1>
                 </div>
-
-                <div class="col-6" style="text-align: center">
-                    <ul class="header__nav">
-                        <li class="header__nav-item">
-                            <a  href="#" class="header__nav-link" style="color:#ff55a5">Sedes</a>
-                        </li>
-
-                        <li class="header__nav-item">
-                            <a href="#" class="header__nav-link">Operadores</a>
-                        </li>
-
-                        <li class="header__nav-item">
-                            <a href="#" class="header__nav-link">Actores</a>
-                        </li>
-
-                        <li class="header__nav-item">
-                            <a href="#" class="header__nav-link">Directores</a>
-                        </li>
-                        <li class="header__nav-item">
-                            <a href="#" class="header__nav-link">Clientes</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-2">
-                    <div style="margin-top: 18px;text-align: -webkit-right"><span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span></div>
-                </div>
-                <div class="col-1">
-                    <div style="justify-content: left">
-                        <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
+                <div class="col-2 col-md-4 col-lg-4 col-xl-4" style="background-color: #55A44E;">
+                    <div style="background-color: red;justify-content: right">
+                        <a class="circulo_add" href="#" style="position: relative">
+                            <img class=" md-1 lg-1" style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="mifooter"></div>
-        </header-->
+        </div-->
+
+        <!--section class="section details" style="background-color: rgba(56,49,68,0.70);width: 100%;">
+
+                <div class="row">
+                    <div class="col-12" style="margin-top: 30px;">
+                        <div class="row">
+                            <div class="col-2 col-md-auto col-lg-auto col-xl-auto"></div>
+                            <div class="col-8 col-md-auto col-lg-auto col-xl-auto">
+                                <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px">
+                                    Sedes
+                                </h1>
+                            </div>
+                            <div class="col-2 col-md-auto col-lg-auto col-xl-auto">
+                                <button  style="cursor: pointer;margin-top: 23px;margin-left: 50px">
+                                    <a class="circulo_add" href="#" >
+                                        <img class=" md-1 lg-1" style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
+                                    </a>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class = "box" style="margin-bottom: 30px;">
+                                <input type="text" value="Buscar Sede" name="search" class="src">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-10">
+                        <div class="card card--details card--series">
+                            <div class="row">
+
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3">
+
+                                </div>
+
+
+
+                                <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9">
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <table class="accordion__list" style="text-align: center">
+                            <thead>
+                                <tr>
+                                    <th>Foto</th>
+                                    <th>Nombre</th>
+                                    <th>Distrito</th>
+                                    <th>Dirección</th>
+                                    <th>Coordenadas</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                    <td>Pilot</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>
+                                        <button style="cursor: pointer">
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:9px;" src="img/iconInfo3.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                    <td>Paternity</td>
+                                    <td>Tuesday, November 23rd, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>
+                                        <button style="cursor: pointer">
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:9px;" src="img/iconInfo3.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                    <td>Occam's Razor</td>
+                                    <td>Tuesday, November 30th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>
+                                        <button style="cursor: pointer">
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:9px;" src="img/iconInfo3.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                    <td>Maternity</td>
+                                    <td>Tuesday, December 7th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>
+                                        <button style="cursor: pointer">
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:9px;" src="img/iconInfo3.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                    <td>Damned If You Do</td>
+                                    <td>Tuesday, December 14th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>Tuesday, November 16th, 2004</td>
+                                    <td>
+                                        <button style="cursor: pointer">
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:9px;" src="img/iconInfo3.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section-->
         <div style="background-color: rgba(56,49,68,0.70);width: 100%;">
             <div  class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
                 <div class="row">
@@ -320,9 +500,6 @@
                 <div style="height: 30px"></div>
             </div>
         </div>
-        <!--footer class="footer">
-        </footer-->
-        <!-- JS -->
         <script src="js/jquery-3.3.1.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
