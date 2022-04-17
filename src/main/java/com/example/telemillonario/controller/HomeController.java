@@ -31,4 +31,9 @@ public class HomeController {
     public String directores1(){
         return "Administrador/Director/listaDirectores";
     }
+
+    @GetMapping("/admin3")
+    public String directores2(){
+        return "Administrador/Sede/editarSedes";
+    }
 }
