@@ -24,7 +24,7 @@ public class HomeController {
 
     @GetMapping("/admin1")
     public String directores(){
-        return "Administrador/Director/crearDirector";
+        return "Administrador/Director/editarDirector";
     }
 
     @GetMapping("/admin2")

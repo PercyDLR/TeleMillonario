@@ -70,14 +70,12 @@
 
                                 <!-- header auth -->
                                 <div class="header__auth">
-                                    <button class="header__search-btn" type="button">
-                                        <i class="icon ion-ios-search"></i>
-                                    </button>
-
-                                    <a href="signin.html" class="header__sign-in">
-                                        <i class="icon ion-ios-log-in"></i>
-                                        <span>sign in</span>
-                                    </a>
+                                    <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
+                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Joaquin Orellana</span>
+                                    </div>
+                                    <div style="margin-bottom: 7px;margin-left: 5px">
+                                        <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
+                                    </div>
                                 </div>
                                 <!-- end header auth -->
 
@@ -113,68 +111,177 @@
         <!-- end header -->
 
 
-        <div class="content" style="margin-top: 70px">
-            <div class="row">
-                <div class="col-12" style="margin-top: 100px">
-                    <h1 class="details__title" style="text-align: center">Directores</h1>
+        <div class="content" style="background-color: rgba(56,49,68,0.70);width: 100%;">
+
+
+            <div  class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
+                    <div class="row">
+                        <div class="col-12" style="margin-top: 30px;">
+                            <div class="row">
+                                <div class="col-2"></div>
+                                <div class="col-8">
+                                    <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px">
+                                        Directores
+                                    </h1>
+                                </div>
+                                <div class="col-2">
+                                    <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
+                                        <a class="circulo_add" href="#" >
+                                            <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
+                                        </a>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class = "box" style="margin-bottom: 30px;">
+                                    <input type="text" value="Buscar Sede" name="search" class="src">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <table class="accordion__list" style="text-align: center">
+                                <thead>
+                                    <tr>
+                                        <th>Foto</th>
+                                        <th>Nombres</th>
+                                        <th>Puntuación</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                        <td>Moises Back</td>
+                                        <td>★★★★★★★★★★</td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                        <td>Carlos Meza</td>
+                                        <td>★★★★★★★★</td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                        <td>Oscar Rios</td>
+                                        <td>★★★★★★</td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                        <td>Carlos Arce</td>
+                                        <td>★★★★★★</td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
+                                        <td>Paul De La Cruz</td>
+                                        <td>★★★★</td>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button>
+                                                <a class="circulo_botones" href="#">
+                                                    <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                </a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-12" style="margin-top: 30px;padding-left: 805px">
+                        <ul class="paginator paginator--list" >
+                            <li class="paginator__item paginator__item--prev">
+                                <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
+                            </li>
+                            <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
+                            <li class="paginator__item"><a href="#">2</a></li>
+                            <li class="paginator__item"><a href="#">3</a></li>
+                            <li class="paginator__item"><a href="#">4</a></li>
+                            <li class="paginator__item paginator__item--next">
+                                <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="height: 30px"></div>
                 </div>
-                <div class="col-12">
-                    <table class="accordion__list" style="text-align: center">
-                        <thead>
-                            <tr>
-                                <th>Foto</th>
-                                <th>Nombre</th>
-                                <th>Distrito</th>
-                                <th>Dirección</th>
-                                <th>Distrito</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>1</th>
-                                <td>Pilot</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>(Boton info,editar,agregar)</td>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <td>Paternity</td>
-                                <td>Tuesday, November 23rd, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>(Boton info,editar,agregar)</td>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <td>Occam's Razor</td>
-                                <td>Tuesday, November 30th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>(Boton info,editar,agregar)</td>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <td>Maternity</td>
-                                <td>Tuesday, December 7th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>(Boton info,editar,agregar)</td>
-                            </tr>
-                            <tr>
-                                <th>5</th>
-                                <td>Damned If You Do</td>
-                                <td>Tuesday, December 14th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>Tuesday, November 16th, 2004</td>
-                                <td>(Boton info,editar,agregar)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
 
         </div>
