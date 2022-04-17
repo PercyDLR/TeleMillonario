@@ -167,9 +167,9 @@ input {
   text-transform: none;
   text-indent: 0px;
   text-shadow: none;
-  display: inline-block;
-  text-align: start;
-  appearance: auto;
+  /*display: inline-block;*/
+ /* text-align: start;*/
+  /*appearance: auto;*/
   -webkit-rtl-ordering: logical;
   cursor: text;
   background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
@@ -200,7 +200,7 @@ input.src {
   color: #908f8f;
   border: 5px solid #343a40;
   background: #fff url(../../img/search-icon.png) no-repeat 9px center;
-  width: 600px;
+  width: 483px;
   transition: all .5s;
   outline: none;
 }
