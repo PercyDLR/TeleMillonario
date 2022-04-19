@@ -38,6 +38,7 @@ Primary use:	FlixGo Template
 /*==============================
 	Common styles
 ==============================*/
+
 .circulo_add{
   width: 68px;
   cursor: pointer;
@@ -111,14 +112,15 @@ position: relative;
 
 
 .mifooter{
+  display: flex;
+  flex-direction: row;
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 3px;
-  margin-top: 57px;
-  /*display: block;*/
+  margin-top: 89px;
   background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
@@ -165,9 +167,9 @@ input {
   text-transform: none;
   text-indent: 0px;
   text-shadow: none;
-  display: inline-block;
-  text-align: start;
-  appearance: auto;
+  /*display: inline-block;*/
+ /* text-align: start;*/
+  /*appearance: auto;*/
   -webkit-rtl-ordering: logical;
   cursor: text;
   background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
@@ -198,7 +200,7 @@ input.src {
   color: #908f8f;
   border: 5px solid #343a40;
   background: #fff url(../../img/search-icon.png) no-repeat 9px center;
-  width: 600px;
+  width: 483px;
   transition: all .5s;
   outline: none;
 }
@@ -1218,7 +1220,7 @@ ul {
 /*==============================
 	Section
 ==============================*/
-.section {
+/*.section {
   padding: 40px 0;
   position: relative;
 }
@@ -1317,7 +1319,7 @@ ul {
   background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-}
+}*/
 @media (min-width: 576px) {
   .section__title {
     font-size: 30px;
@@ -3062,11 +3064,11 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 	Accordion
 ==============================*/
 .accordion {
-  background-color: #28282d;
+  /*background-color: #28282d;
   padding: 20px;
   overflow: hidden;
   max-height: 303px;
-  height: 303px;
+  height: 303px;*/
 }
 .accordion__card {
   background-color: #2b2b31;
@@ -3987,7 +3989,7 @@ a, a:hover {
   background: #6b6767; }
 .contact-wrap .col-form-label {
   font-size: 14px;
-  color: #b3b3b3;
+  color: #000000;
   margin: 0 0 10px 0;
   display: inline-block;
   padding: 0; }

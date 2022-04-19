@@ -24,11 +24,16 @@ public class HomeController {
 
     @GetMapping("/admin1")
     public String directores(){
-        return "Administrador/Director/crearDirector";
+        return "Administrador/Director/editarDirector";
     }
 
     @GetMapping("/admin2")
     public String directores1(){
         return "Administrador/Director/listaDirectores";
+    }
+
+    @GetMapping("/admin3")
+    public String directores2(){
+        return "Administrador/Sede/editarSedes";
     }
 }
