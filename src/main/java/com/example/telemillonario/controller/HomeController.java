@@ -36,4 +36,9 @@ public class HomeController {
     public String directores2(){
         return "Administrador/Sede/editarSedes";
     }
+
+    @GetMapping("sala")
+    public String listaSlas(){
+        return "Administrador/Sala/listaSalas";
+    }
 }
