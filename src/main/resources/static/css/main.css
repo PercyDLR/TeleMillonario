@@ -35,6 +35,113 @@ Primary use:	FlixGo Template
 25. PhotoSwipe customization
 26. mCustomScrollbar customization
 ----------------------------------------*/
+
+.home_sala {
+  /*margin-top: 70px;*/
+  position: relative;
+  display: block;
+  /*background-color: #2b2b31;*/
+  /*padding: 40px 0;*/
+}
+.hhome_sala .container {
+  position: relative;
+  z-index: 2;
+}
+.home_sala__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+.home_sala__cover {
+  opacity: 0.07;
+}
+.home_sala__title {
+  color: #fff;
+  /*text-transform: uppercase;*/
+  /*font-weight: 300;*/
+  font-size: 86px;
+  margin: 0;
+  padding-right: 14px;
+  font-family: 'Open Sans';
+  font-weight: 900;
+  /*font-size: 100%;*/
+  /*margin-bottom: 20px;*/
+}
+.home_sala__title b {
+  font-weight: 700;
+}
+.home_sala__carousel .item {
+  margin-top: 25px;
+}
+.home_sala__carousel .card {
+  margin-bottom: 0;
+}
+.home_sala__nav {
+  font-size: 38px;
+  color: #fff;
+  opacity: 0.7;
+  position: absolute;
+  top: 50%;
+  height: 24px;
+  margin-top: -12px;
+  right: 15px;
+  display: block;
+  z-index: 2;
+}
+.home_sala__nav i {
+  line-height: 24px;
+  height: 24px;
+  display: block;
+}
+.home_sala__nav i:before {
+  line-height: 24px;
+}
+.home_sala__nav--prev {
+  right: 60px;
+}
+.home_sala__nav:hover {
+  opacity: 1;
+}
+.home_sala--bg:before {
+  content: '';
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  background: url("../img/home/telon-abierto.jpg") no-repeat center/cover;
+  opacity: 0.06;
+}
+@media (min-width: 576px) {
+  .home_sala__title {
+    font-size: 30px;
+  }
+}
+@media (min-width: 768px) {
+  .home_sala {
+    /*margin-top: 90px;
+    padding: 60px 0;*/
+  }
+  .home_sala__title {
+    font-size: 86px;
+  }
+  .home_sala__carousel .item {
+    margin-top: 30px;
+  }
+}
+@media (min-width: 1200px) {
+  .home_sala {
+    /*padding: 70px 0;*/
+  }
+  .home_sala__title {
+    font-size: 86px;
+  }
+}
 /*==============================
 	Common styles
 ==============================*/
@@ -869,7 +976,7 @@ ul {
   margin-top: 70px;
   position: relative;
   display: block;
-  background-color: #2b2b31;
+  /*background-color: #2b2b31;*/
   padding: 40px 0;
 }
 .home .container {
@@ -889,11 +996,15 @@ ul {
 }
 .home__title {
   color: #fff;
-  text-transform: uppercase;
-  font-weight: 300;
-  font-size: 28px;
+  /*text-transform: uppercase;*/
+  /*font-weight: 300;*/
+  font-size: 86px;
   margin: 0;
-  padding-right: 70px;
+  padding-right: 14px;
+  font-family: 'Open Sans';
+  font-weight: 900;
+  /*font-size: 100%;*/
+  /*margin-bottom: 20px;*/
 }
 .home__title b {
   font-weight: 700;
@@ -925,7 +1036,7 @@ ul {
   line-height: 24px;
 }
 .home__nav--prev {
-  right: 60px;
+  /*right: 60px;*/
 }
 .home__nav:hover {
   opacity: 1;
@@ -953,7 +1064,7 @@ ul {
     padding: 60px 0;
   }
   .home__title {
-    font-size: 32px;
+    font-size: 86px;
   }
   .home__carousel .item {
     margin-top: 30px;
@@ -964,7 +1075,7 @@ ul {
     padding: 70px 0;
   }
   .home__title {
-    font-size: 36px;
+    font-size: 86px;
   }
 }
 /*==============================
@@ -3137,6 +3248,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .accordion__list {
   width: 100%;
+  display: -webkit-box;
 }
 .accordion__list thead tr {
   border-bottom: 1px solid rgba(255,255,255,0.05);
