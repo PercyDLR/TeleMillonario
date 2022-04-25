@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+          rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="path/to/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+          rel="stylesheet" crossorigin="anonymous"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU">
+    <link rel="stylesheet" href="../../static/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../../static/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../../static/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../../static/css/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="../../static/css/nouislider.min.css">
+    <link rel="stylesheet" href="../../static/css/ionicons.min.css">
+    <link rel="stylesheet" href="../../static/css/plyr.css">
+    <link rel="stylesheet" href="../../static/css/photoswipe.css">
+    <link rel="stylesheet" href="../../static/css/default-skin.css">
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="../../static/icon/favicon-32x32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="../../static/icon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../static/icon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../static/icon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../static/icon/apple-touch-icon-144x144.png">
+
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="Dmitry Volkov">
+    <title>Lista Actores</title>
+
+</head>
+<!--
+<body style="; background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">-->
+<body style="background-image: url('../../static/img/home/telon-abierto-opaco.jpg');background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;width: 100%; background-color: rgba(255,255,255,0.8)">
+<!-- header -->
+<header class="header">
+    <div class="header__wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="header__content">
+                        <img src="../../static/img/tele.PNG">
+                        <ul class="header__nav">
+                            <li class="header__nav-item">
+                                <a href="#" class="header__nav-link">Funciones</a>
+                            </li>
+
+                            <li class="header__nav-item">
+                                <a href="#" class="header__nav-link">Reportes</a>
+                            </li>
+
+                            <li class="header__nav-item">
+                                <a href="pricing.html" class="header__nav-link">Reseñas</a>
+                            </li>
+
+                            <li class="header__nav-item">
+                                <a href="faq.html" class="header__nav-link">Salas</a>
+                            </li>
+                        </ul>
+                        <!-- end header nav -->
+                        <!-- header auth -->
+                        <div class="header__auth">
+                            <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
+                                <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Operador : Agustin Vizcarra</span>
+                                <br>
+                                <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Sede : Conde de Lemos</span>
+                            </div>
+                            <div style="margin-bottom: 7px;margin-left: 5px">
+                                <a href="#"><img style="height: 50px;margin-top: 5px"
+                                                 src="../../static/img/user.png"></a>
+                            </div>
+                        </div>
+                        <!-- end header auth -->
+
+                        <!-- header menu btn -->
+                        <button class="header__btn" type="button">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <!-- end header menu btn -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- header search -->
+    <form action="#" class="header__search">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="header__search-content">
+                        <input type="text" placeholder="Search for a movie, TV Series that you are looking for">
+                        <button type="button">search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- end header search -->
+</header>
+<!-- end header -->
+<div class="content">
+    <div class="container" style="margin-bottom: 30px;opacity: 200%">
+        <div class="row">
+            <div class="col-12" style="margin-top: 30px;">
+                <div class="row">
+                    <div class="col-5">
+                        <h1 class="details__title"
+                            style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: x-large">
+                            Programacion de funciones para hoy
+                        </h1>
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-4">
+                        <div class="input-group" style="padding-top: 10px">
+                            <input name="campo" class="form-control text-light" type="text"
+                                   style="text-align: center; height: auto ;background-color: transparent; border-radius: 5px; border-color: #7c7676"
+                                   placeholder="Buscar Funcion">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-2">
+                <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                    <img class="card-img-top" src="/static/img/covers/HistoriasDeArena.png" alt="Card image cap"
+                         style="width: 300px;height: 250px">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
+                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
+                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-2">
+                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                    <img class="card-img-top" src="/static/img/covers/LaTernura.png" alt="Card image cap"
+                         style="width: 300px;height: 250px">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
+                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
+                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-2">
+                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                    <img class="card-img-top" src="/static/img/covers/Independencia.png" alt="Card image cap"
+                         style="width: 300px;height: 250px">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
+                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
+                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-2">
+                <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                    <img class="card-img-top" src="/static/img/covers/LosTambores.png" alt="Card image cap"
+                         style="width: 300px;height: 250px">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
+                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
+                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-2">
+                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                    <img class="card-img-top" src="/static/img/covers/LosTambores.png" alt="Card image cap"
+                         style="width: 300px;height: 250px">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
+                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
+                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-2">
+                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                    <img class="card-img-top" src="/static/img/covers/Independencia.png" alt="Card image cap"
+                         style="width: 300px;height: 250px">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
+                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
+                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+        </div>
+        <br>
+        <div clas="row">
+            <div class="col-2" style="margin-top: 30px;margin-left: 41%">
+                <ul class="paginator paginator--list">
+                    <li class="paginator__item paginator__item--prev">
+                        <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
+                    </li>
+                    <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
+                    <li class="paginator__item"><a href="#">2</a></li>
+                    <li class="paginator__item"><a href="#">3</a></li>
+                    <li class="paginator__item"><a href="#">4</a></li>
+                    <li class="paginator__item paginator__item--next">
+                        <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div style="height: 10px"></div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/jquery.mCustomScrollbar.min.js"></script>
+<script src="js/wNumb.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/plyr.min.js"></script>
+<script src="js/jquery.morelines.min.js"></script>
+<script src="js/photoswipe.min.js"></script>
+<script src="js/photoswipe-ui-default.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
