@@ -1,10 +1,309 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Title</title>
-    </head>
-    <body>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Font -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+        <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+        <link rel="stylesheet" href="css/owl.carousel.min.css">
+        <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+        <link rel="stylesheet" href="css/nouislider.min.css">
+        <link rel="stylesheet" href="css/ionicons.min.css">
+        <link rel="stylesheet" href="css/plyr.css">
+        <link rel="stylesheet" href="css/photoswipe.css">
+        <link rel="stylesheet" href="css/default-skin.css">
+        <link rel="stylesheet" href="css/main.css">
+        <!-- Favicons -->
+        <link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
+        <link rel="apple-touch-icon" href="icon/favicon-32x32.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="icon/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="icon/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="icon/apple-touch-icon-144x144.png">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="Dmitry Volkov">
+        <title>Lista de Operadores</title>
+    </head>
+    <body class="body" style="float: left; background: url('../img/home/telon-abierto-opaco.jpg') center center / cover no-repeat;background-size: 1940px 1345px;">
+        <div style="background-color: rgba(56,49,68,0.70);width: 100%;height: inherit">
+            <div class="header__wrap " style="border-bottom: solid 3px #ff55a5;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="header__content">
+                                <a href="index.html" class="header__logo">
+                                    <img src="img/tele.png" alt="">
+                                </a>
+                                <ul class="header__nav">
+                                    <li class="header__nav-item">
+                                        <a  href="#" class="header__nav-link">Sedes</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a href="#" class="header__nav-link" style="color:#ff55a5">Operadores</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a href="#" class="header__nav-link">Actores</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a href="#" class="header__nav-link">Directores</a>
+                                    </li>
+                                    <li class="header__nav-item">
+                                        <a href="#" class="header__nav-link">Clientes</a>
+                                    </li>
+                                </ul>
+                                <div class="header__auth">
+                                    <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
+                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
+                                    </div>
+                                    <div style="margin-bottom: 7px;margin-left: 5px">
+                                        <a href="#asd"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
+                                    </div>
+                                </div>
+                                <button class="header__btn" type="button">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="home" style="margin-top: 0px;text-align: center">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="home__title" style="font-size: 81px">Operadores</h1>
+                            <button class="home__nav home__nav--prev" type="button" style="cursor: pointer;margin-left: 50px">
+                                <a class="circulo_add" th:href="@{/agregarOperador}" >
+                                    <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="home_sala">
+                <div class="container">
+                    <div class="row">
+                        <!--div class="col-12">
+                            <div class = "box" style="margin-bottom: 30px;margin-left: 8px">
+                                <input type="text" value="Buscar Sala" name="search" class="src">
+                            </div>
+                            <button class="home__nav home__nav--prev" type="button" style="cursor: pointer;margin-left: 50px">
+                            </button>
+                        </div-->
+                        <form method="post" >
+                            <div class="input-group" style="margin-left: 129px">
+                                <!--div class = "box" style="margin-bottom: 30px;">
+                                    <input style="margin-top: 0px;padding: 9px 10px 9px 32px;font-size: 18px;border-radius: 25px;color: #908f8f;border: 5px solid #343a40;background: #fff url(../../img/search-icon.png) no-repeat 9px center;width: 483px;transition: all .5s;outline: none;"
+                                           type="text" placeholder="Buscar Director" name="search" class="form-control" >
+                                </div-->
+                                <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
+                                    <input type="text" value="Buscar Operador" name="search" class="src">
+                                </div>
+                                <select name="buscador" class="col-3" style="display: block;margin-left: 15px;margin-top: 5px;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff; background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                    <option value=""
+                                            hidden
+                                    >Selecciona un filtro:</option>
+                                    <option  value="Nombre">Nombre</option>
+                                    <option  value="Puntuacion"># Sala</option>
+
+                                </select>
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;background: #e64166">
+                                        <a>Buscar</a>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <div  class="container" style=";margin-bottom: 30px;opacity: 200%;">
+                <div class="row">
+                    <div class="col-xl-12" style="justify-content: center">
+                        <table class="accordion__list" style="text-align: center;" >
+                            <thead>
+                                <tr>
+                                    <th>DNI</th>
+                                    <th></th>
+                                    <th>Nombre</th>
+                                    <th></th>
+                                    <th>Apellido</th>
+                                    <th></th>
+                                    <th>Sede</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>SM001</td>
+                                    <td></td>
+                                    <td>Sala 1</td>
+                                    <td></td>
+                                    <td>12 personas</td>
+                                    <td></td>
+                                    <td>Disponible</td>
+                                    <td></td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" th:href="@{/editarOperador}" >
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SM001</td>
+                                    <td></td>
+                                    <td>Sala 1</td>
+                                    <td></td>
+                                    <td>12 personas</td>
+                                    <td></td>
+                                    <td>Disponible</td>
+                                    <td></td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SM001</td>
+                                    <td></td>
+                                    <td>Sala 1</td>
+                                    <td></td>
+                                    <td>12 personas</td>
+                                    <td></td>
+                                    <td>Disponible</td>
+                                    <td></td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SM001</td>
+                                    <td></td>
+                                    <td>Sala 1</td>
+                                    <td></td>
+                                    <td>12 personas</td>
+                                    <td></td>
+                                    <td>Disponible</td>
+                                    <td></td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SM001</td>
+                                    <td></td>
+                                    <td>Sala 1</td>
+                                    <td></td>
+                                    <td>12 personas</td>
+                                    <td></td>
+                                    <td>Disponible</td>
+                                    <td></td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button>
+                                            <a class="circulo_botones" href="#">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                            </a>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-12" style="margin-top: 30px">
+                                <ul class="paginator paginator--list" >
+                                    <li class="paginator__item paginator__item--prev">
+                                        <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
+                                    </li>
+                                    <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
+                                    <li class="paginator__item"><a href="#">2</a></li>
+                                    <li class="paginator__item"><a href="#">3</a></li>
+                                    <li class="paginator__item"><a href="#">4</a></li>
+                                    <li class="paginator__item paginator__item--next">
+                                        <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/jquery.mousewheel.min.js"></script>
+        <script src="js/jquery.mCustomScrollbar.min.js"></script>
+        <script src="js/wNumb.js"></script>
+        <script src="js/nouislider.min.js"></script>
+        <script src="js/plyr.min.js"></script>
+        <script src="js/jquery.morelines.min.js"></script>
+        <script src="js/photoswipe.min.js"></script>
+        <script src="js/photoswipe-ui-default.min.js"></script>
+        <script src="js/main.js"></script>
     </body>
 </html>

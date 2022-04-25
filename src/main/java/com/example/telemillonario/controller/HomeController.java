@@ -62,4 +62,20 @@ public class HomeController {
         return "Administrador/Sala/editarSalas";
     }
 
+    @GetMapping("/Operadores")
+    public String listaOperadores(){
+        return "Administrador/Operador/listaOperadores";
+    }
+
+    @GetMapping("/agregarOperador")
+    public String agregarOperador(){
+        return "Administrador/Operador/agregarOperadores";
+    }
+
+    @GetMapping("/editarOperador")
+    public String editarOperador(){
+        return "Administrador/Operador/editarOperadores";
+    }
+
+
 }
