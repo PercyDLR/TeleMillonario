@@ -3248,7 +3248,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .accordion__list {
   width: 100%;
-  display: -webkit-box;
+  /*display: -webkit-box;*/
 }
 .accordion__list thead tr {
   border-bottom: 1px solid rgba(255,255,255,0.05);

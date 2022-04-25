@@ -45,7 +45,7 @@
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="#" class="header__nav-link">Operadores</a>
+                                        <a th:href="@{/Operadores}" class="header__nav-link">Operadores</a>
                                     </li>
 
                                     <li class="header__nav-item">
@@ -83,7 +83,7 @@
                         <div class="col-12">
                             <h1 class="home__title">Sedes</h1>
                             <button class="home__nav home__nav--prev" type="button" style="cursor: pointer;margin-left: 50px">
-                                <a class="circulo_add" href="#" >
+                                <a class="circulo_add" th:href="@{/agregarSede}" >
                                     <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
                                 </a>
                             </button>
@@ -129,7 +129,7 @@
                             </td>
                             <td>
                                 <button>
-                                    <a class="circulo_botones" href="#">
+                                    <a class="circulo_botones" th:href="@{/editarSede}">
                                         <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
                                     </a>
                                 </button>

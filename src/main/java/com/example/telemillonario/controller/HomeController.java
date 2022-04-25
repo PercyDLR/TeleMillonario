@@ -37,8 +37,45 @@ public class HomeController {
         return "Administrador/Sede/editarSedes";
     }
 
-    @GetMapping("sala")
+    @GetMapping("/sala")
     public String listaSlas(){
         return "Administrador/Sala/listaSalas";
     }
+
+    @GetMapping("/agregarSede")
+    public String agregarSede(){
+        return "Administrador/Sede/agregarSedes";
+    }
+
+    @GetMapping("/editarSede")
+    public String editarSede(){
+        return "Administrador/Sede/editarSedes";
+    }
+
+    @GetMapping("/agregarSala")
+    public String agregarSala(){
+        return "Administrador/Sala/agregarSalas";
+    }
+
+    @GetMapping("/editarSalas")
+    public String editarSala(){
+        return "Administrador/Sala/editarSalas";
+    }
+
+    @GetMapping("/Operadores")
+    public String listaOperadores(){
+        return "Administrador/Operador/listaOperadores";
+    }
+
+    @GetMapping("/agregarOperador")
+    public String agregarOperador(){
+        return "Administrador/Operador/agregarOperadores";
+    }
+
+    @GetMapping("/editarOperador")
+    public String editarOperador(){
+        return "Administrador/Operador/editarOperadores";
+    }
+
+
 }
