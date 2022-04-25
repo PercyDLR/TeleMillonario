@@ -34,10 +34,11 @@
         <meta name="description" content="">
         <meta name="keywords" content="">
         <meta name="author" content="Dmitry Volkov">
-        <title>Lista Actores</title>
+
+        <title>Lista Directores</title>
 
     </head>
-    <body  class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
+    <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
         <!-- header -->
         <header class="header">
             <div class="header__wrap">
@@ -55,15 +56,15 @@
                                         <a href="#" class="header__nav-link">Operadores</a>
                                     </li>
 
-                                    <li class="header__nav-item active">
-                                        <a href="pricing.html" class="header__nav-link text-light">Actores</a>
+                                    <li class="header__nav-item">
+                                        <a href="pricing.html" class="header__nav-link">Actores</a>
                                     </li>
 
                                     <li class="header__nav-item">
                                         <a href="faq.html" class="header__nav-link">Directores</a>
                                     </li>
                                     <li class="header__nav-item">
-                                        <a href="faq.html" class="header__nav-link">Clientes</a>
+                                        <a href="faq.html" class="header__nav-link text-light">Clientes</a>
                                     </li>
                                 </ul>
                                 <!-- end header nav -->
@@ -93,44 +94,38 @@
             </div>
 
             <!-- header search -->
-            <form action="#" class="header__search">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="header__search-content">
-                                <input type="text" placeholder="Search for a movie, TV Series that you are looking for">
+            <!--            <form action="#" class="header__search">-->
+            <!--                <div class="container">-->
+            <!--                    <div class="row">-->
+            <!--                        <div class="col-12">-->
+            <!--                            <div class="header__search-content">-->
+            <!--                                <input type="text" placeholder="Search for a movie, TV Series that you are looking for">-->
 
-                                <button type="button">search</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <!--                                <button type="button">search</button>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </form>-->
             <!-- end header search -->
         </header>
         <!-- end header -->
 
 
-        <div class="content">
+        <div class="content" >
 
 
             <div  class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
                 <div class="row">
                     <div class="col-12" style="margin-top: 30px;">
                         <div class="row">
-                            <div class="col-2"></div>
-                            <div class="col-8">
+
+                            <div >
                                 <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px">
-                                    Actores
+                                    Listado de Clientes
                                 </h1>
                             </div>
-                            <div class="col-2">
-                                <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
-                                    <a class="circulo_add" href="#" >
-                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
-                                    </a>
-                                </button>
-                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-1"></div>
@@ -139,15 +134,17 @@
                                     <div class="input-group">
                                         <div class = "box" style="margin-bottom: 30px;">
                                             <input style="margin-top: 0px;padding: 9px 10px 9px 32px;font-size: 18px;border-radius: 25px;color: #908f8f;border: 5px solid #343a40;background: #fff url(../../img/search-icon.png) no-repeat 9px center;width: 483px;transition: all .5s;outline: none;"
-                                                   type="text" placeholder="Buscar Actor" name="search" class="form-control" >
+                                                   type="text" placeholder="Buscar Cliente" name="search" class="form-control" >
                                         </div>
                                         <select name="buscador" class="col-3" style="display: block;margin-left: 10px;margin-top: 5px;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff; background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
                                             <option value=""
                                                     hidden
                                             >Selecciona un filtro:</option>
+                                            <option  value="Dni" >Dni</option>
                                             <option  value="Nombre">Nombre</option>
-                                            <option  value="Puntuacion">Puntuación</option>
-
+                                            <option  value="Apellido">Apellido</option>
+                                            <option  value="Numero">Número</option>
+                                            <option  value="Sede">Sede</option>
                                         </select>
 
 
@@ -161,130 +158,119 @@
 
                                 </form>
                             </div>
+
+
                         </div>
+
                     </div>
                     <div class="col-12">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
-                                    <th>Foto</th>
-                                    <th>Nombres</th>
-                                    <th>Puntuación</th>
+                                    <th>Dni</th>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Número</th>
+                                    <th>Sede</th>
                                     <th></th>
-                                    <th></th>
-                                    <th></th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
-                                    <td>Juan Rios</td>
-                                    <td>★★★</td>
-                                    <td>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
 
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
                                 </tr>
                                 <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
-                                    <td>Charles Chapla</td>
-                                    <td>★★★★</td>
-                                    <td>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
 
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
                                 </tr>
                                 <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
-                                    <td>Elena Fujimori</td>
-                                    <td>★★★★★★</td>
-                                    <td>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
 
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
                                 </tr>
                                 <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
-                                    <td>Carlos Arce</td>
-                                    <td>★★★★★★</td>
-                                    <td>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
 
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
                                 </tr>
                                 <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
-                                    <td>Paul De La Cruz</td>
-                                    <td>★★★★</td>
-                                    <td>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
+                                </tr>
+                                <tr>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
 
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
+
+                                </tr>
+                                <tr>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
+
+                                </tr>
+                                <tr>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
+
+                                </tr>
+                                <tr>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
+
+                                </tr>
+                                <tr>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
+
+                                </tr>
+                                <tr>
+                                    <td>12340895</td>
+                                    <td>Peter</td>
+                                    <td>Torres</td>
+                                    <td>991 781 978</td>
+                                    <td>Teatro Británico</td>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -306,12 +292,12 @@
                     </ul>
 
                 </div>
+
                 <div style="height: 30px"></div>
             </div>
 
 
         </div>
-
 
 
 
