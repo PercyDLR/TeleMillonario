@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.com">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Font -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+        <!-- CSS -->
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+              rel="stylesheet" crossorigin="anonymous"
+              integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU">
+        <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+        <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+        <link rel="stylesheet" href="css/owl.carousel.min.css">
+        <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+        <link rel="stylesheet" href="css/nouislider.min.css">
+        <link rel="stylesheet" href="css/ionicons.min.css">
+        <link rel="stylesheet" href="css/plyr.css">
+        <link rel="stylesheet" href="css/photoswipe.css">
+        <link rel="stylesheet" href="css/default-skin.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <!-- Favicons -->
+        <link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
+        <link rel="apple-touch-icon" href="icon/favicon-32x32.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="icon/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="icon/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="icon/apple-touch-icon-144x144.png">
+
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="Dmitry Volkov">
+        <title>Lista Directores</title>
+        <style>
+            .overlay {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                transition: opacity 500ms;
+                visibility: hidden;
+                opacity: 0;
+            }
+            #popup:target{
+                visibility: visible; /* Se regresa a hidden para ocultar */
+                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            }
+
+
+
+        </style>
+    </head>
+    <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
+        <!-- header -->
+        <header class="header">
+            <div class="header__wrap" style="border-bottom: solid 3px #ff55a5;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="header__content">
+                                <img src="img/tele.png">
+                                <ul class="header__nav">
+                                    <li class="header__nav-item">
+                                        <a href="#" class="header__nav-link">Funciones</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a href="#" class="header__nav-link"  style="color:#ff55a5">Reportes</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a href="pricing.html" class="header__nav-link">Reseñas</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a href="faq.html" class="header__nav-link">Salas</a>
+                                    </li>
+                                </ul>
+
+                                <!-- end header nav -->
+
+                                <!-- header auth -->
+                                <div class="header__auth">
+                                    <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
+                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Operador : Agustin Vizcarra</span>
+                                        <br>
+                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Sede : Conde de Lemos</span>
+                                    </div>
+                                    <div style="margin-bottom: 7px;margin-left: 5px">
+                                        <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
+                                    </div>
+                                </div>
+                                <!-- end header auth -->
+
+                                <!-- header menu btn -->
+                                <button class="header__btn" type="button">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </button>
+                                <!-- end header menu btn -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- header search -->
+            <!--            <form action="#" class="header__search">-->
+            <!--                <div class="container">-->
+            <!--                    <div class="row">-->
+            <!--                        <div class="col-12">-->
+            <!--                            <div class="header__search-content">-->
+            <!--                                <input type="text" placeholder="Search for a movie, TV Series that you are looking for">-->
+
+            <!--                                <button type="button">search</button>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </form>-->
+            <!-- end header search -->
+        </header>
+        <!-- end header -->
+
+
+        <div class="content" >
+
+
+            <div class="container" style="margin-bottom: 30px;opacity: 200%">
+<!--                <div class="row">-->
+<!--                    <div class="col-12" style="margin-top: 30px;">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-5">-->
+<!--                                <h1 class="details__title"-->
+<!--                                    style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: x-large">-->
+<!--                                    Estadísticas-->
+<!--                                </h1>-->
+<!--                            </div>-->
+<!--                            <div class="col-3"></div>-->
+<!--                            <div class="col-4">-->
+<!--                                <div class="input-group" style="padding-top: 10px">-->
+<!--                                    <input name="campo" class="form-control text-light" type="text"-->
+<!--                                           style="text-align: center; height: auto ;background-color: transparent; border-radius: 5px; border-color: #7c7676"-->
+<!--                                           placeholder="Buscar Funcion">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <br>
+                <div class="row">
+                    <div class="col-2">
+                        <h1 class="details__title"
+                            style="text-align: center;margin-left: 25px;margin-bottom: 30px;margin-top: 10px;font-size: 40px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                            Estadísticas
+                        </h1>
+                        <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                            <h2 class="details__title"
+                                style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 25px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Función mas vista
+                            </h2>
+                            <div style="display: flex;justify-content: center">
+                                <img class="card-img-top" src="img/covers/Independencia.png" alt="Card image cap"
+                                     style="width: 70%">
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title" style="text-align: center;color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><b>Independencia</b></h5>
+                                <p class="card-text" style="font-size: 110%"><b>Porcentaje de asistencia: 97%</b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-2">
+                        <button style="text-transform: capitalize;margin-left: 70px;margin-bottom: 10px" class="sign__btn" >Exportar reporte de ganancias</button>
+                        <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                            <h1 class="details__title"
+                                style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 35px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Porcentaje de Asistencia
+                            </h1>
+                            <br>
+                            <br>
+                            <div class="card-body" style="display: flex;justify-content: center">
+                                <button ><i style="color: #575454" class="fa fa-arrow-circle-down fa-4x"></i></button>
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-2">
+                        <button style="text-transform: capitalize;margin-left: 70px;margin-bottom: 10px" class="sign__btn" >Enviar reporte de ganancias</button>
+                        <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                            <h1 class="details__title"
+                                style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 35px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Actores mejor calificados
+                            </h1>
+                            <br>
+                            <br>
+                            <div class="card-body" style="display: flex;justify-content: center">
+                                <button ><i style="color: #575454" class="fa fa-arrow-circle-down fa-4x"></i></button>
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-2">
+
+                        <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                            <h2 class="details__title"
+                                style="text-align: center;margin-bottom: 20px;margin-top: 20px;font-size: 25px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Función menos vista
+                            </h2>
+                            <div style="display: flex;justify-content: center">
+                                <img class="card-img-top" src="img/covers/LosTambores.png" alt="Card image cap"
+                                     style="width: 85%">
+                            </div>
+
+                            <div class="card-body">
+
+                                <h5 class="card-title" style="text-align: center;color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><b>Los tambores</b></h5>
+                                <p class="card-text" style="font-size: 110%"><b>Porcentaje de asistencia: 65%</b></p>
+                            </div>
+                        </div>
+                        <div style="display: flex;justify-content: center;margin-left: 40px">
+
+                            <h3 class="details__title"
+                                style="text-align: center;margin-right: 10px;margin-bottom: 20px;margin-top: 10px;font-size: 17px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Periodicidad:
+                            </h3>
+                            <select name="buscador">
+
+                                <option  value="Diaria">Diaria</option>
+                                <option  value="Mensual">Mensual</option>
+                                <option  value="Bimestral">Bimestral</option>
+                                <option  value="Semestral">Semestral</option>
+                                <option  value="Anual">Anual</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="col-3">
+                    </div>
+                    <div class="col-2">
+
+                        <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                            <h2 class="details__title"
+                                style="text-align: center;margin-bottom: 20px;margin-top: 10px;font-size: 25px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Función mejor calificada
+                            </h2>
+                            <div style="display: flex;justify-content: center">
+                                <img class="card-img-top" src="img/covers/Independencia.png" alt="Card image cap"
+                                     style="width: 70%">
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title" style="text-align: center;color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><b>Independencia</b></h5>
+                                <p class="card-text" style="font-size: 110%"><b>Puntuación promedio: 4.9/5</b></p>
+                            </div>
+                        </div>
+                        <div style="display: flex;justify-content: center;margin-left: 40px">
+
+                            <h3 class="details__title"
+                                style="text-align: center;margin-right: 10px;margin-bottom: 20px;margin-top: 10px;font-size: 17px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Periodo:
+                            </h3>
+                            <select name="buscador">
+
+                                <option  value="Enero">Enero</option>
+                                <option  value="Febrero">Febrero</option>
+                                <option  value="Marzo">Marzo</option>
+                                <option  value="Abril">Abril</option>
+                                <option  value="Junio">Junio</option>
+                                <option  value="Julio">Julio</option>
+                                <option  value="Agosto">Agosto</option>
+                                <option  value="Septiembre">Septiembre</option>
+                                <option  value="Octubre">Octubre</option>
+                                <option  value="Noviembre">Noviembre</option>
+                                <option  value="Diciembre">Diciembre</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-2">
+                        <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
+                            <h1 class="details__title"
+                                style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 35px;color: white;font-family: 'Open Sans';font-weight: 900;">
+                                Directores mejor calificados
+                            </h1>
+                            <br>
+                            <br>
+                            <div class="card-body" style="display: flex;justify-content: center">
+                                <button ><i style="color: #575454" class="fa fa-arrow-circle-down fa-4x"></i></button>
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                        <button style="text-transform: capitalize;margin-left: 70px;margin-bottom: 10px" class="sign__btn" >Aplicar Cambios</button>
+                    </div>
+
+                    <div class="col-3"></div>
+                </div>
+                <br>
+
+                <div style="height: 10px"></div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/jquery.mousewheel.min.js"></script>
+        <script src="js/jquery.mCustomScrollbar.min.js"></script>
+        <script src="js/wNumb.js"></script>
+        <script src="js/nouislider.min.js"></script>
+        <script src="js/plyr.min.js"></script>
+        <script src="js/jquery.morelines.min.js"></script>
+        <script src="js/photoswipe.min.js"></script>
+        <script src="js/photoswipe-ui-default.min.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
