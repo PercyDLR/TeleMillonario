@@ -35,57 +35,69 @@
         <meta name="keywords" content="">
         <meta name="author" content="Dmitry Volkov">
         <title>Lista Directores</title>
+        <style>
+            .overlay {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                transition: opacity 500ms;
+                visibility: hidden;
+                opacity: 0;
+            }
+            #popup:target{
+                visibility: visible; /* Se regresa a hidden para ocultar */
+                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            }
 
+
+
+        </style>
     </head>
     <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
         <!-- header -->
         <header class="header">
-            <div class="header__wrap">
+            <div class="header__wrap" style="border-bottom: solid 3px #ff55a5;">
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
                             <div class="header__content">
-                                <img src="img/tele.png">
+                                <a th:href="@{admin}"><img src="img/tele.png"></a>
                                 <ul class="header__nav">
                                     <li class="header__nav-item">
-                                        <a  href="#" class="header__nav-link">Sedes</a>
+                                        <a  th:href="@{/admin}" class="header__nav-link">Sedes</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="#" class="header__nav-link">Operadores</a>
+                                        <a th:href="@{/Operadores}" class="header__nav-link">Operadores</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="pricing.html" class="header__nav-link">Actores</a>
+                                        <a th:href="@{/actor}" class="header__nav-link">Actores</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="faq.html" class="header__nav-link text-light">Directores</a>
+                                        <a th:href="@{/admin2}" class="header__nav-link" style="color:#ff55a5">Directores</a>
                                     </li>
                                     <li class="header__nav-item">
-                                        <a href="faq.html" class="header__nav-link">Clientes</a>
+                                        <a th:href="@{/listaClientes}" class="header__nav-link">Clientes</a>
                                     </li>
                                 </ul>
-                                <!-- end header nav -->
-
-                                <!-- header auth -->
                                 <div class="header__auth">
                                     <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
-                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Joaquin Orellana</span>
+                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
                                     </div>
                                     <div style="margin-bottom: 7px;margin-left: 5px">
                                         <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
                                     </div>
                                 </div>
-                                <!-- end header auth -->
-
-                                <!-- header menu btn -->
                                 <button class="header__btn" type="button">
                                     <span></span>
                                     <span></span>
                                     <span></span>
                                 </button>
-                                <!-- end header menu btn -->
                             </div>
                         </div>
                     </div>
@@ -126,7 +138,7 @@
                                 </div>
                                 <div class="col-2">
                                     <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
-                                        <a class="circulo_add" href="#" >
+                                        <a class="circulo_add" th:href="@{/agregarDirector}">
                                             <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
                                         </a>
                                     </button>
@@ -186,14 +198,14 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" th:href="@{/admin1}">
                                                     <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
                                                 </a>
                                             </button>
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -215,7 +227,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -237,7 +249,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -259,7 +271,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -281,7 +293,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -314,6 +326,37 @@
 
         </div>
 
+
+        <div id="popup" class="overlay">
+            <div class="row">
+                <div class="col-12">
+                    <div class="sign__content">
+                        <!-- authorization form -->
+                        <form action="#" class="sign__form"   style="background-color: #ffffff9e;">
+                            <a href="index.html" class="sign__logo">
+                                <img src="img/logo.svg" alt="">
+                            </a>
+
+                            <div class="sign__group">
+                                <h5 style="color: black;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar este director?</h5>
+                            </div>
+
+
+                            <a href="#" class="sign__btn">Cancelar</a>
+                            <a href="#" class="sign__btn">Continuar</a>
+
+
+
+
+
+                        </form>
+                        <!-- end authorization form -->
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
 
 
 
