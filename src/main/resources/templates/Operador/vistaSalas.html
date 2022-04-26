@@ -29,7 +29,7 @@
         <title>Vista de Salas</title>
     </head>
 
-    <body class="body body--active" style="background-image: url('/static/img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
+    <body class="body">
         <header class="header">
             <div class="header__wrap">
                 <div class="container">
@@ -59,29 +59,43 @@
                                     <li class="header__nav-item">
                                         <a href="#" class="header__nav-link header__nav-link--active">SALAS</a>
                                     </li>
+
+                                    <li class="header__nav-item">
+                                        <br>
+                                        <br>
+                                        <br>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <div style="size: 10px; color: white;white-space: nowrap;">
+                                            <span>Agustin Vizcarra</span>
+                                        </div>
+
+                                        <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
+                                            <span href="#">Conde de Lemos</span>
+                                        </div>
+                                    </li>
                                 </ul>
                                 <!-- end header nav -->
 
                                 <!-- header auth -->
-                                <div class="header__auth">
-                                    <div class="col-3">
-                                        <div style="size: 10px;color: white;white-space: nowrap">
-                                            <span>Agustin Vizcarra</span>
-                                        </div>
+                                <div class="header__auth" style="margin-left: 3px">
 
-                                        <div style="size: 8px;color: rgba(255,255,255,0.5);white-space: nowrap">
-                                            <span href="#">Conde de Lemos</span>
-                                        </div>
-                                    </div>
-                                    <div style="margin-bottom: 7px;margin-left: 5px">
+                                    <div style="margin-bottom: 7px; margin-left: 3px">
                                         <a href="#"><img style="height: 50px;margin-top: 5px"
                                                          src="../../static/img/user.png"></a>
                                     </div>
-                                    <div class="col-2">
+                                    <a href="#" class="header__sign-in">
+                                        <i class="icon ion-ios-log-in"></i>
+                                        <span>Cerrar Sesión</span>
+                                    </a>
+                                    <!--
+                                    <div>
                                         <a href="#" class="filter__btn" title="Cerrar Sesión" style="width: 40px">
                                             <i class="icon ion-ios-log-in"></i>
                                         </a>
                                     </div>
+                                    -->
                                 </div>
                                 <!-- end header auth -->
 
@@ -100,9 +114,441 @@
             <!-- end header search -->
         </header>
 
-        <div>
 
+        <section class="section section--first section--bg" data-bg="../../../static/img/home/telon-abierto-opaco.jpg" style="background: url(&quot;/static/img/home/telon-abierto-opaco.jpg&quot;) center center / cover no-repeat;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section__wrap">
+
+                            <h2 class="section__title">Administración de salas</h2>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <div class="catalog">
+            <div class="container">
+                <form class="form" action="#" style="background-color: #2b2b31">
+                    <div class="row">
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="price price--premium mCustomScrollbar" style="text-align: center">
+                                <div class="price__item price__item--first">
+                                    <span>Sala</span> <span>1</span></div>
+
+                                <table class="accordion__list" style="text-align: center">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora</th>
+                                            <th>Obra</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>9:00 am</td>
+                                            <td>Los Tambores</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10:00 am</td>
+                                            <td>Independencia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:00 am</td>
+                                            <td>Historias de Arena</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12:00 am</td>
+                                            <td>La Ternura</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5:00 pm</td>
+                                            <td>Ollantay</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7:00</td>
+                                            <td>Ña Catita</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 32%; white-space: nowrap" class="justify-content-center" >
+                                    <button class="price__btn" style="display: inline-block">-</button>
+                                    <input class="form__input" value="75" style="display: inline-block; text-align: center">
+                                    <button class="price__btn" style="display: inline-block">+</button>
+                                </div>
+
+                                <div class="price__item">
+                                    <span>Aforo Máx: 80 personas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="price price--premium mCustomScrollbar" style="text-align: center">
+                                <div class="price__item price__item--first">
+                                    <span>Sala</span> <span>1</span></div>
+
+                                <table class="accordion__list" style="text-align: center">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora</th>
+                                            <th>Obra</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>9:00 am</td>
+                                            <td>Los Tambores</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10:00 am</td>
+                                            <td>Independencia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:00 am</td>
+                                            <td>Historias de Arena</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12:00 am</td>
+                                            <td>La Ternura</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5:00 pm</td>
+                                            <td>Ollantay</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7:00</td>
+                                            <td>Ña Catita</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 32%; white-space: nowrap" class="justify-content-center" >
+                                    <button class="price__btn" style="display: inline-block">-</button>
+                                    <input class="form__input" value="75" style="display: inline-block; text-align: center">
+                                    <button class="price__btn" style="display: inline-block">+</button>
+                                </div>
+
+                                <div class="price__item">
+                                    <span>Aforo Máx: 80 personas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="price price--premium mCustomScrollbar" style="text-align: center">
+                                <div class="price__item price__item--first">
+                                    <span>Sala</span> <span>1</span></div>
+
+                                <table class="accordion__list" style="text-align: center">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora</th>
+                                            <th>Obra</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>9:00 am</td>
+                                            <td>Los Tambores</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10:00 am</td>
+                                            <td>Independencia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:00 am</td>
+                                            <td>Historias de Arena</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12:00 am</td>
+                                            <td>La Ternura</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5:00 pm</td>
+                                            <td>Ollantay</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7:00</td>
+                                            <td>Ña Catita</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 32%; white-space: nowrap" class="justify-content-center" >
+                                    <button class="price__btn" style="display: inline-block">-</button>
+                                    <input class="form__input" value="75" style="display: inline-block; text-align: center">
+                                    <button class="price__btn" style="display: inline-block">+</button>
+                                </div>
+
+                                <div class="price__item">
+                                    <span>Aforo Máx: 80 personas</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="price price--premium mCustomScrollbar" style="text-align: center">
+                                <div class="price__item price__item--first">
+                                    <span>Sala</span> <span>1</span></div>
+
+                                <table class="accordion__list" style="text-align: center">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora</th>
+                                            <th>Obra</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>9:00 am</td>
+                                            <td>Los Tambores</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10:00 am</td>
+                                            <td>Independencia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:00 am</td>
+                                            <td>Historias de Arena</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12:00 am</td>
+                                            <td>La Ternura</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5:00 pm</td>
+                                            <td>Ollantay</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7:00</td>
+                                            <td>Ña Catita</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 32%; white-space: nowrap" class="justify-content-center" >
+                                    <button class="price__btn" style="display: inline-block">-</button>
+                                    <input class="form__input" value="75" style="display: inline-block; text-align: center">
+                                    <button class="price__btn" style="display: inline-block">+</button>
+                                </div>
+
+                                <div class="price__item">
+                                    <span>Aforo Máx: 80 personas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="price price--premium mCustomScrollbar" style="text-align: center">
+                                <div class="price__item price__item--first">
+                                    <span>Sala</span> <span>1</span></div>
+
+                                <table class="accordion__list" style="text-align: center">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora</th>
+                                            <th>Obra</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>9:00 am</td>
+                                            <td>Los Tambores</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10:00 am</td>
+                                            <td>Independencia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:00 am</td>
+                                            <td>Historias de Arena</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12:00 am</td>
+                                            <td>La Ternura</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5:00 pm</td>
+                                            <td>Ollantay</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7:00</td>
+                                            <td>Ña Catita</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 32%; white-space: nowrap" class="justify-content-center" >
+                                    <button class="price__btn" style="display: inline-block">-</button>
+                                    <input class="form__input" value="75" style="display: inline-block; text-align: center">
+                                    <button class="price__btn" style="display: inline-block">+</button>
+                                </div>
+
+                                <div class="price__item">
+                                    <span>Aforo Máx: 80 personas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="price price--premium mCustomScrollbar" style="text-align: center">
+                                <div class="price__item price__item--first">
+                                    <span>Sala</span> <span>1</span></div>
+
+                                <table class="accordion__list" style="text-align: center">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora</th>
+                                            <th>Obra</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>9:00 am</td>
+                                            <td>Los Tambores</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10:00 am</td>
+                                            <td>Independencia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11:00 am</td>
+                                            <td>Historias de Arena</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12:00 am</td>
+                                            <td>La Ternura</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5:00 pm</td>
+                                            <td>Ollantay</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7:00</td>
+                                            <td>Ña Catita</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8:00 pm</td>
+                                            <td>El Sargento Canuto</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="width: 32%; white-space: nowrap" class="justify-content-center" >
+                                    <button class="price__btn" style="display: inline-block">-</button>
+                                    <input class="form__input" value="75" style="display: inline-block; text-align: center">
+                                    <button class="price__btn" style="display: inline-block">+</button>
+                                </div>
+
+                                <div class="price__item">
+                                    <span>Aforo Máx: 80 personas</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row justify-content-end">
+                        <button class="form__btn mx-sm-3" type="submit">Guardar</button>
+                    </div>
+                </form>
+                <!-- Fin Salas-->
+
+                <!-- Paginacion-->
+                <div class="row">
+                    <div class="col-12 justify-content-center">
+                        <ul class="paginator paginator--list">
+                            <li class="paginator__item paginator__item--prev">
+                                <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
+                            </li>
+                            <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
+                            <li class="paginator__item"><a href="#">2</a></li>
+                            <li class="paginator__item"><a href="#">3</a></li>
+                            <li class="paginator__item"><a href="#">4</a></li>
+                            <li class="paginator__item paginator__item--next">
+                                <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Fin Paginacion-->
+
+            </div>
         </div>
+
 
         <div>
             <script src="../../../static/js/jquery.mCustomScrollbar.min.js"></script>
