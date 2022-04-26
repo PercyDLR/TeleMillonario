@@ -40,7 +40,7 @@
     <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
         <!-- header -->
         <header class="header">
-            <div class="header__wrap">
+            <div class="header__wrap" style="border-bottom: solid 3px #ff55a5;">
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
@@ -60,7 +60,7 @@
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="faq.html" class="header__nav-link text-light">Directores</a>
+                                        <a href="faq.html" class="header__nav-link" style="color:#ff55a5">Directores</a>
                                     </li>
                                     <li class="header__nav-item">
                                         <a href="faq.html" class="header__nav-link">Clientes</a>
@@ -93,19 +93,7 @@
             </div>
 
             <!-- header search -->
-            <form action="#" class="header__search">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="header__search-content">
-                                <input type="text" placeholder="Search for a movie, TV Series that you are looking for">
 
-                                <button type="button">search</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
             <!-- end header search -->
         </header>
         <!-- end header -->
@@ -113,19 +101,19 @@
 
         <div class="content" >
 
-            <div class="container">
+            <div class="container" style="padding-top: 65px">
                 <div class="row align-items-stretch justify-content-center no-gutters">
                     <div class="col-md-7">
                         <div class="form h-100 contact-wrap p-5" style="border-radius: 40px">
-                            <h3 class="text-center" style="padding-bottom: 30px;font-size: 3rem;color: white;">Editar Director</h3>
+                            <h3 class="text-center" style="padding-bottom: 30px;color: white;font-size: 5rem;font-size: 96px;color: white;font-family: 'Open Sans';font-weight: 900;">Editar Director</h3>
                             <form class="mb-5" method="post" id="contactForm" name="contactForm">
                                 <div class="row">
                                     <div class="col-md-6 form-group mb-3">
-                                        <label for="" class="col-form-label"><b>Nombre *</b></label>
+                                        <label  class="col-form-label"><b>Nombre *</b></label>
                                         <input type="text" class="form-control" name="name" id="name" placeholder="Tu nombre" value="Moises">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
-                                        <label for="" class="col-form-label"><b>Apellido *</b></label>
+                                        <label  class="col-form-label"><b>Apellido *</b></label>
                                         <input type="text" class="form-control" name="email" id="email"  placeholder="Tu apellido" value="Bak ">
                                     </div>
                                 </div>
@@ -133,7 +121,7 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
-                                        <label for="budget" class="col-form-label"><b>Foto</b></label>
+                                        <label  class="col-form-label"><b>Foto</b></label>
                                         <br>
                                         <br>
                                         <br>
@@ -169,12 +157,14 @@
                                 <br>
                                 <div style="display: flex;justify-content: center">
 
-                                    <div style="float: left">
-                                        <button class="btn btn-primary"  style=" margin-top: 30px; background-color: #e64166" >Cancelar</button>
-                                    </div>
-                                    <div style="float: left">
-                                        <button class="btn btn-primary"  style="margin-left: 80px; margin-top: 30px; background-color: #e64166" type="submit">Registrar</button>
-                                    </div>
+<!--                                    <div style="float: left">-->
+<!--                                        <button class="btn btn-primary"  style=" margin-top: 30px; background-color: #e64166" >Cancelar</button>-->
+                                        <button style=" margin-top: 30px;" class="sign__btn" type="submit">Cancelar</button>
+<!--                                    </div>-->
+<!--                                    <div style="float: left">-->
+<!--                                        <button class="btn btn-primary"  style="margin-left: 80px; margin-top: 30px; background-color: #e64166" type="submit">Registrar</button>-->
+                                        <button style="margin-left: 80px; margin-top: 30px;" class="sign__btn" type="submit">Guardar</button>
+<!--                                    </div>-->
 
                                 </div>
 
