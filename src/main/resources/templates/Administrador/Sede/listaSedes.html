@@ -86,7 +86,38 @@
                                         <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
                                     </div>
                                     <div style="margin-bottom: 7px;margin-left: 5px">
-                                        <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
+                                        <a role="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                           aria-controls="offcanvasRight"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
+                                    </div>
+
+                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
+                                         style="width: 18%; background-color: #2b2b31;">
+                                        <div class="offcanvas-header">
+                                            <div class="container mt-5">
+                                                <div class="container" style="display: flex; justify-content: center">
+                                                    <img src="img/user.png" width="100" style="border-radius: 50%;">
+                                                </div>
+                                                <div class="container mt-3" style="display: flex; justify-content: center">
+                                                    <h5 id="offcanvasRightLabel" class="text-light">
+                                                        <b class="mb-2 text-light mt-2" style="font-family: 'Open Sans', sans-serif;">Alonso
+                                                            Rosales</b>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="offcanvas-body">
+                                            <div class="container mt-5" style="position: relative; top: 225px;">
+                                                <hr style="margin: 1rem 0; color:#ff55a5; background-color: currentColor; border: 0; opacity: 0.9">
+                                                <div class="container">
+                                                    <div class="container mt-2 mt-lg-0" style="display: flex; justify-content: center">
+                                                        <h6>
+                                                            <a class="nav-link" style="font-family: 'Open Sans', sans-serif; color: #ff55a5"
+                                                               href="#"><b><i class="bi bi-box-arrow-in-left"></i> Cerrar sesión</b></a>
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <button class="header__btn" type="button">
@@ -335,7 +366,7 @@
                             <div class="sign__group">
                                 <h5 style="color: black;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar esta Sede?</h5>
                             </div>
-                            <a href="#" class="sign__btn">Cancelar</a>
+                            <a th:href="@{/admin}" class="sign__btn">Cancelar</a>
                             <a href="#" class="sign__btn">Continuar</a>
                         </form>
                     </div>
