@@ -82,12 +82,38 @@ $(document).ready(function () {
 			},
 		}
 	});
+	$('.photo__carousel').owlCarousel({
+		mouseDrag: false,
+		touchDrag: false,
+		dots: false,
+		loop: true,
+		autoplay: true,
+		smartSpeed: 600,
+		margin: 30,
+		responsive: {
+			0: {
+				items: 1,
+			},
+			576: {
+				items: 1,
+			},
+			768: {
+				items: 1,
+			},
+			992: {
+				items: 1,
+			},
+			1200: {
+				items: 1,
+			},
+		},
+	});
 
 	$('.home__nav--next').on('click', function() {
-		$('.home__carousel, .home__bg').trigger('next.owl.carousel');
+		$('.home__carousel, .home__bg, .photo__carousel').trigger('next.owl.carousel');
 	});
 	$('.home__nav--prev').on('click', function() {
-		$('.home__carousel, .home__bg').trigger('prev.owl.carousel');
+		$('.home__carousel, .home__bg, .photo__carousel').trigger('prev.owl.carousel');
 	});
 
 	$(window).on('resize', function() {
@@ -151,6 +177,13 @@ $(document).ready(function () {
 		axis: "y",
 		scrollbarPosition: "outside",
 		theme: "custom-bar2"
+	});
+
+	$('.price').mCustomScrollbar({
+		axis: "y",
+		scrollbarPosition: "outside",
+		theme: "custom-bar2",
+		alwaysShowScrollbar: 2
 	});
 
 	/*==============================
