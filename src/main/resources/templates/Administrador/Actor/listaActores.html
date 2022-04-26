@@ -45,47 +45,40 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="header__content">
-                                <img src="img/tele.png">
+                                <a th:href="@{admin}"><img src="img/tele.png"></a>
                                 <ul class="header__nav">
                                     <li class="header__nav-item">
-                                        <a  href="#" class="header__nav-link">Sedes</a>
+                                        <a  th:href="@{/admin}" class="header__nav-link">Sedes</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="#" class="header__nav-link">Operadores</a>
+                                        <a th:href="@{/Operadores}" class="header__nav-link">Operadores</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="pricing.html" class="header__nav-link" style="color:#ff55a5">Actores</a>
+                                        <a th:href="@{/actor}" class="header__nav-link" style="color:#ff55a5">Actores</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a href="faq.html" class="header__nav-link">Directores</a>
+                                        <a th:href="@{/admin2}" class="header__nav-link">Directores</a>
                                     </li>
                                     <li class="header__nav-item">
-                                        <a href="faq.html" class="header__nav-link">Clientes</a>
+                                        <a th:href="@{/listaClientes}" class="header__nav-link">Clientes</a>
                                     </li>
                                 </ul>
-                                <!-- end header nav -->
-
-                                <!-- header auth -->
                                 <div class="header__auth">
                                     <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
-                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Joaquin Orellana</span>
+                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
                                     </div>
                                     <div style="margin-bottom: 7px;margin-left: 5px">
                                         <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
                                     </div>
                                 </div>
-                                <!-- end header auth -->
-
-                                <!-- header menu btn -->
                                 <button class="header__btn" type="button">
                                     <span></span>
                                     <span></span>
                                     <span></span>
                                 </button>
-                                <!-- end header menu btn -->
                             </div>
                         </div>
                     </div>
@@ -126,7 +119,7 @@
                             </div>
                             <div class="col-2">
                                 <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
-                                    <a class="circulo_add" href="#" >
+                                    <a class="circulo_add" th:href="@{/agregarActor}" >
                                         <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
                                     </a>
                                 </button>
@@ -185,7 +178,7 @@
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
+                                            <a class="circulo_botones" th:href="@{/editarActor}">
                                                 <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
                                             </a>
                                         </button>
