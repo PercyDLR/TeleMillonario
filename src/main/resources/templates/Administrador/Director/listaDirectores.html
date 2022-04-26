@@ -35,7 +35,26 @@
         <meta name="keywords" content="">
         <meta name="author" content="Dmitry Volkov">
         <title>Lista Directores</title>
+        <style>
+            .overlay {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                transition: opacity 500ms;
+                visibility: hidden;
+                opacity: 0;
+            }
+            #popup:target{
+                visibility: visible; /* Se regresa a hidden para ocultar */
+                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            }
 
+
+
+        </style>
     </head>
     <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
         <!-- header -->
@@ -193,7 +212,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -215,7 +234,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -237,7 +256,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -259,7 +278,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -281,7 +300,7 @@
                                         </td>
                                         <td>
                                             <button>
-                                                <a class="circulo_botones" href="#">
+                                                <a class="circulo_botones" href="#popup">
                                                     <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
                                                 </a>
                                             </button>
@@ -314,6 +333,37 @@
 
         </div>
 
+
+        <div id="popup" class="overlay">
+            <div class="row">
+                <div class="col-12">
+                    <div class="sign__content">
+                        <!-- authorization form -->
+                        <form action="#" class="sign__form"   style="background-color: #ffffff9e;">
+                            <a href="index.html" class="sign__logo">
+                                <img src="img/logo.svg" alt="">
+                            </a>
+
+                            <div class="sign__group">
+                                <h5 style="color: black;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar este director?</h5>
+                            </div>
+
+
+                            <a href="#" class="sign__btn">Cancelar</a>
+                            <a href="#" class="sign__btn">Continuar</a>
+
+
+
+
+
+                        </form>
+                        <!-- end authorization form -->
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
 
 
 
