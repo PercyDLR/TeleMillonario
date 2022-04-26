@@ -73,8 +73,8 @@
                 $("#horario").change(function () {
                     var val = $(this).val();
                     if (val == "horario") {
-                        $("#a").html("<h2 style=\"font-family: 'Open Sans', sans-serif; color:#ffffff;\" class='text-light' id='counting''></h2>")
-                        $("#b").html("<h2 style=\"font-family: 'Open Sans', sans-serif;\" id='costototal'></h2>")
+                        $("#a").html("<li class=\"page-item\" disabled=\"\"><h5 class=\"page-link text-black\" id='counting'>--</h5></li>")
+                        $("#b").html("<h2 class='text-light' style=\"font-family: 'Open Sans', sans-serif; padding-left: 0px\" id='costototal'></h2>")
                         $("#boletosRestantes").html("<b style=\"font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 20px;\" id='boletosResstantes'>23</b>")
                     }
                 });
@@ -178,26 +178,27 @@
 
                 <div class="row mb-4">
                     <div class="col-sm-10">
-                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9; font-size: 70px"><b>Historias
+                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9; font-size: 65px"><b>Historias
                             de Arena</b></h1>
                     </div>
                 </div>
                 <div class="row mb-4">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <img src="/static/img/covers/HistoriasDeArena.png"
-                             style="width: 400px; height: 600px;object-fit: cover;">
+                             style="width: 350px; height: 520px;object-fit: cover;">
                     </div>
-                    <div class="col-sm-5" style="padding-right: 30px">
+                    <div class="col-sm-5" style="padding-right: 40px; padding-left: 60px">
                         <br>
-                        <h5 class="text-light"><b>Género: Tragedia</b></h5>
-                        <h5 class="text-light"><b>Restricción de edad: Para mayores de 18 años</b></h5>
-                        <h5 class="text-light"><b>Duración: 2hrs 10min</b></h5>
-                        <h5 class="text-light"><b>Aforo: 50</b></h5>
+                        <h6 class="text-light"><b>Género: Tragedia</b></h6>
+                        <h6 class="text-light"><b>Restricción de edad: Para mayores de 18 años</b></h6>
+                        <h6 class="text-light"><b>Duración: 2hrs 10min</b></h6>
+                        <h6 class="text-light"><b>Aforo: 50</b></h6>
                         <br>
-                        <h5 class="text-light" style="text-align: justify"><b>Historias de Arena nos intenta contar que no nos podemos proteger del
+                        <h6 class="text-light" style="text-align: justify"><b>Historias de Arena nos cuenta que no nos
+                            podemos proteger del
                             daño que produce el amor. Que si queremos amar nos tenemos que arriesgar a sufrir. Y que
                             tampoco los padres pueden proteger a los hijos del sufrimiento de la vida porque eso pone en
-                            peligro la vivencia de una vida plena.</b></h5>
+                            peligro la vivencia de una vida plena.</b></h6>
                         <br>
                         <br>
                         <br>
@@ -205,48 +206,18 @@
                         <br>
                         <br>
                         <br>
-                        <h5 class="text-light"><b>Director: Paco Fernandez</b></h5>
-                        <h5 class="text-light" style="text-align: justify"><b>Actores: Pedro Saldarriaga, Aquiles García, Enrique Carranza, Armando
-                            Curth, Martha Noceda</b></h5>
+                        <h6 class="text-light"><b>Director: Paco Fernandez</b></h6>
+                        <h6 class="text-light" style="text-align: justify"><b>Actores: Pedro Saldarriaga, Aquiles
+                            García, Enrique Carranza, Armando
+                            Curth, Martha Noceda</b></h6>
                     </div>
-                    <div class="col-sm-3">
-                        <div class="row mt-2">
-                            <a class="btn btn-primary"
-                               style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; width: 500px; height: 46px; padding-top: 11px;"
-                               href="#" role="button"><i class="bi bi-ticket-perforated-fill"></i> Comprar
-                                boletos</a>
-                            <div class="mt-2"
-                                 style="text-align: center; background-color: #FFFFFF; border-radius: 2px" id="b">
-                                <h2 style="font-family: 'Open Sans', sans-serif;"> --- </h2>
-                            </div>
-                                <div class="col-sm-4 mt-2" style="text-align: center;  padding-left: 45px">
-                                    <button type="button" class="btn btn-secondary" style="width: 40px; height: 46px;"
-                                            onclick="decrement(); multiplicate()"><i class="bi bi-dash"></i></button>
-                                </div>
-                                <div class="col-sm-4 mt-2" id="a" style="text-align: center">
-                                    <h2 style="font-family: 'Open Sans', sans-serif;" class="text-light"> --- </h2>
-                                </div>
-
-                                <div class="col-sm-4 mt-2" style="text-align: center;  padding-right: 45px">
-                                    <button type="button" class="btn btn-secondary" style="width: 40px; height: 46px;"
-                                            onclick="increment(); multiplicate()"><i class="bi bi-plus"></i></button>
-                                </div>
-
-                            <div class="mt-2"
-                                 style="padding-left: 0px; padding-right: 0px; display: flex; justify-content: center;">
-                                <h6 class="text-light"
-                                    style="background-color: #cccccc; border-radius: 6px; padding-left: 17px; padding-right: 17px; padding-bottom: 18px; text-align: center; font-family: 'Open Sans', sans-serif; color: #fff">
-                                    <br>
-                                    <b style="font-family: 'Open Sans', sans-serif; color: #fff"
-                                       id="boletosRestantes"> --- </b> <b>BOLETOS RESTANTES</b>
-                                    <br>
-                                </h6>
-                            </div>
-                        </div>
-                        <div class="row mt-2 justify-content-center">
-                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 25px"><b>Sede</b></label>
+                    <div class="col-sm-4" style="padding-left: 100px">
+                        <h4 style="font-family: 'Open Sans', sans-serif; color:#ffffff; text-align: center; font-size: 24px"><b>Compre
+                            sus entradas aqui</b></h4>
+                        <div class="row mt-3 justify-content-center">
+                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 18px; text-align: center"><b>Sede</b></label>
                             <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
-                                    style="color: #fff; background-color: #48cfae; border-color: #48cfae; height: 50px"
+                                    style="color: #fff; background-color: #800000; border-color: #800000; height: 45px"
                                     id="sede">
                                 <option value="" selected><b>Sede</b></option>
                                 <option value="item1"><b>Gran Teatro Nacional</b></option>
@@ -256,142 +227,176 @@
                             </select>
                         </div>
                         <div class="row mt-2 justify-content-center">
-                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 25px"><b>Sala</b></label>
+                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 18px; text-align: center"><b>Sala</b></label>
                             <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
-                                    style="color: #fff; background-color: #4fc0e8; border-color: #4fc0e8; height: 50px"
+                                    style="color: #fff; background-color: #800000; border-color: #800000; height: 45px"
                                     id="sala">
                                 <option value="" style="font-family: 'Open Sans', sans-serif; color: #fff"> ---</option>
                             </select>
                         </div>
                         <div class="row mt-2 justify-content-center">
-                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 25px"><b>Fecha y hora</b></label>
+                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 18px; text-align: center"><b>Fecha y hora</b></label>
                             <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
-                                    style="color: #fff; background-color: #d85716; border-color: #d85716; height: 50px"
+                                    style="color: #fff; background-color: #800000; border-color: #800000; height: 45px"
                                     id="horario">
                                 <option value="" style="font-family: 'Open Sans', sans-serif; color: #fff"> ---</option>
                             </select>
                         </div>
+                        <div class="row mt-4">
+                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 22px; padding-left: 0px"><b>Costo</b></label>
+                            <div class="mt-2 text-light" id="b" style="padding-left: 0px">
+                                <h2 style="font-family: 'Open Sans', sans-serif; color: #fff"> --- </h2>
+                            </div>
+                            <div class="col-sm-4" style="padding-left: 20px;">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item">
+                                        <button type="button" class="btn btn-secondary"
+                                                onclick="increment(); multiplicate()"><i class="bi bi-plus"></i></button>
+                                    </li>
+                                    <div id="a">
+                                        <li class="page-item" disabled=""><h5 class="page-link text-black">--</h5></li>
+                                    </div>
+                                    <li class="page-item">
+                                        <button type="button" class="btn btn-secondary"
+                                                onclick="decrement(); multiplicate()"><i class="bi bi-dash"></i></button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-8" style="padding-top: 10px; padding-left: 29px;padding-right: 0px;">
+                                <h6 class="text-light"
+                                    style="text-align: center; font-family: 'Open Sans', sans-serif; color: #fff">
+                                    <b style="font-family: 'Open Sans', sans-serif; color: #fff"
+                                       id="boletosRestantes"> --- </b> <b>BOLETOS RESTANTES</b>
+                                </h6>
+                            </div>
+                            <!--width: 500px; height: 46px-->
+                            <a class="btn btn-primary"
+                               style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; padding-top: 11px; padding-bottom: 10px;"
+                               href="#" role="button"><i class="bi bi-ticket-perforated-fill"></i> Comprar
+                                boletos</a>
+
+                        </div>
                     </div>
                 </div>
                 <div class="row">
-                        <!-- JavaScript code-->
-                        <script>
-                            //initialising a variable name data
-                            var data = 1;
-                            var costoBoletos = 15.00;
+                    <!-- JavaScript code-->
+                    <script>
+                        //initialising a variable name data
+                        var data = 1;
+                        var costoBoletos = 15.00;
 
-                            //printing default value of data that is 0 in h2 tag
+                        //printing default value of data that is 0 in h2 tag
+                        document.getElementById("counting").innerText = data;
+                        document.getElementById("costototal").innerText = 'S/' + costoBoletos + '.00';
+
+                        //creation of increment function
+                        function increment() {
+                            data = data + 1;
                             document.getElementById("counting").innerText = data;
-                            document.getElementById("costototal").innerText = 'S/' + costoBoletos + '.00';
+                        }
 
-                            //creation of increment function
-                            function increment() {
-                                data = data + 1;
-                                document.getElementById("counting").innerText = data;
-                            }
+                        //creation of decrement function
+                        function decrement() {
+                            data = data - 1;
+                            document.getElementById("counting").innerText = data;
+                        }
 
-                            //creation of decrement function
-                            function decrement() {
-                                data = data - 1;
-                                document.getElementById("counting").innerText = data;
-                            }
-
-                            //Funcion multiplicacion
-                            function multiplicate() {
-                                document.getElementById("costototal").innerText = 'S/' + data * costoBoletos + '.00';
-                            }
-                        </script>
-                    </div>
-
-                </div>
-                <div class="row mt-3" style="margin-bottom: 50px">
-                    <div class="col-sm-10">
-                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Fotos</b></h1>
-                    </div>
-
-                    <div id="carouselExampleIndicators2" class="carousel slide mt-4" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="0"
-                                    class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="1"
-                                    aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="2"
-                                    aria-label="Slide 3"></button>
-                        </div>
-                        <div class="carousel-inner"
-                             style="padding-right: 50px; padding-left: 50px; height: 220px; margin-bottom: 45px">
-                            <div class="carousel-item active">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen1.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen2.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
-                                        </a>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="carousel-item">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen1.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen2.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen1.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/covers/fotosHistoriasDeArena/imagen2.png"
-                                                 style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        //Funcion multiplicacion
+                        function multiplicate() {
+                            document.getElementById("costototal").innerText = 'S/' + data * costoBoletos + '.00';
+                        }
+                    </script>
                 </div>
 
             </div>
+            <div class="row mt-3" style="margin-bottom: 50px">
+                <div class="col-sm-10">
+                    <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Fotos</b></h1>
+                </div>
+
+                <div id="carouselExampleIndicators2" class="carousel slide mt-4" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="2"
+                                aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner"
+                         style="padding-right: 50px; padding-left: 50px; height: 220px; margin-bottom: 45px">
+                        <div class="carousel-item active">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen1.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen2.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen1.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen2.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen1.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="#">
+                                        <img src="/static/img/covers/fotosHistoriasDeArena/imagen2.png"
+                                             style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
         </div>
 
