@@ -8,6 +8,7 @@
 	<!-- header -->
 	<header th:replace="fragments/navbar :: usuario"></header>
 
+
 	<!-- home -->
 	<section class="home home--bg">
 
@@ -119,6 +120,9 @@
 	<section class="content">
 		<div class="content__head">
 			<div class="container">
+                <div th:replace="fragments/paginacion :: paginacion(0,10,'xd')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(9,10,'xd')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(5,10,'xd')"></div>
 				<div class="row">
 					<div class="col-12">
 						<!-- content title -->

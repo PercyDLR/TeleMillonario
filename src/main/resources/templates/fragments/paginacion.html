@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Paginacion</title>
+    </head>
+    <body>
+
+        <div class="row" th:fragment="paginacion(pagActual,pagTotal,url)">
+            <div th:if="${pagTotal>1}" class="col-12 justify-content-center">
+                <ul class="paginator paginator--list">
+                    <li th:unless="${pagActual==0}" class="paginator__item paginator__item--prev">
+                        <a th:href="@{${url}+'pag='+${pagActual-1}}">
+                            <i class="icon ion-ios-arrow-back"></i>
+                        </a>
+                    </li>
+
+                    <li class="paginator__item"
+                        th:if="${pagActual-4>0 && pagActual==pagTotal-1}">
+                        <a th:href="@{${url}+'pag='+${pagActual-4}}"
+                        th:text="${pagActual}-3"></a>
+                    </li>
+
+                    <li class="paginator__item"
+                        th:if="${pagActual-3>0 && pagActual+3>pagTotal}">
+                        <a th:href="@{${url}+'pag='+${pagActual-3}}"
+                           th:text="${pagActual}-2"></a>
+                    </li>
+
+                    <li class="paginator__item"
+                        th:if="${pagActual-2>=0}">
+                        <a th:href="@{${url}+'pag='+${pagActual-2}}"
+                           th:text="${pagActual}-1"></a>
+                    </li>
+
+                    <li class="paginator__item"
+                        th:if="${pagActual-1>=0}">
+                        <a th:href="@{${url}+'pag='+${pagActual-1}}"
+                           th:text="${pagActual}"></a>
+                    </li>
+
+                    <li class="paginator__item paginator__item--active">
+                        <a th:href="@{${url}+'pag='+${pagActual}}"
+                           th:text="${pagActual}+1"></a>
+                    </li>
+
+                    <li class="paginator__item"
+                        th:if="${pagActual+1<pagTotal}">
+                        <a th:href="@{${url}+'pag='+${pagActual+1}}"
+                           th:text="${pagActual}+2"></a>
+                    </li>
+
+                    <li class="paginator__item"
+                        th:if="${pagActual+2<pagTotal}">
+                        <a th:href="@{${url}+'pag='+${pagActual+2}}"
+                           th:text="${pagActual}+3"></a>
+                    </li>
+
+                    <li class="paginator__item"
+                        th:if="${pagActual+3<pagTotal && pagActual<=1}">
+                        <a th:href="@{${url}+'pag='+${pagActual+3}}"
+                           th:text="${pagActual}+4"></a>
+                    </li>
+
+
+                    <li class="paginator__item"
+                        th:if="${pagActual+4<pagTotal && pagActual==0}">
+                        <a th:href="@{${url}+'pag='+${pagActual+4}}"
+                           th:text="${pagActual}+5"></a>
+                    </li>
+
+                    <li th:unless="${pagActual==pagTotal-1}" class="paginator__item paginator__item--next">
+                        <a th:href="@{${url}+'pag='+${pagActual+1}}">
+                            <i class="icon ion-ios-arrow-forward"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </body>
+</html>

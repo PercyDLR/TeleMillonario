@@ -2719,7 +2719,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-border-radius: 4px;
   border-radius: 4px;
   height: 50px;
-  width: 290px;
+  width: auto;
 }
 .paginator__item {
   margin: 0;
@@ -2767,7 +2767,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 @media (min-width: 360px) {
   .paginator {
-    width: 300px;
+    width: min-content;
   }
 }
 @media (min-width: 768px) {
