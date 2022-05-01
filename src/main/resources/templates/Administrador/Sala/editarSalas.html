@@ -30,7 +30,6 @@
 
     <body class="body"
           style="float: left; background: url('../img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
-        <div>
             <div class="header__wrap " style="border-bottom: solid 3px #ff55a5;">
                 <div class="container">
                     <div class="row">
@@ -89,8 +88,10 @@
                                 <form class="mb-5" method="post" id="contactForm" name="contactForm"
                                       th:action="@{'/sala/guardar'}" th:object="${sala}">
                                     <input hidden th:field="*{id}">
+                                    <input hidden th:field="*{numero}">
+                                    <input hidden name="idsede" th:value="${sede}">
                                     <div class="row">
-                                        <div class="col-md-6 form-group mb-3">
+                                        <div class="col-md-6 form-group mb-3" th:if="${sala.id == 0}">
                                             <label class="col-form-label"><b>Identificador</b></label>
                                             <input class="form-control" type="text" th:field="*{identificador}"
                                                    th:classappend="${#fields.hasErrors('identificador')? 'is-invalid':''}"
@@ -123,14 +124,14 @@
                                     <div class="row" th:unless="${sala.id == 0}">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                   id="flexRadioDefault1" th:checked="${sala.esstado == 1}">
+                                                   id="flexRadioDefault1" th:checked="${sala.estado == 1}">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Sala disponible
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                   id="flexRadioDefault2" th:checked="${sala.esstado == 0}">
+                                                   id="flexRadioDefault2" th:checked="${sala.estado == 0}">
                                             <label class="form-check-label" for="flexRadioDefault2">
                                                 Sala no disponible
                                             </label>
