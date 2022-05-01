@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -123,16 +123,17 @@
                         <div class="row">
                             <div class="col-1"></div>
                             <div class="col-11">
-                                <form method="post" >
+                                <form method="post" th:action="@{'/sala/buscar'}">
                                     <div class="input-group" style="margin-top: 50px">
                                         <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
-                                            <input type="text" value="Buscar Sala" name="search" class="src">
+                                            <input type="text"  name="parametro" class="src"
+                                                   th:value="${parametro == null ? 'Buscar Sala' : parametro}">
                                         </div>
-                                        <select class=" col-3 form-select" name="department" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                        <select class=" col-3 form-select" name="buscador" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
                                             <option>Filtrar por:</option>
-                                            <option value ="1">Identificador</option>
-                                            <option value ="2"># Sala</option>
-                                            <option value ="3">Estado</option>
+                                            <option th:selected="${buscador eq 'identificador'}" value="identificador">Identificador</option>
+                                            <option th:selected="${buscador eq 'numero'}" value="sala"># Sala</option>
+                                            <option th:selected="${buscador eq 'estado'}" value="estado">Estado</option>
                                         </select>
                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                                             <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
@@ -162,14 +163,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>SM001</td>
+                                <tr th:each="sala : ${listSalas}">
+                                    <td th:text="${sala.identificador}">SM001</td>
                                     <td></td>
-                                    <td>Sala 1</td>
+                                    <td th:text="${'Sala'+ ' '+sala.numero}">Sala 1</td>
                                     <td></td>
-                                    <td>12 personas</td>
+                                    <td th:text="${sala.aforo +' '+'personas'}">12 personas</td>
                                     <td></td>
-                                    <td>Disponible</td>
+                                    <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
                                     <td></td>
                                     <td>
                                         <button>
@@ -186,102 +187,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>SM001</td>
-                                    <td></td>
-                                    <td>Sala 1</td>
-                                    <td></td>
-                                    <td>12 personas</td>
-                                    <td></td>
-                                    <td>No Disponible</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>SM001</td>
-                                    <td></td>
-                                    <td>Sala 1</td>
-                                    <td></td>
-                                    <td>12 personas</td>
-                                    <td></td>
-                                    <td>Disponible</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>SM001</td>
-                                    <td></td>
-                                    <td>Sala 1</td>
-                                    <td></td>
-                                    <td>12 personas</td>
-                                    <td></td>
-                                    <td>No Disponible</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>SM001</td>
-                                    <td></td>
-                                    <td>Sala 1</td>
-                                    <td></td>
-                                    <td>12 personas</td>
-                                    <td></td>
-                                    <td>Disponible</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>

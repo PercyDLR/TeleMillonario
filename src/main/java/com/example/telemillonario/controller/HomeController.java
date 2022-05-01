@@ -42,10 +42,10 @@ public class HomeController {
         return "Administrador/Sede/editarSedes";
     }
 
-    @GetMapping("/sala")
-    public String listaSlas() {
-        return "Administrador/Sala/listaSalas";
-    }
+//    @GetMapping("/sala")
+//    public String listaSlas() {
+//        return "Administrador/Sala/listaSalas";
+//    }
 
     @GetMapping("/agregarSede")
     public String agregarSede() {
