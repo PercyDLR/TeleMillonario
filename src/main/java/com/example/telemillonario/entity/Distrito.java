@@ -8,10 +8,10 @@ public class Distrito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private int id;
 
     @Column(name = "estado")
-    private Integer estado;
+    private int estado;
 
     @Column(name = "nombre", length = 100)
     private String nombre;
@@ -24,19 +24,19 @@ public class Distrito {
         this.nombre = nombre;
     }
 
-    public Integer getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(Integer estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

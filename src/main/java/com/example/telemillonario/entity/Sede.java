@@ -8,7 +8,7 @@ public class Sede {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private int id;
 
     @Column(name = "nombre", length = 100)
     private String nombre;
@@ -26,15 +26,15 @@ public class Sede {
     private String telefono;
 
     @Column(name = "numerosalas")
-    private Integer numerosalas;
+    private int numerosalas;
 
     @Column(name = "calificacion")
     private Double calificacion;
 
     @Column(name = "estado")
-    private Integer estado;
+    private int estado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "iddistrito")
     private Distrito iddistrito;
 
@@ -46,11 +46,11 @@ public class Sede {
         this.iddistrito = iddistrito;
     }
 
-    public Integer getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(Integer estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
@@ -62,11 +62,11 @@ public class Sede {
         this.calificacion = calificacion;
     }
 
-    public Integer getNumerosalas() {
+    public int getNumerosalas() {
         return numerosalas;
     }
 
-    public void setNumerosalas(Integer numerosalas) {
+    public void setNumerosalas(int numerosalas) {
         this.numerosalas = numerosalas;
     }
 
@@ -110,11 +110,11 @@ public class Sede {
         this.nombre = nombre;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 }
