@@ -114,5 +114,97 @@
             <!-- end header search -->
         </header>
 
+        <header class="header" th:fragment="admin(seccion,nombre)">
+            <div class="header__wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="header__content">
+                                <!-- header logo -->
+                                <a th:href="@{/}" class="header__logo">
+                                    <img th:src="@{/static/img/tele.PNG}" alt="logo">
+                                </a>
+                                <!-- end header logo -->
+
+                                <!-- header nav -->
+                                <ul class="header__nav" style="height: 100%">
+                                    <li class="header__nav-item">
+                                        <a  th:href="@{/admin}" class="header__nav-link"
+                                            th:classappend="${seccion=='sedes' ? 'header__nav-link--active' : ''}">Sedes</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/Operadores}" class="header__nav-link"
+                                           th:classappend="${seccion=='operadores' ? 'header__nav-link--active' : ''}" >Operadores</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/actor}" class="header__nav-link"
+                                           th:classappend="${seccion=='actores' ? 'header__nav-link--active' : ''}" >Actores</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/admin2}" class="header__nav-link"
+                                           th:classappend="${seccion=='directores' ? 'header__nav-link--active' : ''}" >Directores</a>
+                                    </li>
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/listaClientes}" class="header__nav-link"
+                                           th:classappend="${seccion=='clientes' ? 'header__nav-link--active' : ''}" >Clientes</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <div style="size: 10px; color: white;white-space: nowrap;">
+                                            <span th:text="${nombre}"></span>
+                                        </div>
+
+                                        <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
+                                            <span>Administrador</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- end header nav -->
+
+                                <!-- header auth -->
+                                <div class="header__auth" style="margin-left: 3px">
+
+                                    <div style="margin-bottom: 7px; margin-left: 3px">
+                                        <a href="#"><img style="height: 50px;margin-top: 5px" th:src="@{/static/img/user.png}"></a>
+                                    </div>
+                                    <a href="#" class="header__sign-in">
+                                        <i class="icon ion-ios-log-in"></i>
+                                        <span>Cerrar Sesión</span>
+                                    </a>
+                                </div>
+                                <!-- end header auth -->
+
+                                <!-- header menu btn -->
+                                <button class="header__btn" type="button">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </button>
+                                <!-- end header menu btn -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end header search -->
+        </header>
+
     </body>
 </html>
