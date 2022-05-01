@@ -8,10 +8,10 @@ public class Sala {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private int id;
 
     @Column(name = "aforo")
-    private Integer aforo;
+    private int aforo;
 
     @Column(name = "identificador", length = 10)
     private String identificador;
@@ -19,18 +19,18 @@ public class Sala {
     @Column(name = "numero")
     private Integer numero;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idsede")
     private Sede idsede;
 
     @Column(name = "estado")
-    private Integer estado;
+    private int estado;
 
-    public Integer getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(Integer estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
@@ -42,11 +42,11 @@ public class Sala {
         this.idsede = idsede;
     }
 
-    public Integer getNumero() {
+    public int getNumero() {
         return numero;
     }
 
-    public void setNumero(Integer numero) {
+    public void setNumero(int numero) {
         this.numero = numero;
     }
 
@@ -58,19 +58,19 @@ public class Sala {
         this.identificador = identificador;
     }
 
-    public Integer getAforo() {
+    public int getAforo() {
         return aforo;
     }
 
-    public void setAforo(Integer aforo) {
+    public void setAforo(int aforo) {
         this.aforo = aforo;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 }
