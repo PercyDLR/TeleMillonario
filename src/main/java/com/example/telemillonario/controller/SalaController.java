@@ -90,10 +90,10 @@ public class SalaController {
     @GetMapping("/listaord")
     public String sortAforo(Model model,@RequestParam("ord") String ord) {
         int idsede=7;
-        if (ord == "mayor" ){
-            model.addAttribute("listSalas", salaRepository.sortMenor(idsede));
-        }else{
+        if (ord.equals("mayor")){
             model.addAttribute("listSalas", salaRepository.sortMayor(idsede));
+        }else{
+            model.addAttribute("listSalas", salaRepository.sortMenor(idsede));
         }
 
         return "Administrador/Sala/listaSalas";
