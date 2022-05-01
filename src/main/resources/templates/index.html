@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="fragments/header :: head('Modelo')"></head>
+<head th:replace="fragments/header :: head('Modelo',_)"></head>
 
 <body class="body">
 	
@@ -1339,7 +1339,7 @@
 	<!-- end expected premiere -->
 
     <div th:replace="/fragments/footer :: footer"></div>
-    <div th:replace="/fragments/footer :: js"></div>
+    <div th:replace="/fragments/footer :: js(_)"></div>
 </body>
 
 </html>

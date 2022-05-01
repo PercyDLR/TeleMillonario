@@ -1,6 +1,8 @@
 package com.example.telemillonario.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "sala")
@@ -11,9 +13,11 @@ public class Sala {
     private int id;
 
     @Column(name = "aforo")
+    @Digits(integer = 3, fraction = 0)
     private int aforo;
 
     @Column(name = "identificador", length = 10)
+    @Size(max = 10, message = "Debe tener como máximo 10 caracteres")
     private String identificador;
 
     @Column(name = "numero")
