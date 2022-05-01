@@ -140,12 +140,12 @@ public class SalaController {
             }
             salaRepository.save(sala);
             a.addFlashAttribute("msg",msg);
-            return "redirect:/juegos/lista";
+            return "redirect:/sala";
         }
     }
 
     @GetMapping("/disponibilidad")
-    public String disponibilidadSala(@RequestParam("id") int id, RedirectAttributes a){
+    public String disponibilidadSala(@RequestParam("id") int id, RedirectAttributes a) {
         Optional<Sala> optionalSala = salaRepository.findById(id);
         if (optionalSala.isPresent()) {
             Sala sala = optionalSala.get();
@@ -158,5 +158,6 @@ public class SalaController {
             }
             a.addFlashAttribute("msg", "2");
         }
-        return "redirect:/juegos/lista";
+        return "redirect:/sala";
+    }
 }
