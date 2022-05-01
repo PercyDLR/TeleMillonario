@@ -2,6 +2,7 @@ package com.example.telemillonario.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -12,6 +13,7 @@ public class Sala {
     @Column(name = "id", nullable = false)
     private int id;
 
+    @Min(value = 0)
     @Column(name = "aforo")
     @Digits(integer = 3, fraction = 0)
     private int aforo;
@@ -21,7 +23,7 @@ public class Sala {
     private String identificador;
 
     @Column(name = "numero")
-    private Integer numero;
+    private int numero;
 
     @ManyToOne
     @JoinColumn(name = "idsede")

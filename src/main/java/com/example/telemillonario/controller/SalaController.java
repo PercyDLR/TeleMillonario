@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.spring5.processor.SpringTextareaFieldTagProcessor;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,12 +34,14 @@ public class SalaController {
     public String listSalas(Model model) {
         int idsede=7;
         model.addAttribute("listSalas", salaRepository.buscarSalaPorSede(idsede));
+        model.addAttribute("idsede",idsede);
         return "Administrador/Sala/listaSalas";
     }
 
     @PostMapping("/buscar")
     public String busqueda(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr){
         int idsede=7;
+        model.addAttribute("idsede",idsede);
         try {
             if (parametro.equals("")) { // verifica que no esté vacío
                 attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
@@ -101,8 +104,8 @@ public class SalaController {
     }
 
     @GetMapping("/nuevaSala")
-    public String crearSala(@ModelAttribute("sala") Sala sala, Model model, @RequestParam("sede") int idsede){
-        model.addAttribute("sede", sedeRepository.findById(idsede));
+    public String crearSala(@ModelAttribute("sala") Sala sala, Model model, @RequestParam("idsede") int idsede){
+        model.addAttribute("sede", sedeRepository.findById(idsede).get());
         return "Administrador/Sala/editarSalas";
     }
 
@@ -123,6 +126,7 @@ public class SalaController {
     public String guardarSala(@ModelAttribute("sala") @Valid Sala sala, BindingResult bindingResult, RedirectAttributes a, Model model) {
         String msg;
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getFieldError().getDefaultMessage());
             model.addAttribute("sede", sala.getIdsede());
             return "Administrador/Sala/editarSalas";
         } else {

@@ -127,7 +127,7 @@
                                     <td></td>
                                     <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
                                     <td></td>
-                                    <td><a class="circulo_botones" th:href="@{'sala/editarSalas?id=' + sala.id}"><img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
+                                    <td><a class="circulo_botones" th:href="@{'sala/editarSalas?id=' + ${sala.id}}"><img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
                                     <td th:if="${sala.estado == 1}"><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i class="bi bi-eye-fill"></i></a></td>
                                     <td th:unless="${sala.estado == 1}"><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i class="bi bi-eye-slash-fill"></i></a></td>
                                     <!--<td><img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png"></td>-->
