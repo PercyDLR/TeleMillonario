@@ -19,9 +19,9 @@ public interface SalaRepository extends JpaRepository<Sala,Integer> {
     @Query(nativeQuery = true, value = "select * from telemillonario.sala where estado= ?1 and idsede= ?2")
     List<Sala> buscarPorEstado(int estado,int idsede);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sala where idsede=?1 order by aforo asc;")
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sala where idsede=?1 order by aforo desc;")
     List<Sala> sortMayor(int idsede);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sala where idsede=?1 order by aforo desc;")
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sala where idsede=?1 order by aforo asc;")
     List<Sala> sortMenor(int idsede);
 }

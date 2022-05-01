@@ -33,7 +33,34 @@
         <link rel="apple-touch-icon" sizes="144x144" th:href="@{/icon/apple-touch-icon-144x144.png}">
 
         <title th:text="${titulo}"></title>
+        <!-- Estilos Propios-->
+        <style th:inline="text">
+            body{
+                background: url([[@{/img/home/telon-abierto-opaco.jpg}]])
+                no-repeat  fixed;
+                background-size: 100% 100%;
+            }
 
+            .overlay {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                transition: opacity 500ms;
+                visibility: hidden;
+                opacity: 0;
+            }
+            #popup:target{
+                visibility: visible; /* Se regresa a hidden para ocultar */
+                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            }
+            input::placeholder {
+                color: #000000;
+            }
+        </style>
         <th:block th:replace="${extra}" />
+
     </head>
 </html>
