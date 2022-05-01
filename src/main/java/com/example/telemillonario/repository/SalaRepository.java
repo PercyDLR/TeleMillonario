@@ -13,12 +13,15 @@ public interface SalaRepository extends JpaRepository<Sala,Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sala where idsede= ?1")
     List<Sala> buscarSalaPorSede(int idsede);
 
-    @Query(nativeQuery = true, value = "select * from employees where identificador= ?1")
-    List<Sala> buscarPorIden(String identificador);
+    @Query(nativeQuery = true, value = "select * from telemillonario.sala where numero= ?1 and idsede= ?2")
+    List<Sala> buscarPorNumero(int numero,int idsede);
 
-    @Query(nativeQuery = true, value = "select * from employees where numero= ?1")
-    List<Sala> buscarPorNumero(String numero);
+    @Query(nativeQuery = true, value = "select * from telemillonario.sala where estado= ?1 and idsede= ?2")
+    List<Sala> buscarPorEstado(int estado,int idsede);
 
-    @Query(nativeQuery = true, value = "select * from employees where estado= ?1")
-    List<Sala> buscarPorEstado(int estado);
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sala where idsede=?1 order by aforo asc;")
+    List<Sala> sortMayor(int idsede);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sala where idsede=?1 order by aforo desc;")
+    List<Sala> sortMenor(int idsede);
 }

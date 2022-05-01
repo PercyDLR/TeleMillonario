@@ -36,44 +36,19 @@ public class SalaController {
     }
 
     @PostMapping("/buscar")
-    public String filtroBuscar (Model model, @RequestParam("parametro") String parametro, @RequestParam("buscador") String buscador, RedirectAttributes attr){
-
+    public String busqueda(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr){
+        int idsede=7;
         try {
             if (parametro.equals("")) { // verifica que no esté vacío
                 attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
                 return "redirect:/sala/lista";
             } else {
-                model.addAttribute("parametro", parametro);
-                model.addAttribute("buscador", buscador);
-                parametro = parametro.toLowerCase();
+                int param = Integer.parseInt(parametro);
+                model.addAttribute("parametro", param);
 
-                switch (buscador){
-                    case "identificador":
-                        List<Sala> listaIden = salaRepository.buscarPorIden(parametro);
-                        model.addAttribute("listSalas", listaIden);
-                        break;
-                    case "numero":
-                        List<Sala> listaNumero = salaRepository.buscarPorNumero(parametro);
-                        model.addAttribute("listSalas", listaNumero);
-                        break;
-                    case "estado":
-                        if(parametro == "disponible"){
-                            int param=1;
-                            List<Sala> listaSalasestado = salaRepository.buscarPorEstado(param);
-                            model.addAttribute("listSalas", listaSalasestado);
+                List<Sala> listaNumero = salaRepository.buscarPorNumero(param,idsede);
+                model.addAttribute("listSalas", listaNumero);
 
-                        }else{
-                            int param=0;
-                            List<Sala> listaSalasestado = salaRepository.buscarPorEstado(param);
-                            model.addAttribute("listSalas", listaSalasestado);
-                        }
-
-                        break;
-                    default:
-                        int idsede=7;
-                        model.addAttribute("listSalas", salaRepository.buscarSalaPorSede(idsede));
-                        break;
-                }
 
                 return "Administrador/Sala/listaSalas";
             }
@@ -82,8 +57,47 @@ public class SalaController {
             return "redirect:/sala/lista";
         }
 
+    }
 
+    @PostMapping("/filtrar")
+    public String filtrarPorEstado (Model model,@RequestParam("buscador") String buscador, RedirectAttributes attr){
+        int idsede=7;
+        try {
+                model.addAttribute("buscador", buscador);
+                switch (buscador){
+                    case "disponible":
+                        List<Sala> listaEstado = salaRepository.buscarPorEstado(1,idsede);
+                        model.addAttribute("listSalas", listaEstado);
+                        break;
+                    case "nodisponible":
+                        List<Sala> listaEstado1 = salaRepository.buscarPorEstado(0,idsede);
+                        model.addAttribute("listSalas", listaEstado1);
+                        break;
+                    default:
+                        model.addAttribute("listSalas", salaRepository.buscarSalaPorSede(idsede));
+                        break;
+                }
 
+                return "Administrador/Sala/listaSalas";
+
+        } catch (Exception e) {
+            attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
+            return "redirect:/sala/lista";
+        }
 
     }
+
+    @GetMapping("/listaord")
+    public String sortAforo(Model model,@RequestParam("ord") String ord) {
+        int idsede=7;
+        if (ord == "mayor" ){
+            model.addAttribute("listSalas", salaRepository.sortMenor(idsede));
+        }else{
+            model.addAttribute("listSalas", salaRepository.sortMayor(idsede));
+        }
+
+        return "Administrador/Sala/listaSalas";
+
+    }
+
 }
