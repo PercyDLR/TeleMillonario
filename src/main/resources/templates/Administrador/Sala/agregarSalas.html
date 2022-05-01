@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
-    <head th:insert="fragments/header :: head('Nueva Sala')">
+    <head th:replace="fragments/header :: head('Lista Salas',~{::style})">
 
-        <!--Bootstrap 5-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
-              rel="stylesheet" crossorigin="anonymous"
-              integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU">
         <!-- Estilos Propios-->
         <style>
             .overlay {
@@ -89,6 +85,6 @@
             </div>
         </div>
 
-        <div th:replace="fragments/footer :: js"></div>
+        <div th:replace="fragments/footer :: js(_)"></div>
     </body>
 </html>
