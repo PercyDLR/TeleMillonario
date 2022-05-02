@@ -24,7 +24,7 @@
                             <div class="col-2">
                                 <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
                                     <a class="circulo_add" th:href="@{'sala/nuevaSala?idsede=' + ${idsede}}">
-                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
+                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
                                     </a>
                                 </button>
                             </div>
@@ -52,57 +52,64 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-1"></div>
-                            <div class="col-11">
-                                <form method="post" th:action="@{'/sala/buscar'}">
-                                    <div class="input-group" style="margin-top: 50px">
-                                        <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
-                                            <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0"
-                                                   th:value="${parametro == null ? 'Busca por # sala' : parametro}">
-<!--                                                </div>-->
-<!--                                                    <select class=" col-3 form-select" name="buscador" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">-->
-<!--                                                        <option>Filtrar por:</option>-->
-<!--                                                        <option th:selected="${buscador eq 'identificador'}" value="identificador">Identificador</option>-->
-<!--                                                        <option th:selected="${buscador eq 'numero'}" value="sala"># Sala</option>-->
-<!--                                                        <option th:selected="${buscador eq 'estado'}" value="estado">Estado</option>-->
-<!--                                                    </select>-->
-<!--                                                <div class="btn-group" role="group" aria-label="Basic outlined example">-->
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
-                                                <a>Buscar</a>
-                                            </button>
-                                        </div>
+<!--                            <div class="col-1"></div>-->
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <form method="post" th:action="@{'/sala/buscar'}">
+                                            <div class="input-group" style="margin-top: 50px">
+                                                <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
+                                                    <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: 300px;"
+                                                           th:value="${parametro == null ? 'Busca por # sala' : parametro}">
+                                                </div>
+                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
+                                                        <a>Buscar</a>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
-                                <form method="post" th:action="@{'/sala/filtrar'}">
-                                    <div class="input-group" style="margin-top: 50px">
+                                    <div class="col-5">
+                                        <form method="post" th:action="@{'/sala/filtrar'}">
+                                            <div class="input-group" style="margin-top: 50px">
 
-                                        <select class=" col-3 form-select" name="buscador" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option>Filtrar por:</option>
-                                            <option th:selected="${buscador eq 'disponible'}" value="disponible">Disponible</option>
-                                            <option th:selected="${buscador eq 'nodisponible'}" value="nodisponible">No Disponible</option>
-                                        </select>
-                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
-                                                <a>Buscar</a>
-                                            </button>
-                                        </div>
+                                                <select class=" col-3 form-select" name="buscador" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                                    <option>Filtrar por:</option>
+                                                    <option th:selected="${buscador eq 'disponible'}" value="disponible">Disponible</option>
+                                                    <option th:selected="${buscador eq 'nodisponible'}" value="nodisponible">No Disponible</option>
+                                                </select>
+                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
+                                                        <a>Buscar</a>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
-                                <li class="header__nav-item">
-                                    <a class="dropdown-toggle header__nav-link"
-                                       href="#" role="button" id="dropdownMenuCatalog"
-                                       data-toggle="dropdown" aria-haspopup="true"
-                                       aria-expanded="false">Ordenar aforo:</a>
+                                    <div class="col-2" style="margin-top: 35px">
+                                        <li class="header__nav-item">
+                                            <a class="dropdown-toggle header__nav-link"
+                                               href="#" role="button" id="dropdownMenuCatalog"
+                                               data-toggle="dropdown" aria-haspopup="true"
+                                               aria-expanded="false">Ordenar aforo:</a>
 
-                                    <ul class="dropdown-menu header__dropdown-menu"
-                                        aria-labelledby="dropdownMenuCatalog">
-                                        <li><a th:href="@{/sala/listaord?ord=mayor}">De mayor a menor</a></li>
-                                        <li><a th:href="@{/sala/listaord?ord=menor}">De menor a mayor</a></li>
-                                    </ul>
-                                </li>
+                                            <ul class="dropdown-menu header__dropdown-menu"
+                                                aria-labelledby="dropdownMenuCatalog">
+                                                <li><a th:href="@{/sala/listaord?ord=mayor}">De mayor a menor</a></li>
+                                                <li><a th:href="@{/sala/listaord?ord=menor}">De menor a mayor</a></li>
+                                            </ul>
+                                        </li>
+                                    </div>
+
+                                </div>
+
 
                             </div>
                         </div>
+
+
+
                     </div>
 
                     <div class="col-12" style="margin-top: 50px">
