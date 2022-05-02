@@ -11,25 +11,26 @@
         <div th:replace="fragments/navbar :: admin('sedes','Alonso Rosales')"></div>
 
         <div class="content" style="margin-top: 15px">
-            <div  class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
-                <div class="row">
-                    <div class="col-12" style="margin-top: 30px;">
-                        <div class="row">
-                            <div class="col-2"></div>
-                            <div class="col-8">
-                                <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px">
-                                    Sede: Gran Teatro Nacional
-                                </h1>
-                            </div>
-                            <div class="col-2">
-                                <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
-                                    <a class="circulo_add" th:href="@{'sala/nuevaSala?idsede=' + ${idsede}}">
-                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
-                                    </a>
-                                </button>
-                            </div>
-                        </div>
+            <div  class="container" style="margin-bottom: 30px">
 
+                <div class="row">
+                    <div class="col-md-10 col-7" style="margin-top: 30px;">
+                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px">
+                            Sede: Gran Teatro Nacional
+                        </h1>
+                    </div>
+
+                    <div class="col-md-2 col-5" style="margin-top: 30px;">
+                        <button style="cursor: pointer">
+                            <a th:href="@{'sala/nuevaSala?idsede=' + ${idsede}}">
+                                <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
+                            </a>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
                         <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
                             <i class="bi bi-check-circle-fill"></i>
                             <strong>Sala creada exitosamente</strong>
@@ -50,76 +51,68 @@
                             <strong>Se ha cambiado el estado de la sala</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="row">
-<!--                            <div class="col-1"></div>-->
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-5">
-                                        <form method="post" th:action="@{'/sala/buscar'}">
-                                            <div class="input-group" style="margin-top: 50px">
-                                                <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
-                                                    <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: 300px;"
-                                                           th:value="${parametro == null ? 'Busca por # sala' : parametro}">
-                                                </div>
-                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
-                                                        <a>Buscar</a>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="col-5">
-                                        <form method="post" th:action="@{'/sala/filtrar'}">
-                                            <div class="input-group" style="margin-top: 50px">
-
-                                                <select class=" col-3 form-select" name="buscador" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                                    <option>Filtrar por:</option>
-                                                    <option th:selected="${buscador eq 'disponible'}" value="disponible">Disponible</option>
-                                                    <option th:selected="${buscador eq 'nodisponible'}" value="nodisponible">No Disponible</option>
-                                                </select>
-                                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
-                                                        <a>Buscar</a>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="col-2" style="margin-top: 35px">
-                                        <li class="header__nav-item">
-                                            <a class="dropdown-toggle header__nav-link"
-                                               href="#" role="button" id="dropdownMenuCatalog"
-                                               data-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false">Ordenar aforo:</a>
-
-                                            <ul class="dropdown-menu header__dropdown-menu"
-                                                aria-labelledby="dropdownMenuCatalog">
-                                                <li><a th:href="@{/sala/listaord?ord=mayor}">De mayor a menor</a></li>
-                                                <li><a th:href="@{/sala/listaord?ord=menor}">De menor a mayor</a></li>
-                                            </ul>
-                                        </li>
-                                    </div>
-
+                <div class="row justify-content-center">
+                    <div class="col-md-5 col-12">
+                        <form method="post" th:action="@{'/sala/buscar'}">
+                            <div class="input-group" style="margin-top: 50px">
+                                <div class="box" style="margin-bottom: 30px;margin-left: 8px;">
+                                    <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: 300px;"
+                                           th:value="${parametro == null ? 'Busca por # sala' : parametro}">
                                 </div>
-
-
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
+                                        <a>Buscar</a>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-
-
-
+                        </form>
                     </div>
 
+                    <div class="col-md-5 col-12">
+                        <form method="post" th:action="@{'/sala/filtrar'}">
+                            <div class="input-group" style="margin-top: 50px">
+
+                                <select class=" col-3 form-select" name="buscador" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                    <option>Todas</option>
+                                    <option th:selected="${buscador eq 'disponible'}" value="disponible">Disponible</option>
+                                    <option th:selected="${buscador eq 'nodisponible'}" value="nodisponible">No Disponible</option>
+                                </select>
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
+                                        <a>Buscar</a>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2 col-12" style="margin-top: 35px">
+                        <ul>
+                            <li class="header__nav-item">
+                                <a class="dropdown-toggle header__nav-link"
+                                   href="#" role="button" id="dropdownMenuCatalog"
+                                   data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">Ordenar aforo:</a>
+
+                                <ul class="dropdown-menu header__dropdown-menu"
+                                    aria-labelledby="dropdownMenuCatalog">
+                                    <li><a th:href="@{/sala/listaord?ord=mayor}">De mayor a menor</a></li>
+                                    <li><a th:href="@{/sala/listaord?ord=menor}">De menor a mayor</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-12" style="margin-top: 50px">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
                                     <th>Sala</th>
-                                    <th></th>
                                     <th>Aforo</th>
-                                    <th></th>
                                     <th>Estado</th>
                                     <th></th>
                                     <th></th>
@@ -129,13 +122,15 @@
                             <tbody>
                                 <tr th:each="sala : ${listSalas}">
                                     <td th:text="${sala.identificador+'-'+'Sala'+ ' '+sala.numero}">Sala 1</td>
-                                    <td></td>
+
                                     <td th:text="${sala.aforo +' '+'personas'}">12 personas</td>
-                                    <td></td>
+
                                     <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
-                                    <td></td>
+
                                     <td><a class="circulo_botones" th:href="@{'sala/editarSalas?id=' + ${sala.id}}"><img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
+
                                     <td th:if="${sala.estado == 1}"><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i class="bi bi-eye-fill"></i></a></td>
+
                                     <td th:unless="${sala.estado == 1}"><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i class="bi bi-eye-slash-fill"></i></a></td>
                                     <!--<td><img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png"></td>-->
                                 </tr>
@@ -146,7 +141,6 @@
                 </div>
                 <br>
                 <div th:replace="fragments/paginacion :: paginacion(0,4,'/sala?')"></div>
-                <div style="height: 30px"></div>
             </div>
         </div>
 
@@ -176,4 +170,3 @@
                     crossorigin="anonymous"></script>
         </div>
     </body>
-</html>
