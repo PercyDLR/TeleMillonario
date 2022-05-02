@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="col-md-2 col-5" style="margin-top: 30px;">
-                        <button style="cursor: pointer">
+                        <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
                             <a th:href="@{'/sala/nuevaSala?idsede=' + ${sede.id}}">
                                 <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
                             </a>
@@ -48,7 +48,7 @@
                             <strong>Ocurrio un error al momento de querer editar</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
                             <i class="bi bi-info-circle-fill"></i>
                             <strong th:text="|Se ha cambiado el estado de la sala con identificador ${identificador}|"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -116,8 +116,8 @@
                                     <td><a class="circulo_botones" th:href="@{'/sala/editarSalas?id=' + ${sala.id}}">
                                         <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
 
-                                    <td><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}">
-                                        <i class="bi" th:classappend="${sala.estado == 1 ? 'bi-eye-slash-fill' : 'bi-eye-fill'}"></i></a></td>
+                                    <td><a class="circulo_visibilidad" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}">
+                                        <i style="font-size: 2rem; color: #e64166; padding-left: 9px;padding-top: 2px;" class="bi" th:classappend="${sala.estado == 1 ? 'bi-eye-slash-fill' : 'bi-eye-fill'}"></i></a></td>
                                 </tr>
 
                             </tbody>
