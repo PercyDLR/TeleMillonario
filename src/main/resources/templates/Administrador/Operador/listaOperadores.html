@@ -181,7 +181,7 @@
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#popup">
+                                            <a class="circulo_botones" href="#popup" th:href="@{'/Operadores/borrar' + '?id=' + ${operador.id}}">
                                                 <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/IconTrash2.png}">
                                             </a>
                                         </button>
