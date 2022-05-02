@@ -30,8 +30,53 @@ public class OperadorController {
     @GetMapping("")
     public String listarOperadores(Model model) {
         List<Persona> operadores = personaRepository.listarOperadores();
+        //considerando una cantidad de Operador inicial base de 5
+        int cantidad_por_pagina = 5;//modificar en caso se requiera variar la cantidad de operadores por pagina
+        if(operadores.size()%cantidad_por_pagina==0){
+            //quiere decir que tengo un multiplo
+            model.addAttribute("paginacion",(operadores.size())/cantidad_por_pagina);
+        }else{
+            //quiere decir que tengo un número No multiplo de la cantidad de elementos por página
+            model.addAttribute("paginacion",(operadores.size()/cantidad_por_pagina)+1);
+        }
         model.addAttribute("listaOperadores", operadores);
+        //Usar en caso se requiera
+        //model.addAttribute("listaOperadores",operadores.subList(1,cantidad_por_pagina));
         return "Administrador/Operador/listaOperadores";
+    }
+
+    @GetMapping(value = {"/listar","/listar/{num}"})
+    public String listarPorPagina(@PathVariable("num") Optional<String> num,Model model,RedirectAttributes attr){
+        if(num.isPresent()){
+            try{
+                //verificar si el numero se encuentra dentro del rango de la paginacion
+                int cantidad_por_pagina = 5;
+                int num_paginas;
+                int num_pagina = Integer.parseInt(num.get());
+                if(personaRepository.listarOperadores().size()%cantidad_por_pagina==0){
+                    num_paginas = personaRepository.listarOperadores().size()/cantidad_por_pagina;
+                }else{
+                    num_paginas = (personaRepository.listarOperadores().size()/cantidad_por_pagina) + 1;
+                }
+                //una vez obtenidos los numeros
+                if(num_pagina>0&&num_pagina<=num_paginas){
+                    List<Persona> operadores = personaRepository.listarOperadores();
+                    List<Persona> operadores_filtrados = operadores.subList((cantidad_por_pagina*(num_pagina-1)+1),(cantidad_por_pagina*(num_pagina-1)+cantidad_por_pagina+1));
+                    model.addAttribute("listaOperadores",operadores_filtrados);
+                    model.addAttribute("paginacion",num_paginas);
+                    return "Administrador/Operador/listaOperadores";
+                }else{
+                    attr.addFlashAttribute("msg","Debe ingresar un numero de página entre"+1+" y "+num_paginas);
+                    return "redirect:/Operadores";
+                }
+            }catch (Exception e){
+                attr.addFlashAttribute("msg","Debe ingresar un numero para la página");
+                return "redirect:/Operadores";
+            }
+        }else{
+            attr.addFlashAttribute("msg","Debe Ingresar un valor de paginación");
+            return "redirect:/Operadores";
+        }
     }
 
     @GetMapping(value = "/crear")
@@ -43,7 +88,7 @@ public class OperadorController {
     @PostMapping(value = "/buscar")
     public String filtrarOperador(Model model,@RequestParam("filtro") Optional<String> filtro,@RequestParam("nombre") Optional<String> nombre,RedirectAttributes attr){
         if(!filtro.isPresent()&&!nombre.isPresent()){
-            return "redirect:/operador/lista";
+            return "redirect:/Operadores/";
         }else{
             //algo está buscando
             if(!filtro.isPresent()&&nombre.isPresent()){
@@ -61,7 +106,7 @@ public class OperadorController {
                 attr.addFlashAttribute("msg"," resultado filtrado por"+filtro.get()+" y por nombre");
                 model.addAttribute("listOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre.get(),filtro.get()));
             }
-            return "Operador/listaOperadores";
+            return "Administrador/Operador/listaOperadores";
         }
     }
 
@@ -77,15 +122,15 @@ public class OperadorController {
                     return "Administrador/Operador/editarOperadores";
                 } else {
                     attr.addFlashAttribute("msg", "No existe el operador con el ID" + id);
-                    return "redirect:/Operadores";
+                    return "redirect:/Operadores/";
                 }
             } catch (Exception e) {
                 attr.addFlashAttribute("msg", "Envió un ID inválido");
-                return "redirect:/Operadores";
+                return "redirect:/Operadores/";
             }
         } else {
             attr.addFlashAttribute("msg", "Se envió el ID vacío");
-            return "redirect:/Operadores";
+            return "redirect:/Operadores/";
         }
     }
 
@@ -98,7 +143,7 @@ public class OperadorController {
                     if(operador.getIdsede()==null){
                         attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
                     }
-                    return "/Operador/editarOperadores";
+                    return "Administrador/Operador/editarOperadores";
                 }else{
                     Optional<Persona> aux = personaRepository.findById(id);
                     Persona op = aux.get();
@@ -106,14 +151,14 @@ public class OperadorController {
                     //DNI / Nombre / Apellido son campos no editables
                     op.setIdsede(operador.getIdsede());
                     attr.addFlashAttribute("msg","Se actualizó el operador de manera exitosa");
-                    return "redirect:/operador/lista";
+                    return "redirect:/Operadores/";
                 }
             } else {
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
                     if(operador.getIdsede()==null){
                         attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
                     }
-                    return "/Operador/editarOperadores";
+                    return "Administrador/Operador/editarOperadores";
                 }else{
                     //configuración en activo
                     operador.setEstado(1);
@@ -126,12 +171,12 @@ public class OperadorController {
                     operador.setIdrol(rol);
                     personaRepository.save(operador);
                     attr.addFlashAttribute("msg", "Se creo de el operador de manera exitosa");
-                    return "redirect:/operador/lista";
+                    return "redirect:/Operadores/";
                 }
             }
         } catch (Exception e) {
             attr.addFlashAttribute("msg", "Envió un ID inválido");
-            return "/Operador/editarOperadores";//solo será valido cuando se encuentre en el formulario de editar
+            return "Administrador/Operador/editarOperadores";//solo será valido cuando se encuentre en el formulario de editar
         }
     }
 
@@ -146,18 +191,18 @@ public class OperadorController {
                     operador.setEstado(0);//Borrado lógico
                     personaRepository.save(operador);
                     attr.addFlashAttribute("msg","El operador ha sido borrado exitosamente");
-                    return "redirect:/operador/lista";
+                    return "redirect:/Operadores/";
                 }else{
                     attr.addFlashAttribute("msg", "El operador con ID:"+id+" no se encuentra presente");
-                    return "redirect:/operador/lista";
+                    return "redirect:/Operadores/";
                 }
             }catch (Exception e){
                 attr.addFlashAttribute("msg", "Envió un ID inválido");
-                return "redirect:/operador/lista";
+                return "redirect:/Operadores/";
             }
         }else{
             attr.addFlashAttribute("msg", "Se envió el ID vacío");
-            return "redirect:/operador/lista";
+            return "redirect:/Operadores/";
         }
     }
 
