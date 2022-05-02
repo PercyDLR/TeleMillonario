@@ -29,10 +29,11 @@ public class SalaController {
     @Autowired
     DistritoRepository distritoRepository;
 
+    // Afuera para más orden
+    int idsede=7;
 
     @GetMapping(value = {"", "/","/lista"})
     public String listSalas(Model model) {
-        int idsede=1;
         model.addAttribute("listSalas", salaRepository.buscarSalas(idsede,0,2));
         model.addAttribute("sede", sedeRepository.findById(idsede).get());
         return "Administrador/Sala/listaSalas";
@@ -44,7 +45,7 @@ public class SalaController {
                            @RequestParam("buscador") String buscador,
                            @RequestParam("ord") String ord,
                            RedirectAttributes attr, Model model){
-        int idsede=1;
+
         model.addAttribute("sede", sedeRepository.findById(idsede).get());
 
         try {

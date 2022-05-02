@@ -1,56 +1,48 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="fragments/header :: head('Lista Salas',_)">
-
-
-    </head>
+    <head th:replace="fragments/header :: head('Lista Salas',_)"></head>
 
     <body class="body">
         <div th:replace="fragments/navbar :: admin('sedes','Alonso Rosales')"></div>
 
         <div class="content" style="margin-top: 15px">
-            <div class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
-                <div class="row">
-                    <div class="col-12" style="margin-top: 30px;">
-                        <div class="row">
-                            <div class="col-sm-11">
-                                <h1 style="text-align: center;margin-bottom: 30px;margin-top: 10px; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;"
-                                    th:text="|Salas - ${sede.nombre}|">
-                                    Sede: Gran Teatro Nacional
-                                </h1>
-                            </div>
-                            <div class="col-sm-1">
-                                <button style="cursor: pointer;padding-top: 20px;padding-left: 12px"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
-                                    <a class="circulo_add" th:href="@{'sala/nuevaSala?idsede=' + ${sede.id}}">
-                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;"
-                                             th:src="@{/img/iconAdd.png}">
-                                    </a>
-                                </button>
-                            </div>
-                        </div>
+            <div  class="container" style="margin-bottom: 30px">
 
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                             th:if="${(msg != null) && (msg == '0')}">
+                <div class="row">
+                    <div class="col-md-10 col-7" style="margin-top: 30px;">
+                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px" th:text="|Salas - ${sede.nombre}|">
+                            Sede: Gran Teatro Nacional
+                        </h1>
+                    </div>
+
+                    <div class="col-md-2 col-5" style="margin-top: 30px;">
+                        <button style="cursor: pointer">
+                            <a th:href="@{'/sala/nuevaSala?idsede=' + ${sede.id}}">
+                                <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
+                            </a>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
                             <i class="bi bi-check-circle-fill"></i>
                             <strong th:text="|Sala con identificador ${identificador} creada exitosamente|"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                             th:if="${(msg != null) && (msg == '1')}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '1')}">
                             <i class="bi bi-check-circle-fill"></i>
                             <strong th:text="|Sala con identificador ${identificador} actualizada exitosamente|"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
-                             th:if="${(msg != null) && (msg == '-1')}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '-1')}">
                             <i class="bi bi-exclamation-triangle-fill"></i>
                             <strong>Ocurrio un error al momento de querer editar</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="alert alert-info alert-dismissible fade show" role="alert"
-                             th:if="${(msg != null) && (msg == '2')}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
                             <i class="bi bi-info-circle-fill"></i>
                             <strong th:text="|Se ha cambiado el estado de la sala con identificador ${identificador}|"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -58,101 +50,77 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-center">
-                    <div class="col-md-5 col-12">
-                        <form method="post" th:action="@{'/sala/filtrar'}">
-                            <div class="row justify-content-center">
-                                <div class="col-md-4 col-12">
-                                    <div class="input-group" style="margin-top: 50px">
-                                        <div class="box" style="margin-bottom: 30px;margin-left: 8px;">
-                                            <input type="number" name="parametro" class="src"
-                                                   placeholder="Buscar por # sala" min="0" style="width: 300px;"
-                                                   th:value="${parametro == null ? 'Busca por # sala' : parametro}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8 col-12">
-                                    <div class="input-group" style="margin-top: 50px">
+                <form method="post" th:action="@{'/sala/filtrar'}">
+                    <div class="row justify-content-center">
+                        <div class="col-md-4 col-12">
 
-                                        <select class="col-md-5 col-6 form-select" name="buscador"
-                                                style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option value="">Disponibilidad</option>
-                                            <option th:selected="${buscador eq 'disponible'}" value="disponible">
-                                                Disponible
-                                            </option>
-                                            <option th:selected="${buscador eq 'nodisponible'}" value="nodisponible">No
-                                                Disponible
-                                            </option>
-                                        </select>
-
-                                        <select class="col-md-5 col-6 form-select" name="ord"
-                                                style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option value="">Ordenar</option>
-                                            <option th:selected="${ord eq 'mayor'}" value="mayor">Mayor a Menor</option>
-                                            <option th:selected="${ord eq 'menor'}" value="menor">Menor a Mayor</option>
-                                        </select>
-
-                                        <div class="col-md-2 col-12">
-                                            <button type="submit" class="filter__btn" style="margin-top:6px;">
-                                                <a>Buscar</a>
-                                            </button>
-                                        </div>
-                                    </div>
-
+                            <div class="input-group" style="margin-top: 50px">
+                                <div class="box" style="margin-bottom: 30px;margin-left: 8px;">
+                                    <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: 300px;"
+                                           th:value="${parametro == null ? 'Busca por # sala' : parametro}">
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        <div class="col-md-8 col-12">
+                            <div class="input-group" style="margin-top: 50px">
 
+                                <select class="col-md-5 col-6 form-select" name="buscador" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                    <option value="">Disponibilidad</option>
+                                    <option th:selected="${buscador eq 'disponible'}" value="disponible">Disponible</option>
+                                    <option th:selected="${buscador eq 'nodisponible'}" value="nodisponible">No Disponible</option>
+                                </select>
 
+                                <select class="col-md-5 col-6 form-select" name="ord" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                    <option value="">Ordenar</option>
+                                    <option th:selected="${ord eq 'mayor'}" value="mayor">Mayor a Menor</option>
+                                    <option th:selected="${ord eq 'menor'}" value="menor">Menor a Mayor</option>
+                                </select>
+
+                                <div class="col-md-2 col-12">
+                                    <button type="submit" class="filter__btn" style="margin-top:6px;">
+                                        <a>Buscar</a>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-md-12 col-12" style="margin-top: 50px; overflow-x: scroll">
+                        <table class="accordion__list" style="text-align: center;display: inline-table;">
+                            <thead>
+                                <tr>
+                                    <th>Sala</th>
+                                    <th>Aforo</th>
+                                    <th>Estado</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="sala : ${listSalas}">
+                                    <td th:text="${sala.identificador+'-'+'Sala'+ ' '+sala.numero}">Sala 1</td>
+
+                                    <td th:text="${sala.aforo +' '+'personas'}">12 personas</td>
+
+                                    <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
+
+                                    <td><a class="circulo_botones" th:href="@{'/sala/editarSalas?id=' + ${sala.id}}">
+                                        <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
+
+                                    <td><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}">
+                                        <i class="bi" th:classappend="${sala.estado == 1 ? 'bi-eye-slash-fill' : 'bi-eye-fill'}"></i></a></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+                <br>
+                <div th:replace="fragments/paginacion :: paginacion(0,4,'/sala?parametro='+${parametro}+'&buscador='+${parametro}+'&ord='+${ord}+'&')"></div>
             </div>
-
-            <div class="col-12" style="margin-top: 50px">
-                <table class="accordion__list" style="text-align: center;display: inline-table;">
-                    <thead>
-                        <tr>
-                            <th>Sala</th>
-                            <th></th>
-                            <th>Aforo</th>
-                            <th></th>
-                            <th>Estado</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="sala : ${listSalas}">
-                            <td th:text="${sala.identificador+' - '+'Sala'+ ' '+sala.numero}">Sala 1</td>
-                            <td></td>
-                            <td th:text="${sala.aforo +' '+'personas'}">12 personas</td>
-                            <td></td>
-                            <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
-                            <td></td>
-                            <td><a class="circulo_botones" th:href="@{'sala/editarSalas?id=' + ${sala.id}}"><img
-                                    style="height: 33px;margin-left: 9px;margin-top: 9px;"
-                                    th:src="@{/img/iconEdit2.png}"></a></td>
-                            <td th:if="${sala.estado == 1}"><a class="circulo_visibilidad"
-                                                               th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i
-                                    class="bi bi-eye-slash-fill"
-                                    style="font-size: 2rem; color: #e64166; padding-left: 9px;padding-top: 2px;"></i></a>
-                            </td>
-                            <td th:unless="${sala.estado == 1}"><a class="circulo_visibilidad"
-                                                                   th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i
-                                    class="bi bi-eye-fill"
-                                    style="font-size: 2rem; color: #e64166; padding-left: 9px;padding-top: 2px;"></i></a>
-                            </td>
-                            <!--<td><img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png"></td>-->
-                        </tr>
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <br>
-        <div th:replace="fragments/paginacion :: paginacion(0,4,'/sala?')"></div>
-        </div>
         </div>
 
 
@@ -165,10 +133,9 @@
                                 <img src="img/tele.PNG" alt="">
                             </a>
                             <div class="sign__group">
-                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
-                                    ¿Estás seguro de borrar esta Sala?</h5>
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar esta Sala?</h5>
                             </div>
-                            <a th:href="@{/sala}" class="sign__btn">Cancelar</a>
+                            <a th:href="@{/sala}"  class="sign__btn">Cancelar</a>
                             <a href="#" class="sign__btn">Continuar</a>
                         </form>
                     </div>
