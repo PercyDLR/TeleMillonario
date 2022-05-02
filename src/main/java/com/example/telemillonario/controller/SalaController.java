@@ -33,7 +33,7 @@ public class SalaController {
     @GetMapping(value = {"", "/","/lista"})
     public String listSalas(Model model) {
         int idsede=1;
-        model.addAttribute("listSalas", salaRepository.buscarSalaPorSede(idsede));
+        model.addAttribute("listSalas", salaRepository.buscarSalas(idsede,0,2));
         model.addAttribute("sede", sedeRepository.findById(idsede).get());
         return "Administrador/Sala/listaSalas";
     }
@@ -45,21 +45,25 @@ public class SalaController {
                            @RequestParam("ord") String ord,
                            RedirectAttributes attr, Model model){
         int idsede=1;
-        model.addAttribute("idsede",idsede);
+        model.addAttribute("sede", sedeRepository.findById(idsede).get());
 
         try {
-            if (parametro.equals("")) { // verifica que no esté vacío
-                return "redirect:/sala/lista";
-            } else {
-                int param = Integer.parseInt(parametro);
-                model.addAttribute("parametro", param);
+            int numero = !parametro.isBlank() ? Integer.parseInt(parametro) : 0;
+            model.addAttribute("parametro", numero);
 
-                List<Sala> listaNumero = salaRepository.buscarPorNumero(param,idsede);
-                model.addAttribute("listSalas", listaNumero);
+            int estado = buscador.equals("disponible") ? 1 : buscador.equals("nodisponible") ? 0 : 2;
+            model.addAttribute("buscador", buscador);
 
-                model.addAttribute("sede", sedeRepository.findById(idsede).get());
-                return "Administrador/Sala/listaSalas";
-            }
+            List<Sala> listaSalas = switch (ord) {
+                case "mayor" -> salaRepository.buscarSalasDesc(idsede, numero, estado);
+                case "menor" -> salaRepository.buscarSalasAsc(idsede, numero, estado);
+                default -> salaRepository.buscarSalas(idsede, numero, estado);
+            };
+
+            model.addAttribute("ord",ord);
+            model.addAttribute("listSalas", listaSalas);
+            return "Administrador/Sala/listaSalas";
+
         } catch (Exception e) {
             attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
             return "redirect:/sala/lista";
@@ -67,6 +71,7 @@ public class SalaController {
 
     }
 
+    /*
     @PostMapping("/filtrar")
     public String filtrarPorEstado (Model model,@RequestParam("buscador") String buscador, RedirectAttributes attr){
         int idsede=7;
@@ -94,7 +99,9 @@ public class SalaController {
         }
 
     }
+    */
 
+    /*
     @GetMapping("/listaord")
     public String sortAforo(Model model,@RequestParam("ord") String ord) {
         int idsede=1;
@@ -106,7 +113,7 @@ public class SalaController {
 
         model.addAttribute("sede", sedeRepository.findById(idsede).get());
         return "Administrador/Sala/listaSalas";
-    }
+    }*/
 
     @GetMapping("/nuevaSala")
     public String crearSala(@ModelAttribute("sala") Sala sala, Model model, @RequestParam("idsede") int idsede){
@@ -137,7 +144,7 @@ public class SalaController {
         } else {
             if(!salaRepository.findById(sala.getId()).isPresent()){
                 //Crea automaticamente el numero de la sala
-                List<Sala> listaSalas = salaRepository.buscarSalaPorSede(sala.getIdsede().getId());
+                List<Sala> listaSalas = salaRepository.buscarSalas(sala.getIdsede().getId(),0,2);
                 int b = 0;
                 for (Sala s : listaSalas) {
                     if(s.getNumero() > b) {
