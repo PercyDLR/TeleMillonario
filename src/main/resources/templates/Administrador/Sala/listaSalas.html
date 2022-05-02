@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="fragments/header :: head('Lista Salas',_)"></head>
+    <head th:replace="fragments/header :: head('Lista Salas',~{::style})">
+        <style>
+            input::placeholder {
+                color: #000000;
+            }
+        </style>
+    </head>
 
     <body class="body">
         <div th:replace="fragments/navbar :: admin('sedes','Alonso Rosales')"></div>
