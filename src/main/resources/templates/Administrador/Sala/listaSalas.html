@@ -4,6 +4,7 @@
     <head th:replace="fragments/header :: head('Lista Salas',_)">
 
 
+
     </head>
 
     <body class="body">
@@ -46,27 +47,25 @@
                         </div>
 
                         <div class="row">
-                            <!--                            <div class="col-1"></div>-->
+<!--                            <div class="col-1"></div>-->
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-5">
                                         <form method="post" th:action="@{'/sala/buscar'}">
                                             <div class="input-group" style="margin-top: 50px">
-                                                <div class="box" style="margin-bottom: 30px;margin-left: 8px;">
-                                                    <input type="number" name="parametro" class="src"
-                                                           placeholder="Buscar por # sala" min="0" style="width: 300px;"
+                                                <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
+                                                    <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: 300px;"
                                                            th:value="${parametro == null ? 'Busca por # sala' : parametro}">
                                                 </div>
                                                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                    <button type="submit" class="btn btn-primary"
-                                                            style="margin-left: 10px;margin-top:6px;background: #e64166">
+                                                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
                                                         <a>Buscar</a>
                                                     </button>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-5">
                                         <form method="post" th:action="@{'/sala/filtrar'}">
                                             <div class="input-group" style="margin-top: 50px">
 
@@ -122,7 +121,7 @@
 
                     </div>
 
-                    <div class="col-12" style="margin-top: 20px">
+                    <div class="col-12" style="margin-top: 50px">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
@@ -166,7 +165,6 @@
                 </div>
                 <br>
                 <div th:replace="fragments/paginacion :: paginacion(0,4,'/sala?')"></div>
-                <div style="height: 30px"></div>
             </div>
         </div>
 
