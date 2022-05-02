@@ -95,7 +95,9 @@ public class OperadorController {
             int id = operador.getId();
             if (personaRepository.existsById(id)) {
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
-                    attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                    if(operador.getIdsede()==null){
+                        attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                    }
                     return "/Operador/editarOperadores";
                 }else{
                     Optional<Persona> aux = personaRepository.findById(id);
@@ -107,18 +109,25 @@ public class OperadorController {
                     return "redirect:/operador/lista";
                 }
             } else {
-                //configuración en activo
-                operador.setEstado(1);
-                //Creación de rol
-                Rol rol = new Rol();
-                rol.setId(3);
-                rol.setEstado(1);//Opcional
-                rol.setNombre("Operador");//Opcional
-                //asignación de rol
-                operador.setIdrol(rol);
-                personaRepository.save(operador);
-                attr.addFlashAttribute("msg", "Se creo de el operador de manera exitosa");
-                return "redirect:/operador/lista";
+                if(bindingResult.hasErrors()||operador.getIdsede()==null){
+                    if(operador.getIdsede()==null){
+                        attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                    }
+                    return "/Operador/editarOperadores";
+                }else{
+                    //configuración en activo
+                    operador.setEstado(1);
+                    //Creación de rol
+                    Rol rol = new Rol();
+                    rol.setId(3);
+                    rol.setEstado(1);//Opcional
+                    rol.setNombre("Operador");//Opcional
+                    //asignación de rol
+                    operador.setIdrol(rol);
+                    personaRepository.save(operador);
+                    attr.addFlashAttribute("msg", "Se creo de el operador de manera exitosa");
+                    return "redirect:/operador/lista";
+                }
             }
         } catch (Exception e) {
             attr.addFlashAttribute("msg", "Envió un ID inválido");
