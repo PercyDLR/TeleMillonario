@@ -9,7 +9,8 @@ import java.util.List;
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
     //Filtros para Operadores
-    @Query(value = "select * from persona where persona.idrol = 3 and persona.estado=1",nativeQuery = true)
+    //@Query(value = "select * from persona where persona.idrol = 3 and persona.estado=1",nativeQuery = true)
+    @Query(value = "select * from persona where persona.idrol = 1 and persona.estado=1",nativeQuery = true)
     List<Persona> listarOperadores();
     @Query(value = "select * from persona where (persona.apellidos like '%?1%' or persona.nombres like '%?1%') and idrol = 3",nativeQuery = true)
     List<Persona> listarOperadoresPorNombre(String nombre);

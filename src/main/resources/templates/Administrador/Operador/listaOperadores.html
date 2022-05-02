@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,28 +8,28 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
         <!-- CSS -->
-
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
               rel="stylesheet" crossorigin="anonymous"
               integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU">
-        <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
-        <link rel="stylesheet" href="css/bootstrap-grid.min.css">
-        <link rel="stylesheet" href="css/owl.carousel.min.css">
-        <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
-        <link rel="stylesheet" href="css/nouislider.min.css">
-        <link rel="stylesheet" href="css/ionicons.min.css">
-        <link rel="stylesheet" href="css/plyr.css">
-        <link rel="stylesheet" href="css/photoswipe.css">
-        <link rel="stylesheet" href="css/default-skin.css">
-        <link rel="stylesheet" href="css/main.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" th:href="@{/css/bootstrap-reboot.min.css}">
+        <link rel="stylesheet" th:href="@{/css/bootstrap-grid.min.css}">
+        <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
+        <link rel="stylesheet" th:href="@{/css/jquery.mCustomScrollbar.min.css}">
+        <link rel="stylesheet" th:href="@{/css/nouislider.min.css}">
+        <link rel="stylesheet" th:href="@{/css/ionicons.min.css}">
+        <link rel="stylesheet" th:href="@{/css/plyr.css}">
+        <link rel="stylesheet" th:href="@{/css/photoswipe.css}">
+        <link rel="stylesheet" th:href="@{/css/default-skin.css}">
+        <link rel="stylesheet" th:href="@{/css/main.css}">
 
         <!-- Favicons -->
-        <link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
-        <link rel="apple-touch-icon" href="icon/favicon-32x32.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="icon/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="icon/apple-touch-icon-114x114.png">
-        <link rel="apple-touch-icon" sizes="144x144" href="icon/apple-touch-icon-144x144.png">
+        <link rel="icon" type="image/png" th:href="@{/icon/favicon-32x32.png}" sizes="32x32">
+        <link rel="apple-touch-icon" th:href="@{/icon/favicon-32x32.png}">
+        <link rel="apple-touch-icon" sizes="72x72" th:href="@{/icon/apple-touch-icon-72x72.png}">
+        <link rel="apple-touch-icon" sizes="114x114" th:href="@{/icon/apple-touch-icon-114x114.png}">
+        <link rel="apple-touch-icon" sizes="144x144" th:href="@{/icon/apple-touch-icon-144x144.png}">
 
         <meta name="description" content="">
         <meta name="keywords" content="">
@@ -53,14 +53,14 @@
             }
         </style>
     </head>
-    <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
+    <body class="body" style="background-image: url('/img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
         <header class="header">
             <div class="header__wrap" style="border-bottom: solid 3px #ff55a5;">
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
                             <div class="header__content">
-                                <a th:href="@{admin}"><img src="img/tele.png"></a>
+                                <a th:href="@{admin}"><img th:src="@{/img/tele.PNG}"></a>
                                 <ul class="header__nav">
                                     <li class="header__nav-item">
                                         <a  th:href="@{/admin}" class="header__nav-link">Sedes</a>
@@ -86,7 +86,7 @@
                                         <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
                                     </div>
                                     <div style="margin-bottom: 7px;margin-left: 5px">
-                                        <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
+                                        <a href="#"><img style="height: 50px;margin-top: 5px" th:src="@{/img/user.png}"></a>
                                     </div>
                                 </div>
                                 <button class="header__btn" type="button">
@@ -105,6 +105,7 @@
             <div  class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
                 <div class="row">
                     <div class="col-12" style="margin-top: 30px;">
+                        <div class="alert alert-danger" th:text="${msg}" th:if="${msg != null}"></div>
                         <div class="row">
                             <div class="col-2"></div>
                             <div class="col-8">
@@ -114,8 +115,8 @@
                             </div>
                             <div class="col-2">
                                 <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
-                                    <a class="circulo_add" th:href="@{/agregarOperador}">
-                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
+                                    <a class="circulo_add" th:href="@{/Operadores/crear}">
+                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
                                     </a>
                                 </button>
                             </div>
@@ -162,122 +163,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>123123123</td>
+                                <tr th:each="operador : ${listaOperadores}">
+                                    <td th:text="${operador.dni}"></td>
                                     <td></td>
-                                    <td>Peter</td>
+                                    <td th:text="${operador.nombres}">Peter</td>
                                     <td></td>
-                                    <td>Parker</td>
+                                    <td th:text="${operador.apellidos}">Parker</td>
                                     <td></td>
-                                    <td>Gran Teatro Nacional</td>
+                                    <td th:text="${operador.idsede.nombre}">Gran Teatro Nacional</td>
                                     <td></td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" th:href="@{/editarOperador}" >
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{'/Operadores/editar' + '?id=' + ${operador.id}}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>123123123</td>
-                                    <td></td>
-                                    <td>Peter</td>
-                                    <td></td>
-                                    <td>Parker</td>
-                                    <td></td>
-                                    <td>Gran Teatro Nacional</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>123123123</td>
-                                    <td></td>
-                                    <td>Peter</td>
-                                    <td></td>
-                                    <td>Parker</td>
-                                    <td></td>
-                                    <td>Gran Teatro Nacional</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>123123123</td>
-                                    <td></td>
-                                    <td>Peter</td>
-                                    <td></td>
-                                    <td>Parker</td>
-                                    <td></td>
-                                    <td>Gran Teatro Nacional</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>123123123</td>
-                                    <td></td>
-                                    <td>Peter</td>
-                                    <td></td>
-                                    <td>Parker</td>
-                                    <td></td>
-                                    <td>Gran Teatro Nacional</td>
-                                    <td></td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/IconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -325,20 +230,21 @@
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        <!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/jquery.mousewheel.min.js"></script>
-        <script src="js/jquery.mCustomScrollbar.min.js"></script>
-        <script src="js/wNumb.js"></script>
-        <script src="js/nouislider.min.js"></script>
-        <script src="js/plyr.min.js"></script>
-        <script src="js/jquery.morelines.min.js"></script>
-        <script src="js/photoswipe.min.js"></script>
-        <script src="js/photoswipe-ui-default.min.js"></script>
-        <script src="js/main.js"></script>
+                crossorigin="anonymous"></script-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+        <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/js/owl.carousel.min.js}"></script>
+        <script th:src="@{/js/jquery.mousewheel.min.js}"></script>
+        <script th:src="@{/js/jquery.mCustomScrollbar.min.js}"></script>
+        <script th:src="@{/js/wNumb.js}"></script>
+        <script th:src="@{/js/nouislider.min.js}"></script>
+        <script th:src="@{/js/plyr.min.js}"></script>
+        <script th:src="@{/js/jquery.morelines.min.js}"></script>
+        <script th:src="@{/js/photoswipe.min.js}"></script>
+        <script th:src="@{/js/photoswipe-ui-default.min.js}"></script>
+        <script th:src="@{/js/main.js}"></script>
     </body>
 </html>

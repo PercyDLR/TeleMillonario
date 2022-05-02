@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/operador")
+@RequestMapping("/Operadores")
 public class OperadorController {
 
     @Autowired
@@ -27,17 +27,17 @@ public class OperadorController {
     @Autowired
     SedeRepository sedeRepository;
 
-    @GetMapping(value = {"", "/", "lista"})
+    @GetMapping("")
     public String listarOperadores(Model model) {
         List<Persona> operadores = personaRepository.listarOperadores();
         model.addAttribute("listaOperadores", operadores);
-        return "/Operador/listaOperadores";
+        return "Administrador/Operador/listaOperadores";
     }
 
     @GetMapping(value = "/crear")
     public String crearOperador(Model model,@ModelAttribute("operador") Persona operador) {
         model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
-        return "/Operador/agregarOperadores";
+        return "Administrador/Operador/agregarOperadores";
     }
 
     @PostMapping(value = "/buscar")
@@ -74,18 +74,18 @@ public class OperadorController {
                     Optional<Persona> operador = personaRepository.findById(id);
                     model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
                     model.addAttribute("operador", operador.get());
-                    return "/Operador/editarOperadores";
+                    return "Administrador/Operador/editarOperadores";
                 } else {
                     attr.addFlashAttribute("msg", "No existe el operador con el ID" + id);
-                    return "redirect:/operador/lista";
+                    return "redirect:/Operadores";
                 }
             } catch (Exception e) {
                 attr.addFlashAttribute("msg", "Envió un ID inválido");
-                return "redirect:/operador/lista";
+                return "redirect:/Operadores";
             }
         } else {
             attr.addFlashAttribute("msg", "Se envió el ID vacío");
-            return "redirect:/operador/lista";
+            return "redirect:/Operadores";
         }
     }
 
