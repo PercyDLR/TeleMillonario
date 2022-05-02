@@ -107,14 +107,13 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12" style="margin-top: 50px">
+                    <div class="col-md-12 col-12" style="margin-top: 50px; overflow-x: scroll">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
                                     <th>Sala</th>
                                     <th>Aforo</th>
                                     <th>Estado</th>
-                                    <th></th>
                                     <th></th>
                                     <th></th>
                                 </tr>
@@ -128,9 +127,10 @@
                                     <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
 
                                     <td><a class="circulo_botones" th:href="@{'sala/editarSalas?id=' + ${sala.id}}"><img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
-                                    <td th:if="${sala.estado == 1}"><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i class="bi bi-eye-slash-fill"></i></a></td>
-                                    <td th:unless="${sala.estado == 1}"><a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}"><i class="bi bi-eye-fill"></i></a></td>
-                                    <!--<td><img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png"></td>-->
+                                    <td th:if="${sala.estado == 1}">
+                                        <a class="btn btn-danger" th:title="Borrar" th:href="@{'/sala/disponibilidad?id=' + ${sala.id}}">
+                                            <i class="bi" th:classappend="${sala.estado == 1 ? 'bi-eye-slash-fill' : 'bi-eye-fill'}"></i>
+                                        </a></td>
                                 </tr>
 
                             </tbody>
