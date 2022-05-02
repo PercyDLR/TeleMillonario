@@ -67,12 +67,12 @@ public class HomeController {
         return "Administrador/Sala/editarSalas";
     }
 
-    @GetMapping("/Operadores")
+    /*@GetMapping("/Operadores")
     public String listaOperadores() {
         return "Administrador/Operador/listaOperadores";
-    }
+    }*/
 
-    @GetMapping("/agregarOperador")
+   /* @GetMapping("/agregarOperador")
     public String agregarOperador() {
         return "Administrador/Operador/agregarOperadores";
     }
@@ -80,7 +80,7 @@ public class HomeController {
     @GetMapping("/editarOperador")
     public String editarOperador() {
         return "Administrador/Operador/editarOperadores";
-    }
+    }*/
 
     @GetMapping("/actor")
     public String listaActores() {
