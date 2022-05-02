@@ -13,7 +13,7 @@ public class Sala {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Min(value = 0)
+    @Min(value = 0, message = "El aforo debe ser mayor o igual a 0")
     @Column(name = "aforo")
     @Digits(integer = 3, fraction = 0)
     private int aforo;

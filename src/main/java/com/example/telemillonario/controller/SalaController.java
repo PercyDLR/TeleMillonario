@@ -32,19 +32,18 @@ public class SalaController {
 
     @GetMapping(value = {"", "/","/lista"})
     public String listSalas(Model model) {
-        int idsede=7;
+        int idsede=1;
         model.addAttribute("listSalas", salaRepository.buscarSalaPorSede(idsede));
-        model.addAttribute("idsede",idsede);
+        model.addAttribute("sede", sedeRepository.findById(idsede).get());
         return "Administrador/Sala/listaSalas";
     }
 
     @PostMapping("/buscar")
     public String busqueda(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr){
-        int idsede=7;
+        int idsede=1;
         model.addAttribute("idsede",idsede);
         try {
             if (parametro.equals("")) { // verifica que no esté vacío
-                attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
                 return "redirect:/sala/lista";
             } else {
                 int param = Integer.parseInt(parametro);
@@ -53,7 +52,7 @@ public class SalaController {
                 List<Sala> listaNumero = salaRepository.buscarPorNumero(param,idsede);
                 model.addAttribute("listSalas", listaNumero);
 
-
+                model.addAttribute("sede", sedeRepository.findById(idsede).get());
                 return "Administrador/Sala/listaSalas";
             }
         } catch (Exception e) {
@@ -65,7 +64,7 @@ public class SalaController {
 
     @PostMapping("/filtrar")
     public String filtrarPorEstado (Model model,@RequestParam("buscador") String buscador, RedirectAttributes attr){
-        int idsede=7;
+        int idsede=1;
         try {
                 model.addAttribute("buscador", buscador);
                 switch (buscador){
@@ -82,6 +81,7 @@ public class SalaController {
                         break;
                 }
 
+                model.addAttribute("sede", sedeRepository.findById(idsede).get());
                 return "Administrador/Sala/listaSalas";
 
         } catch (Exception e) {
@@ -93,13 +93,14 @@ public class SalaController {
 
     @GetMapping("/listaord")
     public String sortAforo(Model model,@RequestParam("ord") String ord) {
-        int idsede=7;
+        int idsede=1;
         if (ord.equals("mayor")){
             model.addAttribute("listSalas", salaRepository.sortMayor(idsede));
         }else{
             model.addAttribute("listSalas", salaRepository.sortMenor(idsede));
         }
 
+        model.addAttribute("sede", sedeRepository.findById(idsede).get());
         return "Administrador/Sala/listaSalas";
     }
 
@@ -110,10 +111,11 @@ public class SalaController {
     }
 
     @GetMapping("/editarSalas")
-    public String editarSala(@RequestParam("id") int id, Model model, @ModelAttribute("sala") Sala sala) {
+    public String editarSala(@RequestParam("id") int id, Model model, @ModelAttribute("sala") Sala sala, RedirectAttributes a) {
 
         Optional<Sala> optionalSala = salaRepository.findById(id);
         if(optionalSala.isEmpty()) {
+            a.addFlashAttribute("msg","-1");
             return "redirect:/sala";
         } else {
             model.addAttribute("sala",optionalSala.get());
@@ -124,15 +126,13 @@ public class SalaController {
 
     @PostMapping("/guardar")
     public String guardarSala(@ModelAttribute("sala") @Valid Sala sala, BindingResult bindingResult, RedirectAttributes a, Model model) {
-        String msg;
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getFieldError().getDefaultMessage());
             model.addAttribute("sede", sala.getIdsede());
             return "Administrador/Sala/editarSalas";
         } else {
-            if(salaRepository.findById(sala.getId()).isPresent()){
-                msg="1";
-            } else {
+            if(!salaRepository.findById(sala.getId()).isPresent()){
+                //Crea automaticamente el numero de la sala
                 List<Sala> listaSalas = salaRepository.buscarSalaPorSede(sala.getIdsede().getId());
                 int b = 0;
                 for (Sala s : listaSalas) {
@@ -141,10 +141,28 @@ public class SalaController {
                     }
                 }
                 sala.setNumero(b+1);
-                msg="0";
+                //Crea automaticamente el identificador de la sala
+                String identificador;
+                String[] palabras = sala.getIdsede().getNombre().split(" ");
+                System.out.println("Longitud de la lista: " + palabras.length);
+                System.out.println("Primera palabra: " + palabras[0]);
+                System.out.println("Segunda palabra: " + palabras[1]);
+                System.out.println("Primera letra primera palabra: " + palabras[0].substring(0,1));
+                System.out.println("Primera letra segunda palabra: " + palabras[1].substring(0,1));
+                if (palabras.length >= 2) {
+                    identificador = palabras[0].substring(0,1).toUpperCase() + palabras[1].substring(0,1).toUpperCase() + "00" + Integer.toString(b+1);
+                } else {
+                    identificador = palabras[0].substring(0,2).toUpperCase() + "00" + Integer.toString(b+1);
+                }
+                System.out.println("Identificador: " + identificador);
+                sala.setIdentificador(identificador);
+
+                a.addFlashAttribute("msg","0");
+            } else {
+                a.addFlashAttribute("msg","1");
             }
+            a.addFlashAttribute("identificador", sala.getIdentificador());
             salaRepository.save(sala);
-            a.addFlashAttribute("msg",msg);
             return "redirect:/sala";
         }
     }
@@ -162,6 +180,7 @@ public class SalaController {
                 salaRepository.save(sala);
             }
             a.addFlashAttribute("msg", "2");
+            a.addFlashAttribute("identificador", sala.getIdentificador());
         }
         return "redirect:/sala";
     }
