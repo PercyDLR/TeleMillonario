@@ -38,10 +38,15 @@ public class SalaController {
         return "Administrador/Sala/listaSalas";
     }
 
-    @PostMapping("/buscar")
-    public String busqueda(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr){
+
+    @PostMapping("/filtrar")
+    public String busqueda(@RequestParam("parametro") String parametro,
+                           @RequestParam("buscador") String buscador,
+                           @RequestParam("ord") String ord,
+                           RedirectAttributes attr, Model model){
         int idsede=1;
         model.addAttribute("idsede",idsede);
+
         try {
             if (parametro.equals("")) { // verifica que no esté vacío
                 return "redirect:/sala/lista";
@@ -64,7 +69,7 @@ public class SalaController {
 
     @PostMapping("/filtrar")
     public String filtrarPorEstado (Model model,@RequestParam("buscador") String buscador, RedirectAttributes attr){
-        int idsede=1;
+        int idsede=7;
         try {
                 model.addAttribute("buscador", buscador);
                 switch (buscador){
@@ -81,7 +86,6 @@ public class SalaController {
                         break;
                 }
 
-                model.addAttribute("sede", sedeRepository.findById(idsede).get());
                 return "Administrador/Sala/listaSalas";
 
         } catch (Exception e) {
