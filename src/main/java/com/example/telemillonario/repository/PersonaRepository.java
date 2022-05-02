@@ -4,9 +4,7 @@ import com.example.telemillonario.entity.Persona;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.validation.constraints.Pattern;
 import java.util.List;
-import java.util.regex.Matcher;
 
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
@@ -24,5 +22,4 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     //Filtro para Administradores
     //Filtro para Actores
     //Filtro para Directores
-
 }

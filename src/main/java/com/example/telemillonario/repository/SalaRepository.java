@@ -11,17 +11,24 @@ import java.util.List;
 @Repository
 public interface SalaRepository extends JpaRepository<Sala,Integer> {
 
-    @Query(nativeQuery = true, value = "select * from telemillonario.sala where " +
+    @Query(nativeQuery = true, value = "select count(*) from telemillonario.sala where " +
             "idsede=?1 and (numero=?2 or ?2=0) and (estado=?3 or ?3>=2)")
-    List<Sala> buscarSalas(int sede,int numero, int estado);
+    Integer cantSalas(int sede,int numero, int estado);
 
     @Query(nativeQuery = true, value = "select * from telemillonario.sala where " +
             "idsede=?1 and (numero=?2 or ?2=0) and (estado=?3 or ?3>=2)" +
-            "order by aforo")
-    List<Sala> buscarSalasAsc(int sede,int numero, int estado);
+            "limit ?4,?5")
+    List<Sala> buscarSalas(int sede,int numero, int estado, int pag, int salasporpag);
 
     @Query(nativeQuery = true, value = "select * from telemillonario.sala where " +
             "idsede=?1 and (numero=?2 or ?2=0) and (estado=?3 or ?3>=2)" +
-            "order by aforo desc")
-    List<Sala> buscarSalasDesc(int sede,int numero, int estado);
+            "order by aforo " +
+            "limit ?4,?5")
+    List<Sala> buscarSalasAsc(int sede,int numero, int estado, int pag, int salasporpag);
+
+    @Query(nativeQuery = true, value = "select * from telemillonario.sala where " +
+            "idsede=?1 and (numero=?2 or ?2=0) and (estado=?3 or ?3>=2)" +
+            "order by aforo desc " +
+            "limit ?4,?5")
+    List<Sala> buscarSalasDesc(int sede,int numero, int estado, int pag, int salasporpag);
 }
