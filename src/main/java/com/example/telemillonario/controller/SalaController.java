@@ -33,74 +33,42 @@ public class SalaController {
     @GetMapping(value = {"", "/","/lista"})
     public String listSalas(Model model) {
         int idsede=7;
-        model.addAttribute("listSalas", salaRepository.buscarSalaPorSede(idsede));
+        model.addAttribute("listSalas", salaRepository.buscarSalas(idsede,0,2));
         model.addAttribute("idsede",idsede);
         return "Administrador/Sala/listaSalas";
     }
 
-    @PostMapping("/buscar")
-    public String busqueda(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr){
-        int idsede=7;
-        model.addAttribute("idsede",idsede);
-        try {
-            if (parametro.equals("")) { // verifica que no esté vacío
-                attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
-                return "redirect:/sala/lista";
-            } else {
-                int param = Integer.parseInt(parametro);
-                model.addAttribute("parametro", param);
-
-                List<Sala> listaNumero = salaRepository.buscarPorNumero(param,idsede);
-                model.addAttribute("listSalas", listaNumero);
-
-
-                return "Administrador/Sala/listaSalas";
-            }
-        } catch (Exception e) {
-            attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
-            return "redirect:/sala/lista";
-        }
-
-    }
 
     @PostMapping("/filtrar")
-    public String filtrarPorEstado (Model model,@RequestParam("buscador") String buscador, RedirectAttributes attr){
+    public String busqueda(@RequestParam("parametro") String parametro,
+                           @RequestParam("buscador") String buscador,
+                           @RequestParam("ord") String ord,
+                           RedirectAttributes attr, Model model){
         int idsede=7;
-        try {
-                model.addAttribute("buscador", buscador);
-                switch (buscador){
-                    case "disponible":
-                        List<Sala> listaEstado = salaRepository.buscarPorEstado(1,idsede);
-                        model.addAttribute("listSalas", listaEstado);
-                        break;
-                    case "nodisponible":
-                        List<Sala> listaEstado1 = salaRepository.buscarPorEstado(0,idsede);
-                        model.addAttribute("listSalas", listaEstado1);
-                        break;
-                    default:
-                        model.addAttribute("listSalas", salaRepository.buscarSalaPorSede(idsede));
-                        break;
-                }
+        model.addAttribute("idsede",idsede);
 
-                return "Administrador/Sala/listaSalas";
+        try {
+            int numero = !parametro.isBlank() ? Integer.parseInt(parametro) : 0;
+            model.addAttribute("parametro", numero);
+
+            int estado = buscador.equals("disponible") ? 1 : buscador.equals("nodisponible") ? 0 : 2;
+            model.addAttribute("buscador", buscador);
+
+            List<Sala> listaSalas = switch (ord) {
+                case "mayor" -> salaRepository.buscarSalasDesc(idsede, numero, estado);
+                case "menor" -> salaRepository.buscarSalasAsc(idsede, numero, estado);
+                default -> salaRepository.buscarSalas(idsede, numero, estado);
+            };
+
+            model.addAttribute("ord",ord);
+            model.addAttribute("listSalas", listaSalas);
+            return "Administrador/Sala/listaSalas";
 
         } catch (Exception e) {
             attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
             return "redirect:/sala/lista";
         }
 
-    }
-
-    @GetMapping("/listaord")
-    public String sortAforo(Model model,@RequestParam("ord") String ord) {
-        int idsede=7;
-        if (ord.equals("mayor")){
-            model.addAttribute("listSalas", salaRepository.sortMayor(idsede));
-        }else{
-            model.addAttribute("listSalas", salaRepository.sortMenor(idsede));
-        }
-
-        return "Administrador/Sala/listaSalas";
     }
 
     @GetMapping("/nuevaSala")
@@ -133,7 +101,7 @@ public class SalaController {
             if(salaRepository.findById(sala.getId()).isPresent()){
                 msg="1";
             } else {
-                List<Sala> listaSalas = salaRepository.buscarSalaPorSede(sala.getIdsede().getId());
+                List<Sala> listaSalas = salaRepository.buscarSalas(sala.getIdsede().getId(),0,2);
                 int b = 0;
                 for (Sala s : listaSalas) {
                     if(s.getNumero() > b) {
