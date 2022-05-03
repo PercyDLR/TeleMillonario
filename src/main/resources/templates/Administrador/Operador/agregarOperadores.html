@@ -45,10 +45,19 @@
                 right: 0;
                 background: rgba(0, 0, 0, 0.7);
                 transition: opacity 500ms;
-                visibility: hidden;
                 opacity: 0;
             }
-            #popup:target{
+            #popup{
+                position: fixed;
+                visibility: hidden;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                transition: opacity 500ms;
+                opacity: 0;
+                display: none;
                 visibility: visible; /* Se regresa a hidden para ocultar */
                 opacity: 1; /* Se regresa a o para hacerlo "invisible" */
             }
@@ -107,7 +116,7 @@
                         <div class="col-md-7">
                             <div class="form h-100 contact-wrap p-5" style="border-radius: 40px;border: 20px solid #292524">
                                 <h3 class="text-center" style="padding-bottom: 30px;font-size: 7rem;font-size: 62px;color: white;font-family: 'Open Sans';font-weight: 900;"><b>Añadir Operador</b></h3>
-                                <form class="mb-5" method="post" id="contactForm" name="contactForm" th:action="@{'/Operadores/guardar'}" th:object="${operador}">
+                                <form id="miform" class="mb-5" method="post" th:action="@{/Operadores/guardar}" th:object="${operador}">
                                     <div class="row">
                                         <div class="col-md-6 form-group mb-3">
                                             <label class="col-form-label"><b>DNI * </b></label>
@@ -121,7 +130,7 @@
                                     <div class="row">
                                         <div class="col-md-6 form-group mb-3">
                                             <label  class="col-form-label"><b>Nombre * </b></label>
-                                            <input th:field="*{nombres}" class="form-control" type="text"
+                                            <input th:field="*{nombres}" class="form-control" type="text" id="nombre"
                                                    th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}"/>
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
                                                  th:errors="*{nombres}"></div>
@@ -145,12 +154,18 @@
                                                 <option th:each="sede : ${listaSedes}" th:value="${sede.id}"
                                                         th:text="${sede.nombre}"></option>
                                             </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('idsede')}"
+                                                 th:errors="*{idsede}"></div>
                                         </div>
                                     </div>
                                     <br>
-                                    <div style="display: flex;justify-content: center">
-                                        <button style="border-radius: 20px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" th:href="@{/Operadores}">Cancelar</a></button>
-                                        <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" href="#popup">Registrar</a></button>
+                                    <div class="row">
+                                        <div class="col-md-6 form-group mb-3">
+                                            <a  class="sign__btn" style="color: white;border-radius: 20px; margin-top: 30px;" th:href="@{/Operadores}">Cancelar</a>
+                                        </div>
+                                        <div class="col-md-6 form-group mb-3">
+                                            <a  class="sign__btn" style="color: white;border-radius: 20px; margin-top: 30px;" type="button" onclick="showventanita();">Registrar</a>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -160,25 +175,50 @@
             </div>
         </div>
 
-        <div id="popup" class="overlay">
+        <div id="popup">
             <div class="row">
                 <div class="col-12">
                     <div class="sign__content">
-                        <form action="#" class="sign__form">
-                            <a href="index.html" class="sign__logo">
+                        <div class="sign__form">
+                            <a class="sign__logo">
                                 <img th:src="@{/img/tele.PNG}" alt="">
                             </a>
                             <div class="sign__group">
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de añadir este Operador?</h5>
                             </div>
-                            <a th:href="@{/agregarOperador}" class="sign__btn">Cancelar</a>
-                            <a href="#" class="sign__btn">Continuar</a>
-                        </form>
+                            <a style="color: white" type="button" onclick="cerrarventanita();" class="sign__btn">Cancelar</a>
+                            <button class="sign__btn" type="submit" onclick="guardardatitos();"> Continuar</button>
+                            <!--a type="submit" role="button" class="sign__btn" onclick="guardardatitos();">Continuar</a-->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <script>
+            function showventanita() {
+                document.getElementById('popup').style.display = 'block';
+            }
+
+            function cerrarventanita(){
+                document.getElementById('popup').style.display = 'none';
+            }
+
+            function guardardatitos(){
+                document.getElementById('miform').submit();
+            }
+
+            function validar() {
+                var regName = / ^ [a-zA-Z] + [a-zA-Z] + $ / ;
+                var nombre = document.getElementById ( 'nombre' ).value;
+                if (!regName.test(nombre)) {
+                    document .getElementById ( 'name' ) .focus ();
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        </script>
 
         <!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

@@ -3655,7 +3655,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
   opacity: 0.85;
-  font-size: 13px;
+  font-size: 14px;
   color: #fff;
   text-transform: uppercase;
   font-weight: 500;
