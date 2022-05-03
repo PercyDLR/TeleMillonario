@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {
-
+    //metodos generales
+    @Query(value= "select persona.dni from persona where persona.estado=1",nativeQuery = true)
+    List<String> obtenerDnis();
     //Filtros para Operadores
     //@Query(value = "select * from persona where persona.idrol = 3 and persona.estado=1",nativeQuery = true)
     @Query(value = "select * from persona where persona.idrol = 3 and persona.estado=1",nativeQuery = true)

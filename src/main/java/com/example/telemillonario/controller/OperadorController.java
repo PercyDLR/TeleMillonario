@@ -139,6 +139,7 @@ public class OperadorController {
         try {
             int id = operador.getId();
             if (personaRepository.existsById(id)) {
+                //Editar Operador
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
                     if(operador.getIdsede()==null){
                         attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
@@ -150,28 +151,35 @@ public class OperadorController {
                     //basado en lo siguiente
                     //DNI / Nombre / Apellido son campos no editables
                     op.setIdsede(operador.getIdsede());
+                    personaRepository.save(operador);
                     attr.addFlashAttribute("msg","Se actualizó el operador de manera exitosa");
                     return "redirect:/Operadores/";
                 }
             } else {
+                //Agregar Operador
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
                     if(operador.getIdsede()==null){
                         attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
                     }
-                    return "Administrador/Operador/editarOperadores";
+                    return "Administrador/Operador/agregarOperadores";
                 }else{
-                    //configuración en activo
-                    operador.setEstado(1);
-                    //Creación de rol
-                    Rol rol = new Rol();
-                    rol.setId(3);
-                    rol.setEstado(1);//Opcional
-                    rol.setNombre("Operador");//Opcional
-                    //asignación de rol
-                    operador.setIdrol(rol);
-                    personaRepository.save(operador);
-                    attr.addFlashAttribute("msg", "Se creo de el operador de manera exitosa");
-                    return "redirect:/Operadores/";
+                    if(personaRepository.obtenerDnis().contains(operador.getDni())){
+                        attr.addFlashAttribute("msg","El dni ingresado ya existe");
+                        return "Administrador/Operador/agregarOperadores";
+                    }else{
+                        //configuración en activo
+                        operador.setEstado(1);
+                        //Creación de rol
+                        Rol rol = new Rol();
+                        rol.setId(3);
+                        rol.setEstado(1);//Opcional
+                        rol.setNombre("Operador");//Opcional
+                        //asignación de rol
+                        operador.setIdrol(rol);
+                        personaRepository.save(operador);
+                        attr.addFlashAttribute("msg", "Se creo de el operador de manera exitosa");
+                        return "redirect:/Operadores/";
+                    }
                 }
             }
         } catch (Exception e) {
