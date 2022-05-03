@@ -88,28 +88,33 @@ public class OperadorController {
 
     @PostMapping(value = "/buscar")
     public String filtrarOperador(Model model,@RequestParam("filtro") String filtro,@RequestParam("nombre") String nombre,RedirectAttributes attr){
-        System.out.println(filtro);
         if(filtro.equals("0") && nombre.equals("")){
             return "redirect:/Operadores";
         }else{
             //algo está buscando
             if(filtro.equals("0")&& !nombre.equals("")){
+                System.out.println(filtro);
+                System.out.println(nombre);
                 //busqueda solo por nombre
                 attr.addFlashAttribute("msg","resultado filtrado por nombre");
                 model.addAttribute("listaSede", sedeRepository.findAll());
                 model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorNombre(nombre));
             }
             if(nombre.equals("") && !filtro.equals("0")){
+                System.out.println(filtro);
+                System.out.println(nombre);
                 //busqueda solo por el filtro
                 attr.addFlashAttribute("msg","resultado filtrado por "+filtro);
                 model.addAttribute("listaSede", sedeRepository.findAll());
                 model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltro(filtro));
             }
             if(!nombre.equals("") && !filtro.equals("0")){
+                System.out.println(filtro);
+                System.out.println(nombre);
                 //busqueda por filtro y por nombre
                 attr.addFlashAttribute("msg"," resultado filtrado por "+filtro+" y por nombre");
                 model.addAttribute("listaSede", sedeRepository.findAll());
-                model.addAttribute("listOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre,filtro));
+                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre,filtro));
 
             }
             return "Administrador/Operador/listaOperadores";
