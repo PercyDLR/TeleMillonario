@@ -177,7 +177,7 @@ public class OperadorController {
                         //asignación de rol
                         operador.setIdrol(rol);
                         personaRepository.save(operador);
-                        attr.addFlashAttribute("msg", "Se creo de el operador de manera exitosa");
+                        attr.addFlashAttribute("msg", "Se creo el operador de manera exitosa");
                         return "redirect:/Operadores/";
                     }
                 }
