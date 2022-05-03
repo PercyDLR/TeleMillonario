@@ -190,7 +190,10 @@
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones"  th:id="${operador.id}" type="button" th:onclick="'abrirPopUp('+${operador.id}+');'">
+                                            <!--a class="circulo_botones"  th:id="${operador.id}" type="button" th:onclick="'abrirPopUp('+${operador.id}+');'">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/IconTrash2.png}">
+                                            </a-->
+                                            <a class="circulo_botones"  type="button" th:onclick="|abrirPopUp('${operador.id}')|">
                                                 <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/IconTrash2.png}">
                                             </a>
                                         </button>
@@ -243,11 +246,12 @@
 
         <script>
             function abrirPopUp(id){
-                document.getElementById(popup).style.display = 'block';
+                var variable = id;
+                document.getElementById('popup').style.display = 'block';
             }
 
             function cerrarPopUp(){
-                document.getElementById(popup).style.display = 'none';
+                document.getElementById('popup').style.display = 'none';
             }
 
             function borrar(){
