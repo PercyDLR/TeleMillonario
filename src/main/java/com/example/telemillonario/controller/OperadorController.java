@@ -39,6 +39,7 @@ public class OperadorController {
             //quiere decir que tengo un número No multiplo de la cantidad de elementos por página
             model.addAttribute("paginacion",(operadores.size()/cantidad_por_pagina)+1);
         }
+        model.addAttribute("listaSede", sedeRepository.findAll());
         model.addAttribute("listaOperadores", operadores);
         //Usar en caso se requiera
         //model.addAttribute("listaOperadores",operadores.subList(1,cantidad_por_pagina));
@@ -86,25 +87,30 @@ public class OperadorController {
     }
 
     @PostMapping(value = "/buscar")
-    public String filtrarOperador(Model model,@RequestParam("filtro") Optional<String> filtro,@RequestParam("nombre") Optional<String> nombre,RedirectAttributes attr){
-        if(!filtro.isPresent()&&!nombre.isPresent()){
-            return "redirect:/Operadores/";
+    public String filtrarOperador(Model model,@RequestParam("filtro") String filtro,@RequestParam("nombre") String nombre,RedirectAttributes attr){
+        System.out.println(filtro);
+        if(filtro.equals("0") && nombre.equals("")){
+            return "redirect:/Operadores";
         }else{
             //algo está buscando
-            if(!filtro.isPresent()&&nombre.isPresent()){
+            if(filtro.equals("0")&& !nombre.equals("")){
                 //busqueda solo por nombre
                 attr.addFlashAttribute("msg","resultado filtrado por nombre");
-                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorNombre(nombre.get()));
+                model.addAttribute("listaSede", sedeRepository.findAll());
+                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorNombre(nombre));
             }
-            if(!nombre.isPresent()&&filtro.isPresent()){
+            if(nombre.equals("") && !filtro.equals("0")){
                 //busqueda solo por el filtro
-                attr.addFlashAttribute("msg","resultado filtrado por "+filtro.get());
-                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltro(filtro.get()));
+                attr.addFlashAttribute("msg","resultado filtrado por "+filtro);
+                model.addAttribute("listaSede", sedeRepository.findAll());
+                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltro(filtro));
             }
-            if(nombre.isPresent()&&filtro.isPresent()){
+            if(!nombre.equals("") && !filtro.equals("0")){
                 //busqueda por filtro y por nombre
-                attr.addFlashAttribute("msg"," resultado filtrado por"+filtro.get()+" y por nombre");
-                model.addAttribute("listOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre.get(),filtro.get()));
+                attr.addFlashAttribute("msg"," resultado filtrado por "+filtro+" y por nombre");
+                model.addAttribute("listaSede", sedeRepository.findAll());
+                model.addAttribute("listOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre,filtro));
+
             }
             return "Administrador/Operador/listaOperadores";
         }
@@ -135,36 +141,50 @@ public class OperadorController {
     }
 
     @PostMapping(value = "/guardar")
-    public String guardarOperador(@ModelAttribute("operador") @Valid Persona operador, BindingResult bindingResult, RedirectAttributes attr) {
+    public String guardarOperador(@ModelAttribute("operador") @Valid Persona operador, BindingResult bindingResult, RedirectAttributes attr,Model model) {
         try {
-            int id = operador.getId();
-            if (personaRepository.existsById(id)) {
+            Integer id = operador.getId();
+            if (id != null) {
+            //if (personaRepository.existsById(id)) {
                 //Editar Operador
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
                     if(operador.getIdsede()==null){
-                        attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                        //attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
                     }
                     return "Administrador/Operador/editarOperadores";
                 }else{
                     Optional<Persona> aux = personaRepository.findById(id);
                     Persona op = aux.get();
-                    //basado en lo siguiente
+
+                    op.setEstado(1);
+                    //Creación de rol
+                    Rol rol = new Rol();
+                    rol.setId(3);
+                    rol.setEstado(1);//Opcional
+                    rol.setNombre("Operador");//Opcional
+
+                    op.setIdrol(rol);
                     //DNI / Nombre / Apellido son campos no editables
                     op.setIdsede(operador.getIdsede());
-                    personaRepository.save(operador);
-                    attr.addFlashAttribute("msg","Se actualizó el operador de manera exitosa");
+                    personaRepository.save(op);
+                    attr.addFlashAttribute("msg2","Se actualizó el operador de manera exitosa");
                     return "redirect:/Operadores/";
                 }
             } else {
                 //Agregar Operador
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
-                    if(operador.getIdsede()==null){
+                    model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
+                    //attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                    /*if(operador.getIdsede()==null){
                         attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
-                    }
+                    }*/
                     return "Administrador/Operador/agregarOperadores";
                 }else{
                     if(personaRepository.obtenerDnis().contains(operador.getDni())){
-                        attr.addFlashAttribute("msg","El dni ingresado ya existe");
+                        model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
+                        //attr.addFlashAttribute("msg","El dni ingresado ya existe");
+                        //Falta ver como hacer para pasarle ese mensaje de error al admin
+                        model.addAttribute("msg","El DNI ingresado ya existe");
                         return "Administrador/Operador/agregarOperadores";
                     }else{
                         //configuración en activo
@@ -177,13 +197,14 @@ public class OperadorController {
                         //asignación de rol
                         operador.setIdrol(rol);
                         personaRepository.save(operador);
-                        attr.addFlashAttribute("msg", "Se creo el operador de manera exitosa");
-                        return "redirect:/Operadores/";
+                        attr.addFlashAttribute("msg2", "Se creo de el operador de manera exitosa");
+                        return "redirect:/Operadores";
                     }
                 }
             }
         } catch (Exception e) {
-            attr.addFlashAttribute("msg", "Envió un ID inválido");
+            //attr.addFlashAttribute("msg", "Envió un ID inválido");
+            model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
             return "Administrador/Operador/editarOperadores";//solo será valido cuando se encuentre en el formulario de editar
         }
     }

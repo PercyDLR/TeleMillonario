@@ -2,8 +2,10 @@ package com.example.telemillonario.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
 
 @Entity
 @Table(name = "persona")
@@ -43,6 +45,7 @@ public class Persona {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idsede")
+    @NotNull(message = "Tiene que escoger una Sede valida crj")
     private Sede idsede;//No se puede restringir puesto que implicaría malograr a Usuario,Admin,Actor y director
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -159,4 +162,5 @@ public class Persona {
     public void setId(Integer id) {
         this.id = id;
     }
+
 }

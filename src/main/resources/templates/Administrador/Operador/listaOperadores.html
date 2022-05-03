@@ -44,10 +44,19 @@
                 right: 0;
                 background: rgba(0, 0, 0, 0.7);
                 transition: opacity 500ms;
-                visibility: hidden;
                 opacity: 0;
             }
-            #popup:target{
+            #popup{
+                position: fixed;
+                visibility: hidden;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                transition: opacity 500ms;
+                opacity: 0;
+                display: none;
                 visibility: visible; /* Se regresa a hidden para ocultar */
                 opacity: 1; /* Se regresa a o para hacerlo "invisible" */
             }
@@ -106,6 +115,7 @@
                 <div class="row">
                     <div class="col-12" style="margin-top: 30px;">
                         <div class="alert alert-danger" th:text="${msg}" th:if="${msg != null}"></div>
+                        <div class="alert alert-success" th:text="${msg2}" th:if="${msg2 != null}"></div>
                         <div class="row">
                             <div class="col-2"></div>
                             <div class="col-8">
@@ -124,22 +134,21 @@
                         <div class="row">
                             <div class="col-1"></div>
                             <div class="col-11">
-                                <form method="post" >
+                                <form method="post" th:action="@{'/Operadores/buscar'}" >
                                     <div class="input-group" style="margin-top: 50px">
                                         <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
-                                            <input type="text" value="Buscar Operador" name="search" class="src">
+                                            <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="src">
                                         </div>
-                                        <select class=" col-3 form-select" name="department" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option>Filtrar por:</option>
-                                            <option value ="1">Nombre</option>
-                                            <option value ="2">Sede</option>
-                                            <option value ="3">DNI</option>
+                                        <select class=" col-3 form-select" name="filtro" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                            <option value ="0" selected>Selecionar sede:</option>
+                                            <option th:each="sede : ${listaSede}"
+                                                    th:value="${sede.id}"
+                                                    th:text="${sede.nombre}"></option>
                                         </select>
-                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
-                                                <a>Buscar</a>
-                                            </button>
-                                        </div>
+                                        <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
+                                            <a>Buscar</a>
+                                        </button>
+
                                     </div>
                                 </form>
                             </div>
@@ -181,7 +190,7 @@
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#popup" th:href="@{'/Operadores/borrar' + '?id=' + ${operador.id}}">
+                                            <a class="circulo_botones"  th:id="${operador.id}" type="button" th:onclick="'abrirPopUp('+${operador.id}+');'">
                                                 <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/IconTrash2.png}">
                                             </a>
                                         </button>
@@ -211,24 +220,42 @@
             </div>
         </div>
 
-        <div id="popup" class="overlay">
+        <div id="popup">
             <div class="row">
                 <div class="col-12">
                     <div class="sign__content">
-                        <form action="#" class="sign__form">
+                        <form class="sign__form">
                             <a href="index.html" class="sign__logo">
                                 <img src="img/tele.PNG" alt="">
                             </a>
+                            <input  id="ids" value="0" hidden type="text" >
                             <div class="sign__group">
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar este Operador?</h5>
                             </div>
-                            <a th:href="@{/Operadores}"  class="sign__btn">Cancelar</a>
-                            <a href="#" class="sign__btn">Continuar</a>
+                            <a th:href="@{/Operadores}" onclick="cerrarPopUp();" class="sign__btn">Cancelar</a>
+                            <a style="color: white"  onclick="borrar()" type="button" class="sign__btn">Continuar</a>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            function abrirPopUp(id){
+                document.getElementById("popup").style.display = 'block';
+                document.getElementById("ids").value = id;
+            }
+
+            function cerrarPopUp(){
+                document.getElementById("popup").style.display = 'none';
+            }
+
+            function borrar(){
+                var id = document.getElementById("ids").value;
+                var url = "/Operadores/borrar?id=" + id;
+                window.location.replace(url);
+            }
+        </script>
 
         <!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

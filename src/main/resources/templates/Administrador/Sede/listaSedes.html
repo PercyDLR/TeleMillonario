@@ -1,181 +1,91 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Font -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
-        <!-- CSS -->
-
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
-              rel="stylesheet" crossorigin="anonymous"
-              integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU">
-        <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
-        <link rel="stylesheet" href="css/bootstrap-grid.min.css">
-        <link rel="stylesheet" href="css/owl.carousel.min.css">
-        <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
-        <link rel="stylesheet" href="css/nouislider.min.css">
-        <link rel="stylesheet" href="css/ionicons.min.css">
-        <link rel="stylesheet" href="css/plyr.css">
-        <link rel="stylesheet" href="css/photoswipe.css">
-        <link rel="stylesheet" href="css/default-skin.css">
-        <link rel="stylesheet" href="css/main.css">
-
-        <!-- Favicons -->
-        <link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
-        <link rel="apple-touch-icon" href="icon/favicon-32x32.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="icon/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="icon/apple-touch-icon-114x114.png">
-        <link rel="apple-touch-icon" sizes="144x144" href="icon/apple-touch-icon-144x144.png">
-
-        <meta name="description" content="">
-        <meta name="keywords" content="">
-        <meta name="author" content="Dmitry Volkov">
-        <title>Lista de Sedes</title>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: head('Lista Sedes',~{::style})">
         <style>
-            .overlay {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                transition: opacity 500ms;
-                visibility: hidden;
-                opacity: 0;
-            }
-            #popup:target{
-                visibility: visible; /* Se regresa a hidden para ocultar */
-                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            input::placeholder {
+                color: #000000;
             }
         </style>
     </head>
-    <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
-        <header class="header">
-            <div class="header__wrap" style="border-bottom: solid 3px #ff55a5;">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="header__content">
-                                <a th:href="@{admin}"><img src="img/tele.png"></a>
-                                <ul class="header__nav">
-                                    <li class="header__nav-item">
-                                        <a  th:href="@{/admin}" class="header__nav-link" style="color:#ff55a5">Sedes</a>
-                                    </li>
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/Operadores}" class="header__nav-link">Operadores</a>
-                                    </li>
+    <body class="body">
+        <div th:replace="fragments/navbar :: admin('sedes','Alonso Rosales')"></div>
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/actor}" class="header__nav-link">Actores</a>
-                                    </li>
+        <div class="content" style="margin-top: 15px">
+            <div  class="container" style="margin-bottom: 30px">
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/admin2}" class="header__nav-link">Directores</a>
-                                    </li>
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/listaClientes}" class="header__nav-link">Clientes</a>
-                                    </li>
-                                </ul>
-                                <div class="header__auth">
-                                    <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
-                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
-                                    </div>
-                                    <div style="margin-bottom: 7px;margin-left: 5px">
-                                        <a role="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                                           aria-controls="offcanvasRight"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
-                                    </div>
+                <div class="row">
+                    <div class="col-md-10 col-12" style="margin-top: 30px;">
+                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3.5rem">
+                            Sedes
+                        </h1>
+                    </div>
 
-                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
-                                         style="width: 18%; background-color: #2b2b31;">
-                                        <div class="offcanvas-header">
-                                            <div class="container mt-5">
-                                                <div class="container" style="display: flex; justify-content: center">
-                                                    <img src="img/user.png" width="100" style="border-radius: 50%;">
-                                                </div>
-                                                <div class="container mt-3" style="display: flex; justify-content: center">
-                                                    <h5 id="offcanvasRightLabel" class="text-light">
-                                                        <b class="mb-2 text-light mt-2" style="font-family: 'Open Sans', sans-serif;">Alonso
-                                                            Rosales</b>
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="offcanvas-body">
-                                            <div class="container mt-5" style="position: relative; top: 225px;">
-                                                <hr style="margin: 1rem 0; color:#ff55a5; background-color: currentColor; border: 0; opacity: 0.9">
-                                                <div class="container">
-                                                    <div class="container mt-2 mt-lg-0" style="display: flex; justify-content: center">
-                                                        <h6>
-                                                            <a class="nav-link" style="font-family: 'Open Sans', sans-serif; color: #ff55a5"
-                                                               href="#"><b><i class="bi bi-box-arrow-in-left"></i> Cerrar sesión</b></a>
-                                                        </h6>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="header__btn" type="button">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
-                            </div>
+                    <div class="col-md-2 col-12 d-flex justify-content-center">
+                        <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
+                            <a th:href="@{/agregarSede}">
+                                <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
+                            </a>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong>Sede creada exitosamente</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '1')}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong>Sede actualizada exitosamente</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '-1')}">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>Ocurrio un error al momento de querer editar</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>Se ha eliminado la sede</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
 
-        <div class="content" style="margin-top: 15px">
-            <div  class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
-                <div class="row">
-                    <div class="col-12" style="margin-top: 30px;">
-                        <div class="row">
-                            <div class="col-2"></div>
-                            <div class="col-8">
-                                <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px">
-                                    Sedes
-                                </h1>
-                            </div>
-                            <div class="col-2">
-                                <button style="cursor: pointer;margin-top: 23px;margin-left: 50px">
-                                    <a class="circulo_add" th:href="@{/agregarSede}">
-                                        <img style="height: 55px;margin-left: 6px;margin-top:6px;" src="img/iconAdd.png">
-                                    </a>
-                                </button>
+                <form method="post" th:action="@{/admin}">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 col-12">
+
+                            <div class="input-group d-flex justify-content-center" style="margin-top: 50px">
+                                <div class="box" style="margin-bottom: 30px">
+                                    <input type="text" placeholder="Buscar Sede" name="search" class="src" style="width: 300px;color: #000000">
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-1"></div>
-                            <div class="col-11">
-                                <form method="post" th:action="@{/admin}">
-                                    <div class="input-group" style="margin-top: 50px">
-                                        <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
-                                            <input type="text" value="Buscar Sede" name="search" class="src">
-                                        </div>
-                                        <select class=" col-3 form-select" name="department" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option>Filtrar por:</option>
-                                            <option value ="1">Nombre</option>
-                                            <option value ="2">Distrito</option>
-                                        </select>
-                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
-                                                <a>Buscar</a>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                        <div class="col-lg-6 col-12">
+                            <div class="input-group" style="margin-top: 50px">
+
+                                <select class="col-md-6 col-6 form-select" name="department" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                    <option>Filtrar por:</option>
+                                    <option value ="1">Nombre</option>
+                                    <option value ="2">Distrito</option>
+                                </select>
+
+                                <div class="col-md-6 col-6 d-flex justify-content-center">
+                                    <button type="submit" class="filter__btn" style="margin-top:6px;">
+                                        <a>Buscar</a>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </form>
 
-                    <div class="col-12" style="margin-top: 50px">
+                <div class="row">
+                    <div class="col-md-12 col-12" style="margin-top: 50px; overflow-x: scroll">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
@@ -199,21 +109,21 @@
                                     <td>
                                         <button style="cursor: pointer">
                                             <a class="circulo_botones" th:href="@{/sala}">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" th:href="@{/editarSede}">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -226,22 +136,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -254,22 +164,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -282,22 +192,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -310,22 +220,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -335,22 +245,8 @@
                     </div>
                 </div>
                 <br>
-                <div class="row" style="padding-left: 70px">
-                    <ul class="paginator paginator--list" >
-                        <li class="paginator__item paginator__item--prev">
-                            <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
-                        </li>
-                        <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
-                        <li class="paginator__item"><a href="#">2</a></li>
-                        <li class="paginator__item"><a href="#">3</a></li>
-                        <li class="paginator__item"><a href="#">4</a></li>
-                        <li class="paginator__item paginator__item--next">
-                            <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
-                        </li>
-                    </ul>
+                <div th:replace="fragments/paginacion :: paginacion(0,4,'/admin?')"></div>
 
-                </div>
-                <div style="height: 30px"></div>
             </div>
         </div>
 
@@ -374,20 +270,11 @@
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/jquery.mousewheel.min.js"></script>
-        <script src="js/jquery.mCustomScrollbar.min.js"></script>
-        <script src="js/wNumb.js"></script>
-        <script src="js/nouislider.min.js"></script>
-        <script src="js/plyr.min.js"></script>
-        <script src="js/jquery.morelines.min.js"></script>
-        <script src="js/photoswipe.min.js"></script>
-        <script src="js/photoswipe-ui-default.min.js"></script>
-        <script src="js/main.js"></script>
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
     </body>
 </html>
