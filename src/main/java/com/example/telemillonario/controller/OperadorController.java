@@ -122,15 +122,15 @@ public class OperadorController {
                     return "Administrador/Operador/editarOperadores";
                 } else {
                     attr.addFlashAttribute("msg", "No existe el operador con el ID" + id);
-                    return "redirect:/Operadores";
+                    return "redirect:/Operadores/";
                 }
             } catch (Exception e) {
                 attr.addFlashAttribute("msg", "Envió un ID inválido");
-                return "redirect:/Operadores";
+                return "redirect:/Operadores/";
             }
         } else {
             attr.addFlashAttribute("msg", "Se envió el ID vacío");
-            return "redirect:/Operadores";
+            return "redirect:/Operadores/";
         }
     }
 
@@ -139,23 +139,48 @@ public class OperadorController {
         try {
             int id = operador.getId();
             if (personaRepository.existsById(id)) {
+                //Editar Operador
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
-                    attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                    if(operador.getIdsede()==null){
+                        attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                    }
                     return "Administrador/Operador/editarOperadores";
                 }else{
                     Optional<Persona> aux = personaRepository.findById(id);
                     Persona op = aux.get();
                     //basado en lo siguiente
                     //DNI / Nombre / Apellido son campos no editables
-                    op.setEstado(1);
                     op.setIdsede(operador.getIdsede());
-                    personaRepository.save(op);
-                    attr.addFlashAttribute("msg2","Se actualizó el operador de manera exitosa");
-                    return "redirect:/Operadores";
+                    personaRepository.save(operador);
+                    attr.addFlashAttribute("msg","Se actualizó el operador de manera exitosa");
+                    return "redirect:/Operadores/";
                 }
             } else {
-                attr.addFlashAttribute("msg", "Envió un ID inválido");
-                return "Administrador/Operador/editarOperadores";//solo será valido cuando se encuentre en el formulario de editar
+                //Agregar Operador
+                if(bindingResult.hasErrors()||operador.getIdsede()==null){
+                    if(operador.getIdsede()==null){
+                        attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
+                    }
+                    return "Administrador/Operador/agregarOperadores";
+                }else{
+                    if(personaRepository.obtenerDnis().contains(operador.getDni())){
+                        attr.addFlashAttribute("msg","El dni ingresado ya existe");
+                        return "Administrador/Operador/agregarOperadores";
+                    }else{
+                        //configuración en activo
+                        operador.setEstado(1);
+                        //Creación de rol
+                        Rol rol = new Rol();
+                        rol.setId(3);
+                        rol.setEstado(1);//Opcional
+                        rol.setNombre("Operador");//Opcional
+                        //asignación de rol
+                        operador.setIdrol(rol);
+                        personaRepository.save(operador);
+                        attr.addFlashAttribute("msg", "Se creo de el operador de manera exitosa");
+                        return "redirect:/Operadores/";
+                    }
+                }
             }
         } catch (Exception e) {
             attr.addFlashAttribute("msg", "Envió un ID inválido");
