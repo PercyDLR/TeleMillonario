@@ -116,7 +116,7 @@
                         <div class="col-md-7">
                             <div class="form h-100 contact-wrap p-5" style="border-radius: 40px;border: 20px solid #292524">
                                 <h3 class="text-center" style="padding-bottom: 30px;font-size: 7rem;font-size: 62px;color: white;font-family: 'Open Sans';font-weight: 900;"><b>Añadir Operador</b></h3>
-                                <form id="miform" class="mb-5" method="post" th:action="@{/Operadores/save}" th:object="${operador}">
+                                <form id="miform" class="mb-5" method="post" th:action="@{/Operadores/guardar}" th:object="${operador}">
                                     <div class="row">
                                         <div class="col-md-6 form-group mb-3">
                                             <label class="col-form-label"><b>DNI * </b></label>
@@ -130,7 +130,7 @@
                                     <div class="row">
                                         <div class="col-md-6 form-group mb-3">
                                             <label  class="col-form-label"><b>Nombre * </b></label>
-                                            <input th:field="*{nombres}" class="form-control" type="text"
+                                            <input th:field="*{nombres}" class="form-control" type="text" id="nombre"
                                                    th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}"/>
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
                                                  th:errors="*{nombres}"></div>
@@ -154,6 +154,8 @@
                                                 <option th:each="sede : ${listaSedes}" th:value="${sede.id}"
                                                         th:text="${sede.nombre}"></option>
                                             </select>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('idsede')}"
+                                                 th:errors="*{idsede}"></div>
                                         </div>
                                     </div>
                                     <br>
@@ -185,7 +187,7 @@
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de añadir este Operador?</h5>
                             </div>
                             <a style="color: white" type="button" onclick="cerrarventanita();" class="sign__btn">Cancelar</a>
-                            <button class="sign__btn" type="submit" onclick="guardardatitos()"> Continuar</button>
+                            <button class="sign__btn" type="submit" onclick="guardardatitos();"> Continuar</button>
                             <!--a type="submit" role="button" class="sign__btn" onclick="guardardatitos();">Continuar</a-->
                         </div>
                     </div>
@@ -204,6 +206,17 @@
 
             function guardardatitos(){
                 document.getElementById('miform').submit();
+            }
+
+            function validar() {
+                var regName = / ^ [a-zA-Z] + [a-zA-Z] + $ / ;
+                var nombre = document.getElementById ( 'nombre' ).value;
+                if (!regName.test(nombre)) {
+                    document .getElementById ( 'name' ) .focus ();
+                    return false;
+                } else {
+                    return true;
+                }
             }
         </script>
 
