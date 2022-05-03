@@ -50,12 +50,21 @@
                 right: 0;
                 background: rgba(0, 0, 0, 0.7);
                 transition: opacity 500ms;
-                visibility: hidden;
                 opacity: 0;
             }
-            #popup:target{
+            #popup {
+                position: fixed;
+                visibility: hidden;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                transition: opacity 500ms;
+                opacity: 0;
+                display: none;
                 visibility: visible; /* Se regresa a hidden para ocultar */
-                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+                opacity: 1;
             }
         </style>
         <th:block th:replace="${extra}"/>
