@@ -224,12 +224,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="sign__content">
-                        <input hidden id="ids">
                         <form class="sign__form">
                             <a href="index.html" class="sign__logo">
                                 <img src="img/tele.PNG" alt="">
                             </a>
-
+                            <input  id="ids" value="0" hidden type="text" >
                             <div class="sign__group">
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar este Operador?</h5>
                             </div>
@@ -243,15 +242,18 @@
 
         <script>
             function abrirPopUp(id){
-                document.getElementById(popup).style.display = 'block';
+                document.getElementById("popup").style.display = 'block';
+                document.getElementById("ids").value = id;
             }
 
             function cerrarPopUp(){
-                document.getElementById(popup).style.display = 'none';
+                document.getElementById("popup").style.display = 'none';
             }
 
             function borrar(){
-
+                var id = document.getElementById("ids").value;
+                var url = "/Operadores/borrar?id=" + id;
+                window.location.replace(url);
             }
         </script>
 
