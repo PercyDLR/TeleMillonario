@@ -188,7 +188,7 @@ public class OperadorController {
         }
     }
 
-    @PostMapping(value = "/borrar")
+    @GetMapping(value = "/borrar")
     public String borrarOperador(@RequestParam("id") Optional<String> optid, RedirectAttributes attr){
         if(optid.isPresent()) {
             try{
