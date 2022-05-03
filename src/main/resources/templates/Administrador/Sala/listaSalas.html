@@ -60,7 +60,7 @@
                     <div class="row justify-content-center">
                         <div class="col-md-4 col-12">
 
-                            <div class="input-group" style="margin-top: 50px">
+                            <div class="input-group d-flex justify-content-center" style="margin-top: 50px">
                                 <div class="box" style="margin-bottom: 30px">
                                     <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: 300px;"
                                            th:value="${parametro == null ? 'Busca por # sala' : parametro}">
@@ -70,19 +70,19 @@
                         <div class="col-lg-8 col-12">
                             <div class="input-group" style="margin-top: 50px">
 
-                                <select class="col-md-5 col-6 form-select" name="buscador" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                <select class="col-md-4 col-6 form-select" name="buscador" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
                                     <option value="">Disponibilidad</option>
                                     <option th:selected="${buscador eq 'disponible'}" value="disponible">Disponible</option>
                                     <option th:selected="${buscador eq 'nodisponible'}" value="nodisponible">No Disponible</option>
                                 </select>
 
-                                <select class="col-md-5 col-6 form-select" name="ord" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                <select class="col-md-4 col-6 form-select mx-md-5 mx-1" name="ord" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
                                     <option value="">Ordenar</option>
                                     <option th:selected="${ord eq 'mayor'}" value="mayor">Mayor a Menor</option>
                                     <option th:selected="${ord eq 'menor'}" value="menor">Menor a Mayor</option>
                                 </select>
 
-                                <div class="col-md-2 col-12">
+                                <div class="col-md-4 col-12 d-flex justify-content-center">
                                     <button type="submit" class="filter__btn" style="margin-top:6px;">
                                         <a>Buscar</a>
                                     </button>
