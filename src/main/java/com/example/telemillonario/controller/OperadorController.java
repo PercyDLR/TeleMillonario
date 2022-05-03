@@ -86,25 +86,26 @@ public class OperadorController {
     }
 
     @PostMapping(value = "/buscar")
-    public String filtrarOperador(Model model,@RequestParam("filtro") Optional<String> filtro,@RequestParam("nombre") Optional<String> nombre,RedirectAttributes attr){
-        if(!filtro.isPresent()&&!nombre.isPresent()){
-            return "redirect:/Operadores/";
+    public String filtrarOperador(Model model,@RequestParam("filtro") String filtro,@RequestParam("nombre") String nombre,RedirectAttributes attr){
+        System.out.println(nombre);
+        if(filtro.equals("0") && nombre.equals("")){
+            return "redirect:/Operadores";
         }else{
             //algo está buscando
-            if(!filtro.isPresent()&&nombre.isPresent()){
+            if(filtro.equals("0")&& !nombre.equals("")){
                 //busqueda solo por nombre
                 attr.addFlashAttribute("msg","resultado filtrado por nombre");
-                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorNombre(nombre.get()));
+                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorNombre(nombre));
             }
-            if(!nombre.isPresent()&&filtro.isPresent()){
+            if(nombre.equals("") && !filtro.equals("0")){
                 //busqueda solo por el filtro
-                attr.addFlashAttribute("msg","resultado filtrado por "+filtro.get());
-                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltro(filtro.get()));
+                attr.addFlashAttribute("msg","resultado filtrado por "+filtro);
+                model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltro(filtro));
             }
-            if(nombre.isPresent()&&filtro.isPresent()){
+            if(!nombre.equals("") && !filtro.equals("0")){
                 //busqueda por filtro y por nombre
-                attr.addFlashAttribute("msg"," resultado filtrado por"+filtro.get()+" y por nombre");
-                model.addAttribute("listOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre.get(),filtro.get()));
+                attr.addFlashAttribute("msg"," resultado filtrado por "+filtro+" y por nombre");
+                model.addAttribute("listOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre,filtro));
             }
             return "Administrador/Operador/listaOperadores";
         }

@@ -125,22 +125,21 @@
                         <div class="row">
                             <div class="col-1"></div>
                             <div class="col-11">
-                                <form method="post" >
+                                <form method="post" th:action="@{'/Operadores/buscar'}" >
                                     <div class="input-group" style="margin-top: 50px">
                                         <div class = "box" style="margin-bottom: 30px;margin-left: 8px;">
-                                            <input type="text" value="Buscar Operador" name="search" class="src">
+                                            <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="src">
                                         </div>
-                                        <select class=" col-3 form-select" name="department" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option>Filtrar por:</option>
+                                        <select class=" col-3 form-select" name="filtro" style="border:5px solid #343a40;margin-top:9px;margin-left:70px;display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                            <option value ="0" selected>Filtrar por:</option>
                                             <option value ="1">Nombre</option>
                                             <option value ="2">Sede</option>
                                             <option value ="3">DNI</option>
                                         </select>
-                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
-                                                <a>Buscar</a>
-                                            </button>
-                                        </div>
+                                        <button type="submit" class="btn btn-primary" style="margin-left: 10px;margin-top:6px;background: #e64166">
+                                            <a>Buscar</a>
+                                        </button>
+
                                     </div>
                                 </form>
                             </div>
@@ -224,7 +223,7 @@
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar este Operador?</h5>
                             </div>
                             <a th:href="@{/Operadores}"  class="sign__btn">Cancelar</a>
-                            <a href="#" class="sign__btn">Continuar</a>
+                            <a  class="sign__btn">Continuar</a>
                         </form>
                     </div>
                 </div>
