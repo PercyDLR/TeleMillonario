@@ -39,6 +39,7 @@ public class OperadorController {
             //quiere decir que tengo un número No multiplo de la cantidad de elementos por página
             model.addAttribute("paginacion",(operadores.size()/cantidad_por_pagina)+1);
         }
+        model.addAttribute("listaSede", sedeRepository.findAll());
         model.addAttribute("listaOperadores", operadores);
         //Usar en caso se requiera
         //model.addAttribute("listaOperadores",operadores.subList(1,cantidad_por_pagina));
@@ -87,7 +88,7 @@ public class OperadorController {
 
     @PostMapping(value = "/buscar")
     public String filtrarOperador(Model model,@RequestParam("filtro") String filtro,@RequestParam("nombre") String nombre,RedirectAttributes attr){
-        System.out.println(nombre);
+        System.out.println(filtro);
         if(filtro.equals("0") && nombre.equals("")){
             return "redirect:/Operadores";
         }else{
@@ -95,17 +96,21 @@ public class OperadorController {
             if(filtro.equals("0")&& !nombre.equals("")){
                 //busqueda solo por nombre
                 attr.addFlashAttribute("msg","resultado filtrado por nombre");
+                model.addAttribute("listaSede", sedeRepository.findAll());
                 model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorNombre(nombre));
             }
             if(nombre.equals("") && !filtro.equals("0")){
                 //busqueda solo por el filtro
                 attr.addFlashAttribute("msg","resultado filtrado por "+filtro);
+                model.addAttribute("listaSede", sedeRepository.findAll());
                 model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltro(filtro));
             }
             if(!nombre.equals("") && !filtro.equals("0")){
                 //busqueda por filtro y por nombre
                 attr.addFlashAttribute("msg"," resultado filtrado por "+filtro+" y por nombre");
+                model.addAttribute("listaSede", sedeRepository.findAll());
                 model.addAttribute("listOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre,filtro));
+
             }
             return "Administrador/Operador/listaOperadores";
         }
@@ -179,7 +184,7 @@ public class OperadorController {
                         model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
                         //attr.addFlashAttribute("msg","El dni ingresado ya existe");
                         //Falta ver como hacer para pasarle ese mensaje de error al admin
-                        //model.addAttribute("msg","El DNI ingresado ya existe");
+                        model.addAttribute("msg","El DNI ingresado ya existe");
                         return "Administrador/Operador/agregarOperadores";
                     }else{
                         //configuración en activo
