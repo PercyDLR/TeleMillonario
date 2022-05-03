@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Lista Salas',~{::style})">
+    <head th:replace="fragments/header :: head('Lista Sedes',~{::style})">
         <style>
             input::placeholder {
                 color: #000000;
@@ -61,7 +61,7 @@
 
                             <div class="input-group d-flex justify-content-center" style="margin-top: 50px">
                                 <div class="box" style="margin-bottom: 30px">
-                                    <input type="text" placeholder="Buscar Sede" name="search" class="src" style="width: 300px">
+                                    <input type="text" placeholder="Buscar Sede" name="search" class="src" style="width: 300px;color: #000000">
                                 </div>
                             </div>
                         </div>
@@ -109,21 +109,21 @@
                                     <td>
                                         <button style="cursor: pointer">
                                             <a class="circulo_botones" th:href="@{/sala}">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" th:href="@{/editarSede}">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -136,22 +136,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -164,22 +164,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -192,22 +192,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -220,22 +220,22 @@
                                     <td>Tuesday, November 16th, 2004</td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" src="img/iconInfo3.png">
+                                            <a class="circulo_botones" th:href="@{/sala}">
+                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" href="#">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" src="img/iconEdit2.png">
+                                            <a class="circulo_botones" th:href="@{/editarSede}">
+                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
