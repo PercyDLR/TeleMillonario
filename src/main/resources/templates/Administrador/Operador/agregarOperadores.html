@@ -208,16 +208,6 @@
                 document.getElementById('miform').submit();
             }
 
-            function validar() {
-                var regName = / ^ [a-zA-Z] + [a-zA-Z] + $ / ;
-                var nombre = document.getElementById ( 'nombre' ).value;
-                if (!regName.test(nombre)) {
-                    document .getElementById ( 'name' ) .focus ();
-                    return false;
-                } else {
-                    return true;
-                }
-            }
         </script>
 
         <!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

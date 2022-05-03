@@ -16,13 +16,13 @@
             <div  class="container" style="margin-bottom: 30px">
 
                 <div class="row">
-                    <div class="col-md-10 col-8" style="margin-top: 30px;">
-                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px" th:text="|Salas - ${sede.nombre}|">
-                            Sede: Gran Teatro Nacional
+                    <div class="col-md-10 col-12" style="margin-top: 30px;">
+                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3.5rem"
+                            th:text="|Salas - ${sede.nombre}|">Sede: Gran Teatro Nacional
                         </h1>
                     </div>
 
-                    <div class="col-md-2 col-4" style="margin-top: 30px;">
+                    <div class="col-md-2 col-12 d-flex justify-content-center">
                         <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
                             <a th:href="@{'/sala/nuevaSala?idsede=' + ${sede.id}}">
                                 <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
@@ -62,7 +62,7 @@
 
                             <div class="input-group d-flex justify-content-center" style="margin-top: 50px">
                                 <div class="box" style="margin-bottom: 30px">
-                                    <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: 300px;"
+                                    <input type="number"  name="parametro" class="src" placeholder="Buscar por # sala" min="0" style="width: auto;"
                                            th:value="${parametro == null ? 'Busca por # sala' : parametro}">
                                 </div>
                             </div>
