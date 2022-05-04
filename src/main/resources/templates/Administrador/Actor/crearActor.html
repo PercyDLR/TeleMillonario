@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Lista Salas',~{::style})">
+    <head th:replace="fragments/header :: head('Crear Actor',~{::style})">
         <style>
             label{
                 color: rgba(255,255,255,0.5);
             }
+
             #images{
                 width: 90%;
                 position: relative;
                 margin: auto;
                 display: flex;
             }
-            img{
+            .item img{
                 width: 100%;
             }
         </style>
@@ -66,6 +67,9 @@
                                                         <h1 class="details__title" style="font-size: 1.5rem">Imagenes</h1>
                                                     </div>
                                                     <div class="col-md-3 col-2">
+                                                        <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
+                                                            <i class="icon ion-ios-arrow-round-forward"></i>
+                                                        </button>
                                                         <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
                                                             <i class="icon ion-ios-arrow-round-forward"></i>
                                                         </button>
@@ -79,20 +83,17 @@
 
                                                         <!--Visor de Imagenes-->
                                                         <div class="owl-carousel photo__carousel" id="img_container">
-                                                            <div class="item">
-                                                                <!-- card -->
-                                                                    <img th:src="@{/img/actores/johnny_deep.jpg}" alt="">
-                                                            </div>
+
                                                         </div>
 
                                                         <!-- Boton para agregar imagenes -->
                                                         <div class="card__wrap justify-content-center">
+                                                            <label class="input__btn" for="file-input">
+                                                                Nueva Foto
+                                                            </label>
                                                             <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg"
-                                                                   onchange="preview()" multiple>
-                                                                <button class="filter__btn">
-                                                                    Nueva Foto
-                                                                </button>
-                                                            </input>
+                                                                   style="display: none" onchange="preview()" multiple>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -166,6 +167,17 @@
                         imgContainer.appendChild(item);
                         reader.readAsDataURL(i);
                     }
+
+                    // Vuelve a cargar el deslizador
+                    $('.owl-carousel').trigger('destroy.owl.carousel');
+                    var $owl = $('.owl-carousel').owlCarousel({
+                        items: 1,
+                        loop: true
+                    });
+                    $owl.trigger('refresh.owl.carousel');
+
+
+
                 }
             </script>
 
