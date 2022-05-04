@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="fragments/header :: head('Modelo',_)"></head>
+<head th:replace="fragments/header :: head('Modelo',_)">
+</head>
 
 <body class="body">
 	
 	<!-- header -->
-	<header th:replace="fragments/navbar :: usuario"></header>
+	<header th:replace="fragments/navbar :: usuario('inicio','Percy','De La Rosa')"></header>
 
 
 	<!-- home -->

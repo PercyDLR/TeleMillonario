@@ -66,6 +66,10 @@
                 visibility: visible; /* Se regresa a hidden para ocultar */
                 opacity: 1;
             }
+            a.dropdown-toggle::after {
+                visibility: hidden;
+                display: none;
+            }
         </style>
         <th:block th:replace="${extra}"/>
 
