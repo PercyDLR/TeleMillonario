@@ -2572,7 +2572,7 @@ ul {
   align-items: flex-start;
   padding: 20px 0;
 }
-.filter__btn {
+.filter__btn, .input__btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2593,35 +2593,12 @@ ul {
   font-weight: 500;
   letter-spacing: 1px;
 }
-.filter__btn:hover {
+.filter__btn:hover, .input__btn:hover {
   opacity: 1;
   color: #fff;
 }
 .input__btn {
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 48px;
-  width: 140px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  background-image: -moz-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -ms-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-  -webkit-box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
-  opacity: 0.85;
-  font-size: 13px;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-.input__btn:hover {
-  opacity: 1;
-  color: #fff;
 }
 
 .filter__range {
