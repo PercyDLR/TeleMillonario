@@ -1,5 +1,7 @@
 package com.example.telemillonario.entity;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,6 +25,7 @@ public class Persona {
     @Column(name = "apellidos", length = 100)
     private String apellidos;
 
+    //https://www.geeksforgeeks.org/spring-mvc-custom-validation/
     @NotBlank(message = "El dni no puede estar vacío")
     @Pattern(regexp = "[0-9]{8}",message = "DNI no valido")//Momentaneamente
     @Column(name = "dni", length = 8)
