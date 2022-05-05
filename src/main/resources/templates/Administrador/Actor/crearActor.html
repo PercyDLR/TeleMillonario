@@ -12,8 +12,8 @@
                 margin: auto;
                 display: flex;
             }
-            .item img{
-                width: 100%;
+            .owl-dots{
+                height: 0;
             }
         </style>
     </head>
@@ -157,6 +157,7 @@
                         reader.onload=()=>{
                             let img = document.createElement("img");
                             img.setAttribute("src",reader.result);
+                            img.setAttribute("style","margin-inline: auto;max-height: 150px;max-width: fit-content;")
                             item.appendChild(img);
                         }
                         imgContainer.appendChild(item);
