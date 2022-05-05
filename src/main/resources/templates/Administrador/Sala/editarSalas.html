@@ -6,86 +6,15 @@
             label{
                 color: rgba(255,255,255,0.5);
             }
+            input:read-only{
+                opacity: 50%;
+            }
         </style>
     </head>
 
     <body class="body">
 
         <header th:replace="fragments/navbar :: admin('sedes','Alonso Rosales')"></header>
-
-
-
-            <!--
-            <div class="container">
-                <div class="row align-items-stretch justify-content-center no-gutters">
-                    <div class="col-md-7">
-                        <div class="form h-100 p-5">
-
-                            <div class="row">
-                                <h3 style="text-align: center;margin-bottom: 30px;margin-top: 10px; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;"
-                                    th:text="${sala.id == 0 ? 'Nueva Sala' : 'Editar Sala'}">
-                                </h3>
-                            </div>
-
-                            <form class="mb-5" method="post" id="contactForm" name="contactForm"
-                                  th:action="@{'/sala/guardar'}" th:object="${sala}">
-                                <input hidden th:field="*{id}">
-                                <input hidden th:field="*{numero}">
-                                <input hidden th:field="*{identificador}">
-                                <input hidden name="idsede" th:value="${sede.getId()}">
-                                <br>
-
-                                <div class="row mb-2">
-                                    <div class="col-md-8 form-group mb-3">
-                                        <label class="col-form-label text-light"><b>Aforo</b></label>
-                                        <input class="form-control" type="number" th:field="*{aforo}"
-                                               th:classappend="${#fields.hasErrors('aforo')? 'is-invalid':''}"
-                                               min="0" required>
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('aforo')}"
-                                             th:errors="*{aforo}"></div>
-                                    </div>
-                                </div>
-                                <div class="row mb-2" th:if="${sala.id == 0}" style="padding-left: 25px;">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="1"
-                                               id="flexCheckDefault" name="estado">
-                                        <label class="form-check-label text-light" for="flexCheckDefault">
-                                            La sala se mostrará en estado disponible una vez sea creada
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="row mb-2" th:unless="${sala.id == 0}" style="padding-left: 25px;">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="estado" value="1"
-                                               id="flexRadioDefault1" th:checked="${sala.estado == 1}">
-                                        <label class="form-check-label text-light" for="flexRadioDefault1">
-                                            Sala disponible
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input text-light" type="radio" name="estado" value="0"
-                                               id="flexRadioDefault2" th:checked="${sala.estado == 0}">
-                                        <label class="form-check-label text-light" for="flexRadioDefault2">
-                                            Sala no disponible
-                                        </label>
-                                    </div>
-                                </div>
-                                <br>
-                                <div style="display: flex;justify-content: center">
-                                    <a th:href="@{/sala}" class="sign__btn"
-                                       style="border-radius: 20px; margin-top: 30px;">Cancelar</a>
-                                    <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;"
-                                            class="sign__btn" type="submit"
-                                            th:text="${sala.id == 0? 'Registrar': 'Actualizar'}">Registrar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
 
         <div class="sign">
             <div class="container">
@@ -97,24 +26,26 @@
                             <!-- authorization form -->
                             <form class="sign__form" method="post" th:action="@{'/sala/guardar'}" th:object="${sala}">
 
-                                <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;"
+                                <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;"
                                     th:text="${sala.id == 0 ? 'Nueva Sala' : 'Editar Sala'}">
                                 </h3>
 
                                 <div class="sign__group">
-                                    <input hidden th:field="*{id}">
-                                </div>
-
-                                <div class="sign__group">
-                                    <input hidden th:field="*{numero}">
-                                </div>
-
-                                <div class="sign__group">
-                                    <input hidden th:field="*{identificador}">
+                                    <input hidden th:field="*{id}" readonly>
                                 </div>
 
                                 <div class="sign__group">
                                     <input hidden name="idsede" th:value="${sede.getId()}">
+                                </div>
+
+                                <div class="sign__group">
+                                    <label  th:if="${sala.id != 0}" for="identificador">Id Sala</label>
+                                    <input class="sign__input" th:hidden="${sala.id == 0}" th:field="*{identificador}" readonly>
+                                </div>
+
+                                <div class="sign__group">
+                                    <label th:if="${sala.id != 0}" for="numero">Sala #</label>
+                                    <input class="sign__input" th:hidden="${sala.id == 0}" th:field="*{numero}" readonly>
                                 </div>
 
                                 <div class="sign__group">
@@ -126,7 +57,7 @@
                                          th:errors="*{aforo}"></div>
                                 </div>
 
-                                <div th:if="${sala.id == 0}" class="sign__group sign__group--checkbox">
+                                <div th:if="${sala.id == 0}" class="sign__group sign__group--checkbox" style="text-align: center">
                                     <input class="form-check-input" type="checkbox" value="1"
                                            id="disponibilidad" name="estado">
                                     <label for="disponibilidad">
@@ -134,7 +65,7 @@
                                     </label>
                                 </div>
 
-                                <div th:unless="${sala.id == 0}" class="sign__group sign__group--checkbox">
+                                <div th:unless="${sala.id == 0}" class="sign__group sign__group--checkbox" style="text-align: center">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="estado" value="1"
                                                id="disponible" th:checked="${sala.estado == 1}">

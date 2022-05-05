@@ -23,7 +23,7 @@
         <header th:replace="fragments/navbar :: admin('actores','Alonso Rosales')"></header>
         <!-- end header -->
 
-        <div class="content">
+        <div class="content" style="padding: 0">
 
             <div class="sign">
                 <div class="container">
@@ -58,18 +58,15 @@
                                         </div>
 
                                         <!--Selector Imagenes-->
-                                        <div class="col-md-6 col-12">
+                                        <div class="col-md-6 col-12" style="padding-left: 10px">
 
                                             <!--Encabezado-->
                                             <section class="section section--first" style="margin: 0; padding:10px">
                                                 <div class="row">
                                                     <div class="col-md-9 col-10">
-                                                        <h1 class="details__title" style="font-size: 1.5rem">Imagenes</h1>
+                                                        <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
                                                     </div>
                                                     <div class="col-md-3 col-2">
-                                                        <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
-                                                            <i class="icon ion-ios-arrow-round-forward"></i>
-                                                        </button>
                                                         <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
                                                             <i class="icon ion-ios-arrow-round-forward"></i>
                                                         </button>
@@ -82,18 +79,15 @@
                                                     <div class="col-12 col-sm-12">
 
                                                         <!--Visor de Imagenes-->
-                                                        <div class="owl-carousel photo__carousel" id="img_container">
-
-                                                        </div>
+                                                        <div class="owl-carousel photo__carousel" id="img_container"></div>
 
                                                         <!-- Boton para agregar imagenes -->
-                                                        <div class="card__wrap justify-content-center">
-                                                            <label class="input__btn" for="file-input">
+                                                        <div class="card__wrap">
+                                                            <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
                                                                 Nueva Foto
                                                             </label>
                                                             <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg"
                                                                    style="display: none" onchange="preview()" multiple>
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -134,7 +128,8 @@
                             </a>
 
                             <div class="sign__group">
-                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">Se ha creado el actor correctamente</h5>
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                    Se ha creado el actor correctamente</h5>
                             </div>
                             <a th:href="@{/actor}" class="sign__btn">Continuar</a>
                         </form>
@@ -175,9 +170,6 @@
                         loop: true
                     });
                     $owl.trigger('refresh.owl.carousel');
-
-
-
                 }
             </script>
 

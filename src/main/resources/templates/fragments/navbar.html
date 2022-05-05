@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Navbars</title>
     </head>
     <body>
 
@@ -13,13 +13,13 @@
                         <div class="col-12">
                             <div class="header__content">
                                 <!-- header logo -->
-                                <a th:href="@{/}" class="header__logo">
-                                    <img th:src="@{/img/tele.PNG}" alt="logo">
+                                <a th:href="@{/}" class="header__logo" style="width: 12rem">
+                                    <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
                                 </a>
                                 <!-- end header logo -->
 
                                 <!-- header nav -->
-                                <ul class="header__nav" style="height: 100%">
+                                <ul class="header__nav" style="height: 100%; width: fit-content">
                                     <li class="header__nav-item">
                                         <a  th:href="@{/}" class="header__nav-link"
                                             th:classappend="${seccion=='inicio' ? 'header__nav-link--active' : ''}">Inicio</a>
@@ -45,36 +45,34 @@
                                            th:classappend="${seccion=='directores' ? 'header__nav-link--active' : ''}" >Directores</a>
                                     </li>
 
-                                    <li class="header__nav-item">
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
+                                    <li class="header__nav-item" style="margin-right: auto">
                                         <br>
                                         <br>
                                     </li>
 
+                                    <li class="header__nav-item" style="margin: 5px">
+                                        <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                            <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
 
-                                    <li class="header__nav-item">
-                                        <div style="size: 10px; color: white;white-space: nowrap;">
-                                            <span th:text="${nombre}"></span>
-                                        </div>
-
-                                        <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
-                                            <span th:text="${apellido}"></span>
-                                        </div>
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
+                                            <li><a th:href="@{/perfil}">Perfil</a></li>
+                                            <li><a th:href="@{/historial}">Historial</a></li>
+                                            <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
+                                        </ul>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuCatalog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <img style="height: 50px;margin-top: 5px" th:src="@{/img/user.png}"></a>
+                                        <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div style="size: 10px; color: white;white-space: nowrap;">
+                                                <span th:text="${nombre}"></span>
+                                            </div>
 
-                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
+                                            <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
+                                                <span th:text="${apellido}"></span>
+                                            </div>
+                                        </a>
+
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
                                             <li><a th:href="@{/historial}">Historial</a></li>
                                             <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
@@ -85,7 +83,7 @@
                                 <!-- end header nav -->
 
                                 <!-- header auth -->
-                                <div class="header__auth" style="margin-left: 3px">
+                                <div class="header__auth" style="margin-left: 0">
                                     <a href="#" class="header__sign-in">
                                         <i class="icon ion-ios-log-out"></i>
                                         <span>Cerrar Sesión</span>
@@ -105,20 +103,99 @@
                     </div>
                 </div>
             </div>
+        </header>
 
-            <!-- header search -->
-            <form action="#" class="header__search">
+        <header class="header" th:fragment="operador(seccion,nombre,sede)">
+            <div class="header__wrap">
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
-                            <div class="header__search-content">
-                                <input type="text" placeholder="Ingresa la Obra que estás buscando">
-                                <button type="button">Buscar</button>
+                            <div class="header__content">
+                                <!-- header logo -->
+                                <a th:href="@{/}" class="header__logo" style="width: 12rem">
+                                    <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
+                                </a>
+                                <!-- end header logo -->
+
+                                <!-- header nav -->
+                                <ul class="header__nav" style="height: 100%; width: fit-content">
+                                    <li class="header__nav-item">
+                                        <a  th:href="@{/funciones}" class="header__nav-link"
+                                            th:classappend="${seccion=='funciones' ? 'header__nav-link--active' : ''}">Funciones</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/salas}" class="header__nav-link"
+                                           th:classappend="${seccion=='salas' ? 'header__nav-link--active' : ''}">Salas</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/reportes}" class="header__nav-link"
+                                           th:classappend="${seccion=='reportes' ? 'header__nav-link--active' : ''}">Reportes</a>
+                                    </li>
+
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/resenas}" class="header__nav-link"
+                                           th:classappend="${seccion=='reseñas' ? 'header__nav-link--active' : ''}">Reseñas</a>
+                                    </li>
+
+                                    <li class="header__nav-item" style="margin-right: auto">
+                                        <br>
+                                        <br>
+                                    </li>
+
+                                    <li class="header__nav-item" style="margin: 5px">
+                                        <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
+
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
+                                            <li><a th:href="@{/perfil}">Perfil</a></li>
+                                            <li><a th:href="@{/historial}">Historial</a></li>
+                                            <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="header__nav-item" style="margin-right: 5px">
+                                        <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div style="size: 10px; color: white;white-space: nowrap;">
+                                                <span th:text="${nombre}"></span>
+                                            </div>
+
+                                            <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
+                                                <span th:text="${sede}"></span>
+                                            </div>
+                                        </a>
+
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
+                                            <li><a th:href="@{/perfil}">Perfil</a></li>
+                                            <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <!-- end header nav -->
+
+                                <!-- header auth -->
+                                <div class="header__auth" style="margin-left: 0">
+
+                                    <a href="#" class="header__sign-in">
+                                        <i class="icon ion-ios-log-out"></i>
+                                        <span>Cerrar Sesión</span>
+                                    </a>
+                                </div>
+                                <!-- end header auth -->
+
+                                <!-- header menu btn -->
+                                <button class="header__btn" type="button">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </button>
+                                <!-- end header menu btn -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
             <!-- end header search -->
         </header>
 
@@ -129,13 +206,13 @@
                         <div class="col-12">
                             <div class="header__content">
                                 <!-- header logo -->
-                                <a th:href="@{/}" class="header__logo">
-                                    <img th:src="@{/img/tele.PNG}" alt="logo">
+                                <a th:href="@{/admin}" class="header__logo" style="width: 12rem">
+                                    <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
                                 </a>
                                 <!-- end header logo -->
 
                                 <!-- header nav -->
-                                <ul class="header__nav" style="height: 100%">
+                                <ul class="header__nav" style="height: 100%; width: fit-content">
                                     <li class="header__nav-item">
                                         <a  th:href="@{/admin}" class="header__nav-link"
                                             th:classappend="${seccion=='sedes' ? 'header__nav-link--active' : ''}">Sedes</a>
@@ -160,18 +237,15 @@
                                            th:classappend="${seccion=='clientes' ? 'header__nav-link--active' : ''}" >Clientes</a>
                                     </li>
 
-                                    <li class="header__nav-item">
+                                    <li class="header__nav-item" style="margin-right: auto">
                                         <br>
                                         <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
+                                    </li>
+
+                                    <li class="header__nav-item" style="margin: 5px">
+
+                                            <a href="#"><img style="height: 50px;margin-top: 0" th:src="@{/img/user.png}"></a>
+
                                     </li>
 
                                     <li class="header__nav-item">
@@ -189,9 +263,6 @@
                                 <!-- header auth -->
                                 <div class="header__auth" style="margin-left: 3px">
 
-                                    <div style="margin-bottom: 7px; margin-left: 3px">
-                                        <a href="#"><img style="height: 50px;margin-top: 5px" th:src="@{/img/user.png}"></a>
-                                    </div>
                                     <a href="#" class="header__sign-in">
                                         <i class="icon ion-ios-log-out"></i>
                                         <span>Cerrar Sesión</span>
