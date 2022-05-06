@@ -32,7 +32,7 @@
                             <div class="sign__content" style="margin-top: 70px">
 
                                 <!-- authorization form -->
-                                <form class="sign__form" method="post" th:action="@{/actor/guardar}">
+                                <form class="sign__form" method="post" th:action="@{/ejemplo/subir}" enctype="multipart/form-data">
                                     <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;">Nuevo Actor</h3>
 
                                     <div class="row">
@@ -146,22 +146,59 @@
                 let imgContainer = document.getElementById("img_container");
 
                 function preview(){
-                    imgContainer.innerHTML="";
+
+                    let j=0;
 
                     for(i of fileInput.files){
+
                         let reader = new FileReader();
 
                         let item = document.createElement("div");
                         item.className="item";
 
+                        // Boton de Eliminar
+                        let cover = document.createElement("div");
+                        cover.id=j.toString();
+                        cover.className="card__cover";
+
+                        // Activar la opción de borrar imagen
+                        cover.onclick = function (){
+
+                            const dt = new DataTransfer()
+
+                            for (let i = 0; i < fileInput.files.length; i++) {
+                                const file = fileInput.files[i];
+
+                                if (this.id !== i.toString()) {
+                                    dt.items.add(file);
+                                }
+                            }
+                            fileInput.files = dt.files
+
+                            imgContainer.innerHTML = "";
+                            preview();
+                        };
+
+                        let button = document.createElement("a");
+                        button.className = "card__play";
+                        let close = document.createElement("i");
+                        close.className = "bi bi-x";
+                        close.setAttribute("style","color: white")
+
+                        button.appendChild(close)
+                        cover.appendChild(button)
+
                         reader.onload=()=>{
                             let img = document.createElement("img");
                             img.setAttribute("src",reader.result);
                             img.setAttribute("style","margin-inline: auto;max-height: 150px;max-width: fit-content;")
-                            item.appendChild(img);
+
+                            cover.appendChild(img);
+                            item.appendChild(cover)
                         }
                         imgContainer.appendChild(item);
                         reader.readAsDataURL(i);
+                        j++;
                     }
 
                     // Vuelve a cargar el deslizador
