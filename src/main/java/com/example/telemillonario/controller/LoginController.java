@@ -29,13 +29,6 @@ public class LoginController {
         return "login/signup";
     }
 
-    @PostMapping("/processLogin")
-    public String processLogin(){
-
-
-        return "";
-    }
-
 
     @GetMapping("/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session){
@@ -52,13 +45,13 @@ public class LoginController {
         personita.setIdrol(persona.getIdrol());
 
         session.setAttribute("usuario",personita);
-
+        System.out.println("llego aca");
 
         if(personita.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
             return "redirect:/listarSedes";
 
         }else if(personita.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
-            return "redirect:/PaginaPrincipal";
+            return "redirect:/";
 
         }else {
             return "redirect:/"; //Cual es su pagina principal del Operador?
