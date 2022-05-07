@@ -24,4 +24,8 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     //Filtro para Administradores
     //Filtro para Actores
     //Filtro para Directores
+
+
+    //Busca a un usuario por correo
+    Persona findByCorreo(String correo);
 }

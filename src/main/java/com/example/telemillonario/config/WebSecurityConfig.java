@@ -20,13 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin().loginPage("/login").loginProcessingUrl("/processLogin").defaultSuccessUrl("/redirectByRole",true);
 
-        http.logout().logoutSuccessUrl("/paginaPrincipal").deleteCookies("JSESSIONID").invalidateHttpSession(true);
+        http.logout().logoutSuccessUrl("/PaginaPrincipal").deleteCookies("JSESSIONID").invalidateHttpSession(true);
 
-
-       /* http.authorizeRequests()
-                .antMatchers()
-                .
-        */
     }
 
     @Autowired
@@ -39,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource)
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .usersByUsernameQuery("SELECT correo, contrasenia,estado FROM persona WHERE correo = ?")
-                .authoritiesByUsernameQuery("SELECT correo,nombres FROM persona INNER JOIN rol ON ( persona.idrol = rol.id ) WHERE correo = ? and estado = 1");
+                .authoritiesByUsernameQuery("SELECT persona.correo,rol.nombre FROM persona INNER JOIN rol ON ( persona.idrol = rol.id ) WHERE persona.correo = ? and persona.estado = 1");
     }
 }
 

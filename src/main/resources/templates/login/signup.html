@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="fragments/header :: head('Registro')"></head>
+<!--head th:replace="fragments/header :: head(Registro,extra)"></head-->
 
 <body class="body">
 
-	<div class="sign section--bg" th:data-bg="@{/img/section/section.jpg}">
+	<div class="sign section--bg" th:src="@{/img/section/section.jpg}">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
@@ -44,9 +44,9 @@
 		</div>
 	</div>
 
-    <div th:replace="/fragments/footer :: partners"></div>
+    <!--div th:replace="/fragments/footer :: partners"></div>
     <div th:replace="/fragments/footer :: footer"></div>
-	<div th:replace="/fragments/footer :: js"></div>
+	<div th:replace="/fragments/footer :: js"></div-->
 </body>
 
 </html>
