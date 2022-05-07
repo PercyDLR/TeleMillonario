@@ -32,7 +32,7 @@
                             <div class="sign__content" style="margin-top: 70px">
 
                                 <!-- authorization form -->
-                                <form class="sign__form" method="post" th:action="@{/ejemplo/editar}" enctype="multipart/form-data">
+                                <form class="sign__form" method="post" th:object="${actor}" th:action="@{/ejemplo/editar}" enctype="multipart/form-data">
                                     <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;">Editar Actor</h3>
 
                                     <div class="row">
@@ -40,8 +40,8 @@
 
                                             <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
                                                 <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
-                                                <option value="1"></option>
-                                                <option value="2"></option>
+                                                <option th:each="imagen : ${imagenes}"
+                                                        th:value="${imagen.id}"></option>
                                             </select>
 
                                             <div class="sign__group">
@@ -49,16 +49,16 @@
                                             </div>
 
                                             <div class="sign__group">
-                                                <label for="nombre">Nombre</label>
+                                                <label for="nombres">Nombre</label>
                                                 <input class="sign__input"  style="width: auto"
-                                                       name="nombre" id="nombre"
+                                                       th:field="*{nombres}"
                                                        placeholder="Nombre" required>
                                             </div>
 
                                             <div class="sign__group">
-                                                <label for="nombre">Apellido</label>
+                                                <label for="apellidos">Apellido</label>
                                                 <input class="sign__input" style="width: auto"
-                                                       name="apellido" id="apellido"
+                                                       th:field="*{apellidos}"
                                                        placeholder="Apellido" required>
                                             </div>
                                         </div>
@@ -87,20 +87,12 @@
                                                         <!--Visor de Imagenes-->
                                                         <div class="owl-carousel photo__carousel" id="img_container">
 
-                                                            <!--Imagenes almacenadas en DB
-                                                            La enumeracion va de 0 a #imagenes-1-->
-                                                            <div class="item">
-                                                                <div id="old-0" class="card__cover">
-                                                                    <img>
-                                                                    <a class="card__play" onclick="eliminarEnDB(0)">
-                                                                        <i class="bi bi-x" style="color: white"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="item">
-                                                                <div id="old-1" class="card__cover">
-                                                                    <img>
-                                                                    <a class="card__play" onclick="eliminarEnDB(1)">
+                                                            <div class="item" th:each="foto : ${imagenes}">
+                                                                <div th:id="|old-${foto.numero-1}|" class="card__cover">
+
+                                                                    <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
+
+                                                                    <a class="card__play" th:onclick="|eliminarEnDB(${foto.numero-1})|">
                                                                         <i class="bi bi-x" style="color: white"></i>
                                                                     </a>
                                                                 </div>
@@ -241,12 +233,14 @@
 
                 function eliminarEnDB(id){
 
-                    let cover = imgContainer.getElementById("old-"+id);
-                    var select = document.getElementById("fotos-para-eliminar");
-
+                    let select = document.getElementById("fotos-para-eliminar");
                     select.getElementsByTagName("option")[id].selected = "selected";
 
-                    cover.parentElement.parentElement.remove();
+                    let item = imgContainer.getElementsByClassName("active").item(0);
+                    console.log(item)
+
+                    item.remove();
+
                     refresh()
                 }
 

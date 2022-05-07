@@ -1,8 +1,16 @@
 package com.example.telemillonario.controller;
 
+import com.example.telemillonario.entity.Foto;
+import com.example.telemillonario.entity.Persona;
+import com.example.telemillonario.repository.FotoRepository;
+import com.example.telemillonario.repository.PersonaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/ejemplo")
@@ -18,9 +26,23 @@ public class EjemploController {
         return "Administrador/Actor/crearActor";
     }
 
-    @GetMapping("/agregarActor")
-    public String formEditarActor(){
-        return "Administrador/Actor/crearActor";
+    @Autowired
+    FotoRepository fotoRepository;
+    @Autowired
+    PersonaRepository personaRepository;
+
+    @GetMapping("/editarActor")
+    public String formEditarActor(Model model){
+
+        int idactor = 1;
+
+        Persona actor = personaRepository.findById(idactor).get();
+        List<Foto> fotos = fotoRepository.findByIdpersonaOrderByNumero(idactor);
+
+        model.addAttribute("imagenes", fotos);
+        model.addAttribute("actor", actor);
+
+        return "Administrador/Actor/editarActor";
     }
 
     @PostMapping("/subir")
