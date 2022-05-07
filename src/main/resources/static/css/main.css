@@ -3522,7 +3522,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .sign__form:before {
   content: '';
-  position: absolute;
+ /*position: absolute;*/
   top: 0;
   left: 0;
   right: 0;

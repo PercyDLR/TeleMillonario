@@ -3,6 +3,7 @@ package com.example.telemillonario.entity;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -32,6 +33,8 @@ public class Persona implements Serializable {
     @Column(name = "dni", length = 8)
     private String dni;
 
+    @Email
+    @NotNull(message = "El correo no puede estar vacio")
     @Column(name = "correo", length = 100)
     private String correo;
 
@@ -44,6 +47,7 @@ public class Persona implements Serializable {
     @Column(name = "estado")
     private Integer estado;
 
+    @NotNull(message = "La contraseña no puede estar vacia")
     @Column(name = "contrasenia", length = 200)
     private String contrasenia;
 

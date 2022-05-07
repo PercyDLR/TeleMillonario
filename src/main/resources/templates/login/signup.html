@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<!--head th:replace="fragments/header :: head(Registro,extra)"></head-->
+<head th:replace="fragments/header :: head('Creación de Cuenta',_)"></head>
 
 <body class="body">
 
@@ -10,43 +10,63 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="sign__content">
-						<!-- registration form -->
-						<form action="#" class="sign__form">
-							<a th:href="@{index.html}" class="sign__logo">
-								<img th:src="@{/img/logo.svg}" alt="logo">
+						<form th:action="@{/validacionSignUp}" class="sign__form" th:object="${usuario}">
+							<a th:href="@{/}" class="sign__logo">
+								<img th:src="@{/img/tele.png}" alt="logo">
 							</a>
-
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Nombre">
-							</div>
-
-							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Correo">
+								<input type="text" class="sign__input" placeholder="Nombres" name = "nombres" th:value="${usuario.getNombres()}" required autofocus
+									   th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}">
+								<div class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
+									 th:errors="*{nombres}"></div>
 							</div>
 
 							<div class="sign__group">
-								<input type="password" class="sign__input" placeholder="Contraseña">
+								<input type="text" class="sign__input" placeholder="Apellidos" name = "apellidos" th:value="${usuario.getApellidos()}"
+									   th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}">
+								<div class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
+									 th:errors="*{apellidos}"></div>
+
+							</div>
+							<div class="sign__group">
+								<input type="text" class="sign__input" placeholder="DNI" name = "dni" th:value="${usuario.getDni()}"
+									   th:classappend="${#fields.hasErrors('dni')?'is-invalid':''}">
+								<div class="invalid-feedback" th:if="${#fields.hasErrors('dni')}"
+									 th:errors="*{dni}"></div>
+
+							</div>
+							<div class="sign__group">
+								<input type="email" class="sign__input" placeholder="Correo" name="correo" th:value="${usuario.getCorreo()}"
+									   th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}">
+								<div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
+									 th:errors="*{correo}"></div>
 							</div>
 
-							<div class="sign__group sign__group--checkbox">
-								<input id="remember" name="remember" type="checkbox" checked="checked">
-								<label for="remember">Estoy de acuerdo con la <a href="#">Política de Privacidad</a></label>
+							<div class="sign__group">
+								<input type="text" class="sign__input" placeholder="Fecha de Nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')">
 							</div>
-							
+
+							<div class="sign__group">
+								<input type="text" class="sign__input" placeholder="Dirección" name="direccion" th:value="${usuario.getDireccion()}">
+							</div>
+
+							<div class="sign__group">
+								<input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:value="${usuario.getContrasenia()}"
+									   th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
+								<div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
+									 th:errors="*{contrasenia}"></div>
+							</div>
+
 							<button class="sign__btn" type="button">Registrarse</button>
 
-							<span class="sign__text">¿Ya tienes una cuenta? <a th:href="@{/login/signin}">Ingresa</a></span>
+							<span class="sign__text">¿Ya tienes una cuenta?<a th:href="@{/login}"><span style="margin-right: 15px"></span>Ingresar</a></span>
 						</form>
-						<!-- registration form -->
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-    <!--div th:replace="/fragments/footer :: partners"></div>
-    <div th:replace="/fragments/footer :: footer"></div>
-	<div th:replace="/fragments/footer :: js"></div-->
+	<div th:replace="fragments/footer :: js(_)"></div>
 </body>
 
 </html>

@@ -40,4 +40,13 @@ public class Rol implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public Rol(Integer id, Integer estado, String nombre) {
+        this.id = id;
+        this.estado = estado;
+        this.nombre = nombre;
+    }
+
+    public Rol() {
+    }
 }

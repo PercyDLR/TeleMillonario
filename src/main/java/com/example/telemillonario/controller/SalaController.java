@@ -39,7 +39,7 @@ public class SalaController {
                            @RequestParam(value="ord",required = false,defaultValue = "") String ord,
                            @RequestParam(value = "pag",required = false) String pag,
                            Model model){
-
+        int idsede = 4;
         model.addAttribute("sede", sedeRepository.findById(idsede).get());
 
         int numero = !parametro.isBlank() ? Integer.parseInt(parametro) : 0;
