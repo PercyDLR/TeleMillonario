@@ -1,201 +1,146 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Font -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
-        <!-- CSS -->
-
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
-              rel="stylesheet" crossorigin="anonymous"
-              integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU">
-        <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
-        <link rel="stylesheet" href="css/bootstrap-grid.min.css">
-        <link rel="stylesheet" href="css/owl.carousel.min.css">
-        <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
-        <link rel="stylesheet" href="css/nouislider.min.css">
-        <link rel="stylesheet" href="css/ionicons.min.css">
-        <link rel="stylesheet" href="css/plyr.css">
-        <link rel="stylesheet" href="css/photoswipe.css">
-        <link rel="stylesheet" href="css/default-skin.css">
-        <link rel="stylesheet" href="css/main.css">
-
-        <!-- Favicons -->
-        <link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
-        <link rel="apple-touch-icon" href="icon/favicon-32x32.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="icon/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="icon/apple-touch-icon-114x114.png">
-        <link rel="apple-touch-icon" sizes="144x144" href="icon/apple-touch-icon-144x144.png">
-
-        <meta name="description" content="">
-        <meta name="keywords" content="">
-        <meta name="author" content="Dmitry Volkov">
-        <title>Editar Actor</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: head('Crear Actor',~{::style})">
         <style>
-            .overlay {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                transition: opacity 500ms;
-                visibility: hidden;
-                opacity: 0;
-            }
-            #popup:target{
-                visibility: visible; /* Se regresa a hidden para ocultar */
-                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            label{
+                color: rgba(255,255,255,0.5);
             }
 
-
-
+            #images{
+                width: 90%;
+                position: relative;
+                margin: auto;
+                display: flex;
+            }
+            .owl-dots{
+                height: 0;
+            }
         </style>
     </head>
-    <body class="body" style="background-image: url('img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
+
+    <body class="body">
         <!-- header -->
-        <header class="header">
-            <div class="header__wrap" style="border-bottom: solid 3px #ff55a5;">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="header__content">
-                                <a th:href="@{admin}"><img src="img/tele.png"></a>
-                                <ul class="header__nav">
-                                    <li class="header__nav-item">
-                                        <a  th:href="@{/admin}" class="header__nav-link">Sedes</a>
-                                    </li>
-
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/Operadores}" class="header__nav-link">Operadores</a>
-                                    </li>
-
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/actor}" class="header__nav-link" style="color:#ff55a5">Actores</a>
-                                    </li>
-
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/admin2}" class="header__nav-link">Directores</a>
-                                    </li>
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/listaClientes}" class="header__nav-link">Clientes</a>
-                                    </li>
-                                </ul>
-                                <div class="header__auth">
-                                    <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
-                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
-                                    </div>
-                                    <div style="margin-bottom: 7px;margin-left: 5px">
-                                        <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
-                                    </div>
-                                </div>
-                                <button class="header__btn" type="button">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- header search -->
-            <form action="#" class="header__search">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="header__search-content">
-                                <input type="text" placeholder="Search for a movie, TV Series that you are looking for">
-
-                                <button type="button">search</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <!-- end header search -->
-        </header>
+        <header th:replace="fragments/navbar :: admin('actores')"></header>
         <!-- end header -->
 
+        <div class="content" style="padding: 0">
 
-        <div class="content" >
+            <div class="sign">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="sign__content" style="margin-top: 70px">
 
-            <div class="container" style="padding-top: 65px">
-                <div class="row align-items-stretch justify-content-center no-gutters">
-                    <div class="col-md-7">
-                        <div class="form h-100 contact-wrap p-5" style="border-radius: 40px;border: 20px solid #292524">
-                            <h3 class="text-center" style="padding-bottom: 30px;font-size: 5rem;font-size: 96px;color: white;font-family: 'Open Sans';font-weight: 900;">Editar Actor</h3>
-                            <form class="mb-5" method="post" id="contactForm" name="contactForm">
-                                <div class="row">
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Nombre *</b></label>
-                                        <input type="text" class="form-control" name="name" id="name" placeholder="Tu nombre" value="Moises">
-                                    </div>
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Apellido *</b></label>
-                                        <input type="text" class="form-control" name="email" id="email"  placeholder="Tu apellido" value="Bak ">
-                                    </div>
-                                </div>
-                                <br>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-12 form-group mb-3">
-                                        <label  class="col-form-label"><b>Foto</b></label>
-                                        <br>
-                                        <br>
-                                        <br>
-                                    </div>
-                                </div>
+                                <!-- authorization form -->
+                                <form class="sign__form" method="post" th:action="@{/ejemplo/editar}" enctype="multipart/form-data">
+                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;">Editar Actor</h3>
 
-                                <div class="row" style="display: flex;justify-content: center">
-                                    <div class="drag-drop" style="margin:0;background-image: url('img/foto-eliminar.jpeg');display: flex;justify-content: center;align-items: center;">
-                                        <div>
-                                            <button>
-                                                <a class="circulo_botones" href="#">
-                                                    <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                                </a>
+                                    <div class="row">
+                                        <div class="col-md-6 col-8">
+
+                                            <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
+                                                <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
+                                                <option value="1"></option>
+                                                <option value="2"></option>
+                                            </select>
+
+                                            <div class="sign__group">
+                                                <input hidden name="id">
+                                            </div>
+
+                                            <div class="sign__group">
+                                                <label for="nombre">Nombre</label>
+                                                <input class="sign__input"  style="width: auto"
+                                                       name="nombre" id="nombre"
+                                                       placeholder="Nombre" required>
+                                            </div>
+
+                                            <div class="sign__group">
+                                                <label for="nombre">Apellido</label>
+                                                <input class="sign__input" style="width: auto"
+                                                       name="apellido" id="apellido"
+                                                       placeholder="Apellido" required>
+                                            </div>
+                                        </div>
+
+                                        <!--Selector Imagenes-->
+                                        <div class="col-md-6 col-12" style="padding-left: 10px">
+
+                                            <!--Encabezado-->
+                                            <section class="section section--first" style="margin: 0; padding:10px">
+                                                <div class="row">
+                                                    <div class="col-md-9 col-10">
+                                                        <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
+                                                    </div>
+                                                    <div class="col-md-3 col-2">
+                                                        <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
+                                                            <i class="icon ion-ios-arrow-round-forward"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </section>
+
+                                            <div>
+                                                <div class="row align-items-center">
+                                                    <div class="col-12 col-sm-12">
+
+                                                        <!--Visor de Imagenes-->
+                                                        <div class="owl-carousel photo__carousel" id="img_container">
+
+                                                            <!--Imagenes almacenadas en DB
+                                                            La enumeracion va de 0 a #imagenes-1-->
+                                                            <div class="item">
+                                                                <div id="old-0" class="card__cover">
+                                                                    <img>
+                                                                    <a class="card__play" onclick="eliminarEnDB(0)">
+                                                                        <i class="bi bi-x" style="color: white"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="item">
+                                                                <div id="old-1" class="card__cover">
+                                                                    <img>
+                                                                    <a class="card__play" onclick="eliminarEnDB(1)">
+                                                                        <i class="bi bi-x" style="color: white"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Boton para agregar imagenes -->
+                                                        <div class="card__wrap">
+                                                            <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
+                                                                Nueva Foto
+                                                            </label>
+                                                            <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg"
+                                                                   style="display: none" onchange="preview()" multiple>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br>
+
+                                    <div class="row">
+                                        <div class="col-6" style="justify-content: center">
+                                            <a th:href="@{/sala}" class="sign__btn">Cancelar</a>
+                                        </div>
+
+                                        <div class="col-6" style="justify-content: center">
+                                            <button class="sign__btn" type="submit">Registrar
                                             </button>
                                         </div>
 
-
                                     </div>
-                                    <div class="drag-drop" style="margin:0">
-                                        <input type="file" multiple="multiple" id="photo" />
-                                        <span class="fa-stack fa-2x">
-                                        <i class="fa fa-cloud fa-stack-2x bottom pulsating"></i>
-                                        <i class="fa fa-circle fa-stack-1x top medium"></i>
-                                        <i class="fa fa-arrow-circle-up fa-stack-1x top"></i>
-
-                                    </span>
-                                        <span class="desc">Pulse aquí para añadir archivos</span>
-                                    </div>
-
-                                </div>
-
-                                <br>
-                                <br>
-                                <div style="display: flex;justify-content: center">
-                                    <button style="border-radius: 20px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" th:href="@{/actor}">Cancelar</a></button>
-                                    <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" href="#popup">Guardar</a></button>
-                                </div>
-
-                            </form>
-
-                            <div id="form-message-warning mt-4"></div>
-                            <div id="form-message-success">
-                                Your message was sent, thank you!
+                                </form>
+                                <!-- end authorization form -->
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div id="popup" class="overlay">
@@ -209,41 +154,108 @@
                             </a>
 
                             <div class="sign__group">
-                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">Se ha editado al actor correctamente</h5>
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                    Se ha creado el actor correctamente</h5>
                             </div>
-
-
-
                             <a th:href="@{/actor}" class="sign__btn">Continuar</a>
-
-
-
-
-
                         </form>
                         <!-- end authorization form -->
                     </div>
                 </div>
             </div>
-
-
         </div>
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/jquery.mousewheel.min.js"></script>
-        <script src="js/jquery.mCustomScrollbar.min.js"></script>
-        <script src="js/wNumb.js"></script>
-        <script src="js/nouislider.min.js"></script>
-        <script src="js/plyr.min.js"></script>
-        <script src="js/jquery.morelines.min.js"></script>
-        <script src="js/photoswipe.min.js"></script>
-        <script src="js/photoswipe-ui-default.min.js"></script>
-        <script src="js/main.js"></script>
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script>
+                let fileInput = document.getElementById("file-input");
+                let imgContainer = document.getElementById("img_container");
+
+                function preview(){
+
+                    let j=0;
+                    for(i of fileInput.files){
+
+                        let reader = new FileReader();
+
+                        let item = document.createElement("div");
+                        item.className="item";
+
+                        // Boton de Eliminar
+                        let cover = document.createElement("div");
+                        cover.id="new-"+j.toString();
+                        cover.className="card__cover";
+
+                        // Activar la opción de borrar imagen
+                        cover.onclick = function (){
+
+                            const dt = new DataTransfer()
+
+                            for (let i = 0; i < fileInput.files.length; i++) {
+                                const file = fileInput.files[i];
+
+                                if (this.id !== "new-"+i.toString()) {
+                                    dt.items.add(file);
+                                }
+                            }
+                            fileInput.files = dt.files;
+
+                            cover.parentElement.parentElement.remove();
+                            refresh()
+                        };
+
+                        let button = document.createElement("a");
+                        button.className = "card__play";
+                        let close = document.createElement("i");
+                        close.className = "bi bi-x";
+                        close.setAttribute("style","color: white")
+
+                        button.appendChild(close)
+                        cover.appendChild(button)
+
+                        reader.onload=()=>{
+                            let img = document.createElement("img");
+                            img.setAttribute("src",reader.result);
+                            img.setAttribute("style","margin-inline: auto;max-height: 150px;max-width: fit-content;")
+
+                            cover.appendChild(img);
+                            item.appendChild(cover)
+                        }
+                        imgContainer.appendChild(item);
+                        reader.readAsDataURL(i);
+                        j++;
+                    }
+
+                    // Vuelve a cargar el deslizador
+                    refresh()
+                }
+
+                function refresh() {
+                    $('.owl-carousel').trigger('destroy.owl.carousel');
+                    var $owl = $('.owl-carousel').owlCarousel({
+                        items: 1,
+                        loop: true
+                    });
+                    $owl.trigger('refresh.owl.carousel');
+                }
+
+                function eliminarEnDB(id){
+
+                    let cover = imgContainer.getElementById("old-"+id);
+                    var select = document.getElementById("fotos-para-eliminar");
+
+                    select.getElementsByTagName("option")[id].selected = "selected";
+
+                    cover.parentElement.parentElement.remove();
+                    refresh()
+                }
+
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
     </body>
 </html>

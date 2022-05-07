@@ -79,7 +79,8 @@
                                                     <div class="col-12 col-sm-12">
 
                                                         <!--Visor de Imagenes-->
-                                                        <div class="owl-carousel photo__carousel" id="img_container"></div>
+                                                        <div class="owl-carousel photo__carousel" id="img_container">
+                                                        </div>
 
                                                         <!-- Boton para agregar imagenes -->
                                                         <div class="card__wrap">
@@ -158,7 +159,7 @@
 
                         // Boton de Eliminar
                         let cover = document.createElement("div");
-                        cover.id=j.toString();
+                        cover.id="new-"+j.toString();
                         cover.className="card__cover";
 
                         // Activar la opción de borrar imagen
@@ -169,14 +170,14 @@
                             for (let i = 0; i < fileInput.files.length; i++) {
                                 const file = fileInput.files[i];
 
-                                if (this.id !== i.toString()) {
+                                if (this.id !== "new-"+i.toString()) {
                                     dt.items.add(file);
                                 }
                             }
-                            fileInput.files = dt.files
+                            fileInput.files = dt.files;
 
-                            imgContainer.innerHTML = "";
-                            preview();
+                            cover.parentElement.parentElement.remove();
+                            refresh()
                         };
 
                         let button = document.createElement("a");
@@ -202,6 +203,10 @@
                     }
 
                     // Vuelve a cargar el deslizador
+                    refresh()
+                }
+
+                function refresh() {
                     $('.owl-carousel').trigger('destroy.owl.carousel');
                     var $owl = $('.owl-carousel').owlCarousel({
                         items: 1,
