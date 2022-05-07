@@ -16,11 +16,16 @@ public class EjemploController {
             System.out.println("Nombre: " + img.getOriginalFilename());
             System.out.println("Tipo: " + img.getContentType());
         }
-        return "index";
+        return "redirect:/ejemplo";
     }
 
     @GetMapping("/agregarActor")
     public String formActor(){
         return "Administrador/Actor/crearActor";
+    }
+
+    @GetMapping("")
+    public String modelo(){
+        return "index";
     }
 }

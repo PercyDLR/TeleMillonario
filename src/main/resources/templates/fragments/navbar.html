@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
         <meta charset="UTF-8">
         <title>Navbars</title>
     </head>
     <body>
 
-        <header class="header" th:fragment="usuario(seccion,nombre,apellido)">
+        <header class="header" th:fragment="usuario(seccion)">
+            <form id="form-logout" th:action="@{/logout}" method="post"></form>
             <div class="header__wrap">
                 <div class="container">
                     <div class="row">
@@ -47,32 +48,34 @@
 
                                     <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>
 
-                                    <li class="header__nav-item" style="margin: 5px">
+                                    <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px">
                                         <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                             <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
                                             <li><a th:href="@{/historial}">Historial</a></li>
-                                            <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
+                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
+                                                Cerrar Sesión</a></li>
                                         </ul>
                                     </li>
 
-                                    <li class="header__nav-item">
+                                    <li sec:authorize="isAuthenticated()" class="header__nav-item">
                                         <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <div style="size: 10px; color: white;white-space: nowrap;">
-                                                <span th:text="${nombre}"></span>
+                                                <span th:text="${session.usuario.nombres}"></span>
                                             </div>
 
                                             <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
-                                                <span th:text="${apellido}"></span>
+                                                <span th:text="${session.usuario.apellidos}"></span>
                                             </div>
                                         </a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
                                             <li><a th:href="@{/historial}">Historial</a></li>
-                                            <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
+                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
+                                                Cerrar Sesión</a></li>
                                         </ul>
                                     </li>
                                     <li class="header__nav-item" style="width: 0">
@@ -83,9 +86,14 @@
 
                                 <!-- header auth -->
                                 <div class="header__auth" style="margin-left: 0">
-                                    <a href="#" class="header__sign-in">
-                                        <i class="icon ion-ios-log-out"></i>
-                                        <span>Cerrar Sesión</span>
+                                    <a sec:authorize="isAnonymous()" th:href="@{/login}" class="header__sign-in">
+                                        <i class="icon ion-ios-log-in"></i>
+                                        <span>Iniciar Sesión</span>
+                                    </a>
+                                    <a sec:authorize="isAuthenticated()" th:href="@{/carrito}"
+                                       class="header__sign-in" style="margin-left: auto">
+                                        <i class="bi bi-cart2"></i>
+                                        <span>Carrito</span>
                                     </a>
                                 </div>
                                 <!-- end header auth -->
@@ -104,7 +112,8 @@
             </div>
         </header>
 
-        <header class="header" th:fragment="operador(seccion,nombre,sede)">
+        <header class="header" th:fragment="operador(seccion)">
+            <form id="form-logout" th:action="@{/logout}" method="post"></form>
             <div class="header__wrap">
                 <div class="container">
                     <div class="row">
@@ -146,24 +155,26 @@
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
-                                            <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
+                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
+                                                Cerrar Sesión</a></li>
                                         </ul>
                                     </li>
 
                                     <li class="header__nav-item" style="margin-right: 5px;">
                                         <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <div style="size: 10px; color: white;white-space: nowrap;">
-                                                <span th:text="${nombre}"></span>
+                                                <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
                                             </div>
 
                                             <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
-                                                <span th:text="${sede}"></span>
+                                                <span th:text="|Gran Teatro nacional|"></span>
                                             </div>
                                         </a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
-                                            <li><a th:href="@{/logout}">Cerrar Sesión</a></li>
+                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
+                                                Cerrar Sesión</a></li>
                                         </ul>
                                     </li>
                                     <li class="header__nav-item" style="width: 0">
@@ -175,7 +186,8 @@
                                 <!-- header auth -->
                                 <div class="header__auth" style="margin-left: 0">
 
-                                    <a href="#" class="header__sign-in">
+                                    <a href="#" onclick="document.getElementById('form-logout').submit()"
+                                       class="header__sign-in" style="margin-left: auto">
                                         <i class="icon ion-ios-log-out"></i>
                                         <span>Cerrar Sesión</span>
                                     </a>
@@ -197,7 +209,8 @@
             <!-- end header search -->
         </header>
 
-        <header class="header" th:fragment="admin(seccion,nombre)">
+        <header class="header" th:fragment="admin(seccion)">
+            <form id="form-logout" th:action="@{/logout}" method="post"></form>
             <div class="header__wrap">
                 <div class="container">
                     <div class="row">
@@ -212,7 +225,7 @@
                                 <!-- header nav -->
                                 <ul class="header__nav" style="height: auto; width: fit-content">
                                     <li class="header__nav-item">
-                                        <a  th:href="@{/admin}" class="header__nav-link"
+                                        <a  th:href="@{/listarSedes}" class="header__nav-link"
                                             th:classappend="${seccion=='sedes' ? 'header__nav-link--active' : ''}">Sedes</a>
                                     </li>
 
@@ -243,7 +256,7 @@
 
                                     <li class="header__nav-item">
                                         <div style="size: 10px; color: white;white-space: nowrap;">
-                                            <span th:text="${nombre}"></span>
+                                            <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
                                         </div>
 
                                         <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
@@ -260,7 +273,8 @@
                                 <!-- header auth -->
                                 <div class="header__auth" style="margin-left: 3px">
 
-                                    <a href="#" class="header__sign-in">
+                                    <a href="#" onclick="document.getElementById('form-logout').submit()"
+                                       class="header__sign-in" style="margin-left: auto">
                                         <i class="icon ion-ios-log-out"></i>
                                         <span>Cerrar Sesión</span>
                                     </a>

@@ -18,10 +18,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.formLogin().loginPage("/login").loginProcessingUrl("/processLogin").defaultSuccessUrl("/redirectByRole",true);
+        http.formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/processLogin")
+                .defaultSuccessUrl("/redirectByRole",true);
 
-        http.logout().logoutSuccessUrl("/PaginaPrincipal").deleteCookies("JSESSIONID").invalidateHttpSession(true);
-
+        http.logout()
+                .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true);
     }
 
     @Autowired
