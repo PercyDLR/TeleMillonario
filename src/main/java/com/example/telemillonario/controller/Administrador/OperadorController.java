@@ -1,4 +1,4 @@
-package com.example.telemillonario.controller;
+package com.example.telemillonario.controller.Administrador;
 
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Rol;

@@ -1,4 +1,4 @@
-package com.example.telemillonario.controller;
+package com.example.telemillonario.controller.Administrador;
 
 
 import com.example.telemillonario.entity.Sala;
@@ -102,12 +102,13 @@ public class SalaController {
 
     @PostMapping("/guardar")
     public String guardarSala(@ModelAttribute("sala") @Valid Sala sala, BindingResult bindingResult, RedirectAttributes a, Model model) {
+
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getFieldError().getDefaultMessage());
             model.addAttribute("sede", sala.getIdsede());
             return "Administrador/Sala/editarSalas";
         } else {
-            if(!salaRepository.findById(sala.getId()).isPresent()){
+            Optional<Sala> optSala = salaRepository.findById(sala.getId());
+            if(!optSala.isPresent()){
                 //Crea automaticamente el numero de la sala
                 List<Sala> listaSalas = salaRepository.buscarSalas(sala.getIdsede().getId(),0,2,0,100000);
                 int b = 0;
@@ -117,24 +118,16 @@ public class SalaController {
                     }
                 }
                 sala.setNumero(b+1);
+
                 //Crea automaticamente el identificador de la sala
-                String identificador;
                 String[] palabras = sala.getIdsede().getNombre().split(" ");
-                System.out.println("Longitud de la lista: " + palabras.length);
-                System.out.println("Primera palabra: " + palabras[0]);
-                System.out.println("Segunda palabra: " + palabras[1]);
-                System.out.println("Primera letra primera palabra: " + palabras[0].substring(0,1));
-                System.out.println("Primera letra segunda palabra: " + palabras[1].substring(0,1));
-                if (palabras.length >= 2) {
-                    identificador = palabras[0].substring(0,1).toUpperCase() + palabras[1].substring(0,1).toUpperCase() + "00" + Integer.toString(b+1);
-                } else {
-                    identificador = palabras[0].substring(0,2).toUpperCase() + "00" + Integer.toString(b+1);
-                }
-                System.out.println("Identificador: " + identificador);
+                String identificador = this.genIdentificador(palabras,b+1);
                 sala.setIdentificador(identificador);
 
                 a.addFlashAttribute("msg","0");
             } else {
+                String[] palabras = sala.getIdsede().getNombre().split(" ");
+                String identificador = this.genIdentificador(palabras,optSala.get().getNumero());
                 a.addFlashAttribute("msg","1");
             }
             a.addFlashAttribute("identificador", sala.getIdentificador());
@@ -159,5 +152,20 @@ public class SalaController {
             a.addFlashAttribute("identificador", sala.getIdentificador());
         }
         return "redirect:/sala";
+    }
+
+    private String genIdentificador(String[] palabras, int numeroSala){
+        String identificador="";
+
+        for(String palabra : palabras){
+            // Ignoraq monosilabos
+            if(palabra.length() > 2) {
+                identificador = identificador.concat(palabra.substring(0, 1));
+            }
+        }
+        identificador = identificador.concat(String.format("%03d",numeroSala+1));
+
+        System.out.println("Identificador: " + identificador);
+        return identificador;
     }
 }

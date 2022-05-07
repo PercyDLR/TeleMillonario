@@ -1,15 +1,19 @@
-package com.example.telemillonario.controller;
+package com.example.telemillonario.controller.Usuario;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class AdministradorController {
+public class UsuarioController {
 
-    @GetMapping("/listarSedes")
+    @GetMapping("")
     public String paginaPrincipal(){
-        return "Administrador/Sede/listaSedes";
+        return "vistaPrincipal";
     }
+
+
+
+
 
 
 }
