@@ -7,9 +7,9 @@
     <body>
 
         <div class="row" th:fragment="paginacion(pagActual,pagTotal,url)">
-            <div th:if="${pagTotal>1}" class="col-12 justify-content-center">
+            <div th:if="${pagTotal>1}" style="padding-inline: inherit" class="col-12 justify-content-center">
                 <ul class="paginator paginator--list">
-                    <li th:unless="${pagActual==0}" class="paginator__item paginator__item--prev">
+                    <li style="width: 40px" th:unless="${pagActual==0}" class="paginator__item paginator__item--prev">
                         <a th:href="@{${url}+'pag='+${pagActual-1}}">
                             <i class="icon ion-ios-arrow-back"></i>
                         </a>
@@ -69,7 +69,7 @@
                            th:text="${pagActual}+5"></a>
                     </li>
 
-                    <li th:unless="${pagActual==pagTotal-1}" class="paginator__item paginator__item--next">
+                    <li style="width: 40px" th:unless="${pagActual==pagTotal-1}" class="paginator__item paginator__item--next">
                         <a th:href="@{${url}+'pag='+${pagActual+1}}">
                             <i class="icon ion-ios-arrow-forward"></i>
                         </a>
