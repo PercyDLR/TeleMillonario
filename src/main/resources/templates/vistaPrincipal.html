@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,7 +45,7 @@
                                 <a class="nav-link disabled text-light" style="font-family: 'Open Sans', sans-serif; opacity: 0.6;">Directores</a>
                             </li>
                         </ul>
-                        <a class="btn btn-primary" style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif;" href="../login/inicioSesion.html" role="button">Ingresar</a>
+                        <a class="btn btn-primary" style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif;" th:href="@{/login}" >Ingresar</a>
                     </div>
                 </div>
             </div>

@@ -20,13 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin().loginPage("/login").loginProcessingUrl("/processLogin").defaultSuccessUrl("/redirectByRole",true);
 
-        http.logout().logoutSuccessUrl("/paginaPrincipal").deleteCookies("JSESSIONID").invalidateHttpSession(true);
+        http.logout().logoutSuccessUrl("/PaginaPrincipal").deleteCookies("JSESSIONID").invalidateHttpSession(true);
 
-
-       /* http.authorizeRequests()
-                .antMatchers()
-                .
-        */
     }
 
     @Autowired

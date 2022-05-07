@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+<html  xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head th:replace="fragments/header :: head('Logueo',_)"></head>
 
@@ -10,32 +10,27 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="sign__content">
-						<!-- authorization form -->
-						<form action="#" class="sign__form">
-							<a th:href="@{/}" class="sign__logo">
-								<img th:src="@{/img/logo.svg}" alt="logo">
+						<form th:action="@{/processLogin}" method="POST" class="sign__form">
+							<a th:href="@{/PaginaPrincipal}" class="sign__logo">
+								<img th:src="@{/img/tele.png}" alt="logo">
 							</a>
-
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Correo">
+								<input type="text" class="sign__input" name="correo" placeholder="Correo" required autofocus>
 							</div>
-
 							<div class="sign__group">
-								<input type="password" class="sign__input" placeholder="Contraseña">
+								<input type="password" name="password" class="sign__input" placeholder="Contraseña">
 							</div>
-
-							<div class="sign__group sign__group--checkbox">
+							<!--div class="sign__group sign__group--checkbox">
 								<input id="remember" name="remember" type="checkbox" checked="checked">
 								<label for="remember">Recuérdame</label>
-							</div>
-							
-							<button class="sign__btn" type="button">Ingresar</button>
+							</div-->
+							<h4 th:if="${param.error}" class="form-signin-heading" style="color:red">Acceso denegado</h4>
+							<button class="sign__btn" type="submit">Ingresar</button>
 
-							<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/login/signup}">Regístrate</a></span>
+							<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 15px"></span>Regístrate</a></span>
 
-							<span class="sign__text"><a href="#">¿Olvidaste tu contraseña?</a></span>
+							<!--span class="sign__text"><a href="#">¿Olvidaste tu contraseña?</a></span-->
 						</form>
-						<!-- end authorization form -->
 					</div>
 				</div>
 			</div>
