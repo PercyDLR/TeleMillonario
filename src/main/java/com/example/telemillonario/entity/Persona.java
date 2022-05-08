@@ -38,6 +38,9 @@ public class Persona implements Serializable {
     @Column(name = "correo", length = 100)
     private String correo;
 
+    @Column(name = "telefono", length = 20)
+    private String telefono;
+
     @Column(name = "nacimiento")
     private LocalDate nacimiento;
 
@@ -53,7 +56,7 @@ public class Persona implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idsede")
-    @NotNull(message = "Tiene que escoger una Sede valida crj")
+    @NotNull(message = "Tiene que escoger una Sede valida")
     private Sede idsede;//No se puede restringir puesto que implicaría malograr a Usuario,Admin,Actor y director
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -120,7 +120,7 @@
                         <img src="/static/img/home/images-profile.jpg" width="200" style="border-radius: 50%;">
                         <div class="row">
                             <div class="col" style="padding-left: 15px;padding-top: 20px;">
-                                <a class="btn btn-primary" style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif;" href="#" role="button">Editar perfil</a>
+                                <a class="btn btn-primary" style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif;" th:href="@{/editarPerfil}" role="button">Editar perfil</a>
                             </div>
                         </div>
                     </div>
@@ -130,13 +130,13 @@
                                 <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Nombre</b></label>
                                 <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Nombre"
                                        required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly value="Luna">
+                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly th:value="${usuario.nombres}">
                             </div>
                             <div class="col-sm-5 form-group" style="position: relative;">
                                 <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Apellidos</b></label>
                                 <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Apellidos"
                                        required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly value="Adanson Kahnwald">
+                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly th:value="${usuario.apellidos}">
                             </div>
                         </div>
                         <div class="row">
@@ -144,13 +144,13 @@
                                 <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>DNI</b></label>
                                 <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="DNI" maxlength="8"
                                        required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly value="71861873">
+                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly th:value="${usuario.dni}">
                             </div>
                             <div class="col-sm-5 form-group" style="position: relative;">
                                 <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Email</b></label>
                                 <input class="form-control mt-1 mb-3 text-light" type="email" placeholder="Email"
                                        required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly value="LunaBP@gmail.com">
+                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly th:value="${usuario.correo}">
                             </div>
                         </div>
                         <div class="row">
@@ -158,13 +158,13 @@
                                 <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Número de teléfono</b></label>
                                 <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Número de teléfono"
                                        required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly value="996332874">
+                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly th:value="${usuario.telefono}">
                             </div>
                             <div class="col-sm-5 form-group" style="position: relative;">
                                 <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Dirección</b></label>
                                 <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Dirección"
                                        required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly value="123 Maranga, San Miguel">
+                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676" readonly th:value="${usuario.direccion}">
                             </div>
                         </div>
                         <div class="row" style="text-align: center">
@@ -173,7 +173,7 @@
                                 <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Fecha de nacimiento</b></label>
                                 <input class="form-control mt-2 mb-5 text-light" type="date"
                                        required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676; text-align: center" readonly value="1999-08-28">
+                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676; text-align: center" readonly th:value="${usuario.nacimiento}">
                             </div>
                             <div class="col-sm-3"></div>
                         </div>

@@ -113,98 +113,102 @@
             <div class="container pt-2 me-auto" style="margin-bottom: 45px">
                 <div class="row mt-4">
                     <div class="col-sm-10" style="padding-left: 130px">
-                        <h1 style="font-family: 'Open Sans', sans-serif; color: #FFFFFF; font-size: 48px"><b>Editar perfil del
+                        <h1 style="font-family: 'Open Sans', sans-serif; color: #FFFFFF; font-size: 48px"><b>Editar
+                            perfil del
                             usuario</b></h1>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-4" style="text-align: center; padding-top: 40px; padding-left: 100px">
-                        <img src="/static/img/home/images-profile.jpg" width="200" style="border-radius: 50%;">
-                        <div class="row" style="padding-bottom: 20px; padding-left: 70px; padding-top: 20px">
-                            <input class="form-control" type="file" id="formFile" style="width: 75%" accept="image/png, image/gif, image/jpeg">
-                        </div>
-                        <div class="row">
-                            <div class="col" style="padding-left: 15px;padding-top: 20px;">
-                                <a class="btn btn-primary"
-                                   style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; width: 50%"
-                                   href="#" role="button">Editar</a>
+                <form method="POST" th:object="${usuario}" th:action="@{/guardarPerfil}">
+                    <div class="row">
+                        <div class="col-sm-4" style="text-align: center; padding-top: 40px; padding-left: 100px">
+                            <img src="/static/img/home/images-profile.jpg" width="200" style="border-radius: 50%;">
+                            <div class="row" style="padding-bottom: 20px; padding-left: 70px; padding-top: 20px">
+                                <input class="form-control" type="file" id="formFile" style="width: 75%"
+                                       accept="image/png, image/gif, image/jpeg">
+                            </div>
+                            <div class="row">
+                                <div class="col" style="padding-left: 15px;padding-top: 20px;">
+                                    <button class="btn btn-primary"
+                                       style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; width: 50%"
+                                       role="button" type="submit">Editar</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" style="padding-left: 15px;padding-top: 10px;">
+                                    <a class="btn btn-primary"
+                                       style="background-color: #737373; border-color: #737373; font-family: 'Open Sans', sans-serif; width: 50%"
+                                       th:href="@{/verPerfil}" role="button">Cancelar</a>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col" style="padding-left: 15px;padding-top: 10px;">
-                                <a class="btn btn-primary"
-                                   style="background-color: #737373; border-color: #737373; font-family: 'Open Sans', sans-serif; width: 50%"
-                                   href="#" role="button">Cancelar</a>
+                        <div class="col-sm-8">
+                            <div class="row mt-4"> <!--FALTA PONER FORM-->
+                                <div class="col-sm-5 form-group" style="position: relative;">
+                                    <!--<label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Nombre</b></label>-->
+                                    <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Nombre"
+                                           required
+                                           style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
+                                           readonly disabled th:field="*{nombres}" hidden>
+                                </div>
+                                <div class="col-sm-5 form-group" style="position: relative;">
+                                    <!--<label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Apellidos</b></label>-->
+                                    <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Apellidos"
+                                           required
+                                           style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
+                                           readonly disabled th:field="*{apellidos}" hidden>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 form-group" style="position: relative;">
+                                    <!--<label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>DNI</b></label>-->
+                                    <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="DNI"
+                                           maxlength="8"
+                                           required
+                                           style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
+                                           readonly disabled th:field="*{dni}" hidden>
+                                </div>
+                                <div class="col-sm-5 form-group" style="position: relative;">
+                                    <!--<label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Email</b></label>-->
+                                    <input class="form-control mt-1 mb-3 text-light" type="email" placeholder="Email"
+                                           required
+                                           style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
+                                           readonly disabled th:field="*{correo}" hidden>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 form-group" style="position: relative;">
+                                    <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Número de
+                                        teléfono</b></label>
+                                    <input class="form-control mt-1 mb-3 text-light" type="text"
+                                           placeholder="Número de teléfono"
+                                           required
+                                           style="background-color: transparent; border-radius: 5px; border-color: #7c7676"
+                                           th:field="*{telefono}">
+                                </div>
+                                <div class="col-sm-5 form-group" style="position: relative;">
+                                    <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Dirección</b></label>
+                                    <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Dirección"
+                                           required
+                                           style="background-color: transparent; border-radius: 5px; border-color: #7c7676"
+                                           th:field="*{direccion}">
+                                </div>
+                            </div>
+                            <div class="row" style="text-align: center">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-5 form-group justify-content-center"
+                                     style="position: relative; margin-left: 45px">
+                                    <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Fecha de
+                                        nacimiento</b></label>
+                                    <input class="form-control mt-2 mb-5 text-light" type="date"
+                                           required
+                                           style="background-color: transparent; border-radius: 5px; border-color: #7c7676; text-align: center"
+                                           th:field="*{nacimiento}">
+                                </div>
+                                <div class="col-sm-3"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-8">
-                        <div class="row mt-4"> <!--FALTA PONER FORM-->
-                            <div class="col-sm-5 form-group" style="position: relative;">
-                                <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Nombre</b></label>
-                                <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Nombre"
-                                       required
-                                       style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
-                                       readonly disabled value="Luna">
-                            </div>
-                            <div class="col-sm-5 form-group" style="position: relative;">
-                                <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Apellidos</b></label>
-                                <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Apellidos"
-                                       required
-                                       style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
-                                       readonly disabled value="Adanson Kahnwald">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5 form-group" style="position: relative;">
-                                <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>DNI</b></label>
-                                <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="DNI"
-                                       maxlength="8"
-                                       required
-                                       style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
-                                       readonly disabled value="71861873">
-                            </div>
-                            <div class="col-sm-5 form-group" style="position: relative;">
-                                <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Email</b></label>
-                                <input class="form-control mt-1 mb-3 text-light" type="email" placeholder="Email"
-                                       required
-                                       style="background-color: #908f8f; border-radius: 5px; border-color: #7c7676"
-                                       readonly disabled value="LunaBP@gmail.com">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-5 form-group" style="position: relative;">
-                                <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Número de
-                                    teléfono</b></label>
-                                <input class="form-control mt-1 mb-3 text-light" type="text"
-                                       placeholder="Número de teléfono"
-                                       required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676"
-                                       value="996332874">
-                            </div>
-                            <div class="col-sm-5 form-group" style="position: relative;">
-                                <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Dirección</b></label>
-                                <input class="form-control mt-1 mb-3 text-light" type="text" placeholder="Dirección"
-                                       required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676"
-                                       value="123 Maranga, San Miguel">
-                            </div>
-                        </div>
-                        <div class="row" style="text-align: center">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-5 form-group justify-content-center"
-                                 style="position: relative; margin-left: 45px">
-                                <label style="font-family: 'Open Sans', sans-serif; color:#ffffff"><b>Fecha de
-                                    nacimiento</b></label>
-                                <input class="form-control mt-2 mb-5 text-light" type="date"
-                                       required
-                                       style="background-color: transparent; border-radius: 5px; border-color: #7c7676; text-align: center"
-                                       value="1999-08-28">
-                            </div>
-                            <div class="col-sm-3"></div>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
 
 
