@@ -39,6 +39,7 @@
                                         <div class="col-md-6 col-8">
 
                                             <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
+                                                <option value="" selected></option>
                                                 <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
                                                 <option th:each="imagen : ${imagenes}"
                                                         th:value="${imagen.id}"></option>
@@ -225,8 +226,10 @@
                 function refresh() {
                     $('.owl-carousel').trigger('destroy.owl.carousel');
                     var $owl = $('.owl-carousel').owlCarousel({
-                        items: 1,
-                        loop: true
+                        loop: true,
+                        smartSpeed: 600,
+                        margin: 60,
+                        items: 1
                     });
                     $owl.trigger('refresh.owl.carousel');
                 }

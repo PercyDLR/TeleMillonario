@@ -83,30 +83,10 @@ $(document).ready(function () {
 		}
 	});
 	$('.photo__carousel').owlCarousel({
-		mouseDrag: false,
-		touchDrag: false,
-		dots: false,
 		loop: true,
-		autoplay: true,
 		smartSpeed: 600,
-		margin: 30,
-		responsive: {
-			0: {
-				items: 1,
-			},
-			576: {
-				items: 1,
-			},
-			768: {
-				items: 1,
-			},
-			992: {
-				items: 1,
-			},
-			1200: {
-				items: 1,
-			},
-		},
+		margin: 60,
+		items: 1
 	});
 
 	$('.home__nav--next').on('click', function() {
