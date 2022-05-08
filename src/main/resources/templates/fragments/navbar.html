@@ -128,22 +128,22 @@
                                 <!-- header nav -->
                                 <ul class="header__nav" style="height: auto; width: fit-content; margin-right: auto">
                                     <li class="header__nav-item">
-                                        <a  th:href="@{/funciones}" class="header__nav-link"
+                                        <a  th:href="@{/operador/funciones}" class="header__nav-link"
                                             th:classappend="${seccion=='funciones' ? 'header__nav-link--active' : ''}">Funciones</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a th:href="@{/salas}" class="header__nav-link"
+                                        <a th:href="@{/operador/salas}" class="header__nav-link"
                                            th:classappend="${seccion=='salas' ? 'header__nav-link--active' : ''}">Salas</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a th:href="@{/reportes}" class="header__nav-link"
+                                        <a th:href="@{/operador/reportes}" class="header__nav-link"
                                            th:classappend="${seccion=='reportes' ? 'header__nav-link--active' : ''}">Reportes</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a th:href="@{/resenas}" class="header__nav-link"
+                                        <a th:href="@{/operador/resenas}" class="header__nav-link"
                                            th:classappend="${seccion=='reseñas' ? 'header__nav-link--active' : ''}">Reseñas</a>
                                     </li>
 
@@ -154,7 +154,7 @@
                                             <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
-                                            <li><a th:href="@{/perfil}">Perfil</a></li>
+                                            <li><a th:href="@{/operador/perfil}">Perfil</a></li>
                                             <li><a href="#" onclick="document.getElementById('form-logout').submit()">
                                                 Cerrar Sesión</a></li>
                                         </ul>
@@ -172,7 +172,7 @@
                                         </a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
-                                            <li><a th:href="@{/perfil}">Perfil</a></li>
+                                            <li><a th:href="@{/operador/perfil}">Perfil</a></li>
                                             <li><a href="#" onclick="document.getElementById('form-logout').submit()">
                                                 Cerrar Sesión</a></li>
                                         </ul>
@@ -217,7 +217,7 @@
                         <div class="col-12">
                             <div class="header__content">
                                 <!-- header logo -->
-                                <a th:href="@{/admin}" class="header__logo" style="width: 12rem">
+                                <a th:href="@{/admin/sedes}" class="header__logo" style="width: 12rem">
                                     <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
                                 </a>
                                 <!-- end header logo -->
@@ -225,26 +225,26 @@
                                 <!-- header nav -->
                                 <ul class="header__nav" style="height: auto; width: fit-content; margin-right: auto">
                                     <li class="header__nav-item">
-                                        <a  th:href="@{/listarSedes}" class="header__nav-link"
+                                        <a  th:href="@{/admin/sedes}" class="header__nav-link"
                                             th:classappend="${seccion=='sedes' ? 'header__nav-link--active' : ''}">Sedes</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a th:href="@{/Operadores}" class="header__nav-link"
+                                        <a th:href="@{/admin/operadores}" class="header__nav-link"
                                            th:classappend="${seccion=='operadores' ? 'header__nav-link--active' : ''}" >Operadores</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a th:href="@{/actor}" class="header__nav-link"
+                                        <a th:href="@{/admin/actores}" class="header__nav-link"
                                            th:classappend="${seccion=='actores' ? 'header__nav-link--active' : ''}" >Actores</a>
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a th:href="@{/admin2}" class="header__nav-link"
+                                        <a th:href="@{/admin/directores}" class="header__nav-link"
                                            th:classappend="${seccion=='directores' ? 'header__nav-link--active' : ''}" >Directores</a>
                                     </li>
                                     <li class="header__nav-item">
-                                        <a th:href="@{/listaClientes}" class="header__nav-link"
+                                        <a th:href="@{/admin/clientes}" class="header__nav-link"
                                            th:classappend="${seccion=='clientes' ? 'header__nav-link--active' : ''}" >Clientes</a>
                                     </li>
 

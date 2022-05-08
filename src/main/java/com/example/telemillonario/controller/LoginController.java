@@ -66,7 +66,7 @@ public class LoginController {
         System.out.println("llego aca");
 
         if(personita.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
-            return "redirect:/listarSedes";
+            return "redirect:/admin/sedes";
 
         }else if(personita.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
             return "redirect:/";
@@ -196,7 +196,7 @@ public class LoginController {
 
         String subject = "Link para cambiar contraseña";
 
-        String content = "<p>Buenas, </p>"
+        String content = "<p>Cordiales Saludos: </p>"
                 + "<p>Se ha realizado una solicitud para el cambio de contraseña </p>"
                 + "<p>Haga click en el siguiente link para cambiar su contraseña </p>"
                 + "<p><b><a href="+ resetPasswordLink + ">Cambiar contraseña</a></b></p>"
@@ -210,8 +210,10 @@ public class LoginController {
     }
 
     @GetMapping("/anErrorHasOcurred")
-    public String error(){
-        return "paginaError";
+    public String error(Model model){
+        model.addAttribute("status",404);
+        model.addAttribute("error","");
+        return "error";
     }
 
 

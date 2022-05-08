@@ -24,7 +24,7 @@
 
                     <div class="col-md-2 col-12 d-flex justify-content-center">
                         <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
-                            <a th:href="@{'/sala/nuevaSala?idsede=' + ${sede.id}}">
+                            <a th:href="@{'/admin/salas/nuevaSala?idsede=' + ${sede.id}}">
                                 <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
                             </a>
                         </button>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <form method="post" th:action="@{'/sala/filtrar'}">
+                <form method="post" th:action="@{'/admin/salas/filtrar'}">
                     <div class="row justify-content-center">
                         <div class="col-md-4 col-12">
 
@@ -113,7 +113,7 @@
 
                                     <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
 
-                                    <td><a class="circulo_botones" th:href="@{'/sala/editarSalas?id=' + ${sala.id}}">
+                                    <td><a class="circulo_botones" th:href="@{'/admin/salas/editarSalas?id=' + ${sala.id}}">
                                         <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
 
                                     <td><a class="circulo_visibilidad" th:title="${sala.estado == 1 ? 'Inhabilitar Sala':'Habilitar Sala'}"
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <br>
-                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/sala?parametro='+${parametro}+'&buscador='+${buscador}+'&ord='+${ord}+'&')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/salas?parametro='+${parametro}+'&buscador='+${buscador}+'&ord='+${ord}+'&')"></div>
             </div>
         </div>
 
@@ -159,7 +159,7 @@
                     let opcion = estado == 0 ? 'Habilitar' : 'Deshabilitar';
 
                     popup.getElementsByTagName("h5").item(0).innerText = '¿Estás Seguro de Querer ' +opcion+ ' esta Sala?'
-                    popup.getElementsByTagName("a").item(2).href = [[@{'/sala/disponibilidad?id='}]] + idsala;
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/salas/disponibilidad?id='}]] + idsala;
                     popup.getElementsByTagName("a").item(2).text = opcion + ' Sala';
                     popup.style.display = 'block';
                 }
