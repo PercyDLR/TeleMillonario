@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/sala")
+@RequestMapping("/admin/salas")
 public class SalaController {
 
     @Autowired
@@ -77,7 +77,7 @@ public class SalaController {
                     @RequestParam(value = "pag",required = false) String pag,
                     RedirectAttributes attr){
 
-        return "redirect:/sala?parametro="+parametro+"&buscador="+buscador+"&ord="+ord+"&pag="+pag;
+        return "redirect:/admin/salas?parametro="+parametro+"&buscador="+buscador+"&ord="+ord+"&pag="+pag;
     }
 
     @GetMapping("/nuevaSala")
@@ -92,7 +92,7 @@ public class SalaController {
         Optional<Sala> optionalSala = salaRepository.findById(id);
         if(optionalSala.isEmpty()) {
             a.addFlashAttribute("msg","-1");
-            return "redirect:/sala";
+            return "redirect:/admin/salas";
         } else {
             model.addAttribute("sala",optionalSala.get());
             model.addAttribute("sede", optionalSala.get().getIdsede());
@@ -128,11 +128,12 @@ public class SalaController {
             } else {
                 String[] palabras = sala.getIdsede().getNombre().split(" ");
                 String identificador = this.genIdentificador(palabras,optSala.get().getNumero());
+                sala.setIdentificador(identificador);
                 a.addFlashAttribute("msg","1");
             }
             a.addFlashAttribute("identificador", sala.getIdentificador());
             salaRepository.save(sala);
-            return "redirect:/sala";
+            return "redirect:/admin/salas";
         }
     }
 
@@ -151,7 +152,7 @@ public class SalaController {
             a.addFlashAttribute("msg", "2");
             a.addFlashAttribute("identificador", sala.getIdentificador());
         }
-        return "redirect:/sala";
+        return "redirect:/admin/salas";
     }
 
     private String genIdentificador(String[] palabras, int numeroSala){
@@ -163,7 +164,7 @@ public class SalaController {
                 identificador = identificador.concat(palabra.substring(0, 1));
             }
         }
-        identificador = identificador.concat(String.format("%03d",numeroSala+1));
+        identificador = identificador.concat(String.format("%03d",numeroSala));
 
         System.out.println("Identificador: " + identificador);
         return identificador;

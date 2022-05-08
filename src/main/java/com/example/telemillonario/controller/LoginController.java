@@ -1,27 +1,40 @@
 package com.example.telemillonario.controller;
 
+import com.azure.core.annotation.Get;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Rol;
 import com.example.telemillonario.repository.PersonaRepository;
+import com.example.telemillonario.service.UsuarioService;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @Controller
 public class LoginController {
 
     @Autowired
     PersonaRepository personaRepository;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
 
     @GetMapping("/login")
@@ -56,7 +69,7 @@ public class LoginController {
         System.out.println("llego aca");
 
         if(personita.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
-            return "redirect:/listarSedes";
+            return "redirect:/admin/sedes";
 
         }else if(personita.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
             return "redirect:/";
@@ -87,9 +100,142 @@ public class LoginController {
 
         return "redirect:/crearCuenta";
 
+
+    }
+
+    @GetMapping("/cambioDeContrasenia")
+    public String cambioDeContrasenia(){
+        return "login/CambioDeContrasena";
+    }
+
+    @PostMapping("/cambioPassword")
+    public String processForgotPasswordForm(@RequestParam("correo") String correo,RedirectAttributes redirectAttributes){
+
+        Persona persona = personaRepository.findByCorreo(correo);
+
+        if(persona == null){
+            redirectAttributes.addFlashAttribute("msg","Ingrese un correo válido");
+            return "redirect:/cambioDeContrasenia";
+        }
+
+        String token = RandomString.make(45);
+
+        System.out.println(correo);
+        System.out.println(token);
+
+        usuarioService.updateResetPassword(token,correo);
+
+        //Generamos el link para el reseteo de contraseña
+
+        String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
+
+        System.out.println(resetPasswordLink);
+        try {
+            sendEmail(correo,resetPasswordLink);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            redirectAttributes.addFlashAttribute("msg","Ha ocurrido un error, vuelve a intentarlo mas tarde.");
+            return "redirect:/cambioDeContrasenia";
+        }
+
+        redirectAttributes.addFlashAttribute("msgexito","Se ha enviado el link de recuperacion al correo ingresado");
+        return "redirect:/cambioDeContrasenia";
+
+    }
+
+    @GetMapping("/resetPassword")
+    public String resetPassword(@RequestParam("token") String tokensito, Model model){
+
+        if(tokensito.equalsIgnoreCase("")){
+            return "redirect:/anErrorHasOcurred";
+        }
+
+        Persona personita = personaRepository.buscarPersonaPorTokensito(tokensito);
+        if(personita == null){
+            return "redirect:/anErrorHasOcurred";
+        }
+
+        model.addAttribute("token",tokensito);
+        return "login/actualizacionContrasena";
+    }
+
+    @PostMapping("/resetearContrasenia")
+    public String reseteadaDeContrasenia(@RequestParam("token") String tokensito,@RequestParam("password") String password,@RequestParam("repassword") String confirmarContrasena,RedirectAttributes redirectAttributes){
+
+        if(tokensito.equalsIgnoreCase("")){
+            return "redirect:/anErrorHasOcurred";
+        }
+
+        Persona personita = personaRepository.buscarPersonaPorTokensito(tokensito);
+
+        if(personita == null){
+            return "redirect:/anErrorHasOcurred";
+
+        }else{
+            if(password.equals(confirmarContrasena)){
+                usuarioService.updatePassword(personita,password);
+                redirectAttributes.addFlashAttribute("msgexitoso","Su contraseña se ha cambiado satisfactoriamente.");
+                return "redirect:/sucessPassword";
+            }else{
+                redirectAttributes.addFlashAttribute("msg","Las constraseñas deben coincidir");
+                return "redirect:/resetPassword?token="+tokensito;
+            }
+        }
+
+    }
+
+    @GetMapping("/sucessPassword")
+    public String resetPassword(){
+        return "login/actualizacionContrasena";
     }
 
 
 
+    private void sendEmail(String correo, String resetPasswordLink) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("a20191566@pucp.edu.pe","TeleMillonario");
+        helper.setTo(correo);
+
+        String subject = "Link para cambiar contraseña";
+
+        String content = "<p>Cordiales Saludos: </p>"
+                + "<p>Se ha realizado una solicitud para el cambio de contraseña </p>"
+                + "<p>Haga click en el siguiente link para cambiar su contraseña </p>"
+                + "<p><b><a href="+ resetPasswordLink + ">Cambiar contraseña</a></b></p>"
+                + "<p>Ignorar este mensaje , si usted no ha solicitado dicho cambio.</p>";
+
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+        mailSender.send(message);
+
+    }
+
+    @GetMapping("/anErrorHasOcurred")
+    public String error(Model model){
+        model.addAttribute("status",404);
+        model.addAttribute("error","");
+        return "error";
+    }
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

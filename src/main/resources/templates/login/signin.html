@@ -29,7 +29,7 @@
 
 								<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 15px"></span>Regístrate</a></span>
 
-								<!--span class="sign__text"><a href="#">¿Olvidaste tu contraseña?</a></span-->
+								<span class="sign__text"><a th:href="@{/cambioDeContrasenia}">¿Olvidaste tu contraseña?</a></span>
 							</form>
 						</div>
 					</div>
@@ -37,9 +37,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
     <div th:replace="fragments/footer :: js(_)"></div>
 </body>
 
