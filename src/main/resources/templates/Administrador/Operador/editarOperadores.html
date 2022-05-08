@@ -20,9 +20,15 @@
                         <div class="sign__content" style="margin-top: 70px">
 
                             <!-- authorization form -->
-                            <form id="contactForm" class="sign__form" method="post" th:action="@{'/Operadores/guardar'}" th:object="${operador}">
+                            <form id="contactForm" class="sign__form" method="post" th:action="@{/admin/operadores/guardar}" th:object="${operador}">
 
                                 <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;">Actualizar Operador</h3>
+
+                                <div th:if="${msg != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <strong th:text="${msg}"></strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
 
                                 <div class="sign__group mt-3">
                                     <input hidden th:field="*{id}">
@@ -68,7 +74,7 @@
 
                                 <div class="row">
                                     <div class="col-6" style="justify-content: center">
-                                        <a  class="sign__btn" th:href="@{/Operadores}">Cancelar</a>
+                                        <a  class="sign__btn" th:href="@{/admin/operadores}">Cancelar</a>
                                     </div>
 
                                     <div class="col-6" style="justify-content: center">

@@ -24,7 +24,7 @@
 
 
                             <!-- authorization form -->
-                            <form class="sign__form" method="post" th:action="@{'/sala/guardar'}" th:object="${sala}">
+                            <form class="sign__form" method="post" th:action="@{'/admin/salas/guardar'}" th:object="${sala}">
 
                                 <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;"
                                     th:text="${sala.id == 0 ? 'Nueva Sala' : 'Editar Sala'}">
@@ -86,7 +86,7 @@
 
                                 <div class="row">
                                     <div class="col-6" style="justify-content: center">
-                                        <a th:href="@{/sala}" class="sign__btn">Cancelar</a>
+                                        <a th:href="@{/admin/salas}" class="sign__btn">Cancelar</a>
                                     </div>
 
                                     <div class="col-6" style="justify-content: center">

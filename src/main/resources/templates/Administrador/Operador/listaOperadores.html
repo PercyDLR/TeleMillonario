@@ -38,14 +38,14 @@
 
                     <div class="col-md-2 col-12 d-flex justify-content-center">
                         <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nuevo Operador">
-                            <a th:href="@{/Operadores/crear}">
+                            <a th:href="@{/admin/operadores/crear}">
                                 <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
                             </a>
                         </button>
                     </div>
                 </div>
 
-                <form method="post" th:action="@{/Operadores/buscar}">
+                <form method="post" th:action="@{/admin/operadores/buscar}">
                     <div class="row justify-content-center">
                         <div class="col-md-4 col-12">
 
@@ -105,7 +105,7 @@
 
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" th:href="@{'/Operadores/editar' + '?id=' + ${operador.id}}">
+                                            <a class="circulo_botones" th:href="@{'/admin/operadores/editar' + '?id=' + ${operador.id}}">
                                                 <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
@@ -139,7 +139,7 @@
                             <div class="sign__group">
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar este Operador?</h5>
                             </div>
-                            <a th:href="@{/Operadores}" onclick="cerrarPopUp();" class="sign__btn">Cancelar</a>
+                            <a th:href="@{/admin/operadores}" onclick="cerrarPopUp();" class="sign__btn">Cancelar</a>
                             <a style="color: white"  onclick="borrar()" type="button" class="sign__btn">Continuar</a>
                         </form>
                     </div>
@@ -160,7 +160,7 @@
 
                 function borrar(){
                     var id = document.getElementById("ids").value;
-                    var url = "/Operadores/borrar?id=" + id;
+                    var url = "/admin/operadores/borrar?id=" + id;
                     window.location.replace(url);
                 }
             </script>
