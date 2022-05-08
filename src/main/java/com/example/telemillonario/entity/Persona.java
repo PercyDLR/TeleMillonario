@@ -67,6 +67,17 @@ public class Persona implements Serializable {
     @Column(name = "calificacion")
     private Double calificacion;
 
+    @Column(name = "passwordtoken")
+    private String passwordToken;
+
+    public String getPasswordToken() {
+        return passwordToken;
+    }
+
+    public void setPasswordToken(String passwordToken) {
+        this.passwordToken = passwordToken;
+    }
+
     public Double getCalificacion() {
         return calificacion;
     }

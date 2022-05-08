@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head th:replace="fragments/header :: head('Error',_)"></head>
 
 <body class="body">
 
-	<div class="page-404 section--bg" data-bg="img/section/section.jpg">
+	<div class="page-404 section--bg" th:src="${img/section/section.jpg}">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
