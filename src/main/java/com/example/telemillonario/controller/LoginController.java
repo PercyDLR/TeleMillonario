@@ -48,7 +48,10 @@ public class LoginController {
         personita.setCorreo(persona.getCorreo());
         personita.setNacimiento(persona.getNacimiento());
         personita.setIdrol(persona.getIdrol());
+        personita.setIdsede(persona.getIdsede());
 
+        System.out.println(personita.getIdsede().getId());
+        System.out.println(personita.getIdsede().getNombre());
         session.setAttribute("usuario",personita);
         System.out.println("llego aca");
 
@@ -59,7 +62,7 @@ public class LoginController {
             return "redirect:/";
 
         }else {
-            return "redirect:/"; //Cual es su pagina principal del Operador?
+            return "redirect:/funciones/lista"; //Cual es su pagina principal del Operador?
         }
     }
 

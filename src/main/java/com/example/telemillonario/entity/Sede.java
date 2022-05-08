@@ -1,10 +1,11 @@
 package com.example.telemillonario.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "sede")
-public class Sede {
+public class Sede implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

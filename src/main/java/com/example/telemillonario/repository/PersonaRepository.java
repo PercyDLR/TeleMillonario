@@ -28,4 +28,11 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
     //Busca a un usuario por correo
     Persona findByCorreo(String correo);
+
+    //Listado de actores
+    @Query(value = "SELECT * FROM persona where idrol=5",nativeQuery = true)
+    List<Persona> listarActores();
+
+    @Query(value = "SELECT * FROM persona where idrol=4",nativeQuery = true)
+    List<Persona> listarDirectores();
 }

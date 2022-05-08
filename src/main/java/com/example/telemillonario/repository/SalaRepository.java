@@ -31,4 +31,9 @@ public interface SalaRepository extends JpaRepository<Sala,Integer> {
             "order by aforo desc " +
             "limit ?4,?5")
     List<Sala> buscarSalasDesc(int sede,int numero, int estado, int pag, int salasporpag);
+
+    @Query(nativeQuery = true, value = "select * from telemillonario.sala where " +
+            "idsede=?1 and (estado=?2)")
+    List<Sala> buscarSalasTotal(int sede, int estado);
+
 }
