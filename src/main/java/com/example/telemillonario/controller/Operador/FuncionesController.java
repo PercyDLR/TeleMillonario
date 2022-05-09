@@ -49,7 +49,7 @@ public class FuncionesController {
     @GetMapping(value = {"/crear"})
     public String programarFuncionesForm(@ModelAttribute("funcion")Funcion funcion, Model model, HttpSession session){
 
-        model.addAttribute("listActores",personaRepository.listarActores());
+        model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
         model.addAttribute("listDirectores",personaRepository.listarDirectores());
         Persona persona = (Persona) session.getAttribute("usuario");
         //listado de salas por sede disponibles
@@ -65,7 +65,7 @@ public class FuncionesController {
                                  @RequestParam(value="iddirector") String iddirector) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("listActores",personaRepository.listarActores());
+            model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
             model.addAttribute("listDirectores",personaRepository.listarDirectores());
             Persona persona = (Persona) session.getAttribute("usuario");
             //listado de salas por sede disponibles

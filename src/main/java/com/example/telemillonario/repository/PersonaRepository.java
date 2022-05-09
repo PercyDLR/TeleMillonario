@@ -1,6 +1,7 @@
 package com.example.telemillonario.repository;
 
 import com.example.telemillonario.entity.Persona;
+import com.example.telemillonario.entity.Sala;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -31,10 +32,17 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     //Busca a un usuario por correo
     Persona findByCorreo(String correo);
 
-    //Listado de actores
-    @Query(value = "SELECT * FROM persona where idrol=5",nativeQuery = true)
-    List<Persona> listarActores();
+    //Actores
+    @Query(nativeQuery = true, value = "SELECT * FROM persona " +
+            "where idrol=5 and estado=1 and (concat(nombres,' ',apellidos) like %?1% or ?1='') " +
+            "limit ?2,?3")
+    List<Persona> listarActores(String busqueda, int pag, int actoresxpagina);
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM persona " +
+            "where idrol=5 and estado=1 and (concat(nombres,' ',apellidos) like %?1% or ?1='')")
+    Integer cantActores(String busqueda);
 
+
+    // Directores
     @Query(value = "SELECT * FROM persona where idrol=4",nativeQuery = true)
     List<Persona> listarDirectores();
 
