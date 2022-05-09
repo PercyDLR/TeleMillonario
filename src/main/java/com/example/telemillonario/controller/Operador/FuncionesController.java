@@ -110,7 +110,7 @@ public class FuncionesController {
         if (optFuncionEncontr.isPresent()) {
             Funcion funcencon = optFuncionEncontr.get();
             model.addAttribute("funcion", funcencon);
-            model.addAttribute("listActores",personaRepository.listarActores());
+            model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
             model.addAttribute("listDirectores",personaRepository.listarDirectores());
 
 
