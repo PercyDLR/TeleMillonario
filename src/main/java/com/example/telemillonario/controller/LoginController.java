@@ -63,14 +63,12 @@ public class LoginController {
         personita.setNacimiento(persona.getNacimiento());
         personita.setIdrol(persona.getIdrol());
 
-//        if (persona.getIdsede() !=null){
+        if (persona.getIdsede() !=null){
             personita.setIdsede(persona.getIdsede());
-//        }
+            System.out.println(personita.getIdsede().getId());
+            System.out.println(personita.getIdsede().getNombre());
+        }
 
-
-
-//        System.out.println(personita.getIdsede().getId());
-        System.out.println(personita.getIdsede().getNombre());
         session.setAttribute("usuario",personita);
         System.out.println("llego aca");
 
