@@ -62,6 +62,15 @@
                                 </div>
 
                                 <div class="sign__group">
+                                    <label for="correo">Correo&ensp;&ensp;</label>
+                                    <input class="sign__input" th:field="*{correo}"
+                                           th:classappend="${#fields.hasErrors('correo')? 'is-invalid':''}"
+                                           placeholder="Apellidos" readonly>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
+                                         th:errors="*{correo}"></div>
+                                </div>
+
+                                <div class="sign__group">
                                     <label for="idsede">Sede&ensp;&ensp;&ensp;&ensp;</label>
                                     <select class="sign__input" th:field="*{idsede}">
                                         <option th:each="sede : ${listaSedes}" th:value="${sede.id}"

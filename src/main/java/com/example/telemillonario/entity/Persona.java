@@ -1,5 +1,8 @@
 package com.example.telemillonario.entity;
 
+import com.example.telemillonario.validation.Elenco;
+import com.example.telemillonario.validation.Operador;
+import com.example.telemillonario.validation.Usuario;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
@@ -19,22 +22,22 @@ public class Persona implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @NotBlank(message = "Los nombres no pueden estar vacíos")
+    @NotBlank(message = "Los nombres no pueden estar vacíos",groups = {Usuario.class ,Operador.class, Elenco.class})
     @Column(name = "nombres", length = 100)
     private String nombres;
 
-    @NotBlank(message = "Los apellidos no pueden estar vacíos")
+    @NotBlank(message = "Los apellidos no pueden estar vacíos", groups = {Usuario.class ,Operador.class, Elenco.class})
     @Column(name = "apellidos", length = 100)
     private String apellidos;
 
     //https://www.geeksforgeeks.org/spring-mvc-custom-validation/
-    @NotBlank(message = "El dni no puede estar vacío")
-    @Pattern(regexp = "[0-9]{8}",message = "DNI no valido")//Momentaneamente
+    @NotBlank(message = "El dni no puede estar vacío", groups = {Usuario.class ,Operador.class})
+    @Pattern(regexp = "[0-9]{8}",message = "DNI no valido", groups = {Usuario.class ,Operador.class})//Momentaneamente
     @Column(name = "dni", length = 8)
     private String dni;
 
-    @Email
-    @NotNull(message = "El correo no puede estar vacio")
+    @Email(message = "Ingrese una dirección de correo válida",groups = {Usuario.class ,Operador.class})
+    @NotNull(message = "El correo no puede estar vacio",groups = {Usuario.class ,Operador.class})
     @Column(name = "correo", length = 100)
     private String correo;
 
@@ -50,13 +53,13 @@ public class Persona implements Serializable {
     @Column(name = "estado")
     private Integer estado;
 
-    @NotNull(message = "La contraseña no puede estar vacia")
+    @NotNull(message = "La contraseña no puede estar vacia", groups = Usuario.class)
     @Column(name = "contrasenia", length = 200)
     private String contrasenia;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idsede")
-    @NotNull(message = "Tiene que escoger una Sede valida")
+    @NotNull(message = "Tiene que escoger una Sede valida", groups = Operador.class)
     private Sede idsede;//No se puede restringir puesto que implicaría malograr a Usuario,Admin,Actor y director
 
     @ManyToOne(fetch = FetchType.LAZY)

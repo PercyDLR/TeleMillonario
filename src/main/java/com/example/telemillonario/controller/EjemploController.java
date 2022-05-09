@@ -74,4 +74,12 @@ public class EjemploController {
         return "redirect:/ejemplo";
     }
 
+    @GetMapping("/error")
+    public String pantallaError(Model model){
+
+        model.addAttribute("status",404);
+        model.addAttribute("error","");
+        return "error";
+    }
+
 }

@@ -5,10 +5,12 @@ import com.example.telemillonario.entity.Rol;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.repository.RolRepository;
 import com.example.telemillonario.repository.SedeRepository;
+import com.example.telemillonario.validation.Operador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/Operadores")
+@RequestMapping("/admin/operadores")
 public class OperadorController {
 
     @Autowired
@@ -68,15 +70,15 @@ public class OperadorController {
                     return "Administrador/Operador/listaOperadores";
                 }else{
                     attr.addFlashAttribute("msg","Debe ingresar un numero de página entre"+1+" y "+num_paginas);
-                    return "redirect:/Operadores";
+                    return "redirect:/admin/operadores";
                 }
             }catch (Exception e){
                 attr.addFlashAttribute("msg","Debe ingresar un numero para la página");
-                return "redirect:/Operadores";
+                return "redirect:/admin/operadores";
             }
         }else{
             attr.addFlashAttribute("msg","Debe Ingresar un valor de paginación");
-            return "redirect:/Operadores";
+            return "redirect:/admin/operadores";
         }
     }
 
@@ -89,7 +91,7 @@ public class OperadorController {
     @PostMapping(value = "/buscar")
     public String filtrarOperador(Model model,@RequestParam("filtro") String filtro,@RequestParam("nombre") String nombre,RedirectAttributes attr){
         if(filtro.equals("0") && nombre.equals("")){
-            return "redirect:/Operadores";
+            return "redirect:/admin/operadores";
         }else{
             //algo está buscando
             if(filtro.equals("0")&& !nombre.equals("")){
@@ -133,26 +135,27 @@ public class OperadorController {
                     return "Administrador/Operador/editarOperadores";
                 } else {
                     attr.addFlashAttribute("msg", "No existe el operador con el ID" + id);
-                    return "redirect:/Operadores/";
+                    return "redirect:/admin/operadores/";
                 }
             } catch (Exception e) {
                 attr.addFlashAttribute("msg", "Envió un ID inválido");
-                return "redirect:/Operadores/";
+                return "redirect:/admin/operadores/";
             }
         } else {
             attr.addFlashAttribute("msg", "Se envió el ID vacío");
-            return "redirect:/Operadores/";
+            return "redirect:/admin/operadores/";
         }
     }
 
     @PostMapping(value = "/guardar")
-    public String guardarOperador(@ModelAttribute("operador") @Valid Persona operador, BindingResult bindingResult, RedirectAttributes attr,Model model) {
+    public String guardarOperador(@ModelAttribute("operador") @Validated(Operador.class) Persona operador, BindingResult bindingResult, RedirectAttributes attr, Model model) {
         try {
             Integer id = operador.getId();
             if (id != null) {
             //if (personaRepository.existsById(id)) {
                 //Editar Operador
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
+                    System.out.println(bindingResult.getFieldError());
                     if(operador.getIdsede()==null){
                         //attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
                     }
@@ -173,11 +176,12 @@ public class OperadorController {
                     op.setIdsede(operador.getIdsede());
                     personaRepository.save(op);
                     attr.addFlashAttribute("msg2","Se actualizó el operador de manera exitosa");
-                    return "redirect:/Operadores/";
+                    return "redirect:/admin/operadores/";
                 }
             } else {
                 //Agregar Operador
                 if(bindingResult.hasErrors()||operador.getIdsede()==null){
+                    System.out.println(bindingResult.getFieldError());
                     model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
                     //attr.addFlashAttribute("msg","La sede del operador no puede quedar vacía");
                     /*if(operador.getIdsede()==null){
@@ -203,7 +207,7 @@ public class OperadorController {
                         operador.setIdrol(rol);
                         personaRepository.save(operador);
                         attr.addFlashAttribute("msg2", "Se creo de el operador de manera exitosa");
-                        return "redirect:/Operadores";
+                        return "redirect:/admin/operadores";
                     }
                 }
             }
@@ -219,24 +223,25 @@ public class OperadorController {
         if(optid.isPresent()) {
             try{
                 int id = Integer.parseInt(optid.get());
+
                 if(personaRepository.existsById(id)){
                     Optional<Persona> aux = personaRepository.findById(id);
                     Persona operador = aux.get();
                     operador.setEstado(0);//Borrado lógico
                     personaRepository.save(operador);
                     attr.addFlashAttribute("msg","El operador ha sido borrado exitosamente");
-                    return "redirect:/Operadores/";
                 }else{
                     attr.addFlashAttribute("msg", "El operador con ID:"+id+" no se encuentra presente");
-                    return "redirect:/Operadores/";
                 }
+                return "redirect:/admin/operadores/";
+
             }catch (Exception e){
                 attr.addFlashAttribute("msg", "Envió un ID inválido");
-                return "redirect:/Operadores/";
+                return "redirect:/admin/operadores/";
             }
         }else{
             attr.addFlashAttribute("msg", "Se envió el ID vacío");
-            return "redirect:/Operadores/";
+            return "redirect:/admin/operadores/";
         }
     }
 
