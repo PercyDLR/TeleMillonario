@@ -27,7 +27,7 @@ public class ActorController {
     FotoRepository fotoRepository;
 
     //Variables Importantes
-    float actoresxpagina=10;
+    float actoresxpagina=8;
 
     @GetMapping(value = {"","/","/lista"})
     public String listarActores(Model model,
@@ -39,9 +39,10 @@ public class ActorController {
         }catch(Exception e) {
             pagina=0;
         }
-        int cantActores = personaRepository.cantActores(busqueda);
 
-        List<Persona> listaActores = personaRepository.listarActores(busqueda, (int)actoresxpagina*pagina, (int)actoresxpagina);
+        int cantActores = personaRepository.cantActores(busqueda.toLowerCase());
+
+        List<Persona> listaActores = personaRepository.listarActores(busqueda.toLowerCase(), (int)actoresxpagina*pagina, (int)actoresxpagina);
 
         model.addAttribute("pagActual",pagina);
         model.addAttribute("pagTotal",(int) Math.ceil(cantActores/actoresxpagina));
@@ -51,20 +52,17 @@ public class ActorController {
         return "Administrador/Actor/listaActores";
     }
 
+    @PostMapping("/buscar")
+    String busqueda(@RequestParam(value="busqueda", defaultValue = "") String busqueda){
+
+        return "redirect:/admin/actores?busqueda="+busqueda;
+    }
+
     @GetMapping("/nuevo")
     public String formNuevoActor(@ModelAttribute("actor") Persona actor){
 
         return "Administrador/Actor/editarActor";
     }
-
-    @PostMapping("/buscar")
-    String busqueda(@RequestParam(value="busqueda", defaultValue = "") String busqueda,
-                    @RequestParam(value = "pag") String pag,
-                    RedirectAttributes attr){
-
-        return "redirect:/admin/actores?busqueda="+busqueda;
-    }
-
 
     @GetMapping("/editar")
     public String formEditarActor(RedirectAttributes attr, @ModelAttribute("actor") Persona actor,

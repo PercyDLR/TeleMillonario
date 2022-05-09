@@ -34,11 +34,12 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
     //Actores
     @Query(nativeQuery = true, value = "SELECT * FROM persona " +
-            "where idrol=5 and estado=1 and (concat(nombres,' ',apellidos) like %?1% or ?1='') " +
+            "where idrol=5 and estado=1 and (lower(concat(nombres,' ',apellidos)) like %?1%) " +
             "limit ?2,?3")
     List<Persona> listarActores(String busqueda, int pag, int actoresxpagina);
+
     @Query(nativeQuery = true, value = "SELECT count(*) FROM persona " +
-            "where idrol=5 and estado=1 and (concat(nombres,' ',apellidos) like %?1% or ?1='')")
+            "where idrol=5 and estado=1 and (lower(concat(nombres,' ',apellidos)) like %?1%) ")
     Integer cantActores(String busqueda);
 
 
