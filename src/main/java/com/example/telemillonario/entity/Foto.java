@@ -1,66 +1,34 @@
 package com.example.telemillonario.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "fotos")
-public class Foto implements Serializable {
-
+public class Foto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    int id;
+    private Integer id;
 
     @Column(name = "estado")
-    int estado;
+    private Integer estado;
 
-    @Column(name = "ruta")
-    String ruta;
+    @Column(name = "ruta", length = 500)
+    private String ruta;
 
     @Column(name = "numero")
-    Integer numero;
+    private Integer numero;
 
-    @Column(name = "idpersona")
-    Integer idpersona;
+    @JoinColumn(name = "idpersona")
+    private Integer idpersona;
 
-    @Column(name = "idsede")
-    Integer idsede;
 
-    @Column(name = "idfuncion")
-    Integer idfuncion;
+    @JoinColumn(name = "idsede")
+    private Integer idsede;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getEstado() {
-        return estado;
-    }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
-    }
-
-    public String getRuta() {
-        return ruta;
-    }
-
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
-    }
-
-    public Integer getNumero() {
-        return numero;
-    }
-
-    public void setNumero(Integer numero) {
-        this.numero = numero;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idfuncion")
+    private Funcion funcion;
 
     public Integer getIdpersona() {
         return idpersona;
@@ -78,11 +46,43 @@ public class Foto implements Serializable {
         this.idsede = idsede;
     }
 
-    public Integer getIdfuncion() {
-        return idfuncion;
+    public Funcion getFuncion() {
+        return funcion;
     }
 
-    public void setIdfuncion(Integer idfuncion) {
-        this.idfuncion = idfuncion;
+    public void setFuncion(Funcion funcion) {
+        this.funcion = funcion;
+    }
+
+    public Integer getNumero() {
+        return numero;
+    }
+
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
+
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

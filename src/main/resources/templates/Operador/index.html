@@ -36,116 +36,95 @@
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="col-2">
+        <div class="row" >
+
+            <div class="col-2" th:each="foto : ${listfunc1}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
                     <img class="card-img-top" th:src="@{/img/covers/HistoriasDeArena.png}" alt="Card image cap"
                          style="width: 300px;height: 250px">
                     <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
-                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
+                        <p class="card-text" style="font-size: 130%" ><b>Sala:</b><p th:text="${foto.getFuncion().getSala().getNumero()}"> 5</p></p>
                         <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
                         <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
                     </div>
-                </div>
-            </div>
-            <div class="col-3"></div>
-            <div class="col-2">
-                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="@{/img/covers/LaTernura.png}" alt="Card image cap"
-                         style="width: 300px;height: 250px">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
-                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
-                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
-                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    <div style="display: flex;justify-content: center">
+                        <button>
+                            <a class="circulo_botones" th:href="@{'/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
+                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
+                            </a>
+                        </button>
+                        <button>
+                            <a class="circulo_botones" href="#popup">
+                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
+                            </a>
+                        </button>
                     </div>
+
                 </div>
+
             </div>
-            <div class="col-3"></div>
-            <div class="col-2">
-                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="@{/img/covers/Independencia.png}" alt="Card image cap"
-                         style="width: 300px;height: 250px">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independicia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
-                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
-                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
-                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3"></div>
+<!--            <div class="col-3"></div>-->
+<!--            <div class="col-2">-->
+<!--                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">-->
+<!--                    <img class="card-img-top" th:src="@{/img/covers/LaTernura.png}" alt="Card image cap"-->
+<!--                         style="width: 300px;height: 250px">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>-->
+<!--                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>-->
+<!--                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>-->
+<!--                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>-->
+<!--                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-3"></div>-->
+<!--            <div class="col-2">-->
+<!--                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">-->
+<!--                    <img class="card-img-top" th:src="@{/img/covers/Independencia.png}" alt="Card image cap"-->
+<!--                         style="width: 300px;height: 250px">-->
+<!--                    <div class="card-body">-->
+<!--                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independicia</b></u></h5>-->
+<!--                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>-->
+<!--                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>-->
+<!--                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>-->
+<!--                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-3"></div>-->
         </div>
         <br>
         <div class="row">
-            <div class="col-2">
+            <div class="col-2" th:each="foto : ${listfunc2}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="@{/img/covers/LosTambores.png}" alt="Card image cap"
+                    <img class="card-img-top" th:src="@{/img/covers/HistoriasDeArena.png}" alt="Card image cap"
                          style="width: 300px;height: 250px">
                     <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
-                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
+                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
+                        <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
+                        <p class="card-text" style="font-size: 130%" ><b>Sala:</b><p th:text="${foto.getFuncion().getSala().getNumero()}"> 5</p></p>
                         <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
                         <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
                     </div>
-                </div>
-            </div>
-            <div class="col-3"></div>
-            <div class="col-2">
-                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="@{/img/covers/LosTambores.png}" alt="Card image cap"
-                         style="width: 300px;height: 250px">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
-                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
-                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
-                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
+                    <div style="display: flex;justify-content: center">
+                        <button>
+                            <a class="circulo_botones" th:href="@{'/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
+                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
+                            </a>
+                        </button>
+                        <button>
+                            <a class="circulo_botones" href="#popup">
+                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
+                            </a>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="col-3"></div>
-            <div class="col-2">
-                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="@{/img/covers/Independencia.png}" alt="Card image cap"
-                         style="width: 300px;height: 250px">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>
-                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>
-                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
-                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3"></div>
         </div>
         <br>
-        <div class="row">
-            <div class="col-3">
-                <a class="btn btn-primary" style="display: table-cell;background-color: #DD4063FF;text-align: center;width: 350%;color: #FFFFFF;margin-top: 10px" th:href="@{/funciones/crear}">Programar función</a>
-            </div>
-            <div class="col-7"></div>
-            <div class="col-1">
-                <ul class="paginator paginator--list">
-                    <li class="paginator__item paginator__item--prev">
-                        <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
-                    </li>
-                    <li class="paginator__item paginator__item--active"><a href="#">1</a></li>
-                    <li class="paginator__item"><a href="#">2</a></li>
-                    <li class="paginator__item"><a href="#">3</a></li>
-                    <li class="paginator__item"><a href="#">4</a></li>
-                    <li class="paginator__item paginator__item--next">
-                        <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/funciones/lista?')"></div>
         <div style="height: 10px"></div>
     </div>
 </div>

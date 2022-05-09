@@ -16,7 +16,7 @@
 <div class="content">
     <div class="container" style="margin-bottom: 30px;opacity: 200%">
         <div class="row">
-            <form method="post" th:action="@{'/funciones/guardar'}" th:object="${funcion}">
+            <form method="post" th:action="@{'/funciones/guardar'}" th:object="${funcion}" enctype="multipart/form-data">
                 <div class="card" style="margin-left: 3%;background-color:#e64166">
                     <div class="card-header" style="text-align: center;color: #FFFFFF">
                         <span style="font-family: 'Barlow', sans-serif; font-size: xx-large">Añada una función</span>
@@ -71,7 +71,7 @@
                                             minutos):
                                         </label>
                                         <div class='col-sm-8'>
-                                            <input id="duracion" th:value="|${funcion.id==0 ? '' : funcion.getFin()-funcion.getInicio()}|" name="duracion" type="number" min="30" max="180"
+                                            <input id="duracion" th:value="|${funcion.id==0 ? '' : duracion}|" name="duracion" type="number"
                                                    style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
                                         </div>
                                         <label  class="col-sm-4"
@@ -121,22 +121,77 @@
 
 
                             </div>
-                            <div class="col-2" style="text-align: center">
+                            <div class="col-1" style="text-align: center">
 
                             </div>
-                            <div class="col-5" style="margin-top: 2%">
-                                <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 10%;padding-bottom: 4%">
-                                    <u>Añada imágenes</u></h5>
-                                <div class="image-upload" style="align-content: center;margin-top: 2%">
-                                    <label for="file-input" style="margin-left: 15%">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/56/56887.png"
-                                             style="background-color: #FFFFFF;width: 50%;height: 50%;position: center;border-radius: 10px"
-                                             alt="imagenes">
-                                    </label>
-                                    <input id="file-input" type="file" multiple/>
+<!--                            <div class="col-5" style="margin-top: 2%">-->
+<!--                                <div class="col-4">-->
+<!--                                    <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>-->
+<!--                                </div>-->
+<!--                                <div class="col-1">-->
+<!--                                    <button class="home__nav home__nav&#45;&#45;next" type="button" style="margin-right: 2px">-->
+<!--                                        <i class="icon ion-ios-arrow-round-forward"></i>-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                                <div class="image-upload" style="align-content: center;margin-top: 2%">-->
+<!--                                    <label for="file-input" style="margin-left: 15%">-->
+<!--                                        <img src="https://cdn-icons-png.flaticon.com/512/56/56887.png"-->
+<!--                                             style="background-color: #FFFFFF;width: 50%;height: 50%;position: center;border-radius: 10px"-->
+<!--                                             alt="imagenes">-->
+<!--                                    </label>-->
+<!--                                    <input id="file-input" type="file" multiple/>-->
+<!--                                </div>-->
+<!--                                <br>-->
+<!--                                <h5 style="color: #FFFFFF;margin-left: 12%"><b>Seleccione dando click</b></h5>-->
+<!--                            </div>-->
+
+                            <!--Selector Imagenes-->
+                            <div class="col-md-6 col-8" style="padding-left: 10px">
+
+                                <!--Encabezado-->
+                                <section class="section section--first" style="margin: 0; padding:10px">
+                                    <div class="row">
+                                        <div class="col-md-9 col-6">
+                                            <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
+                                        </div>
+                                        <div class="col-md-3 col-2">
+                                            <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
+                                                <i class="icon ion-ios-arrow-round-forward"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <div>
+                                    <div class="row align-items-center">
+                                        <div class="col-8 col-sm-8">
+
+                                            <!--Visor de Imagenes-->
+                                            <div class="owl-carousel photo__carousel" id="img_container">
+
+                                                <div class="item" th:each="foto : ${imagenes}">
+                                                    <div th:id="|old-${foto.numero-1}|" class="card__cover">
+
+                                                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
+
+                                                        <a class="card__play" th:onclick="|eliminarEnDB(${foto.numero-1})|">
+                                                            <i class="bi bi-x" style="color: white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Boton para agregar imagenes -->
+                                            <div class="card__wrap">
+                                                <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
+                                                    Nueva Foto
+                                                </label>
+                                                <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg, image/jpg"
+                                                       style="display: none" onchange="preview()" multiple>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <br>
-                                <h5 style="color: #FFFFFF;margin-left: 12%"><b>Seleccione dando click</b></h5>
                             </div>
                         </div>
                         <div class="row">
@@ -199,30 +254,100 @@
 
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/jquery.mousewheel.min.js"></script>
-<script src="js/jquery.mCustomScrollbar.min.js"></script>
-<script src="js/wNumb.js"></script>
-<script src="js/nouislider.min.js"></script>
-<script src="js/plyr.min.js"></script>
-<script src="js/jquery.morelines.min.js"></script>
-<script src="js/photoswipe.min.js"></script>
-<script src="js/photoswipe-ui-default.min.js"></script>
-<script src="js/main.js"></script>
-<script src="../../static/js/data-list.js"></script>
+    <div th:replace="fragments/footer :: js(~{::script})">
+        <script>
+            let fileInput = document.getElementById("file-input");
+            let imgContainer = document.getElementById("img_container");
+
+            function preview(){
+
+                let j=0;
+                for(i of fileInput.files){
+
+                    let reader = new FileReader();
+
+                    let item = document.createElement("div");
+                    item.className="item";
+
+                    // Boton de Eliminar
+                    let cover = document.createElement("div");
+                    cover.id="new-"+j.toString();
+                    cover.className="card__cover";
+
+                    // Activar la opción de borrar imagen
+                    cover.onclick = function (){
+
+                        const dt = new DataTransfer()
+
+                        for (let i = 0; i < fileInput.files.length; i++) {
+                            const file = fileInput.files[i];
+
+                            if (this.id !== "new-"+i.toString()) {
+                                dt.items.add(file);
+                            }
+                        }
+                        fileInput.files = dt.files;
+
+                        cover.parentElement.parentElement.remove();
+                        refresh()
+                    };
+
+                    let button = document.createElement("a");
+                    button.className = "card__play";
+                    let close = document.createElement("i");
+                    close.className = "bi bi-x";
+                    close.setAttribute("style","color: white")
+
+                    button.appendChild(close)
+                    cover.appendChild(button)
+
+                    reader.onload=()=>{
+                        let img = document.createElement("img");
+                        img.setAttribute("src",reader.result);
+                        img.setAttribute("style","margin-inline: auto;max-height: 150px;max-width: fit-content;")
+
+                        cover.appendChild(img);
+                        item.appendChild(cover)
+                    }
+                    imgContainer.appendChild(item);
+                    reader.readAsDataURL(i);
+                    j++;
+                }
+
+                // Vuelve a cargar el deslizador
+                refresh()
+            }
+
+            function refresh() {
+                $('.owl-carousel').trigger('destroy.owl.carousel');
+                var $owl = $('.owl-carousel').owlCarousel({
+                    loop: true,
+                    smartSpeed: 600,
+                    margin: 60,
+                    items: 1
+                });
+                $owl.trigger('refresh.owl.carousel');
+            }
+
+            function eliminarEnDB(id){
+
+                let select = document.getElementById("fotos-para-eliminar");
+                select.getElementsByTagName("option")[id].selected = "selected";
+
+                let item = imgContainer.getElementsByClassName("active").item(0);
+                console.log(item)
+
+                item.remove();
+
+                refresh()
+            }
+
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous">
+        </script>
+    </div>
 </body>
 </html>

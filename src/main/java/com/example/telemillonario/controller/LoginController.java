@@ -55,20 +55,22 @@ public class LoginController {
         Persona persona = personaRepository.findByCorreo(auth.getName());
 
         Persona personita = new Persona();
+        personita.setId(persona.getId());
         personita.setNombres(persona.getNombres());
         personita.setApellidos(persona.getApellidos());
         personita.setDni(persona.getDni());
         personita.setCorreo(persona.getCorreo());
         personita.setNacimiento(persona.getNacimiento());
         personita.setIdrol(persona.getIdrol());
-        if (persona.getIdsede()!= null){
 
+//        if (persona.getIdsede() !=null){
             personita.setIdsede(persona.getIdsede());
-        }
+//        }
+
 
 
 //        System.out.println(personita.getIdsede().getId());
-//        System.out.println(personita.getIdsede().getNombre());
+        System.out.println(personita.getIdsede().getNombre());
         session.setAttribute("usuario",personita);
         System.out.println("llego aca");
 
