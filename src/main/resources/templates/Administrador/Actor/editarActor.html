@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Crear Actor',~{::style})">
+    <head th:replace="fragments/header :: head('Editar Actor',~{::style})">
         <style>
             label{
                 color: rgba(255,255,255,0.5);
@@ -32,8 +32,9 @@
                             <div class="sign__content" style="margin-top: 70px">
 
                                 <!-- authorization form -->
-                                <form class="sign__form" method="post" th:object="${actor}" th:action="@{/ejemplo/editar}" enctype="multipart/form-data">
-                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;">Editar Actor</h3>
+                                <form class="sign__form" method="post" th:object="${actor}" th:action="@{/admin/actores/subir}" enctype="multipart/form-data">
+                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;"
+                                    th:text="${actor.id == null ? 'Nuevo Actor' : 'Editar Actor'}"></h3>
 
                                     <div class="row">
                                         <div class="col-md-6 col-8">
@@ -53,14 +54,20 @@
                                                 <label for="nombres">Nombre</label>
                                                 <input class="sign__input"  style="width: auto"
                                                        th:field="*{nombres}"
+                                                       th:classappend="${#fields.hasErrors('nombres')? 'is-invalid':''}"
                                                        placeholder="Nombre" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
+                                                     th:errors="*{nombres}"></div>
                                             </div>
 
                                             <div class="sign__group">
                                                 <label for="apellidos">Apellido</label>
                                                 <input class="sign__input" style="width: auto"
                                                        th:field="*{apellidos}"
+                                                       th:classappend="${#fields.hasErrors('apellidos')? 'is-invalid':''}"
                                                        placeholder="Apellido" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
+                                                     th:errors="*{apellidos}"></div>
                                             </div>
                                         </div>
 
@@ -118,7 +125,7 @@
 
                                     <div class="row">
                                         <div class="col-6" style="justify-content: center">
-                                            <a th:href="@{/sala}" class="sign__btn">Cancelar</a>
+                                            <a th:href="@{/admin/actores}" class="sign__btn">Cancelar</a>
                                         </div>
 
                                         <div class="col-6" style="justify-content: center">
@@ -135,29 +142,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="popup" class="overlay">
-            <div class="row">
-                <div class="col-12">
-                    <div class="sign__content">
-                        <!-- authorization form -->
-                        <form action="#" class="sign__form"   >
-                            <a href="index.html" class="sign__logo">
-                                <img src="img/tele.PNG" alt="">
-                            </a>
-
-                            <div class="sign__group">
-                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
-                                    Se ha creado el actor correctamente</h5>
-                            </div>
-                            <a th:href="@{/actor}" class="sign__btn">Continuar</a>
-                        </form>
-                        <!-- end authorization form -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
 
         <div th:replace="fragments/footer :: js(~{::script})">
             <script>

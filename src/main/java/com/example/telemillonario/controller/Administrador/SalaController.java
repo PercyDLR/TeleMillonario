@@ -51,7 +51,7 @@ public class SalaController {
         }catch(Exception e) {
             pagina=0;
         }
-        int cantSalas= salaRepository.cantSalas(idsede,numero,estado);
+        int cantSalas = salaRepository.cantSalas(idsede,numero,estado);
 
         List<Sala> listaSalas = switch (ord) {
             case "mayor" -> salaRepository.buscarSalasDesc(idsede, numero, estado, (int)salasporpagina*pagina, (int)salasporpagina);
