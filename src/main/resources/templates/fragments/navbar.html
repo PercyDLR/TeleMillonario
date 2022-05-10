@@ -49,7 +49,7 @@
                                     <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>
 
                                     <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px">
-                                        <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                        <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                             <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
@@ -61,7 +61,7 @@
                                     </li>
 
                                     <li sec:authorize="isAuthenticated()" class="header__nav-item">
-                                        <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <a role="button" id="dropdown4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <div style="size: 10px; color: white;white-space: nowrap;">
                                                 <span th:text="${session.usuario.nombres}"></span>
                                             </div>

@@ -4,6 +4,8 @@ import com.azure.core.annotation.Get;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Rol;
 import com.example.telemillonario.repository.PersonaRepository;
+import com.example.telemillonario.service.DniAPI;
+import com.example.telemillonario.service.UsuarioAPI;
 import com.example.telemillonario.service.UsuarioService;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @Controller
@@ -84,11 +87,18 @@ public class LoginController {
     }
 
     @PostMapping("/validacionSignUp")
-    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult,ModelAttribute modelAttribute){
+    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult,ModelAttribute modelAttribute) throws InterruptedException, IOException {
 
         if(bindingResult.hasErrors()){
             return "login/signup";
         }
+
+        //Obtenemos los datos del usuario que ingreso su DNI con la API
+        UsuarioAPI infoUsuarioAPI = DniAPI.FormRestAPI(usuario.getDni());
+
+        //Aca va la validacion de lo obtenido de la API con lo ingresado por el usuario
+
+
 
         //generamos su bcript de contraseña
         String contraseniaBCrypt = new BCryptPasswordEncoder().encode(usuario.getContrasenia());
@@ -198,7 +208,7 @@ public class LoginController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom("a20191566@pucp.edu.pe","TeleMillonario");
+        helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
         helper.setTo(correo);
 
         String subject = "Link para cambiar contraseña";
