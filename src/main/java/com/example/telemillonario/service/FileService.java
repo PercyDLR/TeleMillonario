@@ -6,12 +6,15 @@ import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.models.BlobItem;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Component
 @Service
@@ -85,6 +88,22 @@ public class FileService {
             blob.download(os);
         }
         return os;
+    }
+
+    public MultipartFile formatearArchivo(MultipartFile file,String nombreBase) throws IOException {
+        Random random = new Random();
+        String capitalCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "1234567890";
+        int seed = this.listarArchivos().size();
+        String nombre = nombreBase+"_"+numbers.charAt(random.nextInt(seed))+
+                lowerCaseLetters.charAt(random.nextInt(seed))+
+                capitalCaseLetters.charAt(random.nextInt(seed))+
+                file.getOriginalFilename().split("\\.")[0].charAt(random.nextInt(seed))+
+                "."+
+                file.getOriginalFilename().split("\\.")[1];
+        MultipartFile output = new MockMultipartFile(nombre,nombre,file.getContentType(),file.getBytes());
+        return output;
     }
 
 }
