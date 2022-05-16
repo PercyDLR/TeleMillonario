@@ -1,9 +1,6 @@
 package com.example.telemillonario.controller.Operador;
 
-import com.example.telemillonario.entity.Foto;
-import com.example.telemillonario.entity.Funcion;
-import com.example.telemillonario.entity.Funcionelenco;
-import com.example.telemillonario.entity.Persona;
+import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,7 +25,7 @@ import java.util.Optional;
 
 
 @Controller
-@RequestMapping("/funciones")
+@RequestMapping("/operador/funciones")
 public class FuncionesController {
 
     @Autowired
@@ -49,6 +47,12 @@ public class FuncionesController {
     FotoRepository fotoRepository;
     float funcionesporpagina=6;
 
+    @Autowired
+    GeneroRepository generoRepository;
+
+    @Autowired
+    FuncionGeneroRepository funcionGeneroRepository;
+
 
     @GetMapping(value = {"", "/","/lista"})
     public String listadoFunciones(Model model,@RequestParam(value = "pag",required = false) String pag,HttpSession session){
@@ -69,13 +73,30 @@ public class FuncionesController {
         // crea 2 listas vacias
         List<Foto> listfunc1 = new ArrayList<Foto>();
         List<Foto> listfunc2 = new ArrayList<Foto>();
-        // Se agrega las 3 primeras funciones
-        for (int i = 0; i < size; i++) {
-            listfunc1.add(listfuncfoto.get(i));
-        }
-        //Se agrega las 3 funciones restantes
-        for (int i = size; i < size*2; i++) {
-            listfunc2.add(listfuncfoto.get(i));
+        if(listfuncfoto.size()>3){
+            // Se agrega las 3 primeras funciones
+            for (int i = 0; i < size; i++) {
+                listfunc1.add(listfuncfoto.get(i));
+            }
+
+            if(listfuncfoto.size()>3 && listfuncfoto.size() <6){
+                for (int i = size; i < listfuncfoto.size(); i++) {
+                    listfunc2.add(listfuncfoto.get(i));
+                }
+
+            }else{
+                //Se agrega las 3 funciones restantes
+                for (int i = size; i < size*2; i++) {
+                    listfunc2.add(listfuncfoto.get(i));
+                }
+
+            }
+        }else{
+            // Se agrega las funciones
+            for (int i = 0; i < listfuncfoto.size(); i++) {
+                listfunc1.add(listfuncfoto.get(i));
+            }
+
         }
 
         List<Foto> listfunctotal= fotoRepository.buscarFuncionesParaContar(persona.getIdsede().getId());
@@ -95,6 +116,7 @@ public class FuncionesController {
 
         model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
         model.addAttribute("listDirectores",personaRepository.listarDirectores());
+        model.addAttribute("listGeneros",generoRepository.findAll());
         Persona persona = (Persona) session.getAttribute("usuario");
         //listado de salas por sede disponibles
         model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
@@ -112,7 +134,7 @@ public class FuncionesController {
             model.addAttribute("funcion", funcencon);
             model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
             model.addAttribute("listDirectores",personaRepository.listarDirectores());
-
+            model.addAttribute("listGeneros",generoRepository.findAll());
 
 
             String[] horafinstr = funcencon.getFin().toString().split(":");
@@ -147,7 +169,7 @@ public class FuncionesController {
             model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
             return "Operador/crearFuncion";
         } else {
-            return "redirect:/funciones/lista";
+            return "redirect:/operador/funciones/lista";
         }
 
     }
@@ -159,11 +181,13 @@ public class FuncionesController {
                                  @RequestParam(value="duracion") String duracion,
                                  @RequestParam(value="idactor") String idactor,
                                  @RequestParam(value="iddirector") String iddirector,
-                                 @RequestParam(value="imagenes") MultipartFile[] imagenes) {
+                                 @RequestParam(value="idgenero") String idgenero,
+                                 @RequestParam(value="imagenes") MultipartFile[] imagenes) throws IOException {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
             model.addAttribute("listDirectores",personaRepository.listarDirectores());
+            model.addAttribute("listGeneros",generoRepository.findAll());
             Persona persona = (Persona) session.getAttribute("usuario");
             //listado de salas por sede disponibles
             model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
@@ -223,6 +247,17 @@ public class FuncionesController {
                 funcionElencoRepository.save(funcelen);
             }
 
+            //guardar genero
+            String[] idgen = idgenero.split(",");
+            for (int i=0;i<idgen.length;i++){
+                Funciongenero fungen = new Funciongenero();
+                int idgenint=Integer.parseInt(idgen[i]);
+                fungen.setIdgenero(generoRepository.findById(idgenint).get());
+                fungen.setIdfuncion(func);
+                //estado habilitado
+                fungen.setEstado(1);
+                funcionGeneroRepository.save(fungen);
+            }
 
             Persona persona=(Persona) session.getAttribute("usuario");
             System.out.println("\nImágenes a Agregar: " + imagenes.length);
@@ -230,7 +265,8 @@ public class FuncionesController {
             for(MultipartFile img : imagenes){
                 System.out.println("Nombre: " + img.getOriginalFilename());
                 System.out.println("Tipo: " + img.getContentType());
-                if(fileService.subirArchivo(img)){
+                MultipartFile file_aux = fileService.formatearArchivo(img,"foto");
+                if(fileService.subirArchivo(file_aux)){
                     System.out.println("Archivo subido correctamente");
                     Foto foto = new Foto();
                     foto.setEstado(1);
@@ -239,7 +275,7 @@ public class FuncionesController {
                     foto.setIdpersona(persona.getId());
                     foto.setIdsede(persona.getIdsede().getId());
                     foto.setNumero(i);
-                    foto.setRuta(fileService.obtenerUrl(img.getOriginalFilename()));
+                    foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
                     fotoRepository.save(foto);
                 }else{
                     System.out.println("El archivo"+img.getOriginalFilename()+"No se pude subir de manera correcta");
@@ -249,7 +285,7 @@ public class FuncionesController {
 
 
 
-            return "redirect:/funciones";
+            return "redirect:/operador/funciones";
         }
 
 
@@ -258,6 +294,145 @@ public class FuncionesController {
     }
 
 
+    @PostMapping("/buscar")
+    public String buscarFuncion (Model model,@RequestParam("parametro") String parametro,RedirectAttributes attr,@RequestParam(value = "pag",required = false) String pag,HttpSession session){
 
+        try {
+            if (parametro.equals("")) { // verifica que no esté vacío
+                attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
+                return "redirect:/operador/funciones";
+            } else {
+                model.addAttribute("parametro", parametro);
+                parametro = parametro.toLowerCase();
+
+                int estado=1;
+                int pagina;
+                //tamaña de cada 'row' en vista
+                int size=3;
+                try{
+                    pagina = Integer.parseInt(pag);
+                }catch(Exception e) {
+                    pagina=0;
+                }
+
+                Persona persona=(Persona) session.getAttribute("usuario");
+
+                List<Foto> listfuncfoto= fotoRepository.buscarFotoFuncionesPorNombre(persona.getIdsede().getId(),parametro,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+//        List<Funcion> listfunc= funcionRepository.buscarFuncion(estado,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+                // crea 2 listas vacias
+                List<Foto> listfunc1 = new ArrayList<Foto>();
+                List<Foto> listfunc2 = new ArrayList<Foto>();
+
+
+                if(listfuncfoto.size()>3){
+                    // Se agrega las 3 primeras funciones
+                    for (int i = 0; i < size; i++) {
+                        listfunc1.add(listfuncfoto.get(i));
+                    }
+
+                    if(listfuncfoto.size()>3 && listfuncfoto.size() <6){
+                        for (int i = size; i < listfuncfoto.size(); i++) {
+                            listfunc2.add(listfuncfoto.get(i));
+                        }
+
+                    }else{
+                        //Se agrega las 3 funciones restantes
+                        for (int i = size; i < size*2; i++) {
+                            listfunc2.add(listfuncfoto.get(i));
+                        }
+
+                    }
+                }else{
+                    // Se agrega las funciones
+                    for (int i = 0; i < listfuncfoto.size(); i++) {
+                        listfunc1.add(listfuncfoto.get(i));
+                    }
+
+                }
+
+
+
+                List<Foto> listfunctotal= fotoRepository.buscarFuncionesParaContarPorNombre(persona.getIdsede().getId(),parametro);
+
+                int cantFunc= listfunctotal.size();
+
+                model.addAttribute("listfunc1",listfunc1);
+                model.addAttribute("listfunc2",listfunc2);
+
+                model.addAttribute("pagActual",pagina);
+                model.addAttribute("pagTotal",(int) Math.ceil(cantFunc/funcionesporpagina));
+
+                return "Operador/index";
+            }
+        } catch (Exception e) {
+            attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
+            return "redirect:/operador/funciones";
+        }
+    }
+
+
+
+
+    @GetMapping("/borrar")
+    public String borrarFuncion(Model model,
+                                @RequestParam("idfuncion") int idfuncion,
+                                 RedirectAttributes attr) {
+
+        //buscar las fotos a eliminar en el filemanager de Azure
+
+        try{
+            List<Foto> listfuncfoto=fotoRepository.buscarFotosFuncion(idfuncion);
+
+            if(listfuncfoto.size()!=0){
+                //eliminamos las fotos una por una del filemanager de Azure y de la base de datos
+                for (Foto fot : listfuncfoto) {
+                    String [] urlfoto=fot.getRuta().split("/telemillonario/");
+                    String nombrefoto= urlfoto[1];
+                    fileService.eliminarArchivo(nombrefoto);
+                    fotoRepository.deleteById(fot.getId());
+                }
+
+                //eliminamos en la tabla funcion elenco
+                List<Funcionelenco> listFunElenc =funcionElencoRepository.buscarFuncionElenco(idfuncion);
+                for (Funcionelenco funelen : listFunElenc){
+                    funcionElencoRepository.deleteById(funelen.getId());
+                }
+
+                //eliminamos en la tabla funcion genero
+                List<Funciongenero> listFuncGen =funcionGeneroRepository.buscarFuncionGenero(idfuncion);
+                for (Funciongenero fungen : listFuncGen){
+                    funcionGeneroRepository.deleteById(fungen.getId());
+                }
+
+                //eliminamos la funcion de la base de datos
+                funcionRepository.deleteById(idfuncion);
+
+                attr.addFlashAttribute("msg1", "Funcion borrada exitosamente");
+            }else{
+                attr.addFlashAttribute("msg", "No se puede borrar una funcion que no existe");
+            }
+            return "redirect:/operador/funciones";
+        }catch (Exception e){
+
+            attr.addFlashAttribute("msg", "Hubo un error al borrar una funcion");
+            return "redirect:/operador/funciones";
+        }
+
+
+
+
+
+
+//        Optional<Employees> optEmployees = employeesRepository.findById(id);
+//
+//        if (optEmployees.isPresent()) {
+//            employeesRepository.deleteById(id);
+//            attr.addFlashAttribute("msg", "Empleado borrado exitosamente");
+//        }
+//        return "redirect:/employee";
+
+
+
+    }
 
 }

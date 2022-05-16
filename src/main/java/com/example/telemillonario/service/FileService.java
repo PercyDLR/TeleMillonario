@@ -96,10 +96,10 @@ public class FileService {
         String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
         String numbers = "1234567890";
         int seed = this.listarArchivos().size();
-        String nombre = nombreBase+"_"+numbers.charAt(random.nextInt(seed))+
-                lowerCaseLetters.charAt(random.nextInt(seed))+
-                capitalCaseLetters.charAt(random.nextInt(seed))+
-                file.getOriginalFilename().split("\\.")[0].charAt(random.nextInt(seed))+
+        String nombre = nombreBase+"_"+random.nextInt(20000)+
+                lowerCaseLetters.charAt(random.nextInt(26))+
+                capitalCaseLetters.charAt(random.nextInt(26))+
+                file.getOriginalFilename().split("\\.")[0].charAt(random.nextInt(file.getOriginalFilename().length()))+
                 "."+
                 file.getOriginalFilename().split("\\.")[1];
         MultipartFile output = new MockMultipartFile(nombre,nombre,file.getContentType(),file.getBytes());

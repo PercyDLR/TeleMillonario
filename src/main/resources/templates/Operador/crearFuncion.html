@@ -16,7 +16,7 @@
 <div class="content">
     <div class="container" style="margin-bottom: 30px;opacity: 200%">
         <div class="row">
-            <form method="post" th:action="@{'/funciones/guardar'}" th:object="${funcion}" enctype="multipart/form-data">
+            <form method="post" th:action="@{'/operador/funciones/guardar'}" th:object="${funcion}" enctype="multipart/form-data">
                 <div class="card" style="margin-left: 3%;background-color:#e64166">
                     <div class="card-header" style="text-align: center;color: #FFFFFF">
                         <span style="font-family: 'Barlow', sans-serif; font-size: xx-large">Añada una función</span>
@@ -109,6 +109,7 @@
                                             <input id="stock" type="number" min="1" max="100" th:field="*{stockentradas}"
                                                    style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
                                         </div>
+
                                         <label for="descripcion" class="col-sm-4"
                                                style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Descripcion
                                         </label>
@@ -194,16 +195,42 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="display: flex;justify-content: center">
+                            <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;padding-bottom: 0.5%">
+                                <u>Genero</u></h5>
+                        </div>
                         <div class="row">
                             <div class="col-5">
                                 <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 0.5%">
-                                    <u>Elenco de artistas</u></h5>
+                                    <u>Generos</u></h5>
+                                <label style="color: #FFFFFF"><b>Seleccione los generos</b></label>
+                                <br>
+                                <select class="form-select" name="idgenero" size="3" multiple
+                                         aria-label="multiple select example">
+                                    <option disabled>Seleccione los generos con (+Ctrl)</option>
+                                    <option th:each="genero : ${listGeneros}"
+                                            th:text="|${genero.nombre}|"
+                                            th:value="${genero.id}"></option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div style="display: flex;justify-content: center">
+                            <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;padding-bottom: 0.5%">
+                                <u>Elenco de artistas</u></h5>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5">
+                                <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 0.5%">
+                                    <u>Actores</u></h5>
                                 <label style="color: #FFFFFF"><b>Seleccione los actores</b></label>
                                 <br>
                                 <select class="form-select" name="idactor" size="3" multiple
                                         aria-label="multiple select example">
-                                    <option selected>Seleccione los actores con (+Ctrl)</option>
-                                    <option th:each="actores : ${listActores}"
+                                    <option disabled>Seleccione los actores con (+Ctrl)</option>
+                                    <option th:each="actores,indice : ${listActores}"
                                             th:text="|${actores.getNombres()} ${actores.getApellidos()}|"
                                             th:value="${actores.getId()}"></option>
                                 </select>
@@ -220,7 +247,7 @@
                                 <br>
                                 <select class="form-select" name="iddirector" size="3" multiple
                                         aria-label="multiple select example">
-                                    <option selected>Seleccione los Directores con (+Ctrl)</option>
+                                    <option disabled>Seleccione los Directores con (+Ctrl)</option>
                                     <option th:each="directores : ${listDirectores}"
                                             th:text="|${directores.getNombres()} ${directores.getApellidos()}|"
                                             th:value="${directores.getId()}"></option>
@@ -241,7 +268,7 @@
 
                     </div>
                     <div class="col-3">
-                        <a class="sign__btn" type="submit" th:href="@{/funciones/lista}" >
+                        <a class="sign__btn" type="submit" th:href="@{/operador/funciones/lista}" >
                             Regresar
                         </a>
 

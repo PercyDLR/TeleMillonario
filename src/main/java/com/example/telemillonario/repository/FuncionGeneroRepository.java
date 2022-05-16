@@ -1,7 +1,7 @@
 package com.example.telemillonario.repository;
 
-import com.example.telemillonario.entity.Foto;
 import com.example.telemillonario.entity.Funcionelenco;
+import com.example.telemillonario.entity.Funciongenero;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,12 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FuncionElencoRepository extends JpaRepository<Funcionelenco, Integer> {
+public interface FuncionGeneroRepository extends JpaRepository<Funciongenero,Integer> {
 
-
-
-    @Query(nativeQuery = true, value = "select * from telemillonario.funcionelenco where " +
+    @Query(nativeQuery = true, value = "select * from telemillonario.funciongenero where " +
             "idfuncion=?1")
-    List<Funcionelenco> buscarFuncionElenco(int idfuncion);
-
+    List<Funciongenero> buscarFuncionGenero(int idfuncion);
 }

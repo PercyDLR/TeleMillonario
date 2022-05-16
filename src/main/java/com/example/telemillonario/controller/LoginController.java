@@ -82,7 +82,7 @@ public class LoginController {
             return "redirect:/";
 
         }else {
-            return "redirect:/funciones/lista"; //Cual es su pagina principal del Operador?
+            return "redirect:/operador/funciones/lista"; //Cual es su pagina principal del Operador?
         }
     }
 

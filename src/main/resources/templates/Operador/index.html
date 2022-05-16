@@ -21,16 +21,34 @@
                     <div class="col-5">
                         <h1 class="details__title"
                             style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: x-large">
-                            Programacion de funciones para hoy
+                            Programacion de funciones
                         </h1>
                     </div>
                     <div class="col-3"></div>
-                    <div class="col-4">
-                        <div class="input-group" style="padding-top: 10px">
-                            <input name="campo" class="form-control text-light" type="text"
+                    <form style="display: contents;" method="post" th:action="@{'/operador/funciones/buscar'}">
+                        <div class="col-3"><div class="input-group" style="padding-top: 10px">
+                            <input name="parametro" class="form-control text-light" type="text"
                                    style="text-align: center; height: auto ;background-color: transparent; border-radius: 5px; border-color: #7c7676"
-                                   placeholder="Buscar Funcion">
+                                   placeholder="Buscar por Nombre de Funcion" th:value="${parametro == null ? '' : parametro}">
+                        </div></div>
+                        <div class="col-1">
+
+                            <div class="col-md-4 col-12 d-flex justify-content-center">
+                                <button type="submit" class="filter__btn" style="margin-top:6px;">
+                                    <a>Buscar</a>
+                                </button>
+                            </div>
                         </div>
+                    </form>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null)}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${msg}">Mensaje</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg1 != null)}">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong th:text="${msg1}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
@@ -40,8 +58,8 @@
 
             <div class="col-2" th:each="foto : ${listfunc1}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="@{/img/covers/HistoriasDeArena.png}" alt="Card image cap"
-                         style="width: 300px;height: 250px">
+                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
+                         style="width: 270px;height: 240px;margin-left: 7px;">
                     <div class="card-body">
                         <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
                         <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
@@ -51,13 +69,13 @@
                     </div>
                     <div style="display: flex;justify-content: center">
                         <button>
-                            <a class="circulo_botones" th:href="@{'/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
+                            <a class="circulo_botones" th:href="@{'/operador/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
                                 <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                             </a>
                         </button>
                         <button>
                             <a class="circulo_botones" href="#popup">
-                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
+                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getFuncion().getId()})|" th:src="@{/img/iconTrash2.png}">
                             </a>
                         </button>
                     </div>
@@ -99,8 +117,8 @@
         <div class="row">
             <div class="col-2" th:each="foto : ${listfunc2}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="@{/img/covers/HistoriasDeArena.png}" alt="Card image cap"
-                         style="width: 300px;height: 250px">
+                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
+                         style="width: 270px;height: 240px;margin-left: 7px;">
                     <div class="card-body">
                         <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
                         <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
@@ -110,13 +128,13 @@
                     </div>
                     <div style="display: flex;justify-content: center">
                         <button>
-                            <a class="circulo_botones" th:href="@{'/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
+                            <a class="circulo_botones" th:href="@{'/operador/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
                                 <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                             </a>
                         </button>
                         <button>
                             <a class="circulo_botones" href="#popup">
-                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
+                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getFuncion().getId()})|" th:src="@{/img/iconTrash2.png}">
                             </a>
                         </button>
                     </div>
@@ -124,33 +142,46 @@
             </div>
         </div>
         <br>
-        <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/funciones/lista?')"></div>
+        <div class="col-3">
+            <a class="btn btn-primary" style="display: table-cell;background-color: #DD4063FF;text-align: center;width: 350%;color: #FFFFFF;margin-top: 10px" th:href="@{/operador/funciones/crear}">Programar función</a>
+        </div>
+        <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/funciones/lista?')"></div>
         <div style="height: 10px"></div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/jquery.mousewheel.min.js"></script>
-<script src="js/jquery.mCustomScrollbar.min.js"></script>
-<script src="js/wNumb.js"></script>
-<script src="js/nouislider.min.js"></script>
-<script src="js/plyr.min.js"></script>
-<script src="js/jquery.morelines.min.js"></script>
-<script src="js/photoswipe.min.js"></script>
-<script src="js/photoswipe-ui-default.min.js"></script>
-<script src="js/main.js"></script>
+
+    <div id="popup" class="overlay">
+        <div class="row">
+            <div class="col-12">
+                <div class="sign__content">
+                    <form action="#" class="sign__form">
+                        <a class="sign__logo">
+                            <img th:src="@{/img/tele.PNG}" alt="logo">
+                        </a>
+                        <div class="sign__group">
+                            <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                ¿Estás seguro de querer borrar esta Funcion?</h5>
+                        </div>
+                        <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
+                        <a id="borrar" class="sign__btn">Borrar Funcion</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: js(~{::script})">
+        <script th:inline="javascript">
+            function advertencia(idfuncion) {
+                let popup = document.getElementById('popup');
+
+                popup.getElementsByTagName("a").item(2).href = [[@{'/operador/funciones/borrar?idfuncion='}]] + idfuncion;
+                popup.style.display = 'block';
+            }
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous">
+        </script>
+    </div>
 </body>
 </html>
