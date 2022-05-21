@@ -33,7 +33,7 @@ Primary use:	FlixGo Template
 23. Page 404
 24. Plyr customization
 25. PhotoSwipe customization
-26. mCustomScrollbar customization
+26. Scrollbar customization
 ----------------------------------------*/
 
 .home_sala {
@@ -3978,76 +3978,33 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 /*==============================
 	mCustomScrollbar customization
 ==============================*/
-/* scroll bar 1 */
-.mCS-custom-bar {
-  opacity: 1;
-}
-.mCS-custom-bar.mCSB_outside + .mCSB_scrollTools {
-  right: 2px;
-  top: 15px;
-  bottom: 15px;
-}
-.mCS-custom-bar.mCSB_scrollTools .mCSB_draggerRail {
-  background-color: rgba(255,255,255,0.05);
-}
-.mCS-custom-bar.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
-  background-image: -moz-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -webkit-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -ms-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
+
+::-webkit-scrollbar {
   width: 2px;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-}
-.mCS-custom-bar.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar {
-  background-image: -moz-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -webkit-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -ms-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-}
-.mCS-custom-bar.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
-.mCS-custom-bar.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar {
-  background-image: -moz-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -webkit-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -ms-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-}
-/* scroll bar 2 */
-.mCS-custom-bar2 {
-  opacity: 1;
-}
-.mCS-custom-bar2.mCSB_outside + .mCSB_scrollTools {
-  right: 2px;
-  top: 20px;
-  bottom: 20px;
-}
-.mCS-custom-bar2.mCSB_scrollTools .mCSB_draggerRail {
-  background-color: rgba(255,255,255,0.05);
-}
-.mCS-custom-bar2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
-  background-image: -moz-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -webkit-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -ms-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  width: 2px;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-}
-.mCS-custom-bar2.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar {
-  background-image: -moz-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -webkit-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -ms-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-}
-.mCS-custom-bar2.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
-.mCS-custom-bar2.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar {
-  background-image: -moz-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -webkit-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: -ms-linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
-  background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 100%);
+  height: 2px;
 }
 
-/*HTML AÑADIDO*/
+/* Chromium y Safari */
+::-webkit-scrollbar-track {
+  background: #2b2b31;
+}
+::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(180deg, #ff55a5 0%, #ff5860 80%);
+  border-radius: 10px;
+}
+
+/* Mozilla */
+@supports (scrollbar-color: red blue) {
+  * {
+    scrollbar-color: #ff5860 #2b2b31;
+    scrollbar-width: thin;
+  }
+}
+
+/*==============================
+	HTML AÑADIDO
+==============================*/
+
 /*LO DE ABAJO ES PARA EL FORMULARIO */
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {

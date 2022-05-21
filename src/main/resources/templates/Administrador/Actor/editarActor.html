@@ -40,14 +40,15 @@
                                         <div class="col-md-6 col-8">
 
                                             <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
-                                                <option value="" selected></option>
+
                                                 <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
                                                 <option th:each="imagen : ${imagenes}"
+                                                        th:id="|img-${imagen.id}|"
                                                         th:value="${imagen.id}"></option>
                                             </select>
 
                                             <div class="sign__group">
-                                                <input hidden name="id">
+                                                <input hidden th:field="*{id}">
                                             </div>
 
                                             <div class="sign__group">
@@ -100,7 +101,7 @@
 
                                                                     <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
 
-                                                                    <a class="card__play" th:onclick="|eliminarEnDB(${foto.numero-1})|">
+                                                                    <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
                                                                         <i class="bi bi-x" style="color: white"></i>
                                                                     </a>
                                                                 </div>
@@ -150,7 +151,6 @@
 
                 function preview(){
 
-                    let j=0;
                     for(i of fileInput.files){
 
                         let reader = new FileReader();
@@ -158,37 +158,47 @@
                         let item = document.createElement("div");
                         item.className="item";
 
-                        // Boton de Eliminar
+                        // Overlay para eliminar
                         let cover = document.createElement("div");
-                        cover.id="new-"+j.toString();
                         cover.className="card__cover";
 
+                        // Boton de eliminar
+                        let button = document.createElement("a");
+                        button.className = "card__play new";
+                        button.setAttribute("style","cursor: pointer")
+                        cover.appendChild(button)
+
                         // Activar la opción de borrar imagen
-                        cover.onclick = function (){
+                        button.onclick = function (){
 
                             const dt = new DataTransfer()
 
-                            for (let i = 0; i < fileInput.files.length; i++) {
-                                const file = fileInput.files[i];
+                            //lista con todas las fotos NUEVAS (Agregadas al editar) en el imgContainer
+                            let items = document.querySelectorAll('div.owl-item:not( .cloned) > div > div > a.new');
 
-                                if (this.id !== "new-"+i.toString()) {
+                            console.log("Antes", fileInput.files)
+                            // Se quita del input la imagen mostrada
+                            for (let i = 0; i < items.length; i++) {
+                                let item = items[i].parentElement.parentElement.parentElement;
+
+                                if (item.className !== "owl-item active") {
+                                    let file = fileInput.files[i];
+                                    console.log(file, item.className)
                                     dt.items.add(file);
                                 }
                             }
                             fileInput.files = dt.files;
+                            console.log("Despues",fileInput.files)
 
                             cover.parentElement.parentElement.remove();
                             refresh()
                         };
 
-                        let button = document.createElement("a");
-                        button.className = "card__play";
                         let close = document.createElement("i");
                         close.className = "bi bi-x";
                         close.setAttribute("style","color: white")
 
                         button.appendChild(close)
-                        cover.appendChild(button)
 
                         reader.onload=()=>{
                             let img = document.createElement("img");
@@ -196,11 +206,11 @@
                             img.setAttribute("style","margin-inline: auto;max-height: 150px;max-width: fit-content;")
 
                             cover.appendChild(img);
-                            item.appendChild(cover)
                         }
+                        item.appendChild(cover)
+
                         imgContainer.appendChild(item);
                         reader.readAsDataURL(i);
-                        j++;
                     }
 
                     // Vuelve a cargar el deslizador
@@ -220,8 +230,8 @@
 
                 function eliminarEnDB(id){
 
-                    let select = document.getElementById("fotos-para-eliminar");
-                    select.getElementsByTagName("option")[id].selected = "selected";
+                    let opcion = document.getElementById("img-"+id);
+                    opcion.selected = "selected";
 
                     let item = imgContainer.getElementsByClassName("active").item(0);
                     console.log(item)

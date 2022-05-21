@@ -88,7 +88,7 @@ public class ActorController {
     @PostMapping("/subir")
     public String recibirImagen(@ModelAttribute("actor") @Validated(Elenco.class) Persona actor,
                                 BindingResult bindingResult,
-                                @RequestParam(value = "eliminar", required = false) String[] ids,
+                                @RequestParam(value = "eliminar", defaultValue = "") String[] ids,
                                 @RequestParam("imagenes") MultipartFile[] imagenes,
                                 RedirectAttributes attr){
 
@@ -112,7 +112,7 @@ public class ActorController {
             System.out.println("Tipo: " + img.getContentType());
         }
 
-        return "redirect:/admin/actores/lista";
+        return "redirect:/admin/actores/editar?id="+actor.getId();
     }
 
     @GetMapping(value = "/borrar")
@@ -130,7 +130,7 @@ public class ActorController {
             }else{
                 attr.addFlashAttribute("err", "El operador con ID:"+id+" no se encuentra presente");
             }
-            return "redirect:/admin/operadores/";
+            return "redirect:/admin/actores/";
 
         }catch (Exception e){
             attr.addFlashAttribute("err", "El ID es inválido");

@@ -145,28 +145,6 @@ $(document).ready(function () {
 	});
 
 	/*==============================
-	Scroll bar
-	==============================*/
-	$('.scrollbar-dropdown').mCustomScrollbar({
-		axis: "y",
-		scrollbarPosition: "outside",
-		theme: "custom-bar"
-	});
-
-	$('.accordion').mCustomScrollbar({
-		axis: "y",
-		scrollbarPosition: "outside",
-		theme: "custom-bar2"
-	});
-
-	$('.price').mCustomScrollbar({
-		axis: "y",
-		scrollbarPosition: "outside",
-		theme: "custom-bar2",
-		alwaysShowScrollbar: 2
-	});
-
-	/*==============================
 	Morelines
 	==============================*/
 	$('.card__description--details').moreLines({
