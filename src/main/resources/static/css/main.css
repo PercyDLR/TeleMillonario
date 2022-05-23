@@ -1018,14 +1018,14 @@ ul {
 }
 .home__title {
   color: #fff;
-  /*text-transform: uppercase;*/
+  text-transform: uppercase;
   /*font-weight: 300;*/
-  font-size: 86px;
+  /*font-size: 28px;*/
   margin: 0;
   padding-right: 14px;
   font-family: 'Ubuntu';
   font-weight: 100;
-  /*font-size: 100%;*/
+  font-size: 100%;
   /*margin-bottom: 20px;*/
 }
 .home__title b {
@@ -1560,7 +1560,7 @@ ul {
   transition: 0.4s ease;
 }
 .card__cover img {
-  width: 100%;
+
 }
 .card__cover:before {
   content: '';
