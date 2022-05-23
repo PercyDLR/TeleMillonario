@@ -18,15 +18,14 @@
                                         <span style="font-family: 'Barlow', sans-serif; color:#e64166">Contraseña</span>
                                     </h1>
 
-                                    <!--h4 th:if="${msgexitoso != null}" th:text="${msgexitoso}" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4-->
                                     <h4 th:if="${msg != null}" th:text="${msg}" style="color:red;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
 
                                     <div class="sign__group">
-                                        <input type="password" required autofocus style="width: 400px" name="password" class="sign__input" placeholder="Ingrese su nueva contraseña">
+                                        <input type="password" autofocus style="text-align:center;width: 400px" name="password" class="sign__input" placeholder="Ingrese su nueva contraseña">
                                     </div>
 
                                     <div class="sign__group">
-                                        <input type="password"  required style="width: 400px" name="repassword" class="sign__input" placeholder="Repita su nueva contraseña">
+                                        <input type="password"style="text-align:center;width: 400px" name="repassword" class="sign__input" placeholder="Repita su nueva contraseña">
                                     </div>
 
                                     <button class="sign__btn" type="submit">Actualizar contraseña</button>

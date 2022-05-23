@@ -19,14 +19,13 @@
                                         <span style="font-family: 'Barlow', sans-serif; color:#e64166">Contraseña</span>
                                     </h1>
                                     <h4 th:if="${msgexito != null}" th:text="${msgexito}" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
-                                    <h4 th:if="${msg != null}" th:text="${msg}" style="color:red;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
+                                    <h4 th:if="${msg != null}" th:text="${msg}" style="color:rgba(255,30,0,0.93);opacity:0.8;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
                                     <div class="sign__group" style="margin-top: 15px">
-                                        <input type="text" class="sign__input" style="width: 380px;padding: 0px 48px" name="correo" placeholder="Ingrese el correo con el cual se registro" required autofocus>
+                                        <input type="text" class="sign__input" style="text-align:center;width: 380px;padding: 0px 48px" name="correo" placeholder="Ingrese su correo registrado" autofocus>
                                     </div>
 
                                     <button class="sign__btn" type="submit">Recuperar contraseña</button>
-                                    <br>
-                                    <a th:href="@{/login}" type="button" style="color: #e64166">Iniciar Sesión</a>
+                                    <span class="sign__text"><a th:href="@{/login}" type="button">Iniciar Sesión</a></span>
                                 </form>
                             </div>
                         </div>
