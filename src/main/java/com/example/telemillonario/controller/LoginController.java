@@ -91,6 +91,13 @@ public class LoginController {
         }
     }
 
+    @GetMapping("/SingUpByGoogle")
+    public String crearCuentaGoogle(){
+        return "login/SignUpByGoogle";
+    }
+
+
+
     @PostMapping("/validacionSignUp")
     public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult,ModelAttribute modelAttribute) throws InterruptedException, IOException {
 
