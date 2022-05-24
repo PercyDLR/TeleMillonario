@@ -3516,10 +3516,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   align-items: center;
   padding: 40px 20px;
   /*position: relative;*/
-  border-bottom: solid 3px #ff55a5;
   border-top: solid 3px #ff55a5;
+  /*
+  border-bottom: solid 3px #ff55a5;
   border-right: solid 3px #ff55a5;
   border-left: solid 3px #ff55a5;
+   */
 }
 .sign__form:before {
   content: '';

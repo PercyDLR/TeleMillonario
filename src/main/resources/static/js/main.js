@@ -58,10 +58,10 @@ $(document).ready(function () {
 
 	$('.home__carousel').owlCarousel({
 		mouseDrag: false,
-		touchDrag: false,
+		touchDrag: true,
 		dots: false,
 		loop: true,
-		autoplay: false,
+		autoplay: true,
 		smartSpeed: 600,
 		margin: 30,
 		responsive : {
