@@ -2,10 +2,12 @@ package com.example.telemillonario.controller.Usuario;
 
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.repository.PersonaRepository;
+import com.example.telemillonario.validation.Perfil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,19 +42,26 @@ public class UsuarioController {
     }
 
     @PostMapping("/perfil/guardar")
-    public String guardarPerfilUsuario(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
+    public String guardarPerfilUsuario(@ModelAttribute("usuario") @Validated(Perfil.class) Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
 
+        Persona usuarioSesion = (Persona) session.getAttribute("usuario");
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getFieldError());
+
+            usuario.setNombres(usuarioSesion.getNombres());
+            usuario.setApellidos(usuarioSesion.getApellidos());
+            usuario.setDni(usuarioSesion.getDni());
+            usuario.setCorreo(usuarioSesion.getCorreo());
+
             return "usuario/editarPerfil";
         } else {
-            Persona usuarioSesion = (Persona) session.getAttribute("usuario");
 
             if (usuario.getId().equals(usuarioSesion.getId())) {
 
                 // Sobreescribe los nuevos valores
                 usuarioSesion.setNacimiento(usuario.getNacimiento());
                 usuarioSesion.setDireccion(usuario.getDireccion());
+                usuarioSesion.setTelefono(usuario.getTelefono());
 
                 //Actualiza la DB
                 personaRepository.save(usuarioSesion);

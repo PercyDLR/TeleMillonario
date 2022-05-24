@@ -6,10 +6,7 @@ import com.example.telemillonario.validation.Usuario;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -42,17 +39,26 @@ public class Funcion {
     private Integer restriccionedad;
 
     @Column(name = "precioentrada")
+    @Positive
+    @Digits(integer = 4, fraction = 2, message = "Debe contener solo 2 decimales")
+    @Min(value = 5, message = "El precio mínimo es 5")
+    @NotNull(message = "El precio no debe estar vacio")
     private Double precioentrada;
 
     @Column(name = "stockentradas")
+    @Positive
+    @Digits(integer = 3, fraction = 0, message = "Debe ser un número entero")
+    @NotNull(message = "El stock no debe estar vacio")
     private Integer stockentradas;
 
     @NotBlank(message = "El nombre no puede estar vacío")
-    @Size(max=40,message = "El nombre no puede ser mayor a 40 caracteres")
+    @Size(max=40,message = "Nombre no mayor a 40 caracteres")
     @Column(name = "nombre", length = 100)
     private String nombre;
 
     @Column(name = "descripcion", length = 5000)
+    @Size(max=40,message = "La descripcion no puede ser mayor a 5000 caracteres")
+    @NotBlank(message = "La descripcion no puede estar vacia")
     private String descripcion;
 
     @Column(name = "cantidadasistentes")

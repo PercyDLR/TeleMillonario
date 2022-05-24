@@ -3,6 +3,11 @@
 
     <head th:replace="fragments/header :: head('Perfil',~{::style})">
         <style>
+
+            div.sign__group input{
+                width: 1000px;
+                max-width: calc(100% - 5rem);
+            }
             input:disabled{
                 color: rgba(255,255,255,0.5);
             }
@@ -48,38 +53,27 @@
 
                                         <div class="sign__group">
                                             <label for="nombres">Nombres</label>
-                                            <input class="sign__input"  style="width: auto"
+                                            <input class="sign__input"
                                                    th:value="*{nombres}" id="nombres" disabled>
                                         </div>
 
                                         <div class="sign__group">
                                             <label for="apellidos">Apellidos</label>
-                                            <input class="sign__input"  style="width: auto"
+                                            <input class="sign__input"
                                                    th:value="*{apellidos}" id="apellidos" disabled>
                                         </div>
 
                                         <div class="sign__group">
                                             <label for="dni">DNI&ensp;&ensp;&ensp;&ensp;&ensp;</label>
-                                            <input class="sign__input"  style="width: auto"
+                                            <input class="sign__input"
                                                    th:value="*{dni}" id="dni" disabled>
                                         </div>
 
                                         <div class="sign__group">
                                             <label for="correo">Correo &ensp;&ensp;</label>
-                                            <input class="sign__input"  style="width: auto"
+                                            <input class="sign__input"
                                                    th:value="*{correo}" id="correo" disabled>
                                         </div>
-
-                                        <div class="sign__group">
-                                            <label for="direccion">Dirección</label>
-                                            <input class="sign__input"  style="width: auto"
-                                                   th:field="*{direccion}"
-                                                   th:classappend="${#fields.hasErrors('direccion')? 'is-invalid':''}"
-                                                   placeholder="Dirección" required>
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('direccion')}"
-                                                 th:errors="*{direccion}"></div>
-                                        </div>
-
                                     </div>
 
                                     <!--Selector Imagenes-->
@@ -90,7 +84,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px; text-align: center">
-                                                        Foto de Perfil</h1>
+                                                        Foto</h1>
                                                 </div>
                                             </div>
                                         </section>
@@ -118,11 +112,38 @@
                                     </div>
                                 </div>
 
+                                <div class="row mt-2">
+                                    <div class="col-12" style="padding-right: 0">
+                                        <div class="sign__group">
+                                            <label for="direccion">Dirección</label>
+                                            <input class="sign__input"
+                                                   th:field="*{direccion}"
+                                                   th:classappend="${#fields.hasErrors('direccion')? 'is-invalid':''}"
+                                                   placeholder="Dirección" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('direccion')}"
+                                                 th:errors="*{direccion}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12"></div>
+                                </div>
                                 <div class="row">
-                                    <div class="col-12 mt-4">
-                                        <div class="sign__group" style="text-align: center; white-space: nowrap">
-                                            <label style="display: inline-block" for="nacimiento">Nacimiento</label>
-                                            <input class="sign__input" style="width: auto; display: inline-block"
+
+                                    <div class="col-md-6 col-12" style="padding-right: 0">
+                                        <div class="sign__group">
+                                            <label for="telefono">Teléfono</label>
+                                            <input class="sign__input"
+                                                   th:field="*{telefono}"
+                                                   th:classappend="${#fields.hasErrors('telefono')? 'is-invalid':''}"
+                                                   placeholder="Teléfono" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('telefono')}"
+                                                 th:errors="*{telefono}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12" style="text-align: center; white-space: nowrap">
+                                        <div class="sign__group">
+                                            <label style="display: inline" for="nacimiento">Nacimiento</label>
+                                            <input style="display: inline" class="sign__input"
                                                    th:field="*{nacimiento}"
                                                    th:classappend="${#fields.hasErrors('nacimiento')? 'is-invalid':''}"
                                                    placeholder="Nacimiento" type="date" required>
