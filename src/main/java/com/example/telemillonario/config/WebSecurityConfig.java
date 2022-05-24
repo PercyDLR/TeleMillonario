@@ -27,6 +27,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true);
+
+        http.authorizeRequests()
+                .antMatchers("/admin","/admin/**").hasAuthority("Administrador")
+                .antMatchers("/operador","/operador/**").hasAuthority("Operador")
+                .antMatchers("/perfil","/perfil/**").hasAnyAuthority("Operador","Usuario")
+                .anyRequest().permitAll();
     }
 
     @Autowired
@@ -42,19 +48,3 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("SELECT persona.correo,rol.nombre FROM persona INNER JOIN rol ON ( persona.idrol = rol.id ) WHERE persona.correo = ? and persona.estado = 1");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

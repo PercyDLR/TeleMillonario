@@ -5,6 +5,7 @@ Project:	FlixGo
 Version:	1.0
 Primary use:	FlixGo Template
 ----------------------------------------*/
+/*  MODIFICADO PARA TELEMILLONARIO
 /*----------------------------------------
 [Table of contents]
 
@@ -43,7 +44,7 @@ Primary use:	FlixGo Template
   /*background-color: #2b2b31;*/
   /*padding: 40px 0;*/
 }
-.hhome_sala .container {
+.home_sala .container {
   position: relative;
   z-index: 2;
 }
@@ -1017,14 +1018,14 @@ ul {
 }
 .home__title {
   color: #fff;
-  /*text-transform: uppercase;*/
+  text-transform: uppercase;
   /*font-weight: 300;*/
-  font-size: 86px;
+  /*font-size: 28px;*/
   margin: 0;
   padding-right: 14px;
-  font-family: 'Open Sans';
-  font-weight: 900;
-  /*font-size: 100%;*/
+  font-family: 'Ubuntu';
+  font-weight: 100;
+  font-size: 100%;
   /*margin-bottom: 20px;*/
 }
 .home__title b {
@@ -1057,22 +1058,10 @@ ul {
   line-height: 24px;
 }
 .home__nav--prev {
-  /*right: 60px;*/
+  right: 60px;
 }
 .home__nav:hover {
   opacity: 1;
-}
-.home--bg:before {
-  content: '';
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: block;
-  background: url("../img/home/telon-abierto.jpg") no-repeat center/cover;
-  opacity: 0.06;
 }
 @media (min-width: 576px) {
   .home__title {
@@ -1085,7 +1074,7 @@ ul {
     padding: 60px 0;
   }
   .home__title {
-    font-size: 86px;
+    font-size: 32px;
   }
   .home__carousel .item {
     margin-top: 30px;
@@ -1096,7 +1085,7 @@ ul {
     padding: 70px 0;
   }
   .home__title {
-    font-size: 86px;
+    font-size: 36px;
   }
 }
 /*==============================
@@ -1559,6 +1548,8 @@ ul {
 ==============================*/
 .card {
   margin-bottom: 30px;
+  background: transparent;
+  border: 1px solid transparent;
 }
 .card__cover {
   position: relative;
@@ -1569,7 +1560,7 @@ ul {
   transition: 0.4s ease;
 }
 .card__cover img {
-  width: 100%;
+
 }
 .card__cover:before {
   content: '';
@@ -3525,10 +3516,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   align-items: center;
   padding: 40px 20px;
   /*position: relative;*/
-  border-bottom: solid 3px #ff55a5;
   border-top: solid 3px #ff55a5;
+  /*
+  border-bottom: solid 3px #ff55a5;
   border-right: solid 3px #ff55a5;
   border-left: solid 3px #ff55a5;
+   */
 }
 .sign__form:before {
   content: '';

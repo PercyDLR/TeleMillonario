@@ -15,16 +15,16 @@
 									<img th:src="@{/img/tele.png}" alt="logo">
 								</a>
 								<div class="sign__group">
-									<input type="text" class="sign__input" name="username" placeholder="Correo" required autofocus>
+									<input type="text" class="sign__input" name="username" placeholder="Correo"autofocus>
 								</div>
 								<div class="sign__group">
 									<input type="password" name="password" class="sign__input" placeholder="Contraseña">
 								</div>
-								<div class="sign__group sign__group--checkbox">
+								<!--div class="sign__group sign__group--checkbox">
 									<input id="remember" name="remember" type="checkbox" checked="checked">
 									<label for="remember">Recuérdame</label>
-								</div>
-								<h4 th:if="${param.error}" style="color:red;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;">Correo o contraseña incorrecto</h4>
+								</div-->
+								<h4 th:if="${param.error}" style="color:rgba(255,30,0,0.93);opacity:0.8;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;">Correo o contraseña incorrecto</h4>
 								<button class="sign__btn" type="submit">Ingresar</button>
 
 								<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 15px"></span>Regístrate</a></span>

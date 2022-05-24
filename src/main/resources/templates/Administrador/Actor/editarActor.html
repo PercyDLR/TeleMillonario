@@ -6,6 +6,11 @@
                 color: rgba(255,255,255,0.5);
             }
 
+            div.card__cover img {
+                margin-inline: auto;
+                max-height: 150px;
+                max-width: fit-content;
+            }
             #images{
                 width: 90%;
                 position: relative;
@@ -33,7 +38,7 @@
 
                                 <!-- authorization form -->
                                 <form class="sign__form" method="post" th:object="${actor}" th:action="@{/admin/actores/subir}" enctype="multipart/form-data">
-                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;"
+                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;"
                                     th:text="${actor.id == null ? 'Nuevo Actor' : 'Editar Actor'}"></h3>
 
                                     <div class="row">
@@ -82,6 +87,9 @@
                                                         <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
                                                     </div>
                                                     <div class="col-md-3 col-2">
+                                                        <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
+                                                            <i class="icon ion-ios-arrow-round-back"></i>
+                                                        </button>
                                                         <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
                                                             <i class="icon ion-ios-arrow-round-forward"></i>
                                                         </button>
@@ -146,15 +154,19 @@
 
         <div th:replace="fragments/footer :: js(~{::script})">
             <script>
+                // El input donde se agregan las imágenes
                 let fileInput = document.getElementById("file-input");
+                // Donde se muestran las vistas previas
                 let imgContainer = document.getElementById("img_container");
 
+                // Agrega y quita imagenes de la vista previa e input
                 function preview(){
 
                     for(i of fileInput.files){
 
                         let reader = new FileReader();
 
+                        // Contenedor de la imagen + botones
                         let item = document.createElement("div");
                         item.className="item";
 
@@ -162,7 +174,7 @@
                         let cover = document.createElement("div");
                         cover.className="card__cover";
 
-                        // Boton de eliminar
+                        // Botón de eliminar
                         let button = document.createElement("a");
                         button.className = "card__play new";
                         button.setAttribute("style","cursor: pointer")
@@ -176,34 +188,38 @@
                             //lista con todas las fotos NUEVAS (Agregadas al editar) en el imgContainer
                             let items = document.querySelectorAll('div.owl-item:not( .cloned) > div > div > a.new');
 
-                            console.log("Antes", fileInput.files)
+                            // console.log("Antes", fileInput.files)
+
                             // Se quita del input la imagen mostrada
                             for (let i = 0; i < items.length; i++) {
                                 let item = items[i].parentElement.parentElement.parentElement;
 
                                 if (item.className !== "owl-item active") {
                                     let file = fileInput.files[i];
-                                    console.log(file, item.className)
+                                    // console.log(file, item.className)
                                     dt.items.add(file);
                                 }
                             }
+                            // Se actualiza el input
                             fileInput.files = dt.files;
-                            console.log("Despues",fileInput.files)
+                            // console.log("Despues",fileInput.files)
 
+                            // Se elimina la imagen en la vista previa
                             cover.parentElement.parentElement.remove();
                             refresh()
                         };
 
+                        // Icono de la cruz
                         let close = document.createElement("i");
                         close.className = "bi bi-x";
                         close.setAttribute("style","color: white")
 
                         button.appendChild(close)
 
+                        // Crea las imágenes de la vista previa
                         reader.onload=()=>{
                             let img = document.createElement("img");
                             img.setAttribute("src",reader.result);
-                            img.setAttribute("style","margin-inline: auto;max-height: 150px;max-width: fit-content;")
 
                             cover.appendChild(img);
                         }
@@ -217,6 +233,7 @@
                     refresh()
                 }
 
+                // Actualiza la vista previa, despues de agregar o quitar imágenes
                 function refresh() {
                     $('.owl-carousel').trigger('destroy.owl.carousel');
                     var $owl = $('.owl-carousel').owlCarousel({
@@ -228,14 +245,16 @@
                     $owl.trigger('refresh.owl.carousel');
                 }
 
+                // Marca una de las imágenes ya en la DB para ser eliminada
                 function eliminarEnDB(id){
 
+                    // Se busca en un select la opción correspondiente a la imagen clickeada
                     let opcion = document.getElementById("img-"+id);
                     opcion.selected = "selected";
 
+                    // Se busca la imagen en la vista previa y se elimina
                     let item = imgContainer.getElementsByClassName("active").item(0);
-                    console.log(item)
-
+                    //console.log(item)
                     item.remove();
 
                     refresh()

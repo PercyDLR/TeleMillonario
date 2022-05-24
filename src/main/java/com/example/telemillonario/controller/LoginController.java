@@ -26,6 +26,11 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Objects;
 
 @Controller
 public class LoginController {
@@ -57,6 +62,7 @@ public class LoginController {
 
         Persona persona = personaRepository.findByCorreo(auth.getName());
 
+        /*
         Persona personita = new Persona();
         personita.setId(persona.getId());
         personita.setNombres(persona.getNombres());
@@ -71,14 +77,15 @@ public class LoginController {
             System.out.println(personita.getIdsede().getId());
             System.out.println(personita.getIdsede().getNombre());
         }
+         */
 
-        session.setAttribute("usuario",personita);
+        session.setAttribute("usuario",persona);
         System.out.println("llego aca");
 
-        if(personita.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
+        if(persona.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
             return "redirect:/admin/sedes";
 
-        }else if(personita.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
+        }else if(persona.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
             return "redirect:/";
 
         }else {
@@ -132,27 +139,50 @@ public class LoginController {
             return "redirect:/cambioDeContrasenia";
         }
 
-        String token = RandomString.make(45);
+        if(persona.getPasswordToken().equalsIgnoreCase("")){
+            System.out.println("comillas");
+        }else if(persona.getPasswordToken() == null){
+            System.out.println("es null");
+        }else{
+            System.out.println("es ' ' ");
+        }
+        if(persona.getPasswordToken().equalsIgnoreCase("")){
+            String token = RandomString.make(45);
 
-        System.out.println(correo);
-        System.out.println(token);
+            usuarioService.updateResetPassword(token,correo);
 
-        usuarioService.updateResetPassword(token,correo);
+            //Generamos el link para el reseteo de contraseña
 
-        //Generamos el link para el reseteo de contraseña
+            String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
 
-        String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
+            try {
+                sendEmail(correo,resetPasswordLink);
 
-        System.out.println(resetPasswordLink);
-        try {
-            sendEmail(correo,resetPasswordLink);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            redirectAttributes.addFlashAttribute("msg","Ha ocurrido un error, vuelve a intentarlo mas tarde.");
+                String user = "root";
+                String password = "root";
+                String url = "jdbc:mysql://localhost:3306/telemillonario";
+
+                String sentenciaSQL = "CREATE EVENT telemillonario.eventoborrar"+persona.getId()+"\n ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 15 minute DO UPDATE telemillonario.persona SET passwordtoken = '' WHERE persona.correo = ?;";
+                try (Connection conn = DriverManager.getConnection(url, user, password);
+                     PreparedStatement pstmt = conn.prepareStatement(sentenciaSQL);) {
+
+                    pstmt.setString(1,correo);
+                    pstmt.executeUpdate();
+
+                }
+
+            } catch (MessagingException | UnsupportedEncodingException | SQLException e) {
+                redirectAttributes.addFlashAttribute("msg","Ha ocurrido un error, vuelve a intentarlo mas tarde.");
+                return "redirect:/cambioDeContrasenia";
+            }
+
+            redirectAttributes.addFlashAttribute("msgexito","Se ha enviado el link de recuperacion al correo ingresado");
             return "redirect:/cambioDeContrasenia";
         }
-
-        redirectAttributes.addFlashAttribute("msgexito","Se ha enviado el link de recuperacion al correo ingresado");
-        return "redirect:/cambioDeContrasenia";
+        else{
+            redirectAttributes.addFlashAttribute("msg","Debe esperar 15 minutos para poder solicitar denuevo el cambio");
+            return "redirect:/cambioDeContrasenia";
+        }
 
     }
 
@@ -186,6 +216,23 @@ public class LoginController {
 
         }else{
             if(password.equals(confirmarContrasena)){
+
+                try {
+                    String user = "root";
+                    String pass = "root";
+                    String url = "jdbc:mysql://localhost:3306/telemillonario";
+
+                    String sentenciaSQL = "DROP EVENT IF EXISTS telemillonario.eventoborrar"+personita.getId()+";";
+                    try (Connection conn = DriverManager.getConnection(url, user, pass);
+                         PreparedStatement pstmt = conn.prepareStatement(sentenciaSQL);) {
+                        System.out.println("llego aca");
+                        pstmt.execute();
+                        System.out.println("pase la prueba");
+                    }
+                } catch (SQLException e) {
+                    return "redirect:/anErrorHasOcurred";
+                }
+
                 usuarioService.updatePassword(personita,password);
                 redirectAttributes.addFlashAttribute("msgexitoso","Su contraseña se ha cambiado satisfactoriamente.");
                 return "redirect:/sucessPassword";

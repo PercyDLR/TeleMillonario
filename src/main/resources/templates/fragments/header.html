@@ -35,9 +35,12 @@
         <!-- Estilos Propios-->
         <style th:inline="text">
             body{
-                background: url([[@{/img/home/telon-abierto-opaco.jpg}]])
-                no-repeat  fixed;
+                background: url([[@{/img/home/fondo.jpg}]]) no-repeat  fixed;
                 background-size: 100% 100%;
+            }
+
+            .content, .home{
+                background-color: rgba(43,43,49,0.8);
             }
 
             .overlay {
