@@ -67,7 +67,7 @@ public class Persona implements Serializable {
     @Column(name = "contrasenia", length = 200)
     private String contrasenia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idsede")
     @NotNull(message = "Tiene que escoger una Sede valida", groups = Operador.class)
     private Sede idsede;//No se puede restringir puesto que implicaría malograr a Usuario,Admin,Actor y director

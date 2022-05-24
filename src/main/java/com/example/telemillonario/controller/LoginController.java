@@ -84,39 +84,16 @@ public class LoginController {
     @GetMapping("/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session){
 
-
         Persona persona = personaRepository.findByCorreo(auth.getName());
+        session.setAttribute("usuario",persona);
 
-
-
-        Persona personita = new Persona();
-
-        personita.setId(persona.getId());
-        personita.setNombres(persona.getNombres());
-        personita.setApellidos(persona.getApellidos());
-        personita.setDni(persona.getDni());
-        personita.setCorreo(persona.getCorreo());
-        personita.setNacimiento(persona.getNacimiento());
-        personita.setIdrol(persona.getIdrol());
-
-        personita.setIdsede(persona.getIdsede());
-
-
-
-        System.out.println(personita.getIdsede().getId());
-        System.out.println(personita.getIdsede().getNombre());
-
-        session.setAttribute("usuario",personita);
-        //System.out.println("llego aca");
-
-        if(persona.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
-            return "redirect:/admin/sedes";
-
-        }else if(persona.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
-            return "redirect:/";
-
-        }else {
-            return "redirect:/operador/funciones/lista"; //Cual es su pagina principal del Operador?
+        switch(persona.getIdrol().getNombre()){
+            case "Administrador":
+                return "redirect:/admin/sedes";
+            case "Operador":
+                return "redirect:/operador/funciones/lista";
+            default:
+                return "redirect:/";
         }
     }
 
