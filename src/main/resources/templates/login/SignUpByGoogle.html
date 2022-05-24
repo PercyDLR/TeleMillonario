@@ -15,10 +15,10 @@
                                     <img th:src="@{/img/tele.png}" alt="logo">
                                 </a>
                                 <div class="sign__group">
-                                    <label class="sign__input" style="padding: 12px 20px" th:text="${usuario.getNombres()}"></label>
+                                    <label class="sign__input" style="padding: 12px 20px;background-color: dimgray" th:text="${usuario.getNombres()}"></label>
                                 </div>
                                 <div class="sign__group">
-                                    <label class="sign__input" style="padding: 12px 20px" th:text="${usuario.getApellidos()}"></label>
+                                    <label class="sign__input" style="padding: 12px 20px;background-color: dimgray" th:text="${usuario.getApellidos()}"></label>
                                 </div>
                                 <div class="sign__group">
                                     <input type="text" class="sign__input" placeholder="DNI" name = "dni" th:value="${usuario.getDni()}"
@@ -27,7 +27,7 @@
                                          th:errors="*{dni}"></div>
                                 </div>
                                 <div class="sign__group">
-                                    <label class="sign__input" style="padding: 12px 20px" th:text="${usuario.getCorreo()}"></label>
+                                    <label class="sign__input" style="padding: 12px 20px;background-color: dimgray" th:text="${usuario.getCorreo()}"></label>
                                 </div>
                                 <div class="sign__group">
                                     <input type="text" class="sign__input" placeholder="Teléfono" name="telefono" th:value="${usuario.getTelefono()}"
