@@ -4,11 +4,11 @@ $(document).ready(function () {
 	/*==============================
 	Limit date value
 	================================
-	 */
+
 	var d = new Date()
 	d.setDate(d.getDate() - 1)
 	datePickerId.max = d.toISOString().split("T")[0] ;
-
+*/
 	/*==============================
 	Menu
 	==============================*/
