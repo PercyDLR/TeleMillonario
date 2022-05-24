@@ -44,18 +44,17 @@
                                 </div>
 
                                 <div class="sign__group">
-                                    <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:value="${usuario.getContrasenia()}"
+                                    <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" <!--th:value="${usuario.getContrasenia()}"-->
                                            th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
                                     <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
                                          th:errors="*{contrasenia}"></div>
                                 </div>
                                 <div class="sign__group">
-                                    <input type="password" class="sign__input" placeholder="Confirmar Contraseña" name="recontrasenia" th:value="${usuario.getContrasenia()}"
-                                           th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
-                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
-                                         th:errors="*{contrasenia}"></div>
+                                    <input type="password" class="sign__input" placeholder="Confirmar Contraseña" name="recontrasenia">
+                                    <!--<div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
+                                         th:errors="*{contrasenia}"></div>-->
                                 </div>
-                                <button class="sign__btn" type="button">Registrarse</button>
+                                <button class="sign__btn" type="submit">Registrarse</button>
 
                                 <span class="sign__text">¿Ya tienes una cuenta?<a th:href="@{/login}"><span style="margin-right: 15px"></span>Ingresar</a></span>
                             </form>
@@ -64,7 +63,40 @@
                 </div>
             </div>
         </div>
-        <div th:replace="fragments/footer :: js(_)"></div>
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script>
+                var d = new Date()
+                d.setDate(d.getDate() - 1)
+                datePickerId.max = d.toISOString().split("T")[0] ;
+
+                // Function to check Whether both passwords
+                // is same or not.
+                function checkPassword(form) {
+                    password1 = form.contrasenia.value;
+                    password2 = form.recontrasenia.value;
+
+                    // If password not entered
+                    if (contrasenia == '')
+                        //Habilitar texto que indique su ingreso obligatorio
+
+                    // If confirm password not entered
+                    else if recontrasenia == '')
+                        //Habilitar texto que indique su ingreso obligatorio
+
+                    // If Not same return False.
+                    else if (contrasenia != recontrasenia) {
+                        //Habilitar texto que indique que ambas deben coincidir
+                        return false;
+                    }
+
+                    // If same return True.
+                    else{
+                        //Dejar hacer el form
+                        return true;
+                    }
+                }
+            </script>
+        </div>
     </body>
 
 </html>

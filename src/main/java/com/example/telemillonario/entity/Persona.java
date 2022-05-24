@@ -7,10 +7,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
@@ -34,6 +31,8 @@ public class Persona implements Serializable {
     //https://www.geeksforgeeks.org/spring-mvc-custom-validation/
     @NotBlank(message = "El dni no puede estar vacío", groups = {Usuario.class ,Operador.class})
     @Pattern(regexp = "[0-9]{8}",message = "DNI no valido", groups = {Usuario.class ,Operador.class})//Momentaneamente
+    @Size(max = 8, message = "El dni no puede exceder los 8 caracteres")
+    @Digits(integer = 8, fraction = 0, message = "El dni debe consistir únicamente de 8 números")
     @Column(name = "dni", length = 8)
     private String dni;
 
@@ -42,13 +41,18 @@ public class Persona implements Serializable {
     @Column(name = "correo", length = 100)
     private String correo;
 
+    @NotNull(message = "El correo no puede estar vacio",groups = Usuario.class)
+    @Size(max = 9, message = "El teléfono no puede exceder los 9 caracteres")
+    @Digits(integer = 9, fraction = 0, message = "El teléfono debe consistir únicamente de 9 números")
     @Column(name = "telefono", length = 20)
     private String telefono;
 
+    @NotNull(message = "La fecha de nacimiento no puede estar vacia",groups = Usuario.class)
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @Column(name = "nacimiento")
     private LocalDate nacimiento;
 
+    @NotNull(message = "La dirección no puede estar vacia",groups = Usuario.class)
     @Column(name = "direccion", length = 100)
     private String direccion;
 
