@@ -80,7 +80,7 @@ public class LoginController {
          */
 
         session.setAttribute("usuario",persona);
-        System.out.println("llego aca");
+        //System.out.println("llego aca");
 
         if(persona.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
             return "redirect:/admin/sedes";

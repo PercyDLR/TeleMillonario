@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Objects;
 
 @Controller
 public class UsuarioController {
@@ -44,18 +46,28 @@ public class UsuarioController {
     public String guardarPerfilUsuario(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
 
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getFieldError());
             return "usuario/editarPerfil";
         } else {
             Persona usuarioSesion = (Persona) session.getAttribute("usuario");
 
-            if (usuario.getId() == usuarioSesion.getId()) { //Correctamente editado
+            if (usuario.getId().equals(usuarioSesion.getId())) {
+
+                // Sobreescribe los nuevos valores
+                usuarioSesion.setNacimiento(usuario.getNacimiento());
+                usuarioSesion.setDireccion(usuario.getDireccion());
+
+                //Actualiza la DB
+                personaRepository.save(usuarioSesion);
+                //Actualiza la Sesión
+                session.setAttribute("usuario",usuarioSesion);
+
                 a.addFlashAttribute("msg", "0");
-                personaRepository.save(usuario);
-                session.setAttribute("usuario",usuario);
             } else { //No debe dejar guardar el usuario editado
                 a.addFlashAttribute("msg", "-1");
             }
-            return "redirect:/usuario/perfil";
+
+            return "redirect:/perfil";
         }
 
     }

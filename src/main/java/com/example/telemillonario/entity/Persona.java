@@ -4,6 +4,7 @@ import com.example.telemillonario.validation.Elenco;
 import com.example.telemillonario.validation.Operador;
 import com.example.telemillonario.validation.Usuario;
 import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -44,6 +45,7 @@ public class Persona implements Serializable {
 //    @Column(name = "telefono", length = 20)
 //    private String telefono;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @Column(name = "nacimiento")
     private LocalDate nacimiento;
 
@@ -62,11 +64,12 @@ public class Persona implements Serializable {
     @NotNull(message = "Tiene que escoger una Sede valida", groups = Operador.class)
     private Sede idsede;//No se puede restringir puesto que implicaría malograr a Usuario,Admin,Actor y director
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idrol")//No se puede restringir puesto que implicaría malograr a Usuario,Admin,Actor y director
+    @ManyToOne
+    @JoinColumn(name = "idrol")
     private Rol idrol;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @NotNull(groups = {Usuario.class})
     @JoinColumn(name = "iddistrito")
     private Distrito iddistrito;
 
