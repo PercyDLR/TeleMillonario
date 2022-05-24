@@ -32,7 +32,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin","/admin/**").hasAuthority("Administrador")
                 .antMatchers("/operador","/operador/**").hasAuthority("Operador")
                 .antMatchers("/perfil","/perfil/**").hasAnyAuthority("Operador","Usuario")
-                .anyRequest().permitAll();
+                .anyRequest().permitAll().and()
+                .oauth2Login()
+                .loginPage("/login")
+                .defaultSuccessUrl("/list",true);
     }
 
     @Autowired

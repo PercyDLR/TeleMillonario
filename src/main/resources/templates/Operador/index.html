@@ -58,8 +58,18 @@
 
             <div class="col-2" th:each="foto : ${listfunc1}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
-                         style="width: 270px;height: 240px;margin-left: 7px;">
+                    <div class="card__cover" >
+
+<!--                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">-->
+                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
+                             style="width: 270px;height: 240px;margin-left: 7px;">
+                        <a class="card__play" style="border:none" href="#">
+                            <i style="color: white">Ver mas fotos</i>
+                        </a>
+                    </div>
+
+<!--                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
+<!--                         style="width: 270px;height: 240px;margin-left: 7px;">-->
                     <div class="card-body">
                         <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
                         <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
@@ -117,8 +127,19 @@
         <div class="row">
             <div class="col-2" th:each="foto : ${listfunc2}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
-                         style="width: 270px;height: 240px;margin-left: 7px;">
+
+                    <div class="card__cover" >
+
+                        <!--                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">-->
+                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
+                             style="width: 270px;height: 240px;margin-left: 7px;">
+                        <a class="card__play" style="border:none" href="#">
+                            <i style="color: white">Ver mas fotos</i>
+                        </a>
+                    </div>
+
+<!--                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
+<!--                         style="width: 270px;height: 240px;margin-left: 7px;">-->
                     <div class="card-body">
                         <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
                         <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
@@ -176,6 +197,20 @@
 
                 popup.getElementsByTagName("a").item(2).href = [[@{'/operador/funciones/borrar?idfuncion='}]] + idfuncion;
                 popup.style.display = 'block';
+            }
+
+            function getimagenes(idfuncion) {
+                var idteatrotag = "#teatro_obra" + idobra;
+                var idsalatag = "#sala_obra" + idobra;
+                var idteatro = $(idteatrotag).val();
+                $.get("/sala/teatro/" + idteatro, function (data) {
+                    var option = "<option value='' selected disabled>- Seleccione la Sala -</option>";
+                    $.each(data, function (key, value) {
+                        option = option + "<option data-aforo=" + value.aforo + " value=" + value.id + ">" + value.nombre + "</option>";
+                    });
+                    $(idsalatag).find('option').remove().end().append(option);
+                    $(idsalatag).prop("disabled", false);
+                });
             }
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

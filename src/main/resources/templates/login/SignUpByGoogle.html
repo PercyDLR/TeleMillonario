@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+    <head th:replace="fragments/header :: head('Creación de Cuenta',_)"></head>
+
+    <body class="body">
+
+        <div class="sign section--bg" th:src="@{/img/section/section.jpg}">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sign__content">
+                            <form th:action="@{/validacionSignUp}" class="sign__form" th:object="${usuario}">
+                                <a th:href="@{/}" class="sign__logo">
+                                    <img th:src="@{/img/tele.png}" alt="logo">
+                                </a>
+                                <div class="sign__group">
+                                    <label class="sign__input" style="padding: 12px 20px" th:text="${usuario.getNombres()}"></label>
+                                </div>
+                                <div class="sign__group">
+                                    <label class="sign__input" style="padding: 12px 20px" th:text="${usuario.getApellidos()}"></label>
+                                </div>
+                                <div class="sign__group">
+                                    <input type="text" class="sign__input" placeholder="DNI" name = "dni" th:value="${usuario.getDni()}"
+                                           th:classappend="${#fields.hasErrors('dni')?'is-invalid':''}">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('dni')}"
+                                         th:errors="*{dni}"></div>
+                                </div>
+                                <div class="sign__group">
+                                    <label class="sign__input" style="padding: 12px 20px" th:text="${usuario.getCorreo()}"></label>
+                                </div>
+                                <div class="sign__group">
+                                    <input type="text" class="sign__input" placeholder="Fecha de Nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')">
+                                </div>
+
+                                <div class="sign__group">
+                                    <input type="text" class="sign__input" placeholder="Dirección" name="direccion" th:value="${usuario.getDireccion()}">
+                                </div>
+
+                                <div class="sign__group">
+                                    <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:value="${usuario.getContrasenia()}"
+                                           th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
+                                         th:errors="*{contrasenia}"></div>
+                                </div>
+                                <div class="sign__group">
+                                    <input type="password" class="sign__input" placeholder="Confirmar Contraseña" name="recontrasenia" th:value="${usuario.getContrasenia()}"
+                                           th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
+                                         th:errors="*{contrasenia}"></div>
+                                </div>
+                                <button class="sign__btn" type="button">Registrarse</button>
+
+                                <span class="sign__text">¿Ya tienes una cuenta?<a th:href="@{/login}"><span style="margin-right: 15px"></span>Ingresar</a></span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/footer :: js(_)"></div>
+    </body>
+
+</html>
