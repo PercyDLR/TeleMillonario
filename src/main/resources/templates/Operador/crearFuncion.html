@@ -257,7 +257,7 @@
                                 <label style="color: #FFFFFF"><b>Seleccione los generos</b></label>
                                 <br>
                                 <select class="form-select" name="idgenero" size="3" multiple
-                                        aria-label="multiple select example" th:if="${sval==1}">
+                                        aria-label="multiple select example" th:if="${sval==1}" required>
                                     <option disabled>Seleccione los generos con (+Ctrl)</option>
                                     <option th:each="genero : ${listGeneros}"
                                             th:text="|${genero.nombre}|"
@@ -267,7 +267,7 @@
 
 
                                 <select class="form-select" name="idgenero" size="3" multiple
-                                         aria-label="multiple select example" th:unless="${sval==1}">
+                                         aria-label="multiple select example" th:unless="${sval==1}" required>
                                     <option disabled>Seleccione los generos con (+Ctrl)</option>
                                     <option th:each="genero : ${listGeneros}"
                                             th:text="|${genero.nombre}|"
@@ -289,7 +289,7 @@
                                 <label style="color: #FFFFFF"><b>Seleccione los actores</b></label>
                                 <br>
                                 <select class="form-select" name="idactor" size="3" multiple
-                                        aria-label="multiple select example" th:if="${sval==1}">
+                                        aria-label="multiple select example" th:if="${sval==1}" required>
                                     <option disabled>Seleccione los actores con (+Ctrl)</option>
                                     <option th:each="actores,indice : ${listActores}"
                                             th:text="|${actores.nombres} ${actores.apellidos}|"
@@ -298,7 +298,7 @@
                                 </select>
 
                                 <select class="form-select" name="idactor" size="3" multiple
-                                        aria-label="multiple select example" th:unless="${sval==1}">
+                                        aria-label="multiple select example" th:unless="${sval==1}" required>
                                     <option disabled>Seleccione los actores con (+Ctrl)</option>
                                     <option th:each="actores,indice : ${listActores}"
                                             th:text="|${actores.nombres} ${actores.apellidos}|"
@@ -316,7 +316,7 @@
                                 <label  style="color: #FFFFFF"><b>Seleccione los directores</b></label>
                                 <br>
                                 <select class="form-select" name="iddirector" size="3" multiple
-                                        aria-label="multiple select example" th:if="${sval==1}">
+                                        aria-label="multiple select example" th:if="${sval==1}" required>
                                     <option disabled>Seleccione los Directores con (+Ctrl)</option>
                                     <option th:each="directores : ${listDirectores}"
                                             th:text="|${directores.nombres} ${directores.apellidos}|"
@@ -325,7 +325,7 @@
                                 </select>
 
                                 <select class="form-select" name="iddirector" size="3" multiple
-                                        aria-label="multiple select example" th:unless="${sval==1}">
+                                        aria-label="multiple select example" th:unless="${sval==1}" required>
                                     <option disabled>Seleccione los Directores con (+Ctrl)</option>
                                     <option th:each="directores : ${listDirectores}"
                                             th:text="|${directores.nombres} ${directores.apellidos}|"
