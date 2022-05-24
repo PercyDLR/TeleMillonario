@@ -41,8 +41,8 @@ public class Persona implements Serializable {
     @Column(name = "correo", length = 100)
     private String correo;
 
-//    @Column(name = "telefono", length = 20)
-//    private String telefono;
+    @Column(name = "telefono", length = 20)
+    private String telefono;
 
     @Column(name = "nacimiento")
     private LocalDate nacimiento;
@@ -188,4 +188,7 @@ public class Persona implements Serializable {
         this.id = id;
     }
 
+    public String getTelefono() {return telefono;}
+
+    public void setTelefono(String telefono) {this.telefono = telefono;}
 }

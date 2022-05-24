@@ -30,7 +30,13 @@
                                     <label class="sign__input" style="padding: 12px 20px" th:text="${usuario.getCorreo()}"></label>
                                 </div>
                                 <div class="sign__group">
-                                    <input type="text" class="sign__input" placeholder="Fecha de Nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')">
+                                    <input type="text" class="sign__input" placeholder="Teléfono" name="telefono" th:value="${usuario.getTelefono()}"
+                                           th:classappend="${#fields.hasErrors('telefono')?'is-invalid':''}">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('telefono')}"
+                                         th:errors="*{telefono}"></div>
+                                </div>
+                                <div class="sign__group">
+                                    <input type="text" id="datePickerId" class="sign__input" placeholder="Fecha de Nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')">
                                 </div>
 
                                 <div class="sign__group">
