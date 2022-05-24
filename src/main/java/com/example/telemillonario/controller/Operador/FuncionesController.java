@@ -189,6 +189,7 @@ public class FuncionesController {
 
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
+        //VALIDACIONES
         if (bindingResult.hasErrors()) {
             model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
             model.addAttribute("listDirectores",personaRepository.listarDirectores());
@@ -245,6 +246,24 @@ public class FuncionesController {
                 model.addAttribute("fechaactual",now);
                 model.addAttribute("msgduracion","Debe ingresar una duracion");
                 model.addAttribute("fechamasinicio",fechamasinicio);
+                model.addAttribute("val",2);
+                Persona persona = (Persona) session.getAttribute("usuario");
+                //listado de salas por sede disponibles
+                model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
+                return "Operador/crearFuncion";
+
+            }
+
+
+            if (!duracion.matches("[+-]?\\d*(\\.\\d+)?")){
+                model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
+                model.addAttribute("listDirectores",personaRepository.listarDirectores());
+                model.addAttribute("listGeneros",generoRepository.findAll());
+                model.addAttribute("duracion",duracion);
+                model.addAttribute("fechaactual",now);
+                model.addAttribute("msgduracion","Debe ingresar un número");
+                model.addAttribute("fechamasinicio",fechamasinicio);
+                model.addAttribute("val",2);
                 Persona persona = (Persona) session.getAttribute("usuario");
                 //listado de salas por sede disponibles
                 model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
@@ -258,8 +277,7 @@ public class FuncionesController {
 
 
 
-
-
+            //GUARDAR NEW FORM
             if(funcion.getId()==0){
 
                 //separamos el formato de la vista
@@ -278,9 +296,9 @@ public class FuncionesController {
                 funcion.setEstado(1);
                 funcion.setFecha(datetime);
                 funcion.setInicio(datetime1);
-                Long durac=Long.parseLong(duracion);
-                System.out.println(datetime1);
 
+                System.out.println(datetime1);
+                Long durac=Long.parseLong(duracion);
                 funcion.setFin(datetime1.plusMinutes(durac));
 
 
@@ -353,7 +371,7 @@ public class FuncionesController {
                     }
 
                 }
-
+            //GUARDAR FORM EDITAR
             }else{
                 Funcion func=funcionRepository.findById(funcion.getId()).get();
                 //separamos el formato de la vista
