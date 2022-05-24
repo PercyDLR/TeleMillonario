@@ -136,12 +136,13 @@ public class FuncionesController {
             Funcion funcencon = optFuncionEncontr.get();
             model.addAttribute("funcion", funcencon);
             model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
-
+            model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(idfuncion));
             model.addAttribute("listDirectores",personaRepository.listarDirectores());
             model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(idfuncion));
-
             model.addAttribute("listGeneros",generoRepository.findAll());
+            model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(idfuncion));
             model.addAttribute("fechaactual",LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+            model.addAttribute("sval",1);
 
             String[] horafinstr = funcencon.getFin().toString().split(":");
             String horafinstr1 = horafinstr[0];

@@ -44,12 +44,19 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
             "where idrol=5 and estado=1 and (lower(concat(nombres,' ',apellidos)) like %?1%) ")
     Integer cantActores(String busqueda);
 
+    @Query(value = "SELECT fe.idpersona FROM funcionelenco fe\n" +
+            "inner join persona p on (fe.idpersona=p.id)\n" +
+            "where fe.idfuncion=?1 and fe.estado=1 and p.idrol=5",nativeQuery = true)
+    List<Integer> actoresPorFuncion(int idfuncion);
+
+
 
     // Directores
     @Query(value = "SELECT * FROM persona where idrol=4",nativeQuery = true)
     List<Persona> listarDirectores();
-    @Query(value = "SELECT idpersona FROM funcionelenco\n" +
-            "where idfuncion=?1 and estado=1;",nativeQuery = true)
+    @Query(value = "SELECT fe.idpersona FROM funcionelenco fe\n" +
+            "inner join persona p on (fe.idpersona=p.id)\n" +
+            "where fe.idfuncion=?1 and fe.estado=1 and p.idrol=4",nativeQuery = true)
     List<Integer> directoresPorFuncion(int idfuncion);
 
     //Busca a un usuario por su token de password

@@ -58,18 +58,20 @@
 
             <div class="col-2" th:each="foto : ${listfunc1}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-                    <div class="card__cover" >
 
-<!--                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">-->
-                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
-                             style="width: 270px;height: 240px;margin-left: 7px;">
-                        <a class="card__play" style="border:none" href="#">
-                            <i style="color: white">Ver mas fotos</i>
-                        </a>
-                    </div>
 
-<!--                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
-<!--                         style="width: 270px;height: 240px;margin-left: 7px;">-->
+                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
+                         style="width: 270px;height: 240px;margin-left: 7px;">
+<!--                    <div class="card__cover" >-->
+
+<!--&lt;!&ndash;                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">&ndash;&gt;-->
+<!--                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
+<!--                             style="width: 270px;height: 240px;margin-left: 7px;">-->
+<!--                        <a class="card__play" style="border:none" href="#">-->
+<!--                            <i style="color: white">Ver mas fotos</i>-->
+<!--                        </a>-->
+<!--                    </div>-->
+
                     <div class="card-body">
                         <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
                         <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
@@ -128,18 +130,19 @@
             <div class="col-2" th:each="foto : ${listfunc2}" style="margin-right: 190px">
                 <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
 
-                    <div class="card__cover" >
+<!--                    <div class="card__cover" >-->
 
-                        <!--                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">-->
-                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
-                             style="width: 270px;height: 240px;margin-left: 7px;">
-                        <a class="card__play" style="border:none" href="#">
-                            <i style="color: white">Ver mas fotos</i>
-                        </a>
-                    </div>
+<!--                        &lt;!&ndash;                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">&ndash;&gt;-->
+<!--                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
+<!--                             style="width: 270px;height: 240px;margin-left: 7px;">-->
+<!--                        <a class="card__play" style="border:none" href="#">-->
+<!--                            <i style="color: white">Ver mas fotos</i>-->
+<!--                        </a>-->
+<!--                    </div>-->
 
-<!--                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
-<!--                         style="width: 270px;height: 240px;margin-left: 7px;">-->
+
+                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
+                         style="width: 270px;height: 240px;margin-left: 7px;">
                     <div class="card-body">
                         <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
                         <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>

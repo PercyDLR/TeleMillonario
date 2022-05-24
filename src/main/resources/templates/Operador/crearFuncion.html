@@ -5,6 +5,20 @@
             input::placeholder {
                 color: #000000;
             }
+            div.card__cover img {
+                margin-inline: auto;
+                max-height: 150px;
+                max-width: fit-content;
+            }
+            #images{
+                width: 90%;
+                position: relative;
+                margin: auto;
+                display: flex;
+            }
+            .owl-dots{
+                height: 0;
+            }
         </style>
     </head>
 <!--
@@ -20,11 +34,20 @@
 
                 <div class="card" style="margin-left: 3%;background-color:#e64166">
                     <div class="card-header" style="text-align: center;color: #FFFFFF">
-                        <span style="font-family: 'Barlow', sans-serif; font-size: xx-large">Añada una función</span>
+                        <span style="font-family: 'Barlow', sans-serif; font-size: xx-large"
+                              th:text="${funcion.id == 0 ? 'Crear función' : 'Editar función'}"></span>
                     </div>
                     <div class="card-body" style="background-color:#e64166">
                         <div class="row">
                             <div class="col-5">
+
+                                    <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
+
+                                        <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
+                                        <option th:each="imagen : ${imagenes}"
+                                                th:id="|img-${imagen.id}|"
+                                                th:value="${imagen.id}"></option>
+                                    </select>
 
                                     <div class="form-group row" style="padding-top: 5%">
                                         <input type="hidden" th:field="*{id}">
@@ -181,6 +204,9 @@
                                             <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
                                         </div>
                                         <div class="col-md-3 col-2">
+                                            <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
+                                                <i class="icon ion-ios-arrow-round-back"></i>
+                                            </button>
                                             <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
                                                 <i class="icon ion-ios-arrow-round-forward"></i>
                                             </button>
@@ -200,7 +226,7 @@
 
                                                         <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
 
-                                                        <a class="card__play" th:onclick="|eliminarEnDB(${foto.numero-1})|">
+                                                        <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
                                                             <i class="bi bi-x" style="color: white"></i>
                                                         </a>
                                                     </div>
@@ -231,12 +257,21 @@
                                 <label style="color: #FFFFFF"><b>Seleccione los generos</b></label>
                                 <br>
                                 <select class="form-select" name="idgenero" size="3" multiple
-                                         aria-label="multiple select example">
+                                        aria-label="multiple select example" th:if="${sval==1}">
                                     <option disabled>Seleccione los generos con (+Ctrl)</option>
                                     <option th:each="genero : ${listGeneros}"
                                             th:text="|${genero.nombre}|"
                                             th:value="${genero.id}"
-                                            th:selected="(${genero.id} )"></option>
+                                            th:selected="${#arrays.contains(generosFuncion,genero.id)}"></option>
+                                </select>
+
+
+                                <select class="form-select" name="idgenero" size="3" multiple
+                                         aria-label="multiple select example" th:unless="${sval==1}">
+                                    <option disabled>Seleccione los generos con (+Ctrl)</option>
+                                    <option th:each="genero : ${listGeneros}"
+                                            th:text="|${genero.nombre}|"
+                                            th:value="${genero.id}"></option>
                                 </select>
                             </div>
 
@@ -254,11 +289,20 @@
                                 <label style="color: #FFFFFF"><b>Seleccione los actores</b></label>
                                 <br>
                                 <select class="form-select" name="idactor" size="3" multiple
-                                        aria-label="multiple select example">
+                                        aria-label="multiple select example" th:if="${sval==1}">
                                     <option disabled>Seleccione los actores con (+Ctrl)</option>
                                     <option th:each="actores,indice : ${listActores}"
-                                            th:text="|${actores.getNombres()} ${actores.getApellidos()}|"
-                                            th:value="${actores.getId()}"></option>
+                                            th:text="|${actores.nombres} ${actores.apellidos}|"
+                                            th:value="${actores.id}"
+                                            th:selected="${#arrays.contains(actoresFuncion,actores.id)}"></option>></option>
+                                </select>
+
+                                <select class="form-select" name="idactor" size="3" multiple
+                                        aria-label="multiple select example" th:unless="${sval==1}">
+                                    <option disabled>Seleccione los actores con (+Ctrl)</option>
+                                    <option th:each="actores,indice : ${listActores}"
+                                            th:text="|${actores.nombres} ${actores.apellidos}|"
+                                            th:value="${actores.id}"></option>
                                 </select>
                             </div>
                             <div class="col-2">
@@ -272,12 +316,20 @@
                                 <label  style="color: #FFFFFF"><b>Seleccione los directores</b></label>
                                 <br>
                                 <select class="form-select" name="iddirector" size="3" multiple
-                                        aria-label="multiple select example">
+                                        aria-label="multiple select example" th:if="${sval==1}">
                                     <option disabled>Seleccione los Directores con (+Ctrl)</option>
                                     <option th:each="directores : ${listDirectores}"
                                             th:text="|${directores.nombres} ${directores.apellidos}|"
                                             th:value="${directores.id}"
                                     th:selected="${#arrays.contains(directoresFuncion,directores.id)}"></option>
+                                </select>
+
+                                <select class="form-select" name="iddirector" size="3" multiple
+                                        aria-label="multiple select example" th:unless="${sval==1}">
+                                    <option disabled>Seleccione los Directores con (+Ctrl)</option>
+                                    <option th:each="directores : ${listDirectores}"
+                                            th:text="|${directores.nombres} ${directores.apellidos}|"
+                                            th:value="${directores.id}"></option>
                                 </select>
 
                             </div>
@@ -287,19 +339,20 @@
                 </div>
                 <div class="row">
                     <div class="col-3">
-                        <button class="sign__btn" type="submit"
-                        >Guardar
-                        </button>
-                    </div>
-                    <div class="col-6">
-
-                    </div>
-                    <div class="col-3">
                         <a class="sign__btn" type="submit" th:href="@{/operador/funciones/lista}" >
                             Regresar
                         </a>
 
 
+                    </div>
+                    <div class="col-6">
+
+                    </div>
+
+                    <div class="col-3">
+                        <button class="sign__btn" type="submit"
+                        >Guardar
+                        </button>
                     </div>
                 </div>
             </form>
@@ -309,69 +362,89 @@
     </div>
 </div>
     <div th:replace="fragments/footer :: js(~{::script})">
+
+
         <script>
+            // El input donde se agregan las imágenes
             let fileInput = document.getElementById("file-input");
+            // Donde se muestran las vistas previas
             let imgContainer = document.getElementById("img_container");
 
+            // Agrega y quita imagenes de la vista previa e input
             function preview(){
 
-                let j=0;
                 for(i of fileInput.files){
 
                     let reader = new FileReader();
 
+                    // Contenedor de la imagen + botones
                     let item = document.createElement("div");
                     item.className="item";
 
-                    // Boton de Eliminar
+                    // Overlay para eliminar
                     let cover = document.createElement("div");
-                    cover.id="new-"+j.toString();
                     cover.className="card__cover";
 
+                    // Botón de eliminar
+                    let button = document.createElement("a");
+                    button.className = "card__play new";
+                    button.setAttribute("style","cursor: pointer")
+                    cover.appendChild(button)
+
                     // Activar la opción de borrar imagen
-                    cover.onclick = function (){
+                    button.onclick = function (){
 
                         const dt = new DataTransfer()
 
-                        for (let i = 0; i < fileInput.files.length; i++) {
-                            const file = fileInput.files[i];
+                        //lista con todas las fotos NUEVAS (Agregadas al editar) en el imgContainer
+                        let items = document.querySelectorAll('div.owl-item:not( .cloned) > div > div > a.new');
 
-                            if (this.id !== "new-"+i.toString()) {
+                        // console.log("Antes", fileInput.files)
+
+                        // Se quita del input la imagen mostrada
+                        for (let i = 0; i < items.length; i++) {
+                            let item = items[i].parentElement.parentElement.parentElement;
+
+                            if (item.className !== "owl-item active") {
+                                let file = fileInput.files[i];
+                                // console.log(file, item.className)
                                 dt.items.add(file);
                             }
                         }
+                        // Se actualiza el input
                         fileInput.files = dt.files;
+                        // console.log("Despues",fileInput.files)
 
+                        // Se elimina la imagen en la vista previa
                         cover.parentElement.parentElement.remove();
                         refresh()
                     };
 
-                    let button = document.createElement("a");
-                    button.className = "card__play";
+                    // Icono de la cruz
                     let close = document.createElement("i");
                     close.className = "bi bi-x";
                     close.setAttribute("style","color: white")
 
                     button.appendChild(close)
-                    cover.appendChild(button)
 
+                    // Crea las imágenes de la vista previa
                     reader.onload=()=>{
                         let img = document.createElement("img");
                         img.setAttribute("src",reader.result);
-                        img.setAttribute("style","margin-inline: auto;max-height: 150px;max-width: fit-content;")
 
                         cover.appendChild(img);
-                        item.appendChild(cover)
                     }
+                    item.appendChild(cover)
+
                     imgContainer.appendChild(item);
                     reader.readAsDataURL(i);
-                    j++;
                 }
 
                 // Vuelve a cargar el deslizador
                 refresh()
             }
 
+            // Actualiza la vista previa, despues de agregar o quitar imágenes
             function refresh() {
                 $('.owl-carousel').trigger('destroy.owl.carousel');
                 var $owl = $('.owl-carousel').owlCarousel({
@@ -383,14 +456,16 @@
                 $owl.trigger('refresh.owl.carousel');
             }
 
+            // Marca una de las imágenes ya en la DB para ser eliminada
             function eliminarEnDB(id){
 
-                //let select = document.getElementById("fotos-para-eliminar");
-                //select.getElementsByTagName("option")[id].selected = "selected";
+                // Se busca en un select la opción correspondiente a la imagen clickeada
+                let opcion = document.getElementById("img-"+id);
+                opcion.selected = "selected";
 
+                // Se busca la imagen en la vista previa y se elimina
                 let item = imgContainer.getElementsByClassName("active").item(0);
-                console.log(item)
-
+                //console.log(item)
                 item.remove();
 
                 refresh()
