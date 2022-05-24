@@ -27,15 +27,17 @@
 								<h4 th:if="${param.error}" style="color:rgba(255,30,0,0.93);opacity:0.8;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;">Correo o contraseña incorrecto</h4>
 								<button class="sign__btn" type="submit">Ingresar</button>
 
-								<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 15px"></span>Regístrate</a></span>
+								<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 5px"></span>Regístrate</a></span>
+								<span class="sign__text" style="margin-top: 5px;">ó</span>
+								<a class="sign__btn__google" href="/oauth2/authorization/google" style="margin-top: 5px;"><img th:src="@{/img/iconGoogle.png}" alt="Google" width="20px" height="20px" style="margin-top: 0px;margin-right: 9px;">Regístrate con Google</a>
 
 								<span class="sign__text"><a th:href="@{/cambioDeContrasenia}">¿Olvidaste tu contraseña?</a></span>
 							</form>
+							<!--<div>
 							<div class="container unauthenticated">
-								<div>
 									With Google: <a href="/oauth2/authorization/google">click here</a>
-								</div>
 							</div>
+							</div>-->
 						</div>
 					</div>
 				</div>
