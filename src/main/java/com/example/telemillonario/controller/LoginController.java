@@ -14,6 +14,9 @@ import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,6 +47,27 @@ public class LoginController {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private OAuth2AuthorizedClientService auth2AuthorizedClientService;
+
+    @GetMapping("/list")
+    public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session){
+        OAuth2AuthorizedClient client = auth2AuthorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(),authentication.getName());
+        String name = (String)  authentication.getPrincipal().getAttributes().get("given_name");
+        String lastname = (String)  authentication.getPrincipal().getAttributes().get("family_name");
+        String email = (String) authentication.getPrincipal().getAttributes().get("email");
+        Persona personita = new Persona();
+        personita.setNombres(name);
+        personita.setApellidos(lastname);
+        personita.setCorreo(email);
+        Rol rol = new Rol(2,1,"Usuario");
+        personita.setIdrol(rol);
+        model.addAttribute("usuario",personita);
+        /*
+        * Faltarian contraseña, fecha de nacimiento, dni, direccion y estado
+        * */
+        return "login/SignUpByGoogle";
+    }
 
     @GetMapping("/login")
     public String loginForm(){
@@ -80,7 +104,7 @@ public class LoginController {
          */
 
         session.setAttribute("usuario",persona);
-        System.out.println("llego aca");
+        //System.out.println("llego aca");
 
         if(persona.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
             return "redirect:/admin/sedes";
@@ -92,12 +116,6 @@ public class LoginController {
             return "redirect:/operador/funciones/lista"; //Cual es su pagina principal del Operador?
         }
     }
-
-    @GetMapping("/SingUpByGoogle")
-    public String crearCuentaGoogle(){
-        return "login/SignUpByGoogle";
-    }
-
 
 
     @PostMapping("/validacionSignUp")

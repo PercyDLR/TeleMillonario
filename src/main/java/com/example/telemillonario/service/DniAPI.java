@@ -14,7 +14,6 @@ import java.net.http.HttpResponse;
 
 @Service
 public class DniAPI {
-
     private static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 
     public static UsuarioAPI FormRestAPI(String dni) throws IOException, InterruptedException {
@@ -35,7 +34,4 @@ public class DniAPI {
         return usuario;
 
     }
-
-
-
 }
