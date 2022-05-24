@@ -62,6 +62,7 @@ public class LoginController {
 
         Persona persona = personaRepository.findByCorreo(auth.getName());
 
+        /*
         Persona personita = new Persona();
         personita.setId(persona.getId());
         personita.setNombres(persona.getNombres());
@@ -76,14 +77,15 @@ public class LoginController {
             System.out.println(personita.getIdsede().getId());
             System.out.println(personita.getIdsede().getNombre());
         }
+         */
 
-        session.setAttribute("usuario",personita);
+        session.setAttribute("usuario",persona);
         System.out.println("llego aca");
 
-        if(personita.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
+        if(persona.getIdrol().getNombre().equalsIgnoreCase("Administrador")){
             return "redirect:/admin/sedes";
 
-        }else if(personita.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
+        }else if(persona.getIdrol().getNombre().equalsIgnoreCase("Usuario")){
             return "redirect:/";
 
         }else {

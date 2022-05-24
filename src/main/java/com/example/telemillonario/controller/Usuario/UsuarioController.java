@@ -2,6 +2,7 @@ package com.example.telemillonario.controller.Usuario;
 
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.repository.PersonaRepository;
+import com.example.telemillonario.validation.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,31 +26,36 @@ public class UsuarioController {
         return "vistaPrincipal";
     }
 
-    @GetMapping("/verPerfil")
-    public String verPerfilUsuario(Model model, HttpSession session) {
-        model.addAttribute("usuario", personaRepository.findById((int) session.getAttribute("id")));
+    @GetMapping("/perfil")
+    public String verPerfilUsuario(@ModelAttribute("usuario") Persona usuario, Model model, HttpSession session) {
+        usuario = (Persona) session.getAttribute("usuario");
+        model.addAttribute("usuario",usuario);
         return "usuario/verPerfil";
     }
 
-    @GetMapping("/editarPerfil")
-    public String editarPerfilUsuario(@ModelAttribute("usuario") Persona usuario ,Model model, HttpSession session) {
-        model.addAttribute("usuario", personaRepository.findById((int) session.getAttribute("id")));
+    @GetMapping("/perfil/editar")
+    public String editarPerfilUsuario(@ModelAttribute("usuario") Persona usuario, Model model, HttpSession session) {
+        usuario = (Persona) session.getAttribute("usuario");
+        model.addAttribute("usuario",usuario);
         return "usuario/editarPerfil";
     }
 
-    @PostMapping("/guardarPerfil")
+    @PostMapping("/perfil/guardar")
     public String guardarPerfilUsuario(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
 
         if (bindingResult.hasErrors()) {
             return "usuario/editarPerfil";
         } else {
-            if (usuario.getId() == (int) session.getAttribute("id")) { //Correctamente editado
+            Persona usuarioSesion = (Persona) session.getAttribute("usuario");
+
+            if (usuario.getId() == usuarioSesion.getId()) { //Correctamente editado
                 a.addFlashAttribute("msg", "0");
                 personaRepository.save(usuario);
+                session.setAttribute("usuario",usuario);
             } else { //No debe dejar guardar el usuario editado
                 a.addFlashAttribute("msg", "-1");
             }
-            return "redirect:/usuario/verPerfil";
+            return "redirect:/usuario/perfil";
         }
 
     }

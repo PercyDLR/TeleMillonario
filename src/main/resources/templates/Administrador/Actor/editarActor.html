@@ -38,7 +38,7 @@
 
                                 <!-- authorization form -->
                                 <form class="sign__form" method="post" th:object="${actor}" th:action="@{/admin/actores/subir}" enctype="multipart/form-data">
-                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 70px; font-family: 'Open Sans', sans-serif;"
+                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;"
                                     th:text="${actor.id == null ? 'Nuevo Actor' : 'Editar Actor'}"></h3>
 
                                     <div class="row">
