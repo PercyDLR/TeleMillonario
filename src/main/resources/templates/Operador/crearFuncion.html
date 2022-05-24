@@ -26,6 +26,7 @@
                             <div class="col-5">
 
                                     <div class="form-group row" style="padding-top: 5%">
+                                        <input type="hidden" th:field="*{id}">
                                         <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 10%;padding-bottom: 2%">
                                             <u>Información de la función</u></h5>
                                         <label  class="col-sm-4"
@@ -34,19 +35,33 @@
                                         <div class="col-sm-8">
                                             <input type="text" style="text-align: center" class="form-control" th:field="*{nombre}"
                                                    placeholder="Nombre">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('nombre')}"
+                                                 th:errors="*{nombre}"></div>
                                         </div>
                                         <label  class="col-sm-4"
                                                style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Fecha-hora de la
                                             función: </label>
-                                        <div class='col-sm-8'>
+                                        <div class='col-sm-8' th:if="${val==null}">
                                             <input id="fecha" type="datetime-local" th:value="|${funcion.getFecha()}T${funcion.getInicio()}|" name="fechamasinicio"
-                                                   min="2022-06-07T00:00" max="2022-06-14T00:00"
+                                                   th:min="${fechaactual}" max="2022-06-14T00:00"
                                                    style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px" required>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('fecha')}"
+                                                 th:errors="*{fecha}"></div>
+
                                         </div>
+                                        <div class='col-sm-8' th:if="${val!=null}">
+                                            <input id="fecha1" type="datetime-local" th:value="${fechamasinicio}" name="fechamasinicio"
+                                                   th:min="${fechaactual}" max="2022-06-14T00:00"
+                                                   style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px" required>
+                                            <div class="text-danger" th:if="${msgfecha!=null}" th:text="${msgfecha}"></div>
+
+                                        </div>
+
+
                                         <label  class="col-sm-4"
                                                style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Restricción de
                                             edad</label>
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-8" style="padding-top: 30px;padding-bottom: 30px">
                                             <div class="col-sm-10" id="restriccion">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="restriccionedad"
@@ -64,6 +79,8 @@
                                                         No
                                                     </label>
                                                 </div>
+                                                <div class="text-danger" th:if="${#fields.hasErrors('restriccionedad')}"
+                                                     th:errors="*{restriccionedad}"></div>
                                             </div>
                                         </div>
                                         <label for="duracion" class="col-sm-4"
@@ -98,7 +115,7 @@
                                             <select th:field="*{sala}" class="col-12" style="display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff; background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
                                                 <option th:each="sala : ${listaSalasporSede}"
                                                         th:text="|Sala-${sala.getNumero()}|"
-                                                        th:value="${sala.getId()}"></option>
+                                                        th:value="${sala.getId()}" >></option>
                                             </select>
 
                                         </div>

@@ -1,6 +1,15 @@
 package com.example.telemillonario.entity;
 
+import com.example.telemillonario.validation.Elenco;
+import com.example.telemillonario.validation.Operador;
+import com.example.telemillonario.validation.Usuario;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -16,6 +25,7 @@ public class Funcion {
     private int estado;
 
     @Column(name = "fecha")
+    @Future(message = "La fecha que ingresaste ya pasó")
     private LocalDate fecha;
 
     @Column(name = "inicio")
@@ -28,6 +38,7 @@ public class Funcion {
     private Double calificacion;
 
     @Column(name = "restriccionedad")
+    @NotNull(message = "La restriccion de edad no debe estar vacia")
     private Integer restriccionedad;
 
     @Column(name = "precioentrada")
@@ -36,6 +47,8 @@ public class Funcion {
     @Column(name = "stockentradas")
     private Integer stockentradas;
 
+    @NotBlank(message = "El nombre no puede estar vacío")
+    @Size(max=40,message = "El nombre no puede ser mayor a 40 caracteres")
     @Column(name = "nombre", length = 100)
     private String nombre;
 
