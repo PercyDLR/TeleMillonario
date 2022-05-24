@@ -48,6 +48,9 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     // Directores
     @Query(value = "SELECT * FROM persona where idrol=4",nativeQuery = true)
     List<Persona> listarDirectores();
+    @Query(value = "SELECT idpersona FROM funcionelenco\n" +
+            "where idfuncion=?1 and estado=1;",nativeQuery = true)
+    List<Integer> directoresPorFuncion(int idfuncion);
 
     //Busca a un usuario por su token de password
     @Query(value = "select * from persona where persona.passwordtoken = ?1",nativeQuery = true)

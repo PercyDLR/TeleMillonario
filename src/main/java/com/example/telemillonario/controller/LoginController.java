@@ -87,8 +87,10 @@ public class LoginController {
 
         Persona persona = personaRepository.findByCorreo(auth.getName());
 
-        /*
+
+
         Persona personita = new Persona();
+
         personita.setId(persona.getId());
         personita.setNombres(persona.getNombres());
         personita.setApellidos(persona.getApellidos());
@@ -97,14 +99,14 @@ public class LoginController {
         personita.setNacimiento(persona.getNacimiento());
         personita.setIdrol(persona.getIdrol());
 
-        if (persona.getIdsede() !=null){
-            personita.setIdsede(persona.getIdsede());
-            System.out.println(personita.getIdsede().getId());
-            System.out.println(personita.getIdsede().getNombre());
-        }
-         */
+        personita.setIdsede(persona.getIdsede());
 
-        session.setAttribute("usuario",persona);
+
+
+        System.out.println(personita.getIdsede().getId());
+        System.out.println(personita.getIdsede().getNombre());
+
+        session.setAttribute("usuario",personita);
         //System.out.println("llego aca");
 
         if(persona.getIdrol().getNombre().equalsIgnoreCase("Administrador")){

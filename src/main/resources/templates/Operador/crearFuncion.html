@@ -17,6 +17,7 @@
     <div class="container" style="margin-bottom: 30px;opacity: 200%">
         <div class="row">
             <form method="post" th:action="@{'/operador/funciones/guardar'}" th:object="${funcion}" enctype="multipart/form-data">
+
                 <div class="card" style="margin-left: 3%;background-color:#e64166">
                     <div class="card-header" style="text-align: center;color: #FFFFFF">
                         <span style="font-family: 'Barlow', sans-serif; font-size: xx-large">Añada una función</span>
@@ -274,8 +275,9 @@
                                         aria-label="multiple select example">
                                     <option disabled>Seleccione los Directores con (+Ctrl)</option>
                                     <option th:each="directores : ${listDirectores}"
-                                            th:text="|${directores.getNombres()} ${directores.getApellidos()}|"
-                                            th:value="${directores.getId()}"></option>
+                                            th:text="|${directores.nombres} ${directores.apellidos}|"
+                                            th:value="${directores.id}"
+                                    th:selected="${#arrays.contains(directoresFuncion,directores.id)}"></option>
                                 </select>
 
                             </div>
@@ -383,8 +385,8 @@
 
             function eliminarEnDB(id){
 
-                let select = document.getElementById("fotos-para-eliminar");
-                select.getElementsByTagName("option")[id].selected = "selected";
+                //let select = document.getElementById("fotos-para-eliminar");
+                //select.getElementsByTagName("option")[id].selected = "selected";
 
                 let item = imgContainer.getElementsByClassName("active").item(0);
                 console.log(item)
