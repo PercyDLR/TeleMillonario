@@ -73,7 +73,13 @@
 			</div>
 		</div>
 	</div>
-	<div th:replace="fragments/footer :: js(_)"></div>
+	<div th:replace="fragments/footer :: js(~{::script})">
+        <script>
+            var d = new Date()
+            d.setDate(d.getDate() - 1)
+            datePickerId.max = d.toISOString().split("T")[0] ;
+        </script>
+    </div>
 </body>
 
 </html>

@@ -2,14 +2,6 @@ $(document).ready(function () {
 	"use strict"; // start of use strict
 
 	/*==============================
-	Limit date value
-	================================
-
-	var d = new Date()
-	d.setDate(d.getDate() - 1)
-	datePickerId.max = d.toISOString().split("T")[0] ;
-*/
-	/*==============================
 	Menu
 	==============================*/
 	$('.header__btn').on('click', function() {

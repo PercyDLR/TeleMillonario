@@ -2,15 +2,13 @@ package com.example.telemillonario.entity;
 
 import com.example.telemillonario.validation.Elenco;
 import com.example.telemillonario.validation.Operador;
+import com.example.telemillonario.validation.Perfil;
 import com.example.telemillonario.validation.Usuario;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
@@ -23,33 +21,36 @@ public class Persona implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @NotBlank(message = "Los nombres no pueden estar vacíos",groups = {Usuario.class ,Operador.class, Elenco.class})
+    @NotEmpty(message = "Los nombres no pueden estar vacíos",groups = {Usuario.class ,Operador.class, Elenco.class})
     @Column(name = "nombres", length = 100)
     private String nombres;
 
-    @NotBlank(message = "Los apellidos no pueden estar vacíos", groups = {Usuario.class ,Operador.class, Elenco.class})
+    @NotEmpty(message = "Los apellidos no pueden estar vacíos", groups = {Usuario.class ,Operador.class, Elenco.class})
     @Column(name = "apellidos", length = 100)
     private String apellidos;
 
     //https://www.geeksforgeeks.org/spring-mvc-custom-validation/
-    @NotBlank(message = "El dni no puede estar vacío", groups = {Usuario.class ,Operador.class})
+    @NotEmpty(message = "El dni no puede estar vacío", groups = {Usuario.class ,Operador.class})
     @Pattern(regexp = "[0-9]{8}",message = "DNI no valido", groups = {Usuario.class ,Operador.class})//Momentaneamente
     @Column(name = "dni", length = 8)
     private String dni;
 
     @Email(message = "Ingrese una dirección de correo válida",groups = {Usuario.class ,Operador.class})
-    @NotNull(message = "El correo no puede estar vacio",groups = {Usuario.class ,Operador.class})
+    @NotEmpty(message = "El correo no puede estar vacio",groups = {Usuario.class ,Operador.class})
     @Column(name = "correo", length = 100)
     private String correo;
 
     @Column(name = "telefono", length = 20)
+    @Size(min=7 ,max = 20, groups = Perfil.class)
     private String telefono;
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Past(groups = Perfil.class)
     @Column(name = "nacimiento")
     private LocalDate nacimiento;
 
     @Column(name = "direccion", length = 100)
+    @NotEmpty(groups = Perfil.class)
     private String direccion;
 
     @Column(name = "estado")
