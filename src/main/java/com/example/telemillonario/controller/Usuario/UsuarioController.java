@@ -2,7 +2,6 @@ package com.example.telemillonario.controller.Usuario;
 
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.repository.PersonaRepository;
-import com.example.telemillonario.validation.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,18 +43,28 @@ public class UsuarioController {
     public String guardarPerfilUsuario(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
 
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getFieldError());
             return "usuario/editarPerfil";
         } else {
             Persona usuarioSesion = (Persona) session.getAttribute("usuario");
 
-            if (usuario.getId() == usuarioSesion.getId()) { //Correctamente editado
+            if (usuario.getId().equals(usuarioSesion.getId())) {
+
+                // Sobreescribe los nuevos valores
+                usuarioSesion.setNacimiento(usuario.getNacimiento());
+                usuarioSesion.setDireccion(usuario.getDireccion());
+
+                //Actualiza la DB
+                personaRepository.save(usuarioSesion);
+                //Actualiza la Sesión
+                session.setAttribute("usuario",usuarioSesion);
+
                 a.addFlashAttribute("msg", "0");
-                personaRepository.save(usuario);
-                session.setAttribute("usuario",usuario);
             } else { //No debe dejar guardar el usuario editado
                 a.addFlashAttribute("msg", "-1");
             }
-            return "redirect:/usuario/perfil";
+
+            return "redirect:/perfil";
         }
 
     }
