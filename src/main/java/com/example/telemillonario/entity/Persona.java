@@ -34,12 +34,12 @@ public class Persona implements Serializable {
     @Pattern(regexp = "[0-9]{8}",message = "DNI no valido", groups = {Usuario.class ,Operador.class})//Momentaneamente
     @Size(max = 8, message = "El dni no puede exceder los 8 caracteres")
     @Digits(integer = 8, fraction = 0, message = "El dni debe consistir únicamente de 8 números")
-    @Column(name = "dni", length = 8)
+    @Column(name = "dni", length = 8, unique = true)
     private String dni;
 
     @Email(message = "Ingrese una dirección de correo válida",groups = {Usuario.class ,Operador.class})
     @NotEmpty(message = "El correo no puede estar vacio",groups = {Usuario.class ,Operador.class})
-    @Column(name = "correo", length = 100)
+    @Column(name = "correo", length = 100, unique = true)
     private String correo;
 
     @NotNull(message = "El correo no puede estar vacio",groups = Usuario.class)

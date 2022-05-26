@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 @Controller
 public class LoginController {
@@ -99,10 +100,22 @@ public class LoginController {
 
 
     @PostMapping("/validacionSignUp")
-    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, ModelAttribute modelAttribute) throws InterruptedException, IOException {
+    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model) throws InterruptedException, IOException {
 
-        if(bindingResult.hasErrors()){
-            return "login/signup";
+        boolean coincidencias = false;
+        List<Persona> listaPersonas = personaRepository.findAll();
+        for (Persona p : listaPersonas) {
+            if (p.getDni() != null && p.getDni().equals(usuario.getDni())) {
+                model.addAttribute("errDni", "El DNI ingresado ya está en uso");
+                coincidencias = true;
+            }
+            if (p.getCorreo() != null && p.getCorreo().equals(usuario.getCorreo())) {
+                coincidencias = true;
+                model.addAttribute("errCorreo", "El correo ingresado ya está en uso");
+            }
+        }
+        if(bindingResult.hasErrors() || coincidencias){
+            return "/login/signup";
         } else {
             //Obtenemos los datos del usuario que ingreso su DNI con la API
             //UsuarioAPI infoUsuarioAPI = DniAPI.FormRestAPI(usuario.getDni());
@@ -115,12 +128,11 @@ public class LoginController {
 
             //le asignamos el rol 2 -> usuario
             usuario.setIdrol(rolRepository.getById(2));
-
             //Estado -> 1
             usuario.setEstado(1);
             personaRepository.save(usuario);
 
-            return "redirect:/crearCuenta";
+            return "redirect:/login";
         }
 
     }

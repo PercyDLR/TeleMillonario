@@ -10,40 +10,42 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="sign__content">
-						<form th:action="@{/validacionSignUp}" class="sign__form" th:object="${usuario}">
+						<form th:action="@{/validacionSignUp}" class="sign__form" th:object="${usuario}" method="post">
 							<a th:href="@{/}" class="sign__logo">
 								<img th:src="@{/img/tele.png}" alt="logo">
 							</a>
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Nombres" name = "nombres" th:value="${usuario.getNombres()}" required autofocus
+								<input type="text" class="sign__input" placeholder="Nombres" name = "nombres" th:value="${usuario.getNombres()}" required autofocus maxlength="100"
 									   th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
 									 th:errors="*{nombres}"></div>
 							</div>
 
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Apellidos" name = "apellidos" th:value="${usuario.getApellidos()}" required
+								<input type="text" class="sign__input" placeholder="Apellidos" name = "apellidos" th:value="${usuario.getApellidos()}" required maxlength="100"
 									   th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
 									 th:errors="*{apellidos}"></div>
 
 							</div>
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="DNI" name = "dni" th:value="${usuario.getDni()}" required
+								<input type="text" class="sign__input" placeholder="DNI" name = "dni" th:value="${usuario.getDni()}" required maxlength="8"
 									   th:classappend="${#fields.hasErrors('dni')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('dni')}"
 									 th:errors="*{dni}"></div>
+								<div th:text="${errDni}" class="invalid-feedback"></div>
 
 							</div>
 							<div class="sign__group">
-								<input type="email" class="sign__input" placeholder="Correo" name="correo" th:value="${usuario.getCorreo()}" required
+								<input type="email" class="sign__input" placeholder="Correo" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
 									   th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
 									 th:errors="*{correo}"></div>
+								<div th:text="${errCorreo}" class="invalid-feedback"></div>
 							</div>
 
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Teléfono" name="telefono" th:value="${usuario.getTelefono()}" required
+								<input type="text" class="sign__input" placeholder="Teléfono" name="telefono" th:value="${usuario.getTelefono()}" required maxlength="9"
 									   th:classappend="${#fields.hasErrors('telefono')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('telefono')}"
 									 th:errors="*{telefono}"></div>
@@ -54,20 +56,21 @@
 							</div>
 
 							<div class="sign__group">
-								<input type="text" class="sign__input" placeholder="Dirección" name="direccion" th:value="${usuario.getDireccion()}" required>
+								<input type="text" class="sign__input" placeholder="Dirección" name="direccion" th:value="${usuario.getDireccion()}" required maxlength="100">
 							</div>
 
 							<div class="sign__group">
-								<input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:value="${usuario.getContrasenia()}" required
+								<input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" id="contrasenia" required maxlength="200"
 									   th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
 									 th:errors="*{contrasenia}"></div>
 							</div>
 							<div class="sign__group">
-								<input type="password" class="sign__input" placeholder="Confirmar Contraseña" name="recontrasenia" th:value="${usuario.getContrasenia()}" required>
+								<input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" required maxlength="200">
+								<div class="invalid-feedback" id="coindicencia">Las contraseñas no coinciden</div>
 							</div>
 
-							<button class="sign__btn" type="submit">Registrarse</button>
+							<button class="sign__btn" type="submit" id="btnSubmit" onclick="return Validate()">Registrarse</button>
 
 							<span class="sign__text">¿Ya tienes una cuenta?<a th:href="@{/login}"><span style="margin-right: 15px"></span>Ingresar</a></span>
 						</form>
@@ -77,38 +80,31 @@
 		</div>
 	</div>
 	<div th:replace="fragments/footer :: js(~{::script})">
-		<script>
+		<script type="text/javascript">
+
 			var d = new Date()
 			d.setDate(d.getDate() - 1)
 			datePickerId.max = d.toISOString().split("T")[0] ;
 
-			// Function to check Whether both passwords
-			// is same or not.
-			function checkPassword(form) {
-				password1 = form.contrasenia.value;
-				password2 = form.recontrasenia.value;
+			function Validate() {
+				var password = document.getElementById("contrasenia").value;
+				var confirmPassword = document.getElementById("recontrasenia").value;
+				var x = document.getElementById("coindicencia");
+				x.style.display = "none";
 
-				// If password not entered
-				if (contrasenia == '') {}
-						//Habilitar texto que indique su ingreso obligatorio
-
-				// If confirm password not entered
-				else if (recontrasenia == '') {}
-						//Habilitar texto que indique su ingreso obligatorio
-
-				// If Not same return False.
-				else if (contrasenia != recontrasenia) {
-					//Habilitar texto que indique que ambas deben coincidir
+				if (password != confirmPassword) {
+					x.style.display = "block";
 					return false;
 				}
-
-				// If same return True.
-				else{
-					//Dejar hacer el form
-					return true;
-				}
+				return true;
 			}
+
 		</script>
+
+		<!--
+
+		-->
+
 	</div>
 </body>
 
