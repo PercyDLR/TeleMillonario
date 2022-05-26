@@ -42,7 +42,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/perfil/guardar")
-    public String guardarPerfilUsuario(@ModelAttribute("usuario") @Validated(Perfil.class) Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
+    public String guardarPerfilUsuario(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
+        //@Validated(Perfil.class)
 
         Persona usuarioSesion = (Persona) session.getAttribute("usuario");
         if (bindingResult.hasErrors()) {

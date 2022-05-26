@@ -109,10 +109,10 @@
                                     <div class="col-12" style="padding-right: 0">
                                         <div class="sign__group">
                                             <label for="direccion">Dirección</label>
-                                            <input class="sign__input"
+                                            <input class="sign__input" id="direccion"
                                                    th:field="*{direccion}"
                                                    th:classappend="${#fields.hasErrors('direccion')? 'is-invalid':''}"
-                                                   placeholder="Dirección" required>
+                                                   placeholder="Dirección" required maxlength="100">
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('direccion')}"
                                                  th:errors="*{direccion}"></div>
                                         </div>
@@ -124,10 +124,10 @@
                                     <div class="col-md-6 col-12" style="padding-right: 0">
                                         <div class="sign__group">
                                             <label for="telefono">Teléfono</label>
-                                            <input class="sign__input"
+                                            <input class="sign__input" id="telefono"
                                                    th:field="*{telefono}"
                                                    th:classappend="${#fields.hasErrors('telefono')? 'is-invalid':''}"
-                                                   placeholder="Teléfono" required>
+                                                   placeholder="Teléfono" required maxlength="9">
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('telefono')}"
                                                  th:errors="*{telefono}"></div>
                                         </div>
@@ -136,7 +136,7 @@
                                     <div class="col-md-6 col-12" style="text-align: center; white-space: nowrap">
                                         <div class="sign__group">
                                             <label style="display: inline" for="nacimiento">Nacimiento</label>
-                                            <input style="display: inline;text-align: center" class="sign__input"
+                                            <input style="display: inline;text-align: center" class="sign__input" id="nacimiento"
                                                    th:field="*{nacimiento}"
                                                    th:classappend="${#fields.hasErrors('nacimiento')? 'is-invalid':''}"
                                                    placeholder="Nacimiento" type="date" required>

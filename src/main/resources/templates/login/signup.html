@@ -33,7 +33,7 @@
 									   th:classappend="${#fields.hasErrors('dni')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('dni')}"
 									 th:errors="*{dni}"></div>
-								<div th:text="${errDni}" class="invalid-feedback"></div>
+								<div class="invalid-feedback d-block" th:if="${(errDni != null) && (errDni eq 1)}">El DNI ingresado ya está en uso</div>
 
 							</div>
 							<div class="sign__group">
@@ -41,7 +41,7 @@
 									   th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
 									 th:errors="*{correo}"></div>
-								<div th:text="${errCorreo}" class="invalid-feedback"></div>
+								<div class="invalid-feedback d-block" th:if="${(errCorreo != null) && (errCorreo eq 1)}">El correo ingresado ya está en uso</div>
 							</div>
 
 							<div class="sign__group">

@@ -68,7 +68,7 @@ public class LoginController {
         /*
         * Faltarian contraseña, fecha de nacimiento, dni, direccion y estado
         * */
-        return "login/SignUpByGoogle";
+        return "login/signup";
     }
 
     @GetMapping("/login")
@@ -100,18 +100,18 @@ public class LoginController {
 
 
     @PostMapping("/validacionSignUp")
-    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model) throws InterruptedException, IOException {
+    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a) throws InterruptedException, IOException {
 
         boolean coincidencias = false;
         List<Persona> listaPersonas = personaRepository.findAll();
         for (Persona p : listaPersonas) {
             if (p.getDni() != null && p.getDni().equals(usuario.getDni())) {
-                model.addAttribute("errDni", "El DNI ingresado ya está en uso");
+                model.addAttribute("errDni", 1);
                 coincidencias = true;
             }
             if (p.getCorreo() != null && p.getCorreo().equals(usuario.getCorreo())) {
                 coincidencias = true;
-                model.addAttribute("errCorreo", "El correo ingresado ya está en uso");
+                model.addAttribute("errCorreo", 1);
             }
         }
         if(bindingResult.hasErrors() || coincidencias){
@@ -131,6 +131,7 @@ public class LoginController {
             //Estado -> 1
             usuario.setEstado(1);
             personaRepository.save(usuario);
+            a.addFlashAttribute("msg", 1);
 
             return "redirect:/login";
         }

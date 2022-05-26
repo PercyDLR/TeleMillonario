@@ -10,6 +10,13 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="sign__content">
+
+							<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg eq 1)}" style="position: absolute; left: 800px; top: 550px">
+								<i class="bi bi-check-circle-fill"></i>
+								<strong>Usuario creado correctamente</strong>
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+
 							<form class="sign__form" th:action="@{/processLogin}" method="POST">
 								<a th:href="@{/}" class="sign__logo">
 									<img th:src="@{/img/tele.png}" alt="logo">
@@ -24,7 +31,7 @@
 									<input id="remember" name="remember" type="checkbox" checked="checked">
 									<label for="remember">Recuérdame</label>
 								</div-->
-								<h4 th:if="${param.error}" style="color:rgba(255,30,0,0.93);opacity:0.8;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;">Correo o contraseña incorrecto</h4>
+								<div class="invalid-feedback d-block" th:if="${param.error}">Correo o contraseña incorrectos</div>
 								<button class="sign__btn" type="submit">Ingresar</button>
 
 								<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 5px"></span>Regístrate</a></span>
@@ -33,18 +40,18 @@
 
 								<span class="sign__text"><a th:href="@{/cambioDeContrasenia}">¿Olvidaste tu contraseña?</a></span>
 							</form>
-							<!--<div>
-							<div class="container unauthenticated">
-									With Google: <a href="/oauth2/authorization/google">click here</a>
-							</div>
-							</div>-->
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-    <div th:replace="fragments/footer :: js(_)"></div>
+
+    <div th:replace="fragments/footer :: js(~{::script})">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+				integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+				crossorigin="anonymous"></script>
+	</div>
 </body>
 
 </html>
