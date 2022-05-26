@@ -33,6 +33,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
     //Busca a un usuario por correo
     Persona findByCorreo(String correo);
+    Persona findByNombres(String correo);
 
     //Actores
     @Query(nativeQuery = true, value = "SELECT * FROM persona " +
