@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+    <head th:replace="fragments/header :: head('Cambio de Contraseña',_)"></head>
+
+    <body class="body">
+        <div class="content" style="padding: 0">
+            <div class="sign">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="sign__content">
+                                <form class="sign__form" th:action="@{/cambioPassword}" method="POST">
+                                    <a th:href="@{/}" class="sign__logo">
+                                        <img th:src="@{/img/tele.png}" alt="logo">
+                                    </a>
+
+                                    <h1 style="font-size: 40px">
+                                        <span style="font-family: 'Barlow', sans-serif; color:#ffffff">Cambio de </span>
+                                        <span style="font-family: 'Barlow', sans-serif; color:#e64166">Contraseña</span>
+                                    </h1>
+                                    <h5 style="font-size: 20px; margin-top: 20px">
+                                        <span style="font-family: 'Open Sans', sans-serif; color:#ffffff">Se le ha enviado un correo de verificación para que pueda realizar el cambio de su contraseña </span>
+                                    </h5>
+                                    <br>
+                                    <h5 style="font-size: 20px">
+                                    <span style="font-family: 'Open Sans', sans-serif; color:#ffffff">Su enlace expirará en <span
+                                            id="timer"></span> minutos, por lo que deberá cambiar su contraseña lo más pronto posible</span>
+                                    </h5>
+                                    <span class="sign__text"><a th:href="@{/login}"
+                                                                type="button">Iniciar Sesión</a></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script>
+                document.getElementById('timer').innerHTML =
+                    15 + ":" + 01;
+                startTimer();
+
+
+                function startTimer() {
+                    var presentTime = document.getElementById('timer').innerHTML;
+                    var timeArray = presentTime.split(/[:]+/);
+                    var m = timeArray[0];
+                    var s = checkSecond((timeArray[1] - 1));
+                    if (s == 59) {
+                        m = m - 1
+                    }
+                    if (m < 0) {
+                        return
+                    }
+
+                    document.getElementById('timer').innerHTML =
+                        m + ":" + s;
+                    console.log(m)
+                    setTimeout(startTimer, 1000);
+
+                }
+
+                function checkSecond(sec) {
+                    if (sec < 10 && sec >= 0) {
+                        sec = "0" + sec
+                    }
+                    ; // add zero in front of numbers < 10
+                    if (sec < 0) {
+                        sec = "59"
+                    }
+                    ;
+                    return sec;
+                }
+            </script>
+        </div>
+    </body>
+</html>

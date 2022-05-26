@@ -52,6 +52,11 @@ public class LoginController {
     @Autowired
     RolRepository rolRepository;
 
+    @GetMapping("/prueba")
+    public String prueba(){
+        return "login/correoVerificacion";
+    }
+
     @GetMapping("/list")
     public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session){
         OAuth2AuthorizedClient client = auth2AuthorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(),authentication.getName());
