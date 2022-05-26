@@ -1,7 +1,52 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="fragments/header :: head('Modelo',_)">
+<head th:replace="fragments/header :: head('Modelo',~{::style})">
+    <style>
+        .select-label, .select2-results__option, .select2-search__field, .select2-selection__choice__display{
+            color: white;
+            width: 100%;
+        }
+        .select2-container .select2-search--inline .select2-search__field{
+            height: 1.25rem;
+            vertical-align: unset;
+        }
+        .select2-container--default .select2-selection--multiple{
+            background-color: #2b2b31;
+            border: none;
+            height: auto;
+            border-radius: 0;
+            padding-block: 5px;
+        }
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border: solid #ff55a5 1px;
+        }
+
+        .select2-dropdown {
+            background-color: #2b2b31;
+            border: none;
+            font-size: 15px;
+            box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%);
+            border-radius: 0;
+            padding-inline: 0;
+        }
+
+        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: #2b2b31;
+            color: #ff55a5
+        }
+        .select2-container--default .select2-results__option--selected {
+            background-color: #424247;
+            color: white;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #424247;
+            border: none;
+            vertical-align: unset;
+        }
+
+
+    </style>
 </head>
 
 <body class="body">
@@ -122,6 +167,19 @@
         <input type="file" style="color: white" id="imagenes" name="imagenes" multiple>
         <button class="filter__btn" type="submit">Subir Imagenes</button>
     </form>
+
+    <div class="col-6" style="width: 50%">
+    <label class="select-label" for="estados">Seleccione Integrantes
+        <select class="select2" style="width: 100%; background-color: #2b2b31" id="estados" name="estados" multiple="multiple">
+            <option value="AL">Percy</option>
+            <option value="WY">Rodrigo</option>
+            <option value="AL">Joaquin</option>
+            <option value="WY">Manuel</option>
+            <option value="AL">Alonso</option>
+            <option value="WY">...</option>
+        </select>
+    </label>
+    </div>
 
 	<!-- content -->
 	<section class="content">
@@ -328,8 +386,17 @@
 	</section>
 	<!-- end expected premiere -->
 
-    <div th:replace="/fragments/footer :: footer"></div>
-    <div th:replace="/fragments/footer :: js(_)"></div>
+
+    <div th:replace="/fragments/footer :: js(~{::script})">
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    placeholder: 'Integrantes',
+                    closeOnSelect: false
+                });
+            });
+        </script>
+    </div>
 </body>
 
 </html>
