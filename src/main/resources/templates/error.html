@@ -14,7 +14,7 @@
 							<h1 class="page-404__title" th:text="${status}"></h1>
 							<p class="page-404__text" th:text="(${status} == 404) ? 'La página que buscas no está disponible' : ${error}"></p>
 
-                            <a sec:authorize="hasAuthority('Usuario')" th:href="@{/}" class="page-404__btn">Página Principal</a>
+                            <a sec:authorize="hasAuthority('Usuario') || isAnonymous()" th:href="@{/}" class="page-404__btn">Página Principal</a>
                             <a sec:authorize="hasAuthority('Operador')" th:href="@{/operador/funciones}" class="page-404__btn">Página Principal</a>
                             <a sec:authorize="hasAuthority('Administrador')" th:href="@{/admin}" class="page-404__btn">Página Principal</a>
 
