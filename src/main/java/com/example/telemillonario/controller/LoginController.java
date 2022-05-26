@@ -158,50 +158,53 @@ public class LoginController {
             return "redirect:/cambioDeContrasenia";
         }
 
-        if(persona.getPasswordToken().equalsIgnoreCase("")){
+        //System.out.println("---------------");
+        /*if(persona.getPasswordToken().equalsIgnoreCase("")){
             System.out.println("comillas");
         }else if(persona.getPasswordToken() == null){
             System.out.println("es null");
         }else{
             System.out.println("es ' ' ");
-        }
-        if(persona.getPasswordToken().equalsIgnoreCase("")){
-            String token = RandomString.make(45);
+        }*/
+        //if(persona.getPasswordToken().equalsIgnoreCase("")){
+        if(persona.getPasswordToken() == null){
+                String token = RandomString.make(45);
 
-            usuarioService.updateResetPassword(token,correo);
+                usuarioService.updateResetPassword(token,correo);
 
-            //Generamos el link para el reseteo de contraseña
+                //Generamos el link para el reseteo de contraseña
 
-            String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
+                String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
 
-            try {
-                sendEmail(correo,resetPasswordLink);
+                try {
+                    sendEmail(correo,resetPasswordLink);
 
-                String user = "root";
-                String password = "root";
-                String url = "jdbc:mysql://localhost:3306/telemillonario";
+                    String user = "root";
+                    String password = "root";
+                    String url = "jdbc:mysql://localhost:3306/telemillonario";
 
-                String sentenciaSQL = "CREATE EVENT telemillonario.eventoborrar"+persona.getId()+"\n ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 15 minute DO UPDATE telemillonario.persona SET passwordtoken = '' WHERE persona.correo = ?;";
-                try (Connection conn = DriverManager.getConnection(url, user, password);
-                     PreparedStatement pstmt = conn.prepareStatement(sentenciaSQL);) {
+                    String sentenciaSQL = "CREATE EVENT telemillonario.eventoborrar"+persona.getId()+"\n ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 15 minute DO UPDATE telemillonario.persona SET passwordtoken = '' WHERE persona.correo = ?;";
+                    try (Connection conn = DriverManager.getConnection(url, user, password);
+                         PreparedStatement pstmt = conn.prepareStatement(sentenciaSQL);) {
 
-                    pstmt.setString(1,correo);
-                    pstmt.executeUpdate();
+                        pstmt.setString(1,correo);
+                        pstmt.executeUpdate();
 
+                    }
+
+                } catch (MessagingException | UnsupportedEncodingException | SQLException e) {
+                    redirectAttributes.addFlashAttribute("msg","Ha ocurrido un error, vuelve a intentarlo mas tarde.");
+                    return "redirect:/cambioDeContrasenia";
                 }
 
-            } catch (MessagingException | UnsupportedEncodingException | SQLException e) {
-                redirectAttributes.addFlashAttribute("msg","Ha ocurrido un error, vuelve a intentarlo mas tarde.");
+                redirectAttributes.addFlashAttribute("msgexito","Se ha enviado el link de recuperacion al correo ingresado");
+                return "redirect:/cambioDeContrasenia";
+        }
+            else{
+                redirectAttributes.addFlashAttribute("msg","Debe esperar 15 minutos para poder solicitar denuevo el cambio");
                 return "redirect:/cambioDeContrasenia";
             }
 
-            redirectAttributes.addFlashAttribute("msgexito","Se ha enviado el link de recuperacion al correo ingresado");
-            return "redirect:/cambioDeContrasenia";
-        }
-        else{
-            redirectAttributes.addFlashAttribute("msg","Debe esperar 15 minutos para poder solicitar denuevo el cambio");
-            return "redirect:/cambioDeContrasenia";
-        }
 
     }
 

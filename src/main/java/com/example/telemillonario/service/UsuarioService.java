@@ -39,8 +39,8 @@ public class UsuarioService {
         String encoddedPassword = passwordEncoder.encode(newPassword);
 
         persona.setContrasenia(encoddedPassword);
-        persona.setPasswordToken("");
-
+        //persona.setPasswordToken("");
+        persona.setPasswordToken(null);
         personaRepository.save(persona);
     }
 
