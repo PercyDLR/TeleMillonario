@@ -3,13 +3,9 @@
 
     <head th:replace="fragments/header :: head('Perfil',~{::style})">
         <style>
-
             div.sign__group input{
                 width: 1000px;
                 max-width: calc(100% - 5rem);
-            }
-            input:disabled{
-                color: rgba(255,255,255,0.5);
             }
             h6{
                 color: #f0579f;
@@ -22,9 +18,6 @@
                 height: 150px;
                 max-height: 150px;
                 max-width: fit-content;
-            }
-            label{
-                color: rgba(255,255,255,0.5);
             }
         </style>
     </head>
@@ -143,7 +136,7 @@
                                     <div class="col-md-6 col-12" style="text-align: center; white-space: nowrap">
                                         <div class="sign__group">
                                             <label style="display: inline" for="nacimiento">Nacimiento</label>
-                                            <input style="display: inline" class="sign__input"
+                                            <input style="display: inline;text-align: center" class="sign__input"
                                                    th:field="*{nacimiento}"
                                                    th:classappend="${#fields.hasErrors('nacimiento')? 'is-invalid':''}"
                                                    placeholder="Nacimiento" type="date" required>

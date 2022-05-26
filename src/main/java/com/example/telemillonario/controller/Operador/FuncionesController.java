@@ -189,9 +189,13 @@ public class FuncionesController {
                                  @RequestParam(value="idactor") String idactor,
                                  @RequestParam(value="iddirector") String iddirector,
                                  @RequestParam(value="idgenero") String idgenero,
+                                 @RequestParam(value = "eliminar", defaultValue = "a") String[] ids,
                                  @RequestParam(value="imagenes") MultipartFile[] imagenes) throws IOException {
 
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+
+
+
 
         //VALIDACIONES
         if (bindingResult.hasErrors()) {
@@ -201,6 +205,8 @@ public class FuncionesController {
             model.addAttribute("duracion",duracion);
             model.addAttribute("fechaactual",now);
             model.addAttribute("fechamasinicio",fechamasinicio);
+            model.addAttribute("durval",1);
+            model.addAttribute("val",2);
             Persona persona = (Persona) session.getAttribute("usuario");
             //listado de salas por sede disponibles
             model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
@@ -276,6 +282,22 @@ public class FuncionesController {
             }
 
 
+
+            if (funcion.getSala()==null){
+                model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
+                model.addAttribute("listDirectores",personaRepository.listarDirectores());
+                model.addAttribute("listGeneros",generoRepository.findAll());
+                model.addAttribute("duracion",duracion);
+                model.addAttribute("fechaactual",now);
+                model.addAttribute("msgsala","Debe seleccionar una sala");
+                model.addAttribute("fechamasinicio",fechamasinicio);
+                model.addAttribute("val",2);
+                Persona persona = (Persona) session.getAttribute("usuario");
+                //listado de salas por sede disponibles
+                model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
+                return "Operador/crearFuncion";
+
+            }
 
 
 
@@ -464,6 +486,26 @@ public class FuncionesController {
                     funcionGeneroRepository.save(fungen);
                 }
 
+
+                //eliminar imagenes
+                System.out.println("Imágenes a Eliminar: " + ids.length);
+                if(!ids[0].equals("a")){
+                    for(String id : ids){
+                        System.out.println("ID: " + id);
+                        int idfoto= Integer.parseInt(id);
+
+                        Foto fot=fotoRepository.findById(idfoto).get();
+                        String [] urlfoto=fot.getRuta().split("/telemillonario/");
+                        String nombrefoto= urlfoto[1];
+                        fileService.eliminarArchivo(nombrefoto);
+                        fotoRepository.deleteById(idfoto);
+
+                    }
+
+                }
+
+
+                //agregar imagenes
 
                 Persona persona=(Persona) session.getAttribute("usuario");
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);

@@ -29,9 +29,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true);
 
         http.authorizeRequests()
-                .antMatchers("/admin","/admin/**").hasAuthority("Administrador")
-                .antMatchers("/operador","/operador/**").hasAuthority("Operador")
-                .antMatchers("/perfil","/perfil/**").hasAnyAuthority("Operador","Usuario")
+                .antMatchers("/admin/**").hasAuthority("Administrador")
+                .antMatchers("/operador/**").hasAuthority("Operador")
+                .antMatchers("/perfil/**").hasAnyAuthority("Operador","Usuario")
+                .antMatchers("/","/cartelera/*","/sedes/*","/actores/*","/directores/*").access("hasAuthority('Usuario') || isAnonymous()")
                 .anyRequest().permitAll().and()
                 .oauth2Login()
                 .loginPage("/login")
