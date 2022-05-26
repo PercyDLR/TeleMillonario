@@ -9,6 +9,7 @@ Primary use:	FlixGo Template
 /*----------------------------------------
 [Table of contents]
 
+0. Personalizado
 1. Header
 2. Home
 3. Content
@@ -34,26 +35,20 @@ Primary use:	FlixGo Template
 ----------------------------------------*/
 
 /*==============================
-	Common styles
+	Personalizado
 ==============================*/
-
-.header__btn {
-  /*padding: 0;
-  border: none;
-  background-color: white;
-  -webkit-transition: 0.4s ease;
-  -moz-transition: 0.4s ease;
-  transition: 0.4s ease;
+.circulo_botones{
+  width: 50px;
   cursor: pointer;
-  outline: none;*/
-  display: block;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  margin-top: -22px;
-  width: 24px;
-  height: 40px;
-  opacity: 0.8;
+  height: 50px;
+  background: rgba(43, 43, 49, 0.98);
+  border-radius: 50%;
+  display: flex;
+  position: relative;
+}
+
+.circulo_botones:hover{
+  background-color: black;
 }
 
 input {
@@ -67,7 +62,7 @@ input {
   text-indent: 0px;
   text-shadow: none;
   /*display: inline-block;*/
- /* text-align: start;*/
+  /* text-align: start;*/
   /*appearance: auto;*/
   -webkit-rtl-ordering: logical;
   cursor: text;
@@ -110,7 +105,29 @@ input.src:hover{
   border-color: #343a40;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------*/
+/*==============================
+	Common styles
+==============================*/
+
+.header__btn {
+  /*padding: 0;
+  border: none;
+  background-color: white;
+  -webkit-transition: 0.4s ease;
+  -moz-transition: 0.4s ease;
+  transition: 0.4s ease;
+  cursor: pointer;
+  outline: none;*/
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -22px;
+  width: 24px;
+  height: 40px;
+  opacity: 0.8;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -3136,10 +3153,19 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   letter-spacing: 0.2px;
   font-family: 'Open Sans', sans-serif;
 }
+input.sign__input:disabled , input.sign__input:disabled{
+  color: rgba(255,255,255,0.5);
+}
+
 .sign__group {
   position: relative;
   margin-bottom: 20px;
 }
+
+.sign__group label{
+  color: rgba(255,255,255,0.5);
+}
+
 .sign__group--checkbox {
   width: 100%;
   text-align: left;
