@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Editar Actor',~{::style})">
+    <head th:replace="fragments/header :: head(${actor.id == null ? 'Nuevo Actor' : 'Editar Actor'},~{::style})">
         <style>
             label{
                 color: rgba(255,255,255,0.5);

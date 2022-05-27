@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/admin/actores")
-public class ActorController {
+@RequestMapping("/admin/directores")
+public class DirectorController {
 
     @Autowired
     PersonaRepository personaRepository;
@@ -32,7 +32,7 @@ public class ActorController {
     FileService fileService;
 
     //Variables Importantes
-    float actoresxpagina=8;
+    float directoresxpagina=8;
 
     @GetMapping(value = {"","/","/lista"})
     public String listarActores(Model model,
@@ -45,53 +45,51 @@ public class ActorController {
             pagina=0;
         }
 
-        int cantActores = personaRepository.cantActores(busqueda.toLowerCase());
+        int cantDirectores = personaRepository.cantDirectores(busqueda.toLowerCase());
 
-        List<Persona> listaActores = personaRepository.listarActores(busqueda.toLowerCase(), (int)actoresxpagina*pagina, (int)actoresxpagina);
+        List<Persona> listaDirectores = personaRepository.listarDirectoresFiltrado(busqueda.toLowerCase(), (int)directoresxpagina*pagina, (int)directoresxpagina);
 
         model.addAttribute("pagActual",pagina);
-        model.addAttribute("pagTotal",(int) Math.ceil(cantActores/actoresxpagina));
+        model.addAttribute("pagTotal",(int) Math.ceil(cantDirectores/directoresxpagina));
 
         model.addAttribute("busqueda", busqueda);
-        model.addAttribute("listaActores", listaActores);
-        return "Administrador/Actor/listaActores";
+        model.addAttribute("listaDirectores", listaDirectores);
+        return "Administrador/Director/listaDirectores";
     }
 
     @PostMapping("/buscar")
     String busqueda(@RequestParam(value="busqueda", defaultValue = "") String busqueda){
-
-        return "redirect:/admin/actores?busqueda="+busqueda;
+        return "redirect:/admin/directores?busqueda="+busqueda;
     }
 
     @GetMapping("/nuevo")
-    public String formNuevoActor(@ModelAttribute("actor") Persona actor){
-
-        return "Administrador/Actor/editarActor";
+    public String formNuevoActor(@ModelAttribute("director") Persona actor){
+        return "Administrador/Director/editarDirector";
     }
 
     @GetMapping("/editar")
-    public String formEditarActor(RedirectAttributes attr, @ModelAttribute("actor") Persona actor,
-                                  @RequestParam("id") String idactor, Model model){
+    public String formEditarActor(RedirectAttributes attr, @ModelAttribute("director") Persona director,
+                                  @RequestParam("id") String iddirector, Model model){
 
         try{
-            int id = Integer.parseInt(idactor);
+            int id = Integer.parseInt(iddirector);
 
             // Se obtienen los datos y las imágenes del actor
-            actor = personaRepository.findById(id).get();
+            director = personaRepository.findById(id).get();
             List<Foto> fotos = fotoRepository.findByIdpersonaOrderByNumero(id);
 
             model.addAttribute("imagenes", fotos);
-            model.addAttribute("actor",actor);
-            return "Administrador/Actor/editarActor";
+            model.addAttribute("director",director);
+            return "Administrador/Director/editarDirector";
 
         } catch (Exception e){
             attr.addFlashAttribute("err", "La ID del actor es inválida");
-            return "redirect:/admin/actores/lista";
+            return "redirect:/admin/directores/lista";
         }
     }
 
     @PostMapping("/subir")
-    public String recibirImagen(@ModelAttribute("actor") @Validated(Elenco.class) Persona actor,
+    public String recibirImagen(@ModelAttribute("director") @Validated(Elenco.class) Persona director,
                                 BindingResult bindingResult,
                                 @RequestParam(value = "eliminar", defaultValue = "") String[] ids,
                                 @RequestParam("imagenes") MultipartFile[] imagenes,
@@ -101,37 +99,35 @@ public class ActorController {
         // Se buscan errores de validación
         if(bindingResult.hasErrors()){
             System.out.println(bindingResult.getFieldError());
-            return "Administrador/Actor/editarActor";
+            return "Administrador/Director/editarDirector";
         }
-
         try {
             // Primero se guardan los datos del actor
             Rol rol = new Rol();
-            rol.setId(5);
-            actor.setIdrol(rol);
-            actor.setEstado(1);
+            rol.setId(4);
+            director.setIdrol(rol);
+            director.setEstado(1);
 
-            personaRepository.save(actor);
+            personaRepository.save(director);
 
             // Se obtienen el ID del actor recién creado
-            actor = personaRepository.findFirstByNombresOrderByIdDesc(actor.getNombres());
+            director = personaRepository.findFirstByNombresOrderByIdDesc(director.getNombres());
         } catch (Exception e){
             System.out.println(e.getMessage());
-            attr.addFlashAttribute("err","Hubo un problema al guardar los datos de Actor");
-            return "redirect:/admin/actores";
+            attr.addFlashAttribute("err","Hubo un problema al guardar los datos de Director");
+            return "redirect:/admin/directores";
         }
-
         // Número de fotos Ya Guardadas en la DB
         int fotosGuardadas = 0;
 
         //-----------------------------------------------
         //            Eliminar Foto de la DB
         //-----------------------------------------------
-        if(actor.getId() != null){
+        if(director.getId() != null){
             System.out.println("Imágenes a Eliminar: " + ids.length);
 
             // Se obtienen las fotos guardadas en DB
-            List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(actor.getId());
+            List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(director.getId());
             fotosGuardadas = fotosEnDB.size();
             boolean fotoEliminada = false;
 
@@ -185,11 +181,11 @@ public class ActorController {
                 // Se almacenan los datos en un objeto Foto
                 Foto foto = new Foto();
                 foto.setEstado(1);
-                foto.setIdpersona(actor.getId());
+                foto.setIdpersona(director.getId());
                 foto.setNumero(fotosGuardadas + i);
 
                 // Guardar en el Sevidor
-                MultipartFile imgRenombrada = fileService.formatearArchivo(img, "actor");
+                MultipartFile imgRenombrada = fileService.formatearArchivo(img, "director");
                 if(fileService.subirArchivo(imgRenombrada)){
 
                     // Si se guarda exitosamente, se obtiene el url de la foto
@@ -206,11 +202,15 @@ public class ActorController {
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 attr.addFlashAttribute("err","Hubo un problema al guardar las Imagenes");
-                return "redirect:/admin/actores";
+                return "redirect:/admin/directores";
             }
+
+            System.out.println("Nombre: " + img.getOriginalFilename());
+            System.out.println("Tipo: " + img.getContentType());
         }
-        attr.addFlashAttribute("msg","Actor Creado Exitosamente");
-        return "redirect:/admin/actores";
+
+        attr.addFlashAttribute("msg","Director Creado Exitosamente");
+        return "redirect:/admin/directores";
     }
 
     @GetMapping(value = "/borrar")
@@ -221,18 +221,18 @@ public class ActorController {
 
             if(personaRepository.existsById(id)){
                 Optional<Persona> aux = personaRepository.findById(id);
-                Persona actor = aux.get();
-                actor.setEstado(0);//Borrado lógico
-                personaRepository.save(actor);
+                Persona director = aux.get();
+                director.setEstado(0);//Borrado lógico
+                personaRepository.save(director);
                 attr.addFlashAttribute("msg","El actor ha sido eliminado exitosamente");
             }else{
                 attr.addFlashAttribute("err", "El operador con ID:"+id+" no se encuentra presente");
             }
-            return "redirect:/admin/actores/";
+            return "redirect:/admin/directores/";
 
         }catch (Exception e){
             attr.addFlashAttribute("err", "El ID es inválido");
-            return "redirect:/admin/actores/";
+            return "redirect:/admin/directores/";
         }
 
     }

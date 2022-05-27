@@ -33,7 +33,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
     //Busca a un usuario por correo
     Persona findByCorreo(String correo);
-    Persona findByNombres(String correo);
+    Persona findFirstByNombresOrderByIdDesc(String correo);
 
     //Actores
     @Query(nativeQuery = true, value = "SELECT * FROM persona " +
@@ -53,6 +53,16 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
 
     // Directores
+    @Query(nativeQuery = true, value = "SELECT * FROM persona " +
+            "where idrol=4 and estado=1 and (lower(concat(nombres,' ',apellidos)) like %?1%) " +
+            "limit ?2,?3")
+    List<Persona> listarDirectoresFiltrado(String busqueda, int pag, int directoresxpagina);
+
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM persona " +
+            "where idrol=4 and estado=1 and (lower(concat(nombres,' ',apellidos)) like %?1%) ")
+    Integer cantDirectores(String busqueda);
+
+
     @Query(value = "SELECT * FROM persona where idrol=4",nativeQuery = true)
     List<Persona> listarDirectores();
     @Query(value = "SELECT fe.idpersona FROM funcionelenco fe\n" +

@@ -15,7 +15,7 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
 
     List<Foto> findByIdsedeOrderByNumero(int id);
 
-    @Query(nativeQuery = true, value = "select * from telemillonario.fotos where " +
+    @Query(nativeQuery = true, value = "select * from fotos where " +
             "idsede=?1 group by idfuncion " +
             "limit ?2,?3")
     List<Foto> buscarFotoFunciones(int idsede, int pag, int salasporpag);

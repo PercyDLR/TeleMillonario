@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Lista Salas',~{::style})">
+    <head th:replace="fragments/header :: head('Lista Actores',~{::style})">
         <style>
             input::placeholder {
                 color: #000000;
@@ -12,15 +12,13 @@
         <!-- header -->
         <div th:replace="fragments/navbar :: admin('actores')"></div>
 
-        <div class="content">
-
-
-            <div  class="container" style="height: 100%;margin-bottom: 30px;opacity: 200%">
+        <div class="content" style="margin-top: 15px">
+            <div  class="container" style="margin-bottom: 30px">
 
                 <div class="row">
                     <div class="col-md-10 col-12" style="margin-top: 30px;">
                         <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3.5rem">
-                            Actores
+                            Directores
                         </h1>
                     </div>
 
@@ -95,8 +93,7 @@
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;"
-                                                     th:onclick="|advertencia(${actor.id})|" th:src="@{/img/iconTrash2.png}">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${actor.id})|" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
