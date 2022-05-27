@@ -104,8 +104,38 @@ public class ActorController {
             return "Administrador/Actor/editarActor";
         }
 
+        //-----------------------------------------------
+        //      Validación de los Datos enviados
+        //-----------------------------------------------
+        long tamanho = 0;
+
+        for (MultipartFile img : imagenes){
+
+            // Se verifica que los archivos enviados sean imágenes
+            switch(img.getContentType()){
+
+                case "application/octet-stream":
+                case "image/jpeg":
+                case "image/png":
+                    tamanho += img.getSize();
+
+                    // Se verifica que el tamaño no sea superior a 20 MB
+                    if (tamanho > 1048576*20){
+                        attr.addFlashAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
+                        return "redirect:/admin/actores";
+                    }
+                    break;
+
+                default:
+                    attr.addFlashAttribute("err","Solo se deben de enviar imágenes");
+                    return "redirect:/admin/actores";
+            }
+        }
+
+        //-----------------------------------------------
+        //         Guardado de Datos del Actor
+        //-----------------------------------------------
         try {
-            // Primero se guardan los datos del actor
             Rol rol = new Rol();
             rol.setId(5);
             actor.setIdrol(rol);
@@ -205,11 +235,17 @@ public class ActorController {
 
             } catch (Exception e){
                 System.out.println(e.getMessage());
-                attr.addFlashAttribute("err","Hubo un problema al guardar las Imagenes");
+
+                if(imagenes[0].getContentType().equals("application/octet-stream")) {
+                    attr.addFlashAttribute("msg", "Actor Guardado Exitosamente");
+                } else{
+                    attr.addFlashAttribute("err", "Hubo un problema al guardar las Imagenes");
+                }
+
                 return "redirect:/admin/actores";
             }
         }
-        attr.addFlashAttribute("msg","Actor Creado Exitosamente");
+        attr.addFlashAttribute("msg","Actor Guardado Exitosamente");
         return "redirect:/admin/actores";
     }
 
@@ -226,7 +262,7 @@ public class ActorController {
                 personaRepository.save(actor);
                 attr.addFlashAttribute("msg","El actor ha sido eliminado exitosamente");
             }else{
-                attr.addFlashAttribute("err", "El operador con ID:"+id+" no se encuentra presente");
+                attr.addFlashAttribute("err", "El actor con ID: "+id+" no se encuentra presente");
             }
             return "redirect:/admin/actores/";
 

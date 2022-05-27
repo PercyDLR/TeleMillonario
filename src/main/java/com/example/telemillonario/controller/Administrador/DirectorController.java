@@ -101,6 +101,42 @@ public class DirectorController {
             System.out.println(bindingResult.getFieldError());
             return "Administrador/Director/editarDirector";
         }
+
+        //-----------------------------------------------
+        //      Validación de los Datos enviados
+        //-----------------------------------------------
+        long tamanho = 0;
+
+        for (MultipartFile img : imagenes){
+
+            // Se verifica que los archivos enviados sean imágenes
+            switch(img.getContentType()){
+
+                case "application/octet-stream":
+                    attr.addFlashAttribute("err","Debe ingresar al menos 1 imagen");
+                    return "redirect:/admin/directores";
+
+                case "image/jpeg":
+                case "image/png":
+                    tamanho += img.getSize();
+
+                    // Se verifica que el tamaño no sea superior a 20 MB
+                    if (tamanho > 1048576*20){
+                        attr.addFlashAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
+                        return "redirect:/admin/directores";
+                    }
+                    break;
+
+                default:
+                    attr.addFlashAttribute("err","Solo se deben de enviar imágenes");
+                    return "redirect:/admin/directores";
+            }
+        }
+
+        //-----------------------------------------------
+        //         Guardado de Datos del Actor
+        //-----------------------------------------------
+
         try {
             // Primero se guardan los datos del actor
             Rol rol = new Rol();
@@ -201,7 +237,13 @@ public class DirectorController {
 
             } catch (Exception e){
                 System.out.println(e.getMessage());
-                attr.addFlashAttribute("err","Hubo un problema al guardar las Imagenes");
+
+                if(imagenes[0].getContentType().equals("application/octet-stream")) {
+                    attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
+                } else{
+                    attr.addFlashAttribute("err", "Hubo un problema al guardar las Imagenes");
+                }
+
                 return "redirect:/admin/directores";
             }
 
@@ -209,7 +251,7 @@ public class DirectorController {
             System.out.println("Tipo: " + img.getContentType());
         }
 
-        attr.addFlashAttribute("msg","Director Creado Exitosamente");
+        attr.addFlashAttribute("msg","Director Guardado Exitosamente");
         return "redirect:/admin/directores";
     }
 
@@ -224,9 +266,9 @@ public class DirectorController {
                 Persona director = aux.get();
                 director.setEstado(0);//Borrado lógico
                 personaRepository.save(director);
-                attr.addFlashAttribute("msg","El actor ha sido eliminado exitosamente");
+                attr.addFlashAttribute("msg","El director ha sido eliminado exitosamente");
             }else{
-                attr.addFlashAttribute("err", "El operador con ID:"+id+" no se encuentra presente");
+                attr.addFlashAttribute("err", "El director con ID: "+id+" no existe");
             }
             return "redirect:/admin/directores/";
 

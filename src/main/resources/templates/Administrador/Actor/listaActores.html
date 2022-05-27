@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-md-10 col-12" style="margin-top: 30px;">
                         <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3.5rem">
-                            Directores
+                            Actores
                         </h1>
                     </div>
 
@@ -33,12 +33,12 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
                             <i class="bi bi-check-circle-fill"></i>
                             <strong th:text="${msg}"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(err != null) && (msg == '-1')}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
                             <i class="bi bi-exclamation-triangle-fill"></i>
                             <strong th:text="${err}"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

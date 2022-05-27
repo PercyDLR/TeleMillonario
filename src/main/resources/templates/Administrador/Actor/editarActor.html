@@ -159,8 +159,22 @@
                 // Donde se muestran las vistas previas
                 let imgContainer = document.getElementById("img_container");
 
+                // Se conservan las fotos almacenadas en DB y las nuevas fotos
+                // se reemplazan cada vez que se sube un grupo de fotos
+                let itemsAntiguos = imgContainer.getElementsByClassName("old");
+                let contenido = "";
+
+                for(jj=0; jj<itemsAntiguos.length; jj++){
+                    if(!itemsAntiguos[jj].parentElement.classList.contains("cloned")){
+                        contenido += itemsAntiguos[jj].innerHTML;
+                    }
+                }
+
                 // Agrega y quita imagenes de la vista previa e input
                 function preview(){
+
+                    // Deja solo las imágenes de la DB, para posteriormente agregar las nuevas
+                    imgContainer.innerHTML = contenido
 
                     for(i of fileInput.files){
 
