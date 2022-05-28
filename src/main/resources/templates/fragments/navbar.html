@@ -20,7 +20,7 @@
                                 <!-- end header logo -->
 
                                 <!-- header nav -->
-                                <ul class="header__nav" style="height: auto; width: fit-content; margin-right: auto">
+                                <ul class="header__nav" style="height: auto;">
                                     <li class="header__nav-item">
                                         <a  th:href="@{/}" class="header__nav-link"
                                             th:classappend="${seccion=='inicio' ? 'header__nav-link--active' : ''}">Inicio</a>
@@ -47,7 +47,11 @@
                                     </li>
 
                                     <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>
+                                </ul>
+                                <!-- end header nav -->
 
+                                <!-- Cuenta -->
+                                <ul class="header__nav cuenta" style="height: auto;">
                                     <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px">
                                         <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                             <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
@@ -60,13 +64,13 @@
                                         </ul>
                                     </li>
 
-                                    <li sec:authorize="isAuthenticated()" class="header__nav-item">
+                                    <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin-bottom: 0">
                                         <a role="button" id="dropdown4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div style="size: 10px; color: white;white-space: nowrap;">
+                                            <div class="cuenta" style="size: 10px;color: white">
                                                 <span th:text="${session.usuario.nombres}"></span>
                                             </div>
 
-                                            <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
+                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
                                                 <span th:text="${session.usuario.apellidos}"></span>
                                             </div>
                                         </a>
@@ -79,10 +83,7 @@
                                         </ul>
                                     </li>
                                     <li class="header__nav-item" style="width: 0">
-                                        <br>
-                                    </li>
                                 </ul>
-                                <!-- end header nav -->
 
                                 <!-- header auth -->
                                 <div class="header__auth" style="margin-left: 0">
@@ -126,7 +127,7 @@
                                 <!-- end header logo -->
 
                                 <!-- header nav -->
-                                <ul class="header__nav" style="height: auto; width: fit-content; margin-right: auto">
+                                <ul class="header__nav" style="height: auto">
                                     <li class="header__nav-item">
                                         <a  th:href="@{/operador/funciones}" class="header__nav-link"
                                             th:classappend="${seccion=='funciones' ? 'header__nav-link--active' : ''}">Funciones</a>
@@ -148,6 +149,11 @@
                                     </li>
 
                                     <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>
+                                </ul>
+                                <!-- end header nav -->
+
+                                <!-- Cuenta -->
+                                <ul class="header__nav cuenta" style="height: auto;">
 
                                     <li class="header__nav-item" style="margin: 5px">
                                         <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -160,14 +166,14 @@
                                         </ul>
                                     </li>
 
-                                    <li class="header__nav-item" style="margin-right: 5px;">
+                                    <li class="header__nav-item" style="margin-right: 5px;margin-bottom: 0">
                                         <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div style="size: 10px; color: white;white-space: nowrap;">
+                                            <div class="cuenta" style="size: 10px; color: white">
                                                 <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
                                             </div>
 
-                                            <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
-                                                <span th:text="|Gran Teatro nacional|"></span>
+                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
+                                                <span th:text="${session.usuario.idsede.nombre}"></span>
                                             </div>
                                         </a>
 
@@ -178,10 +184,7 @@
                                         </ul>
                                     </li>
                                     <li class="header__nav-item" style="width: 0">
-                                        <br>
-                                    </li>
                                 </ul>
-                                <!-- end header nav -->
 
                                 <!-- header auth -->
                                 <div class="header__auth" style="margin-left: 0">
@@ -223,7 +226,7 @@
                                 <!-- end header logo -->
 
                                 <!-- header nav -->
-                                <ul class="header__nav" style="height: auto; width: fit-content; margin-right: auto">
+                                <ul class="header__nav" style="height: auto">
                                     <li class="header__nav-item">
                                         <a  th:href="@{/admin/sedes}" class="header__nav-link"
                                             th:classappend="${seccion=='sedes' ? 'header__nav-link--active' : ''}">Sedes</a>
@@ -249,26 +252,26 @@
                                     </li>
 
                                     <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>
+                                </ul>
+                                <!-- end header nav -->
 
-                                    <li class="header__nav-item" style="margin: 5px">
-                                            <img style="height: 50px;margin-top: 0" th:src="@{/img/user.png}">
+                                <!-- Cuenta -->
+                                <ul class="header__nav cuenta" style="height: auto;">
+                                    <li class="header__nav-item" style="margin: 5px;">
+                                        <img style="height: 50px;margin-top: 0" th:src="@{/img/user.png}">
                                     </li>
 
-                                    <li class="header__nav-item">
-                                        <div style="size: 10px; color: white;white-space: nowrap;">
+                                    <li class="header__nav-item" style="margin-bottom: 0">
+                                        <div class="cuenta" style="size: 10px;color: white">
                                             <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
                                         </div>
 
-                                        <div style="size: 8px; color: rgba(255,255,255,0.5);white-space: nowrap;">
+                                        <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
                                             <span>Administrador</span>
                                         </div>
                                     </li>
                                     <li class="header__nav-item" style="width: 0">
-                                        <br>
-                                    </li>
                                 </ul>
-
-                                <!-- end header nav -->
 
                                 <!-- header auth -->
                                 <div class="header__auth" style="margin-left: 3px">
