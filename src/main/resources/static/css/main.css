@@ -190,13 +190,13 @@ ul {
   list-style: none;
 }
 ::-moz-selection {
-  background: #fff;
-  color: #000;
+  background: rgba(0,0,0,0.35);
+  color: white;
   text-shadow: none;
 }
 ::selection {
-  background: #fff;
-  color: #000;
+  background: rgba(0,0,0,0.35);
+  color: white;
   text-shadow: none;
 }
 ::-webkit-input-placeholder {
@@ -2949,7 +2949,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .accordion__list tbody tr {
   border-bottom: 1px solid rgba(255,255,255,0.05);
-  cursor: pointer;
 }
 .accordion__list tbody tr:hover {
   background-color: rgba(255,255,255,0.01);
@@ -2959,7 +2958,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .accordion__list tbody th,
 .accordion__list tbody td {
- /* color: rgba(255,255,255,0.5);*/
   color : white;
   font-size: 14px;
   padding: 9px 20px 24px;
@@ -3237,14 +3235,7 @@ input.sign__input:disabled , input.sign__input:disabled{
   -moz-transform: scale(1);
   transform: scale(1);
 }
-.sign__group--checkbox label::-moz-selection {
-  background: transparent;
-  color: rgba(255,255,255,0.5);
-}
-.sign__group--checkbox label::selection {
-  background: transparent;
-  color: rgba(255,255,255,0.5);
-}
+
 .sign__btn {
   display: flex;
   justify-content: center;
