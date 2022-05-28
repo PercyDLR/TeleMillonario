@@ -52,7 +52,8 @@
 							</div>
 
 							<div class="sign__group">
-								<input type="text" id="datePickerId" class="sign__input" placeholder="Fecha de Nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')" required>
+								<input type="date" id="datePickerId" class="sign__input" placeholder="Fecha de Nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')" required>
+								<div class="invalid-feedback d-block" th:if="${(errDate != null) && (errDate eq -1)}">La fecha ingresada debe ser hasta un dia antes de la fecha actual</div>
 							</div>
 
 							<div class="sign__group">
@@ -66,8 +67,9 @@
 									 th:errors="*{contrasenia}"></div>
 							</div>
 							<div class="sign__group">
-								<input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" required maxlength="200">
+								<input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" name="recontrasenia" required maxlength="200">
 								<div class="invalid-feedback" id="coindicencia">Las contraseñas no coinciden</div>
+								<div class="invalid-feedback d-block" th:if="${(errRecontrasenia != null) && (errRecontrasenia eq 1)}">Ambos campos de contraseña deben ser llenados</div>
 							</div>
 
 							<button class="sign__btn" type="submit" id="btnSubmit" onclick="return Validate()">Registrarse</button>

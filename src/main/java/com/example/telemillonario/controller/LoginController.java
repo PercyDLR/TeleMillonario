@@ -32,6 +32,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Controller
@@ -105,7 +107,13 @@ public class LoginController {
 
 
     @PostMapping("/validacionSignUp")
-    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a) throws InterruptedException, IOException {
+    public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, @RequestParam(value = "recontrasenia", required = false) String recontrasenia, Model model, RedirectAttributes a) throws InterruptedException, IOException {
+
+        boolean errorRecontrasenia = false;
+        if (recontrasenia.equals("") || recontrasenia == null) {
+            model.addAttribute("errRecontrasenia", 1);
+            errorRecontrasenia = true;
+        }
 
         boolean coincidencias = false;
         List<Persona> listaPersonas = personaRepository.findAll();
@@ -119,13 +127,26 @@ public class LoginController {
                 model.addAttribute("errCorreo", 1);
             }
         }
-        if(bindingResult.hasErrors() || coincidencias){
+        if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia){
             return "/login/signup";
         } else {
             //Obtenemos los datos del usuario que ingreso su DNI con la API
             //UsuarioAPI infoUsuarioAPI = DniAPI.FormRestAPI(usuario.getDni());
 
             //Aca va la validacion de lo obtenido de la API con lo ingresado por el usuario
+
+            LocalDate fechaActual = LocalDate.now();
+            LocalDate fechaRegistrada = usuario.getNacimiento();
+            Period period = Period.between(fechaRegistrada, fechaActual);
+
+            System.out.print(period.getYears() + " years,");
+            System.out.print(period.getMonths() + " months,");
+            System.out.print(period.getDays() + " days");
+
+            if (period.getYears() < 0 || period.getMonths() < 0 || (period.getDays() <= 0 && (period.getYears() < 0 || period.getMonths() < 0))) {
+                model.addAttribute("errDate", -1);
+                return "usuario/signup";
+            }
 
             //generamos su bcript de contraseña
             String contraseniaBCrypt = new BCryptPasswordEncoder().encode(usuario.getContrasenia());
