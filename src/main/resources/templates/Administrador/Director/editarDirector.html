@@ -42,6 +42,16 @@
                                         th:text="${director.id == null ? 'Nuevo Director' : 'Editar Director'}"></h3>
 
                                     <div class="row">
+                                        <div class="col-12" style="width: fit-content">
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                                <strong th:text="${err}"></strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-md-6 col-8">
 
                                             <select id="fotos-para-eliminar" name="eliminar" hidden multiple>

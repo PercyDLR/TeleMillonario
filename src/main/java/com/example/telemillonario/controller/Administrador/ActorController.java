@@ -92,7 +92,7 @@ public class ActorController {
 
     @PostMapping("/subir")
     public String recibirImagen(@ModelAttribute("actor") @Validated(Elenco.class) Persona actor,
-                                BindingResult bindingResult,
+                                BindingResult bindingResult, Model model,
                                 @RequestParam(value = "eliminar", defaultValue = "") String[] ids,
                                 @RequestParam("imagenes") MultipartFile[] imagenes,
                                 RedirectAttributes attr){
@@ -121,14 +121,14 @@ public class ActorController {
 
                     // Se verifica que el tamaño no sea superior a 20 MB
                     if (tamanho > 1048576*20){
-                        attr.addFlashAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
-                        return "redirect:/admin/actores";
+                        model.addAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
+                        return "Administrador/Actor/editarActor";
                     }
                     break;
 
                 default:
-                    attr.addFlashAttribute("err","Solo se deben de enviar imágenes");
-                    return "redirect:/admin/actores";
+                    model.addAttribute("err","Solo se deben de enviar imágenes");
+                    return "Administrador/Actor/editarActor";
             }
         }
 
@@ -151,25 +151,28 @@ public class ActorController {
             return "redirect:/admin/actores";
         }
 
-        // Número de fotos Ya Guardadas en la DB
-        int fotosGuardadas = 0;
-
         //-----------------------------------------------
         //            Eliminar Foto de la DB
         //-----------------------------------------------
+
+        // Número de fotos Ya Guardadas en la DB
+        int fotosGuardadas = 0;
+
         if(actor.getId() != null){
-            System.out.println("Imágenes a Eliminar: " + ids.length);
+            //System.out.println("Imágenes a Eliminar: " + ids.length);
 
             // Se obtienen las fotos guardadas en DB
             List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(actor.getId());
             fotosGuardadas = fotosEnDB.size();
-            boolean fotoEliminada = false;
 
             for(int i = 0; i < fotosEnDB.size(); i++){
+                boolean fotoBorrada = false;
+
+                Foto fotoEnDB = fotosEnDB.get(i);
+
                 for(int j = 0; j < ids.length; j++) {
                     try{
                         int id = Integer.parseInt(ids[j]);
-                        Foto fotoEnDB = fotosEnDB.get(i);
 
                         // Se compara el ID de la foto en DB con el de la foto que se quiere remover
                         if (fotoEnDB.getId() == id){
@@ -180,24 +183,25 @@ public class ActorController {
                             // Borrado del fileService
                             String ruta = fotosEnDB.get(i).getRuta();
                             String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
-                            System.out.println("Nombre de la foto a eliminar: " + nombreFoto);
+                            //System.out.println("Nombre de la foto a eliminar: " + nombreFoto);
                             fileService.eliminarArchivo(nombreFoto);
 
-                            fotoEliminada = true;
                             fotosGuardadas--;
+                            fotoBorrada = true;
                             break;
                         }
-                        // Cuando se elimina una foto todos los números posteriores se corren por 1
-                        if(fotoEliminada){
-                            fotoEnDB.setNumero(fotoEnDB.getNumero()-1);
-                            fotoRepository.save(fotoEnDB);
-                        }
-
 
                     } catch (Exception e){
                         System.out.println(e.getMessage());
                         break;
                     }
+                }
+                // Cuando se elimina una foto todos los números posteriores se corren por 1
+                int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
+
+                if(!fotoBorrada && fotosEliminadas > 0){
+                    fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
+                    fotoRepository.save(fotoEnDB);
                 }
             }
         }
@@ -206,7 +210,16 @@ public class ActorController {
         //            Agregar Foto de la DB
         //-----------------------------------------------
 
-        System.out.println("Imágenes a Agregar: " + imagenes.length);
+        //System.out.println("Imágenes a Agregar: " + imagenes.length);
+
+        if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")){
+            model.addAttribute("err", "Se debe de tener al menos 1 imagen");
+            return "Administrador/Actor/editarActor";
+
+        } else if(imagenes[0].getContentType().equals("application/octet-stream")) {
+            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
+            return "redirect:/admin/actores";
+        }
 
         // Se guarda imagen por imagen (en ese orden se les dará número)
         for(int i = 0; i< imagenes.length; i++){
@@ -235,13 +248,7 @@ public class ActorController {
 
             } catch (Exception e){
                 System.out.println(e.getMessage());
-
-                if(imagenes[0].getContentType().equals("application/octet-stream")) {
-                    attr.addFlashAttribute("msg", "Actor Guardado Exitosamente");
-                } else{
-                    attr.addFlashAttribute("err", "Hubo un problema al guardar las Imagenes");
-                }
-
+                attr.addFlashAttribute("err", "Hubo un problema al guardar las Imagenes");
                 return "redirect:/admin/actores";
             }
         }
