@@ -14,17 +14,22 @@
 							<a th:href="@{/}" class="sign__logo">
 								<img th:src="@{/img/tele.png}" alt="logo">
 							</a>
+
+							<input type="number" name="google" th:value="${google}" hidden>
+
 							<div class="sign__group">
+								<label th:if="${google eq 1}" class="sign__input" style="padding: 12px 20px;background-color: dimgray" th:text="${usuario.getNombres()}"></label>
 								<input type="text" class="sign__input" placeholder="Nombres" name = "nombres" th:value="${usuario.getNombres()}" required autofocus maxlength="100"
-									   th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}">
-								<div class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
+									   th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}" th:hidden="${google eq 1}">
+								<div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
 									 th:errors="*{nombres}"></div>
 							</div>
 
 							<div class="sign__group">
+								<label th:if="${google eq 1}" class="sign__input" style="padding: 12px 20px;background-color: dimgray" th:text="${usuario.getApellidos()}"></label>
 								<input type="text" class="sign__input" placeholder="Apellidos" name = "apellidos" th:value="${usuario.getApellidos()}" required maxlength="100"
-									   th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}">
-								<div class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
+									   th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}" th:hidden="${google eq 1}">
+								<div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
 									 th:errors="*{apellidos}"></div>
 
 							</div>
@@ -37,11 +42,12 @@
 
 							</div>
 							<div class="sign__group">
+								<label th:if="${google eq 1}" class="sign__input" style="padding: 12px 20px;background-color: dimgray" th:text="${usuario.getCorreo()}"></label>
 								<input type="email" class="sign__input" placeholder="Correo" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
-									   th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}">
-								<div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
+									   th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}" th:hidden="${google eq 1}">
+								<div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
 									 th:errors="*{correo}"></div>
-								<div class="invalid-feedback d-block" th:if="${(errCorreo != null) && (errCorreo eq 1)}">El correo ingresado ya está en uso</div>
+								<div th:unless="${google eq 1}" class="invalid-feedback d-block" th:if="${(errCorreo != null) && (errCorreo eq 1)}">El correo ingresado ya está en uso</div>
 							</div>
 
 							<div class="sign__group">
