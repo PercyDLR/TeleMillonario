@@ -99,7 +99,13 @@ public class UsuarioController {
                     case "application/octet-stream":
                         break;
                     default:
+                        usuario.setNombres(usuarioSesion.getNombres());
+                        usuario.setApellidos(usuarioSesion.getApellidos());
+                        usuario.setDni(usuarioSesion.getDni());
+                        usuario.setCorreo(usuarioSesion.getCorreo());
+
                         model.addAttribute("err","Solo se deben de enviar imágenes");
+                        model.addAttribute("imagenes",fotoRepository.findByIdpersonaOrderByNumero(usuarioSesion.getId()));
                         return "usuario/editarPerfil";
                 }
 
@@ -108,24 +114,28 @@ public class UsuarioController {
                         List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(usuario.getId());
                         System.out.println("Error en list foto");
 
-                        // Vacía las fotos en DB
+                        // Borado de fotos
                         if (fotosEnDB.size() > 0){
                             for (Foto foto : fotosEnDB){
+                                // Vacía las fotos en DB
                                 fotoRepository.delete(foto);
+
+                                // Borrado del fileService
+                                String ruta = foto.getRuta();
+                                String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
+                                //System.out.println("Nombre de la foto a eliminar: " + nombreFoto);
+                                fileService.eliminarArchivo(nombreFoto);
                             }
                         }
-                        System.out.println("Error en vacia las fotos en DB");
 
                         Foto fotoPerfil = new Foto();
 
                         // Guardado en el Contenedor de archivos
                         MultipartFile newImg = fileService.formatearArchivo(img, "usuario");
-                        System.out.println("Error en guardado en contenedor de archivos");
 
                         if (fileService.subirArchivo(newImg)){
                             fotoPerfil.setRuta(fileService.obtenerUrl(newImg.getOriginalFilename()));
                         }
-                        System.out.println("Error en el ultimo if");
 
                         // Guardado de la Foto en DB
                         fotoPerfil.setNumero(0);

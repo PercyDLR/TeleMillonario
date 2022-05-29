@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Editar Perfil',~{::style})">
+
+    <head th:replace="fragments/header :: head('Perfil',~{::style})">
         <style>
-            h6{
-                color: #f0579f;
-                font-family: "Open Sans", sans-serif;
-            }
-            .sign__group span{
+            input.sign__input:disabled{
                 color: white;
+            }
+            div.sign__group input{
+                width: 1000px;
+                max-width: calc(100% - 5rem);
             }
             .perfil{
                 height: 150px;
                 max-height: 150px;
                 max-width: fit-content;
             }
+            #img_container img {
+                margin: 5px;
+                width: 160px;
+                object-fit:cover
+            }
         </style>
     </head>
 
     <body class="body">
-
         <div th:replace="fragments/navbar :: usuario('inicio')"></div>
 
-        <div class="content sign" style="padding: 0">
+        <div class="sign content" style="padding: 0">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -51,35 +56,45 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
 
+                                <div class="row">
+                                    <div class="col-12" style="width: fit-content">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong th:text="${err}"></strong>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="row mt-5">
                                     <div class="col-md-8 col-12">
 
                                         <div class="sign__group">
-                                            <h6>Nombres: <span th:text="*{nombres}"></span></h6>
+                                            <input hidden th:field="*{id}">
                                         </div>
 
                                         <div class="sign__group">
-                                            <h6>Apellidos: <span th:text="*{apellidos}"></span></h6>
+                                            <label for="nombres">Nombres</label>
+                                            <input class="sign__input"
+                                                   th:value="*{nombres}" id="nombres" disabled>
                                         </div>
 
                                         <div class="sign__group">
-                                            <h6>DNI: <span th:text="*{dni}"></span></h6>
+                                            <label for="apellidos">Apellidos</label>
+                                            <input class="sign__input"
+                                                   th:value="*{apellidos}" id="apellidos" disabled>
                                         </div>
 
                                         <div class="sign__group">
-                                            <h6>Correo: <span th:text="*{correo}"></span></h6>
+                                            <label for="dni">DNI&ensp;&ensp;&ensp;&ensp;&ensp;</label>
+                                            <input class="sign__input"
+                                                   th:value="*{dni}" id="dni" disabled>
                                         </div>
 
                                         <div class="sign__group">
-                                            <h6>Teléfono: <span th:text="*{telefono}"></span></h6>
-                                        </div>
-
-                                        <div class="sign__group">
-                                            <h6>Dirección: <span th:text="*{direccion}"></span></h6>
-                                        </div>
-
-                                        <div class="sign__group">
-                                            <h6>Nacimiento: <span th:text="*{nacimiento}"></span></h6>
+                                            <label for="correo">Correo &ensp;&ensp;</label>
+                                            <input class="sign__input"
+                                                   th:value="*{correo}" id="correo" disabled>
                                         </div>
                                     </div>
 
@@ -98,11 +113,45 @@
 
                                         <div>
                                             <div class="row">
-                                                <div class="col-12" style="text-align: center; padding-left: 10px">
-                                                    <img class="perfil" style="margin: 5px; width: 160px; object-fit:cover" th:src="${session.fotoPerfil}">
+                                                <div class="col-12" style="padding-left: 10px">
+
+                                                    <!--Visor de Imagenes-->
+                                                    <div id="img_container" style="text-align: center">
+                                                        <img class="perfil" th:src="${session.fotoPerfil}">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-12" style="padding-right: 0">
+                                        <div class="sign__group">
+                                            <label for="direccion">Dirección</label>
+                                            <input class="sign__input" id="direccion"
+                                                   th:value="*{direccion}"
+                                                   placeholder="Dirección" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-12"></div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 col-12" style="padding-right: 0">
+                                        <div class="sign__group">
+                                            <label for="telefono">Teléfono</label>
+                                            <input class="sign__input" id="telefono" th:value="*{telefono}" placeholder="Teléfono" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12" style="text-align: center; white-space: nowrap">
+                                        <div class="sign__group">
+                                            <label style="display: inline">Nacimiento</label>
+                                            <input style="display: inline;text-align: center" class="sign__input" th:value="${usuario.nacimiento}"
+                                                   placeholder="Nacimiento" type="date" disabled>
+                                        </div>
+
                                     </div>
                                 </div>
 

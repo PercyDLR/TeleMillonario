@@ -13,9 +13,9 @@
                 max-width: fit-content;
             }
             #img_container img {
-                margin-inline: auto;
-                max-height: 150px;
-                max-width: fit-content;
+                margin: 5px;
+                width: 160px;
+                object-fit:cover
             }
         </style>
     </head>
@@ -96,7 +96,7 @@
 
                                                     <!--Visor de Imagenes-->
                                                     <div id="img_container" style="text-align: center">
-                                                        <img class="perfil" style="margin: 5px; width: 160px; object-fit:cover" th:src="${session.fotoPerfil}">
+                                                        <img class="perfil" th:src="${session.fotoPerfil}">
                                                     </div>
 
                                                     <!-- Boton para agregar imagenes -->
