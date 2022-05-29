@@ -12,6 +12,6 @@ public interface GeneroRepository extends JpaRepository<Genero,Integer> {
 
 
 
-    @Query(value = "SELECT idgenero FROM telemillonario.funciongenero where idfuncion=64 and estado=1;",nativeQuery = true)
+    @Query(value = "SELECT idgenero FROM telemillonario.funciongenero where idfuncion=?1 and estado=1;",nativeQuery = true)
     List<Integer> generosPorFuncion(int idfuncion);
 }

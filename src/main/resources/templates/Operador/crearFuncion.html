@@ -266,11 +266,10 @@
                             <div class="col-5">
                                 <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 0.5%">
                                     <u>Generos</u></h5>
-                                <label style="color: #FFFFFF"><b>Seleccione los generos</b></label>
+                                <label style="color: #FFFFFF"><b>Seleccione los géneros</b></label>
                                 <br>
-                                <select class="form-select" name="idgenero" size="3" multiple
-                                        aria-label="multiple select example" th:if="${sval==1}" required>
-                                    <option disabled>Seleccione los generos con (+Ctrl)</option>
+                                <select class="select2" name="idgenero" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:if="${sval==1}" required>
+                                    <option disabled>Seleccione los generos:</option>
                                     <option th:each="genero : ${listGeneros}"
                                             th:text="|${genero.nombre}|"
                                             th:value="${genero.id}"
@@ -278,9 +277,8 @@
                                 </select>
 
 
-                                <select class="form-select" name="idgenero" size="3" multiple
-                                         aria-label="multiple select example" th:unless="${sval==1}" required>
-                                    <option disabled>Seleccione los generos con (+Ctrl)</option>
+                                <select class="select2" name="idgenero" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
+                                    <option disabled>Seleccione los géneros:</option>
                                     <option th:each="genero : ${listGeneros}"
                                             th:text="|${genero.nombre}|"
                                             th:value="${genero.id}"></option>
@@ -300,18 +298,16 @@
                                     <u>Actores</u></h5>
                                 <label style="color: #FFFFFF"><b>Seleccione los actores</b></label>
                                 <br>
-                                <select class="form-select" name="idactor" size="3" multiple
-                                        aria-label="multiple select example" th:if="${sval==1}" required>
-                                    <option disabled>Seleccione los actores con (+Ctrl)</option>
+                                <select class="select2" name="idactor" multiple="multiple" style="width: 100%; background-color: #2b2b31"  th:if="${sval==1}" required>
+                                    <option disabled>Seleccione los actores:</option>
                                     <option th:each="actores,indice : ${listActores}"
                                             th:text="|${actores.nombres} ${actores.apellidos}|"
                                             th:value="${actores.id}"
-                                            th:selected="${#arrays.contains(actoresFuncion,actores.id)}"></option>></option>
+                                            th:selected="${#arrays.contains(actoresFuncion,actores.id)}"></option>
                                 </select>
 
-                                <select class="form-select" name="idactor" size="3" multiple
-                                        aria-label="multiple select example" th:unless="${sval==1}" required>
-                                    <option disabled>Seleccione los actores con (+Ctrl)</option>
+                                <select class="select2" name="idactor" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
+                                    <option disabled>Seleccione los actores:</option>
                                     <option th:each="actores,indice : ${listActores}"
                                             th:text="|${actores.nombres} ${actores.apellidos}|"
                                             th:value="${actores.id}"></option>
@@ -327,18 +323,16 @@
 
                                 <label  style="color: #FFFFFF"><b>Seleccione los directores</b></label>
                                 <br>
-                                <select class="form-select" name="iddirector" size="3" multiple
-                                        aria-label="multiple select example" th:if="${sval==1}" required>
-                                    <option disabled>Seleccione los Directores con (+Ctrl)</option>
+                                <select class="select2" name="iddirector" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:if="${sval==1}" required>
+                                    <option disabled>Seleccione los Directores:</option>
                                     <option th:each="directores : ${listDirectores}"
                                             th:text="|${directores.nombres} ${directores.apellidos}|"
                                             th:value="${directores.id}"
                                     th:selected="${#arrays.contains(directoresFuncion,directores.id)}"></option>
                                 </select>
 
-                                <select class="form-select" name="iddirector" size="3" multiple
-                                        aria-label="multiple select example" th:unless="${sval==1}" required>
-                                    <option disabled>Seleccione los Directores con (+Ctrl)</option>
+                                <select class="select2" name="iddirector" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
+                                    <option disabled>Seleccione los Directores:</option>
                                     <option th:each="directores : ${listDirectores}"
                                             th:text="|${directores.nombres} ${directores.apellidos}|"
                                             th:value="${directores.id}"></option>
@@ -489,6 +483,13 @@
                 document.getElementById("stockentradas").max = aforo;
                 $("#aforofuncion_obra").prop("disabled", false);
             }
+
+            $(document).ready(function() {
+                $('.select2').select2({
+                    placeholder: 'Integrantes',
+                    closeOnSelect: false
+                });
+            });
 
         </script>
 
