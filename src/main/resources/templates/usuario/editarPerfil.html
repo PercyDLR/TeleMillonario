@@ -12,6 +12,11 @@
                 max-height: 150px;
                 max-width: fit-content;
             }
+            #img_container img {
+                margin-inline: auto;
+                max-height: 150px;
+                max-width: fit-content;
+            }
         </style>
     </head>
 
@@ -29,6 +34,16 @@
                                 <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;">
                                     Editar Perfil
                                 </h3>
+
+                                <div class="row">
+                                    <div class="col-12" style="width: fit-content">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong th:text="${err}"></strong>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="row mt-5">
                                     <div class="col-md-8 col-12">
@@ -81,7 +96,7 @@
 
                                                     <!--Visor de Imagenes-->
                                                     <div id="img_container" style="text-align: center">
-                                                        <img class="perfil" th:src="@{/img/user.png}">
+                                                        <img class="perfil" th:src="${session.fotoPerfil}">
                                                     </div>
 
                                                     <!-- Boton para agregar imagenes -->
@@ -89,7 +104,7 @@
                                                         <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
                                                             Cambiar Foto
                                                         </label>
-                                                        <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg"
+                                                        <input name="imagen" type="file" id="file-input" accept="image/png, image/jpeg"
                                                                style="display: none" onchange="preview()">
                                                     </div>
                                                 </div>
@@ -163,6 +178,34 @@
         </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">
+
+            <script>
+                // El input donde se agregan las imágenes
+                let fileInput = document.getElementById("file-input");
+                // Donde se muestran las vistas previas
+                let imgContainer = document.getElementById("img_container");
+
+                // Agrega y quita imagenes de la vista previa e input
+                function preview(){
+
+                    // Deja solo las imágenes de la DB, para posteriormente agregar las nuevas
+                    imgContainer.innerHTML = ""
+
+                    for(i of fileInput.files){
+
+                        let reader = new FileReader();
+
+                        // Crea las imágenes de la vista previa
+                        reader.onload=()=>{
+                            let img = document.createElement("img");
+                            img.setAttribute("src",reader.result);
+                            imgContainer.appendChild(img);
+                        }
+                        reader.readAsDataURL(i);
+                    }
+                }
+
+            </script>
 
             <script type="text/javascript">
 

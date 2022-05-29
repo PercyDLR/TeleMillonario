@@ -1,7 +1,10 @@
 package com.example.telemillonario.controller.Usuario;
 
+import com.example.telemillonario.entity.Foto;
 import com.example.telemillonario.entity.Persona;
+import com.example.telemillonario.repository.FotoRepository;
 import com.example.telemillonario.repository.PersonaRepository;
+import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.validation.Perfil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
@@ -27,6 +31,12 @@ public class UsuarioController {
 
     @Autowired
     PersonaRepository personaRepository;
+
+    @Autowired
+    FileService fileService;
+
+    @Autowired
+    FotoRepository fotoRepository;
 
     @GetMapping("")
     public String paginaPrincipal(){
@@ -48,23 +58,21 @@ public class UsuarioController {
     }
 
     @PostMapping("/perfil/guardar")
-    public String guardarPerfilUsuario(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult, Model model, RedirectAttributes a, HttpSession session) {
+    public String guardarPerfilUsuario(@ModelAttribute("usuario") @Valid Persona usuario,
+                                       @RequestParam("imagen") MultipartFile img,
+                                       BindingResult bindingResult, Model model,
+                                       RedirectAttributes a, HttpSession session) {
         //@Validated(Perfil.class)
 
         Persona usuarioSesion = (Persona) session.getAttribute("usuario");
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getFieldError());
-
-            usuario.setNombres(usuarioSesion.getNombres());
-            usuario.setApellidos(usuarioSesion.getApellidos());
-            usuario.setDni(usuarioSesion.getDni());
-            usuario.setCorreo(usuarioSesion.getCorreo());
-
             return "usuario/editarPerfil";
         } else {
 
             if (usuario.getId().equals(usuarioSesion.getId())) {
 
+                // Validación Fechas
                 LocalDate fechaActual = LocalDate.now();
                 LocalDate fechaRegistrada = usuario.getNacimiento();
                 Period period = Period.between(fechaRegistrada, fechaActual);
@@ -83,8 +91,55 @@ public class UsuarioController {
                 usuarioSesion.setDireccion(usuario.getDireccion());
                 usuarioSesion.setTelefono(usuario.getTelefono());
 
+                // Validar imágen
+                switch(img.getContentType()){
+
+                    case "image/jpeg":
+                    case "image/png":
+                    case "application/octet-stream":
+                        break;
+                    default:
+                        model.addAttribute("err","Solo se deben de enviar imágenes");
+                        return "usuario/editarPerfil";
+                }
+
+                try {
+                    List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(usuario.getId());
+
+                    // Vacía las fotos en DB
+                    if (fotosEnDB.size() > 0){
+                        for (Foto foto : fotosEnDB){
+                            fotoRepository.delete(foto);
+                        }
+                    }
+
+                    Foto fotoPerfil = new Foto();
+
+                    // Guardado en el Contenedor de archivos
+                    MultipartFile newImg = fileService.formatearArchivo(img, "usuario");
+
+                    if (fileService.subirArchivo(newImg)){
+                        fotoPerfil.setRuta(fileService.obtenerUrl(newImg.getOriginalFilename()));
+                    }
+
+                    // Guardado de la Foto en DB
+                    fotoPerfil.setNumero(0);
+                    fotoPerfil.setIdpersona(usuario.getId());
+                    fotoPerfil.setEstado(1);
+
+                    fotoRepository.save(fotoPerfil);
+                    session.setAttribute("fotoPerfil",fotoPerfil.getRuta());
+
+                } catch (Exception e){
+                    e.getMessage();
+                    a.addFlashAttribute("msg",-2);
+                    return "redirect:/perfil";
+                }
+
                 //Actualiza la DB
                 personaRepository.save(usuarioSesion);
+
+
                 //Actualiza la Sesión
                 session.setAttribute("usuario",usuarioSesion);
 
