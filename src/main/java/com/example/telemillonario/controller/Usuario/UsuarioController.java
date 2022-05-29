@@ -103,42 +103,48 @@ public class UsuarioController {
                         return "usuario/editarPerfil";
                 }
 
-                try {
-                    List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(usuario.getId());
+                if (img.getOriginalFilename().length() != 0) {
+                    try {
+                        List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(usuario.getId());
+                        System.out.println("Error en list foto");
 
-                    // Vacía las fotos en DB
-                    if (fotosEnDB.size() > 0){
-                        for (Foto foto : fotosEnDB){
-                            fotoRepository.delete(foto);
+                        // Vacía las fotos en DB
+                        if (fotosEnDB.size() > 0){
+                            for (Foto foto : fotosEnDB){
+                                fotoRepository.delete(foto);
+                            }
                         }
+                        System.out.println("Error en vacia las fotos en DB");
+
+                        Foto fotoPerfil = new Foto();
+
+                        // Guardado en el Contenedor de archivos
+                        MultipartFile newImg = fileService.formatearArchivo(img, "usuario");
+                        System.out.println("Error en guardado en contenedor de archivos");
+
+                        if (fileService.subirArchivo(newImg)){
+                            fotoPerfil.setRuta(fileService.obtenerUrl(newImg.getOriginalFilename()));
+                        }
+                        System.out.println("Error en el ultimo if");
+
+                        // Guardado de la Foto en DB
+                        fotoPerfil.setNumero(0);
+                        fotoPerfil.setIdpersona(usuario.getId());
+                        fotoPerfil.setEstado(1);
+
+                        fotoRepository.save(fotoPerfil);
+                        session.setAttribute("fotoPerfil",fotoPerfil.getRuta());
+
+                    } catch (Exception e){
+                        e.getMessage();
+                        System.out.println(e.getMessage());
+                        a.addFlashAttribute("msg",-2);
+                        return "redirect:/perfil";
                     }
-
-                    Foto fotoPerfil = new Foto();
-
-                    // Guardado en el Contenedor de archivos
-                    MultipartFile newImg = fileService.formatearArchivo(img, "usuario");
-
-                    if (fileService.subirArchivo(newImg)){
-                        fotoPerfil.setRuta(fileService.obtenerUrl(newImg.getOriginalFilename()));
-                    }
-
-                    // Guardado de la Foto en DB
-                    fotoPerfil.setNumero(0);
-                    fotoPerfil.setIdpersona(usuario.getId());
-                    fotoPerfil.setEstado(1);
-
-                    fotoRepository.save(fotoPerfil);
-                    session.setAttribute("fotoPerfil",fotoPerfil.getRuta());
-
-                } catch (Exception e){
-                    e.getMessage();
-                    a.addFlashAttribute("msg",-2);
-                    return "redirect:/perfil";
                 }
 
                 //Actualiza la DB
                 personaRepository.save(usuarioSesion);
-
 
                 //Actualiza la Sesión
                 session.setAttribute("usuario",usuarioSesion);
