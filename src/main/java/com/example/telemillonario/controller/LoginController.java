@@ -280,30 +280,35 @@ public class LoginController {
             return "redirect:/anErrorHasOcurred";
 
         }else{
-            if(password.equals(confirmarContrasena)){
+            if((password.equals("") || password == null) || (confirmarContrasena.equals("") || confirmarContrasena == null)) {
+                redirectAttributes.addFlashAttribute("msg1", "Llene ambos campos de contraseña");
+                return "redirect:/resetPassword?token=" + tokensito;
+            } else {
+                if (password.equals(confirmarContrasena)) {
 
-                try {
-                    String user = "root";
-                    String pass = "root";
-                    String url = "jdbc:mysql://localhost:3306/telemillonario";
+                    try {
+                        String user = "root";
+                        String pass = "root";
+                        String url = "jdbc:mysql://localhost:3306/telemillonario";
 
-                    String sentenciaSQL = "DROP EVENT IF EXISTS telemillonario.eventoborrar"+personita.getId()+";";
-                    try (Connection conn = DriverManager.getConnection(url, user, pass);
-                         PreparedStatement pstmt = conn.prepareStatement(sentenciaSQL);) {
-                        System.out.println("llego aca");
-                        pstmt.execute();
-                        System.out.println("pase la prueba");
+                        String sentenciaSQL = "DROP EVENT IF EXISTS telemillonario.eventoborrar" + personita.getId() + ";";
+                        try (Connection conn = DriverManager.getConnection(url, user, pass);
+                             PreparedStatement pstmt = conn.prepareStatement(sentenciaSQL);) {
+                            System.out.println("llego aca");
+                            pstmt.execute();
+                            System.out.println("pase la prueba");
+                        }
+                    } catch (SQLException e) {
+                        return "redirect:/anErrorHasOcurred";
                     }
-                } catch (SQLException e) {
-                    return "redirect:/anErrorHasOcurred";
-                }
 
-                usuarioService.updatePassword(personita,password);
-                redirectAttributes.addFlashAttribute("msgexitoso","Su contraseña se ha cambiado satisfactoriamente.");
-                return "redirect:/sucessPassword";
-            }else{
-                redirectAttributes.addFlashAttribute("msg","Las constraseñas deben coincidir");
-                return "redirect:/resetPassword?token="+tokensito;
+                    usuarioService.updatePassword(personita, password);
+                    redirectAttributes.addFlashAttribute("msgexitoso", "Su contraseña se ha cambiado satisfactoriamente.");
+                    return "redirect:/sucessPassword";
+                } else {
+                    redirectAttributes.addFlashAttribute("msg2", "Las constraseñas deben coincidir");
+                    return "redirect:/resetPassword?token=" + tokensito;
+                }
             }
         }
 

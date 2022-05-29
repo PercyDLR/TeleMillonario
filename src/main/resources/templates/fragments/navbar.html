@@ -52,9 +52,9 @@
 
                                 <!-- Cuenta -->
                                 <ul class="header__nav cuenta" style="height: auto;">
-                                    <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px">
+                                    <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px; margin-rigth: 10px">
                                         <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                            <img style="height: 50px; margin-top: 0;border-radius: 50%" th:src="${session.fotoPerfil}"></a>
+                                            <img style="height: 50px; width: 50px; margin-top: 0;border-radius: 50%; object-fit:cover" th:src="${session.fotoPerfil}"></a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
