@@ -54,7 +54,7 @@
                                 <ul class="header__nav cuenta" style="height: auto;">
                                     <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px">
                                         <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                            <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
+                                            <img style="height: 50px; margin-top: 0;border-radius: 50%" th:src="${session.fotoPerfil}"></a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
@@ -166,7 +166,7 @@
                                         </ul>
                                     </li>
 
-                                    <li class="header__nav-item" style="margin-right: 5px;margin-bottom: 0">
+                                    <li class="header__nav-item" style="margin-bottom: 0">
                                         <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <div class="cuenta" style="size: 10px; color: white">
                                                 <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>

@@ -3505,7 +3505,7 @@ input.sign__input:disabled , input.sign__input:disabled{
 ==============================*/
 
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 4px;
   height: 2px;
 }
 

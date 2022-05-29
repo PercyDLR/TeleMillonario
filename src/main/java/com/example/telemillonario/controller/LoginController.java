@@ -1,7 +1,9 @@
 package com.example.telemillonario.controller;
 
+import com.example.telemillonario.entity.Foto;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Rol;
+import com.example.telemillonario.repository.FotoRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.repository.RolRepository;
 import com.example.telemillonario.service.DniAPI;
@@ -54,6 +56,9 @@ public class LoginController {
     @Autowired
     RolRepository rolRepository;
 
+    @Autowired
+    FotoRepository fotoRepository;
+
     @GetMapping("/prueba")
     public String prueba(){
         return "login/correoVerificacion";
@@ -102,6 +107,14 @@ public class LoginController {
             case "Operador":
                 return "redirect:/operador/funciones/lista";
             default:
+                String fotoPerfil;
+                try{
+                    fotoPerfil = fotoRepository.findByIdpersonaOrderByNumero(persona.getId()).get(0).getRuta();
+                } catch (Exception e){
+                    fotoPerfil = "/img/user.png";
+                }
+
+                session.setAttribute("fotoPerfil",fotoPerfil);
                 return "redirect:/";
         }
     }

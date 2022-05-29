@@ -122,12 +122,18 @@ public class ActorController {
                     // Se verifica que el tamaño no sea superior a 20 MB
                     if (tamanho > 1048576*20){
                         model.addAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
+                        if (actor.getId() != null){
+                            model.addAttribute("imagenes",fotoRepository.findByIdpersonaOrderByNumero(actor.getId()));
+                        }
                         return "Administrador/Actor/editarActor";
                     }
                     break;
 
                 default:
                     model.addAttribute("err","Solo se deben de enviar imágenes");
+                    if (actor.getId() != null){
+                        model.addAttribute("imagenes",fotoRepository.findByIdpersonaOrderByNumero(actor.getId()));
+                    }
                     return "Administrador/Actor/editarActor";
             }
         }
@@ -214,6 +220,7 @@ public class ActorController {
 
         if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")){
             model.addAttribute("err", "Se debe de tener al menos 1 imagen");
+            model.addAttribute("imagenes",fotoRepository.findByIdpersonaOrderByNumero(actor.getId()));
             return "Administrador/Actor/editarActor";
 
         } else if(imagenes[0].getContentType().equals("application/octet-stream")) {
