@@ -24,16 +24,16 @@
                             Programacion de funciones
                         </h1>
                     </div>
-                    <div class="col-3"></div>
+                    <div class="col-2"></div>
                     <form style="display: contents;" method="post" th:action="@{'/operador/funciones/buscar'}">
                         <div class="col-3"><div class="input-group" style="padding-top: 10px">
                             <input name="parametro" class="form-control text-light" type="text"
                                    style="text-align: center; height: auto ;background-color: transparent; border-radius: 5px; border-color: #7c7676"
                                    placeholder="Buscar por Nombre de Funcion" th:value="${parametro == null ? '' : parametro}">
                         </div></div>
-                        <div class="col-1">
+                        <div class="col-2">
 
-                            <div class="col-md-4 col-12 d-flex justify-content-center">
+                            <div class="col-12 d-flex justify-content-center">
                                 <button type="submit" class="filter__btn" style="margin-top:6px;">
                                     <a>Buscar</a>
                                 </button>
