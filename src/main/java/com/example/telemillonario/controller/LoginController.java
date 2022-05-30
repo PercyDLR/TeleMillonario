@@ -159,16 +159,20 @@ public class LoginController {
                 model.addAttribute("errCorreo", 1);
             }
         }
+
+         /*
+
+                Aca va lo de la API DNI con tod0 y vlaidation
+
+         */
+
+
         if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
             }
             return "/login/signup";
         } else {
-            //Obtenemos los datos del usuario que ingreso su DNI con la API
-            //UsuarioAPI infoUsuarioAPI = DniAPI.FormRestAPI(usuario.getDni());
-
-            //Aca va la validacion de lo obtenido de la API con lo ingresado por el usuario
 
             //generamos su bcript de contraseña
             String contraseniaBCrypt = new BCryptPasswordEncoder().encode(usuario.getContrasenia());
@@ -201,16 +205,8 @@ public class LoginController {
             return "redirect:/cambioDeContrasenia";
         }
 
-        //System.out.println("---------------");
-        /*if(persona.getPasswordToken().equalsIgnoreCase("")){
-            System.out.println("comillas");
-        }else if(persona.getPasswordToken() == null){
-            System.out.println("es null");
-        }else{
-            System.out.println("es ' ' ");
-        }*/
-        //if(persona.getPasswordToken().equalsIgnoreCase("")){
-        if(persona.getPasswordToken() == null){
+
+        if(persona.getPasswordToken() == null || persona.getPasswordToken().equals("")){
                 String token = RandomString.make(45);
 
                 usuarioService.updateResetPassword(token,correo);

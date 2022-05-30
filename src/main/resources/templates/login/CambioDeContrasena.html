@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head th:replace="fragments/header :: head('Cambio de Contraseña',_)"></head>
 
     <body class="body">
@@ -9,7 +9,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="sign__content">
-                                <form class="sign__form" th:action="@{/cambioPassword}" method="POST">
+                                <form class="sign__form" th:action="@{/cambioPassword}" method="POST" style="border-bottom: solid 3px #ff55a5;border-right: solid 3px #ff55a5;border-left: solid 3px #ff55a5;">
+
                                     <a th:href="@{/}" class="sign__logo">
                                         <img th:src="@{/img/tele.png}" alt="logo">
                                     </a>
@@ -29,6 +30,8 @@
                                 </form>
                                 <a th:href="@{/prueba}">Prueba</a>
                             </div>
+
+
                         </div>
                     </div>
                 </div>

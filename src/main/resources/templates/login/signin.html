@@ -17,7 +17,7 @@
 								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 							</div>
 
-							<form class="sign__form" th:action="@{/processLogin}" method="POST">
+							<form class="sign__form" th:action="@{/processLogin}" method="POST" style="border-bottom: solid 3px #ff55a5;border-right: solid 3px #ff55a5;border-left: solid 3px #ff55a5;">
 								<a th:href="@{/}" class="sign__logo">
 									<img th:src="@{/img/tele.png}" alt="logo">
 								</a>
@@ -27,14 +27,10 @@
 								<div class="sign__group" style="margin-bottom: 0">
 									<input type="password" name="password" class="sign__input" placeholder="Contraseña">
 								</div>
-								<!--div class="sign__group sign__group--checkbox">
-									<input id="remember" name="remember" type="checkbox" checked="checked">
-									<label for="remember">Recuérdame</label>
-								</div-->
-								<div class="invalid-feedback d-block" th:if="${param.error}">Correo o contraseña incorrectos</div>
+								<div class="invalid-feedback d-block" th:if="${param.error}" style="text-align: center">Correo o contraseña incorrectos</div>
 								<button class="sign__btn" type="submit">Ingresar</button>
 
-								<span class="sign__text">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 5px"></span>Regístrate</a></span>
+								<span class="sign__text" style="text-align: center">¿No tienes una cuenta?<br><br><a th:href="@{/crearCuenta}"><span style="margin-right: 5px"></span>Regístrate</a></span>
 								<span class="sign__text" style="margin-top: 5px;">ó</span>
 								<a class="sign__btn__google" href="/oauth2/authorization/google" style="margin-top: 5px;"><img th:src="@{/img/iconGoogle.png}" alt="Google" width="20px" height="20px" style="margin-top: 0px;margin-right: 9px;">Regístrate con Google</a>
 
