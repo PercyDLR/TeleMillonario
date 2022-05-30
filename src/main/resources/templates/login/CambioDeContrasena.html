@@ -20,6 +20,9 @@
                                         <span style="font-family: 'Barlow', sans-serif; color:#e64166">Contraseña</span>
                                     </h1>
                                     <h4 th:if="${msgexito != null}" th:text="${msgexito}" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
+                                    <h4 th:if="${msgexito != null}" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;">
+                                        Su enlace expirará en <span id="timer" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></span> minutos, por lo que deberá cambiar su contraseña lo más pronto posible
+                                    </h4>
                                     <h4 th:if="${msg != null}" th:text="${msg}" style="color:rgba(255,30,0,0.93);opacity:0.8;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
                                     <div class="sign__group" style="margin-top: 15px">
                                         <input type="text" class="sign__input" style="text-align:center;width: 380px;padding: 0px 48px" name="correo" placeholder="Ingrese su correo registrado" autofocus>
@@ -37,6 +40,44 @@
                 </div>
             </div>
         </div>
-        <div th:replace="fragments/footer :: js(_)"></div>
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script>
+                document.getElementById('timer').innerHTML =
+                    15 + ":" + 01;
+                startTimer();
+
+
+                function startTimer() {
+                    var presentTime = document.getElementById('timer').innerHTML;
+                    var timeArray = presentTime.split(/[:]+/);
+                    var m = timeArray[0];
+                    var s = checkSecond((timeArray[1] - 1));
+                    if (s == 59) {
+                        m = m - 1
+                    }
+                    if (m < 0) {
+                        return
+                    }
+
+                    document.getElementById('timer').innerHTML =
+                        m + ":" + s;
+                    console.log(m)
+                    setTimeout(startTimer, 1000);
+
+                }
+
+                function checkSecond(sec) {
+                    if (sec < 10 && sec >= 0) {
+                        sec = "0" + sec
+                    }
+                    ; // add zero in front of numbers < 10
+                    if (sec < 0) {
+                        sec = "59"
+                    }
+                    ;
+                    return sec;
+                }
+            </script>
+        </div>
     </body>
 </html>

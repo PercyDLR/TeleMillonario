@@ -59,11 +59,6 @@ public class LoginController {
     @Autowired
     FotoRepository fotoRepository;
 
-    @GetMapping("/prueba")
-    public String prueba(){
-        return "login/correoVerificacion";
-    }
-
     @GetMapping("/list")
     public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session){
         OAuth2AuthorizedClient client = auth2AuthorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(),authentication.getName());
@@ -125,7 +120,7 @@ public class LoginController {
                                    @RequestParam(value = "recontrasenia", required = false) String recontrasenia,
                                    @RequestParam(value = "google", required = false) Integer google,
                                    Model model,
-                                   RedirectAttributes a) throws InterruptedException, IOException {
+                                   RedirectAttributes a) throws InterruptedException, IOException, MessagingException {
 
         boolean errorRecontrasenia = false;
         if (recontrasenia.equals("") || recontrasenia == null) {
@@ -184,6 +179,11 @@ public class LoginController {
             usuario.setEstado(1);
             personaRepository.save(usuario);
             a.addFlashAttribute("msg", 1);
+
+            try {
+                sendEmailSuccessRegistration(usuario.getCorreo());
+            } catch (MessagingException | UnsupportedEncodingException e) {
+            }
 
             return "redirect:/login";
         }
@@ -331,6 +331,32 @@ public class LoginController {
                 + "<p>Haga click en el siguiente link para cambiar su contraseña </p>"
                 + "<p><b><a href="+ resetPasswordLink + ">Cambiar contraseña</a></b></p>"
                 + "<p>Ignorar este mensaje , si usted no ha solicitado dicho cambio.</p>";
+
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+        mailSender.send(message);
+
+    }
+
+    private void sendEmailSuccessRegistration(String correo) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        String longin = "http://localhost:8080/login";
+
+        helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
+        helper.setTo(correo);
+
+        String subject = "¡Bienvenido a Telemillonario!";
+
+        String content = "<p>Cordiales Saludos: </p>"
+                + "<p>Usted se ha registrado exitosamente a nuestra plataforma </p>"
+                + "<p>Ahora usted podrá realizar lo siguiente: </p>"
+                + "<p> - Acceso a la compra de boletos y visualización de su carrito de compras<p>"
+                + "<p> - Acceso a su historial de compras, junto a las funciones a las que ha asistido<p>"
+                + "<p> - Calificar la obra a la que ha asistido, a su director y a sus actores"
+                + "<p>Ingrese sesión mediante el siguiente <b><a href=" + longin +">enlace</a></b><p>";
 
         helper.setSubject(subject);
         helper.setText(content,true);
