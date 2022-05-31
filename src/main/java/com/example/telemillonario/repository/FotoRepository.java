@@ -56,4 +56,8 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "limit ?3,?4")
     List<Foto> buscarSedePorDistrito(String distrito,int estado,int pag, int salasporpag);
 
+    @Query(nativeQuery = true, value = "select * from telemillonario.fotos where " +
+            "idsede=?1 and idfuncion IS NULL")
+    List<Foto> buscarFotosSede(int idfuncion);
+
 }

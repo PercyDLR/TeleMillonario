@@ -1,51 +1,30 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/bootstrap-reboot.min.css">
-<link rel="stylesheet" href="css/bootstrap-grid.min.css">
-<link rel="stylesheet" href="css/owl.carousel.min.css">
-<link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
-<link rel="stylesheet" href="css/nouislider.min.css">
-<link rel="stylesheet" href="css/ionicons.min.css">
-<link rel="stylesheet" href="css/plyr.css">
-<link rel="stylesheet" href="css/photoswipe.css">
-<link rel="stylesheet" href="css/default-skin.css">
-<link rel="stylesheet" href="css/main.css">
-<!-- Favicons -->
-<link rel="icon" type="image/png" href="icon/favicon-32x32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="icon/favicon-32x32.png">
-<link rel="apple-touch-icon" sizes="72x72" href="icon/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="icon/apple-touch-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="144x144" href="icon/apple-touch-icon-144x144.png">
-<meta name="description" content="">
-<meta name="keywords" content="">
-<meta name="author" content="Dmitry Volkov">
-<title>Editar Sede</title>
+    <head th:replace="fragments/header :: head('Crear Sede',~{::style})">
         <style>
-            .overlay {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                transition: opacity 500ms;
-                visibility: hidden;
-                opacity: 0;
+            input::placeholder {
+                color: #000000;
             }
-            #popup:target{
-                visibility: visible; /* Se regresa a hidden para ocultar */
-                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            div.card__cover img {
+                margin-inline: auto;
+                max-height: 150px;
+                max-width: fit-content;
+            }
+            #images{
+                width: 90%;
+                position: relative;
+                margin: auto;
+                display: flex;
+            }
+            .owl-dots{
+                height: 0;
             }
         </style>
-</head>
-
-<body class="body" style="float: left; background: url('../img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
+    </head>
+    <body >
+        <!-- header -->
+        <div th:replace="fragments/navbar :: admin('crear')"></div>
+        <!-- end header -->
     <div>
         <div class="header__wrap " style="border-bottom: solid 3px #ff55a5;">
             <div class="container">
@@ -95,83 +74,144 @@
             <div class="container">
                 <div class="row align-items-stretch justify-content-center no-gutters">
                     <div class="col-md-7">
-                        <div class="form h-100 contact-wrap p-5" style="border-radius: 40px;border: 20px solid #292524">
-                            <h3 class="text-center" style="padding-bottom: 30px;font-size: 7rem;font-size: 93px;color: white;font-family: 'Open Sans';font-weight: 900;"><b>Editar Sede</b></h3>
-                            <form class="mb-5" method="post" id="contactForm" name="contactForm">
+                        <form class="mb-5" method="post" th:action="@{'/admin/sedes/guardar'}" th:object="${sede}" enctype="multipart/form-data">
+                            <div class="form h-100 contact-wrap p-5" style="border-radius: 40px;border: 20px solid #292524">
+                                <h3 class="text-center" th:text="${sede.id == 0 ? 'Crear Sede' : 'Editar Sede'}" style="padding-bottom: 30px;font-size: 7rem;font-size: 93px;color: white;font-family: 'Open Sans';font-weight: 900;"><b>Editar Sede</b></h3>
+
                                 <div class="row">
+                                    <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
+
+                                        <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
+                                        <option th:each="imagen : ${imagenes}"
+                                                th:id="|img-${imagen.id}|"
+                                                th:value="${imagen.id}"></option>
+                                    </select>
+                                    <input type="hidden" th:field="*{id}">
                                     <div class="col-md-6 form-group mb-3">
                                         <label class="col-form-label"><b>Nombre</b></label>
-                                        <input type="text" class="form-control" name="name" value="Gran Teatro Nacional">
+                                        <input type="text" class="form-control" th:field="*{nombre}">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label class="col-form-label"><b>Dirección</b></label>
-                                        <input type="text" class="form-control" name="email"value="La Molina" >
+                                        <input type="text" class="form-control" th:field="*{direccion}">
                                     </div>
                                 </div>
                                 <br>
                                 <div class="row">
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Coordenadas</b></label>
-                                        <input type="text" class="form-control" name="name" value="41°24'12.2'N 2°10'26.5'E">
+                                        <input type="text" class="form-control" th:field="*{coordenadas}">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Teléfono</b></label>
-                                        <input type="text" class="form-control" name="email" value="123123123">
+                                        <input type="text" class="form-control" th:field="*{telefono}">
                                     </div>
                                 </div>
                                 <br>
                                 <div class="row">
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Número de Salas</b></label>
-                                        <input type="text" class="form-control" name="name" value="12">
+                                        <input type="text" class="form-control" th:field="*{numerosalas}">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Distrito</b></label>
-                                        <input type="text" class="form-control" name="email" value="La Molina">
+                                        <select  th:field="*{iddistrito}" class="col-12" style="display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff; background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                            <option th:each="distrito : ${listdistritos}"
+                                                    th:text="|${distrito.getNombre()} |"
+                                                    th:value="${distrito.getId()}"></option>
+                                        </select>
                                     </div>
                                 </div>
                                 <br>
-                                <div class="row">
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Estado</b></label>
-                                        <select class="form-select" name="department" style="display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option value ="1" selected>Disponible</option>
-                                            <option value ="2">No Disponible</option>
-                                        </select>
-                                    </div>
+                                <div th:if="${sede.id == 0}" class="sign__group sign__group--checkbox" style="text-align: center">
+                                    <input class="form-check-input" type="checkbox" value="1"
+                                           id="disponibilidad" name="estado">
+                                    <label for="disponibilidad">
+                                        La sede se mostrará en estado disponible una vez sea creada
+                                    </label>
+                                </div>
 
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Fotos</b></label>
-                                        <br>
-                                        <div class="drag-drop" style="margin:0;background-image: url('img/foto-eliminar.jpeg');display: flex;justify-content: center;align-items: center;">
-                                            <div>
-                                                <button>
-                                                    <a class="circulo_botones" href="#">
-                                                        <img style="height: 27px;margin-left: 11px;margin-top: 11px;" src="img/IconTrash2.png">
-                                                    </a>
+                                <div th:unless="${sede.id == 0}" class="sign__group sign__group--checkbox" style="text-align: center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="estado" value="1"
+                                               id="disponible" th:checked="${sede.estado == 1}">
+                                        <label class="form-check-label text-light" for="disponible">
+                                            Sala disponible
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input text-light" type="radio" name="estado" value="0"
+                                               id="nodisponible" th:checked="${sede.estado == 0}">
+                                        <label class="form-check-label text-light" for="nodisponible">
+                                            Sala no disponible
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!--Selector Imagenes-->
+                                <div class="col-md-6 col-8" style="padding-left: 10px">
+
+                                    <!--Encabezado-->
+                                    <section class="section section--first" style="margin: 0; padding:10px">
+                                        <div class="row">
+                                            <div class="col-md-9 col-6">
+                                                <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
+                                            </div>
+                                            <div class="col-md-3 col-2">
+                                                <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
+                                                    <i class="icon ion-ios-arrow-round-back"></i>
+                                                </button>
+                                                <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
+                                                    <i class="icon ion-ios-arrow-round-forward"></i>
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="drag-drop" style="margin:0">
-                                            <input type="file" multiple="multiple" id="photo" />
-                                            <span class="fa-stack fa-2x">
-                                            <i class="fa fa-cloud fa-stack-2x bottom pulsating"></i>
-                                            <i class="fa fa-circle fa-stack-1x top medium"></i>
-                                            <i class="fa fa-arrow-circle-up fa-stack-1x top"></i>
-                                            </span>
-                                            <span class="desc">Pulse aquí para añadir archivos</span>
-                                        </div>
+                                    </section>
 
+                                    <div>
+                                        <div class="row align-items-center">
+                                            <div class="col-8 col-sm-8">
+
+                                                <!--Visor de Imagenes-->
+                                                <div class="owl-carousel photo__carousel" id="img_container">
+
+                                                    <div class="item" th:each="foto : ${imagenes}">
+                                                        <div th:id="|old-${foto.numero-1}|" class="card__cover">
+
+                                                            <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
+
+                                                            <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
+                                                                <i class="bi bi-x" style="color: white"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Boton para agregar imagenes -->
+                                                <div class="card__wrap">
+                                                    <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
+                                                        Nueva Foto
+                                                    </label>
+                                                    <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg, image/jpg"
+                                                           style="display: none" onchange="preview()" multiple >
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
+
+
                                 <br>
                                 <div style="display: flex;justify-content: center">
                                     <button style="border-radius: 20px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" th:href="@{/admin}">Cancelar</a></button>
-                                    <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" href="#popup">Registrar</a></button>
+                                    <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;" th:text="${sede.id == 0? 'Registrar': 'Actualizar'}" class="sign__btn" type="submit"><a style="color: white" >Registrar</a></button>
                                 </div>
-                            </form>
-                        </div>
+
+                            </div>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -196,17 +236,123 @@
         </div>
     </div>
 
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.mousewheel.min.js"></script>
-    <script src="js/jquery.mCustomScrollbar.min.js"></script>
-    <script src="js/wNumb.js"></script>
-    <script src="js/nouislider.min.js"></script>
-    <script src="js/plyr.min.js"></script>
-    <script src="js/jquery.morelines.min.js"></script>
-    <script src="js/photoswipe.min.js"></script>
-    <script src="js/photoswipe-ui-default.min.js"></script>
-    <script src="js/main.js"></script>
+        <div th:replace="fragments/footer :: js(~{::script})">
+
+
+            <script>
+                // El input donde se agregan las imágenes
+                let fileInput = document.getElementById("file-input");
+                // Donde se muestran las vistas previas
+                let imgContainer = document.getElementById("img_container");
+
+                // Agrega y quita imagenes de la vista previa e input
+                function preview(){
+
+                    for(i of fileInput.files){
+
+                        let reader = new FileReader();
+
+                        // Contenedor de la imagen + botones
+                        let item = document.createElement("div");
+                        item.className="item";
+
+                        // Overlay para eliminar
+                        let cover = document.createElement("div");
+                        cover.className="card__cover";
+
+                        // Botón de eliminar
+                        let button = document.createElement("a");
+                        button.className = "card__play new";
+                        button.setAttribute("style","cursor: pointer")
+                        cover.appendChild(button)
+
+                        // Activar la opción de borrar imagen
+                        button.onclick = function (){
+
+                            const dt = new DataTransfer()
+
+                            //lista con todas las fotos NUEVAS (Agregadas al editar) en el imgContainer
+                            let items = document.querySelectorAll('div.owl-item:not( .cloned) > div > div > a.new');
+
+                            // console.log("Antes", fileInput.files)
+
+                            // Se quita del input la imagen mostrada
+                            for (let i = 0; i < items.length; i++) {
+                                let item = items[i].parentElement.parentElement.parentElement;
+
+                                if (item.className !== "owl-item active") {
+                                    let file = fileInput.files[i];
+                                    // console.log(file, item.className)
+                                    dt.items.add(file);
+                                }
+                            }
+                            // Se actualiza el input
+                            fileInput.files = dt.files;
+                            // console.log("Despues",fileInput.files)
+
+                            // Se elimina la imagen en la vista previa
+                            cover.parentElement.parentElement.remove();
+                            refresh()
+                        };
+
+                        // Icono de la cruz
+                        let close = document.createElement("i");
+                        close.className = "bi bi-x";
+                        close.setAttribute("style","color: white")
+
+                        button.appendChild(close)
+
+                        // Crea las imágenes de la vista previa
+                        reader.onload=()=>{
+                            let img = document.createElement("img");
+                            img.setAttribute("src",reader.result);
+
+                            cover.appendChild(img);
+                        }
+                        item.appendChild(cover)
+
+                        imgContainer.appendChild(item);
+                        reader.readAsDataURL(i);
+                    }
+
+                    // Vuelve a cargar el deslizador
+                    refresh()
+                }
+
+                // Actualiza la vista previa, despues de agregar o quitar imágenes
+                function refresh() {
+                    $('.owl-carousel').trigger('destroy.owl.carousel');
+                    var $owl = $('.owl-carousel').owlCarousel({
+                        loop: true,
+                        smartSpeed: 600,
+                        margin: 60,
+                        items: 1
+                    });
+                    $owl.trigger('refresh.owl.carousel');
+                }
+
+                // Marca una de las imágenes ya en la DB para ser eliminada
+                function eliminarEnDB(id){
+
+                    // Se busca en un select la opción correspondiente a la imagen clickeada
+                    let opcion = document.getElementById("img-"+id);
+                    opcion.selected = "selected";
+
+                    // Se busca la imagen en la vista previa y se elimina
+                    let item = imgContainer.getElementsByClassName("active").item(0);
+                    //console.log(item)
+                    item.remove();
+
+                    refresh()
+                }
+
+
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
 </body>
 </html>
