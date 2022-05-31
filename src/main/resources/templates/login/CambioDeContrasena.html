@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="sign__content">
-                                <form class="sign__form" th:action="@{/cambioPassword}" method="POST" style="border-bottom: solid 3px #ff55a5;border-right: solid 3px #ff55a5;border-left: solid 3px #ff55a5;">
+                                <form class="sign__form" th:action="@{/cambioPassword}" method="POST">
 
                                     <a th:href="@{/}" class="sign__logo">
                                         <img th:src="@{/img/tele.png}" alt="logo">
@@ -52,7 +52,7 @@
                     var timeArray = presentTime.split(/[:]+/);
                     var m = timeArray[0];
                     var s = checkSecond((timeArray[1] - 1));
-                    if (s == 59) {
+                    if (s === 59) {
                         m = m - 1
                     }
                     if (m < 0) {
@@ -70,11 +70,10 @@
                     if (sec < 10 && sec >= 0) {
                         sec = "0" + sec
                     }
-                    ; // add zero in front of numbers < 10
+                    // add zero in front of numbers < 10
                     if (sec < 0) {
                         sec = "59"
                     }
-                    ;
                     return sec;
                 }
             </script>

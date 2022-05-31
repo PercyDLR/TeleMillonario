@@ -8,14 +8,17 @@
         <!-- JS -->
         <div th:fragment="js(extra)">
             <th:block th:replace="${extra}"/>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+                    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+                    crossorigin="anonymous"></script>
+            <!--
             <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+            -->
             <script sec:authorize="hasAuthority('Operador')" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
             <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
             <script th:src="@{/js/owl.carousel.min.js}"></script>
             <script th:src="@{/js/main.js}"></script>
-            <!--
             <script th:src="@{/js/jquery.morelines.min.js}"></script>
-            -->
         </div>
 
     </body>
