@@ -860,7 +860,7 @@ public class FuncionesController {
                             foto.setFuncion(func);
 
                             foto.setIdpersona(persona.getId());
-                            foto.setIdsede(persona.getIdsede().getId());
+                            foto.setSede(persona.getIdsede());
                             foto.setNumero(i);
                             foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
                             fotoRepository.save(foto);
@@ -995,7 +995,7 @@ public class FuncionesController {
                             foto.setFuncion(func);
 
                             foto.setIdpersona(persona.getId());
-                            foto.setIdsede(persona.getIdsede().getId());
+                            foto.setSede(persona.getIdsede());
                             foto.setNumero(i);
                             foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
                             fotoRepository.save(foto);

@@ -30,7 +30,7 @@ public class SalaController {
     DistritoRepository distritoRepository;
 
     // Variables Importantes (Afuera para más orden)
-    int idsede=7;
+//    int idsede=7;
     float salasporpagina=5;
 
     @GetMapping(value = {"", "/","/lista"})
@@ -38,36 +38,46 @@ public class SalaController {
                            @RequestParam(value="buscador",required = false,defaultValue = "") String buscador,
                            @RequestParam(value="ord",required = false,defaultValue = "") String ord,
                            @RequestParam(value = "pag",required = false) String pag,
+                            @RequestParam(value = "idsede",required = false) String idsede,
                            Model model){
-
-        model.addAttribute("sede", sedeRepository.findById(idsede).get());
-
-        int numero = !parametro.isBlank() ? Integer.parseInt(parametro) : 0;
-        int estado = buscador.equals("disponible") ? 1 : buscador.equals("nodisponible") ? 0 : 2;
-
-        int pagina;
         try{
-            pagina = Integer.parseInt(pag);
-        }catch(Exception e) {
-            pagina=0;
+           int sedeid=Integer.parseInt(idsede);
+            model.addAttribute("sede", sedeRepository.findById(sedeid).get());
+            int numero = !parametro.isBlank() ? Integer.parseInt(parametro) : 0;
+            int estado = buscador.equals("disponible") ? 1 : buscador.equals("nodisponible") ? 0 : 2;
+
+            int pagina;
+            try{
+                pagina = Integer.parseInt(pag);
+            }catch(Exception e) {
+                pagina=0;
+            }
+            int cantSalas = salaRepository.cantSalas(sedeid,numero,estado);
+
+            List<Sala> listaSalas = switch (ord) {
+                case "mayor" -> salaRepository.buscarSalasDesc(sedeid, numero, estado, (int)salasporpagina*pagina, (int)salasporpagina);
+                case "menor" -> salaRepository.buscarSalasAsc(sedeid, numero, estado, (int)salasporpagina*pagina, (int)salasporpagina);
+                default -> salaRepository.buscarSalas(sedeid, numero, estado, (int)salasporpagina*pagina, (int)salasporpagina);
+            };
+
+            model.addAttribute("parametro", parametro);
+            model.addAttribute("buscador", buscador);
+            model.addAttribute("ord",ord);
+
+            model.addAttribute("pagActual",pagina);
+            model.addAttribute("pagTotal",(int) Math.ceil(cantSalas/salasporpagina));
+            model.addAttribute("idsede",sedeid);
+            model.addAttribute("listSalas", listaSalas);
+            return "Administrador/Sala/listaSalas";
+        }catch (NumberFormatException nfe){
+            model.addAttribute("status",404);
+            model.addAttribute("error","");
+            return "error";
         }
-        int cantSalas = salaRepository.cantSalas(idsede,numero,estado);
 
-        List<Sala> listaSalas = switch (ord) {
-            case "mayor" -> salaRepository.buscarSalasDesc(idsede, numero, estado, (int)salasporpagina*pagina, (int)salasporpagina);
-            case "menor" -> salaRepository.buscarSalasAsc(idsede, numero, estado, (int)salasporpagina*pagina, (int)salasporpagina);
-            default -> salaRepository.buscarSalas(idsede, numero, estado, (int)salasporpagina*pagina, (int)salasporpagina);
-        };
 
-        model.addAttribute("parametro", parametro);
-        model.addAttribute("buscador", buscador);
-        model.addAttribute("ord",ord);
 
-        model.addAttribute("pagActual",pagina);
-        model.addAttribute("pagTotal",(int) Math.ceil(cantSalas/salasporpagina));
 
-        model.addAttribute("listSalas", listaSalas);
-        return "Administrador/Sala/listaSalas";
     }
 
     @PostMapping("/filtrar")
@@ -75,9 +85,10 @@ public class SalaController {
                     @RequestParam(value="buscador", defaultValue = "") String buscador,
                     @RequestParam(value="ord", defaultValue = "") String ord,
                     @RequestParam(value = "pag",required = false) String pag,
+                    @RequestParam(value = "idsede",required = false) String idsede,
                     RedirectAttributes attr){
 
-        return "redirect:/admin/salas?parametro="+parametro+"&buscador="+buscador+"&ord="+ord+"&pag="+pag;
+        return "redirect:/admin/salas?parametro="+parametro+"&buscador="+buscador+"&ord="+ord+"&idsede="+idsede+"&pag="+pag;
     }
 
     @GetMapping("/nuevaSala")

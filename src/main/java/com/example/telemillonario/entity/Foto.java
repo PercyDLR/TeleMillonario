@@ -22,9 +22,9 @@ public class Foto {
     @JoinColumn(name = "idpersona")
     private Integer idpersona;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idsede")
-    private Integer idsede;
+    private Sede sede;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idfuncion")
@@ -38,12 +38,12 @@ public class Foto {
         this.idpersona = idpersona;
     }
 
-    public Integer getIdsede() {
-        return idsede;
+    public Sede getSede() {
+        return sede;
     }
 
-    public void setIdsede(Integer idsede) {
-        this.idsede = idsede;
+    public void setSede(Sede sede) {
+        this.sede = sede;
     }
 
     public Funcion getFuncion() {

@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <form method="post" th:action="@{'/admin/salas/filtrar'}">
+                <form method="post" th:action="@{'/admin/salas/filtrar?idsede='+ ${idsede}}">
                     <div class="row justify-content-center">
                         <div class="col-md-4 col-12">
 
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <br>
-                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/salas?parametro='+${parametro}+'&buscador='+${buscador}+'&ord='+${ord}+'&')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/salas?parametro='+${parametro}+'&idsede='+${idsede}+'&buscador='+${buscador}+'&ord='+${ord}+'&')"></div>
             </div>
         </div>
 

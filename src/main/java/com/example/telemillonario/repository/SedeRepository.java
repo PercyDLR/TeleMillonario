@@ -1,7 +1,9 @@
 package com.example.telemillonario.repository;
 
+import com.example.telemillonario.entity.Sala;
 import com.example.telemillonario.entity.Sede;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,4 +12,8 @@ import java.util.List;
 public interface SedeRepository extends JpaRepository<Sede,Integer> {
 
     List<Sede> findByEstado(int estado);
+
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.sede where estado=?1")
+    Integer buscarSedesTotal(int estado);
+
 }

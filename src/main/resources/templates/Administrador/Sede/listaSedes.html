@@ -55,23 +55,24 @@
                     </div>
                 </div>
 
-                <form method="post" th:action="@{/admin}">
+                <form method="post" th:action="@{/admin/sedes/buscar}">
                     <div class="row justify-content-center">
                         <div class="col-md-6 col-12">
 
                             <div class="input-group d-flex justify-content-center" style="margin-top: 50px">
                                 <div class="box" style="margin-bottom: 30px">
-                                    <input type="text" placeholder="Buscar Sede" name="search" class="src" style="width: 300px;color: #000000">
+                                    <input type="text" name="parametro" placeholder="Buscar Sede" class="src" style="width: 300px;color: #000000"
+                                           th:value="${parametro == null ? 'Ingrese lo que desea buscar' : parametro}">
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-12">
                             <div class="input-group" style="margin-top: 50px">
 
-                                <select class="col-md-6 col-6 form-select" name="department" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+                                <select  class="col-md-6 col-6 form-select" name="buscador" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
                                     <option>Filtrar por:</option>
-                                    <option value ="1">Nombre</option>
-                                    <option value ="2">Distrito</option>
+                                    <option th:selected="${buscador eq 'nombre'}" value="nombre">Nombre</option>
+                                    <option th:selected="${buscador eq 'distrito'}" value="distrito">Distrito</option>
                                 </select>
 
                                 <div class="col-md-6 col-6 d-flex justify-content-center">
@@ -100,15 +101,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/sedes/GranTeatroNacional.png"></center></th>
-                                    <td>Gran Teatro Nacional</td>
-                                    <td>San Miguel</td>
-                                    <td>Av. Grau</td>
-                                    <td>Tuesday, November 16th, 2004</td>
+                                <tr th:each="foto : ${listaSedes}">
+                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" th:src="${foto.ruta}"></center></th>
+                                    <td th:text="${foto.getSede().getNombre()}">Gran Teatro Nacional</td>
+                                    <td th:text="${foto.getSede().getIddistrito().getNombre()}">San Miguel</td>
+                                    <td th:text="${foto.getSede().getDireccion()}">Av. Grau</td>
+                                    <td th:text="${foto.getSede().getCoordenadas()}"></td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" th:href="@{/admin/salas}">
+                                            <a class="circulo_botones" th:href="@{'/admin/salas'+'?idsede='+ ${foto.getSede().getId()}}">
                                                 <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
@@ -128,124 +129,13 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/sedes/TeatroMunicipalLima.png"></center></th>
-                                    <td>Teatro Municipal de Lima</td>
-                                    <td>Centro de Lima</td>
-                                    <td>Av. Nicolás de Piérola</td>
-                                    <td>Tuesday, November 16th, 2004</td>
-                                    <td>
-                                        <button style="cursor: pointer">
-                                            <a class="circulo_botones" th:href="@{/admin/salas}">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" th:href="@{/admin/sedes/editar}">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/sedes/MicroteatroLima.png"></center></th>
-                                    <td>Micro Teatro Lima</td>
-                                    <td>Comas</td>
-                                    <td>Tuesday, November 16th, 2004</td>
-                                    <td>Tuesday, November 16th, 2004</td>
-                                    <td>
-                                        <button style="cursor: pointer">
-                                            <a class="circulo_botones" th:href="@{/admin/salas}">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" th:href="@{/admin/sedes/editar}">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/sedes/TeatroMunicipalTacna.png"></center></th>
-                                    <td>Teatro Municipal Tacna</td>
-                                    <td>Callao</td>
-                                    <td>Tuesday, November 16th, 2004</td>
-                                    <td>Tuesday, November 16th, 2004</td>
-                                    <td>
-                                        <button style="cursor: pointer">
-                                            <a class="circulo_botones" th:href="@{/admin/salas}">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" th:href="@{/admin/sedes/editar}">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" src="img/foto-eliminar.jpeg"></center></th>
-                                    <td>Teatro Canuto</td>
-                                    <td>Lince</td>
-                                    <td>Tuesday, November 16th, 2004</td>
-                                    <td>Tuesday, November 16th, 2004</td>
-                                    <td>
-                                        <button style="cursor: pointer">
-                                            <a class="circulo_botones" th:href="@{/admin/salas}">
-                                                <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" th:href="@{/admin/sedes/editar}">
-                                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
-                                            </a>
-                                        </button>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <br>
-                <div th:replace="fragments/paginacion :: paginacion(0,4,'/admin?')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/sedes?')"></div>
 
             </div>
         </div>
