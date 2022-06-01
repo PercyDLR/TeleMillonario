@@ -23,7 +23,7 @@
 
                     <div class="col-md-2 col-12 d-flex justify-content-center">
                         <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
-                            <a th:href="@{/agregarSede}">
+                            <a th:href="@{/admin/sedes/crear}">
                                 <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
                             </a>
                         </button>
@@ -116,7 +116,7 @@
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" th:href="@{/admin/sedes/editar}">
+                                            <a class="circulo_botones" th:href="@{'/admin/sedes/editar'+'?idsede='+ ${foto.getSede().getId()}}">
                                                 <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>

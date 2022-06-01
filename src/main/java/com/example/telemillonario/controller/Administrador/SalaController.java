@@ -144,12 +144,12 @@ public class SalaController {
             }
             a.addFlashAttribute("identificador", sala.getIdentificador());
             salaRepository.save(sala);
-            return "redirect:/admin/salas";
+            return "redirect:/admin/salas?idsede="+sala.getIdsede().getId();
         }
     }
 
     @GetMapping("/disponibilidad")
-    public String disponibilidadSala(@RequestParam("id") int id, RedirectAttributes a) {
+    public String disponibilidadSala(@RequestParam("id") int id,@RequestParam(value = "idsede",required = false) String idsede, RedirectAttributes a) {
         Optional<Sala> optionalSala = salaRepository.findById(id);
         if (optionalSala.isPresent()) {
             Sala sala = optionalSala.get();
@@ -163,7 +163,7 @@ public class SalaController {
             a.addFlashAttribute("msg", "2");
             a.addFlashAttribute("identificador", sala.getIdentificador());
         }
-        return "redirect:/admin/salas";
+        return "redirect:/admin/salas?idsede="+idsede;
     }
 
     private String genIdentificador(String[] palabras, int numeroSala){
