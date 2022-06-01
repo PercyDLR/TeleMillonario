@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,10 +148,8 @@ public class ActorController {
             actor.setIdrol(rol);
             actor.setEstado(1);
 
-            personaRepository.save(actor);
+            actor = personaRepository.save(actor);
 
-            // Se obtienen el ID del actor recién creado
-            actor = personaRepository.findFirstByNombresOrderByIdDesc(actor.getNombres());
         } catch (Exception e){
             System.out.println(e.getMessage());
             attr.addFlashAttribute("err","Hubo un problema al guardar los datos de Actor");
@@ -158,63 +157,49 @@ public class ActorController {
         }
 
         //-----------------------------------------------
-        //            Eliminar Foto de la DB
+        //    Validación de Fotos a Eliminar en la DB
         //-----------------------------------------------
 
         // Número de fotos Ya Guardadas en la DB
         int fotosGuardadas = 0;
+        List<Foto> fotosParaEliminar = new ArrayList<>();
 
-        if(actor.getId() != null){
-            //System.out.println("Imágenes a Eliminar: " + ids.length);
+        // Se obtienen las fotos guardadas en DB
+        List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(actor.getId());
+        fotosGuardadas = fotosEnDB.size();
 
-            // Se obtienen las fotos guardadas en DB
-            List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(actor.getId());
-            fotosGuardadas = fotosEnDB.size();
+        for(int i = 0; i < fotosEnDB.size(); i++){
+            boolean fotoBorrada = false;
 
-            for(int i = 0; i < fotosEnDB.size(); i++){
-                boolean fotoBorrada = false;
+            Foto fotoEnDB = fotosEnDB.get(i);
 
-                Foto fotoEnDB = fotosEnDB.get(i);
+            for(int j = 0; j < ids.length; j++) {
+                try{
+                    int id = Integer.parseInt(ids[j]);
 
-                for(int j = 0; j < ids.length; j++) {
-                    try{
-                        int id = Integer.parseInt(ids[j]);
+                    // Se compara el ID de la foto en DB con el de la foto que se quiere remover
+                    if (fotoEnDB.getId() == id){
 
-                        // Se compara el ID de la foto en DB con el de la foto que se quiere remover
-                        if (fotoEnDB.getId() == id){
+                        fotosParaEliminar.add(fotoEnDB);
 
-                            // Borrado de la DB
-                            fotoRepository.delete(fotoEnDB);
-
-                            // Borrado del fileService
-                            String ruta = fotosEnDB.get(i).getRuta();
-                            String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
-                            //System.out.println("Nombre de la foto a eliminar: " + nombreFoto);
-                            fileService.eliminarArchivo(nombreFoto);
-
-                            fotosGuardadas--;
-                            fotoBorrada = true;
-                            break;
-                        }
-
-                    } catch (Exception e){
-                        System.out.println(e.getMessage());
+                        fotosGuardadas--;
+                        fotoBorrada = true;
                         break;
                     }
-                }
-                // Cuando se elimina una foto todos los números posteriores se corren por 1
-                int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
 
-                if(!fotoBorrada && fotosEliminadas > 0){
-                    fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
-                    fotoRepository.save(fotoEnDB);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                    break;
                 }
             }
-        }
+            // Cuando se elimina una foto todos los números posteriores se corren por 1
+            int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
 
-        //-----------------------------------------------
-        //            Agregar Foto de la DB
-        //-----------------------------------------------
+            if(!fotoBorrada && fotosEliminadas > 0){
+                fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
+                fotoRepository.save(fotoEnDB);
+            }
+        }
 
         //System.out.println("Imágenes a Agregar: " + imagenes.length);
 
@@ -227,6 +212,21 @@ public class ActorController {
             attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
             return "redirect:/admin/actores";
         }
+
+        for (Foto foto : fotosParaEliminar){
+            // Borrado de la DB
+            fotoRepository.delete(foto);
+
+            // Borrado del fileService
+            String ruta = foto.getRuta();
+            String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
+
+            fileService.eliminarArchivo(nombreFoto);
+        }
+
+        //-----------------------------------------------
+        //            Agregar Foto de la DB
+        //-----------------------------------------------
 
         // Se guarda imagen por imagen (en ese orden se les dará número)
         for(int i = 0; i< imagenes.length; i++){
