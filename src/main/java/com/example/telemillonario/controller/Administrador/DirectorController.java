@@ -203,16 +203,15 @@ public class DirectorController {
         }
         //System.out.println("Imágenes a Agregar: " + imagenes.length);
 
+        // Verifica que la casilla de imágenes no se vaya a quedar vacía
         if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")){
             model.addAttribute("err", "Se debe de tener al menos 1 imagen");
             model.addAttribute("imagenes", fotosEnDB);
             return "Administrador/Director/editarDirector";
 
-        } else if(imagenes[0].getContentType().equals("application/octet-stream")) {
-            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
-            return "redirect:/admin/directores";
         }
 
+        // Elimina las fotos
         for (Foto foto : fotosParaEliminar){
             // Borrado de la DB
             fotoRepository.delete(foto);
@@ -223,6 +222,14 @@ public class DirectorController {
 
             fileService.eliminarArchivo(nombreFoto);
         }
+
+        // Regresa si no se han agregado más fotos
+        if(imagenes[0].getContentType().equals("application/octet-stream")) {
+            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
+            return "redirect:/admin/directores";
+        }
+
+
 
         //-----------------------------------------------
         //            Agregar Foto de la DB
