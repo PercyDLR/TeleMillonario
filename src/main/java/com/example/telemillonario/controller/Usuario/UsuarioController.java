@@ -1,8 +1,12 @@
 package com.example.telemillonario.controller.Usuario;
 
 import com.example.telemillonario.entity.Foto;
+import com.example.telemillonario.entity.Funcion;
+import com.example.telemillonario.entity.Funciongenero;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.repository.FotoRepository;
+import com.example.telemillonario.repository.FuncionGeneroRepository;
+import com.example.telemillonario.repository.FuncionRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.validation.Perfil;
@@ -21,8 +25,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -38,8 +44,19 @@ public class UsuarioController {
     @Autowired
     FotoRepository fotoRepository;
 
+    @Autowired
+    FuncionRepository funcionRepository;
+
+    @Autowired
+    FuncionGeneroRepository funcionGeneroRepository;
+
     @GetMapping("")
-    public String paginaPrincipal(){
+    public String paginaPrincipal(Model model){
+        List<Funcion> listaFunciones = funcionRepository.obtenerFuncionesDestacadasPaginaPrincipal();
+        model.addAttribute("listaFunciones",listaFunciones);
+
+        List<Funciongenero> funcionGenero = funcionGeneroRepository.findAll();
+        model.addAttribute("funcionGenero",funcionGenero);
         return "vistaPrincipal";
     }
 
@@ -167,5 +184,38 @@ public class UsuarioController {
         }
 
     }
+
+    /*Redireccion para ver los detalles de la obra para comprar tickets*/
+    @GetMapping("/detallesObra")
+    public String detallesObras(@RequestParam(value = "Obra") String funcionID,Model model){
+
+        int idFuncion;
+        try{
+            idFuncion = Integer.parseInt(funcionID);
+        }catch (NumberFormatException e){
+            return "anErrorHasOcurred";
+        }
+
+        Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
+
+        if(funcion.isPresent()){
+            List<Funciongenero> funcionGenero = funcionGeneroRepository.findAll();
+            model.addAttribute("funcionGenero",funcionGenero);
+            return "usuario/obras/obraDetalles";
+
+        }else{
+            return "anErrorHasOcurred";
+        }
+
+    }
+
+
+    /*Compra de tickets*/
+
+
+
+
+
+
 
 }
