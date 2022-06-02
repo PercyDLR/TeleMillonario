@@ -112,7 +112,6 @@ public class UsuarioController {
                 if (img.getOriginalFilename().length() != 0) {
                     try {
                         List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(usuario.getId());
-                        System.out.println("Error en list foto");
 
                         // Borado de fotos
                         if (fotosEnDB.size() > 0){
