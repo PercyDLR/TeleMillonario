@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -117,7 +117,7 @@
                         <b class="mb-2 text-light me-md-2 mt-2" style="font-family: 'Open Sans', sans-serif;">Luna</b>
                         <a role="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                            aria-controls="offcanvasRight">
-                            <img src="/static/img/home/images-profile.jpg" width="50" style="border-radius: 50%;">
+                            <img src="../static/img/home/images-profile.jpg" width="50" style="border-radius: 50%;">
                         </a>
 
                     </div>
@@ -130,7 +130,7 @@
             <div class="offcanvas-header">
                 <div class="container mt-5">
                     <div class="container" style="display: flex; justify-content: center">
-                        <img src="/static/img/home/images-profile.jpg" width="100" style="border-radius: 50%;">
+                        <img src="../static/img/home/images-profile.jpg" width="100" style="border-radius: 50%;">
                     </div>
                     <div class="container mt-3" style="display: flex; justify-content: center">
                         <h5 id="offcanvasRightLabel" class="text-light">
@@ -212,8 +212,7 @@
                             Curth, Martha Noceda</b></h6>
                     </div>
                     <div class="col-sm-4" style="padding-left: 100px">
-                        <h4 style="font-family: 'Open Sans', sans-serif; color:#ffffff; text-align: center; font-size: 24px"><b>Compre
-                            sus entradas aqui</b></h4>
+                        <h4 style="font-family: 'Open Sans', sans-serif; color:#ffffff; text-align: center; font-size: 24px"><b>Compre sus entradas aqui</b></h4>
                         <div class="row mt-3 justify-content-center">
                             <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 18px; text-align: center"><b>Sede</b></label>
                             <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
@@ -270,9 +269,8 @@
                                 </h6>
                             </div>
                             <!--width: 500px; height: 46px-->
-                            <a class="btn btn-primary"
-                               style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; padding-top: 11px; padding-bottom: 10px;"
-                               href="#" role="button"><i class="bi bi-ticket-perforated-fill"></i> Comprar
+                            <a class="btn btn-primary" style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; padding-top: 11px; padding-bottom: 10px;"
+                               th:href="@{/compra}"role="button"><i class="bi bi-ticket-perforated-fill"></i> Comprar
                                 boletos</a>
 
                         </div>

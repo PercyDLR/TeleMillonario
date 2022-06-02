@@ -10,11 +10,11 @@ public class Funciongenero {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idfuncion")
     private Funcion idfuncion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idgenero")
     private Genero idgenero;
 

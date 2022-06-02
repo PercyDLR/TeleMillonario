@@ -2,9 +2,61 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
     <head th:replace="fragments/header :: head('Crear Funcion',~{::style})">
         <style>
-            input::placeholder {
-                color: #000000;
+            .select-label, .select2-results__option, .select2-search__field, .select2-selection__choice__display{
+                color: white;
+                width: 100%;
             }
+            .select2-container .select2-search--inline .select2-search__field{
+                height: 1.25rem;
+                vertical-align: unset;
+            }
+            .select2-container--default .select2-selection--multiple{
+                background-color: #2b2b31;
+                border: none;
+                height: auto;
+                border-radius: 0;
+                padding-block: 5px;
+            }
+            .select2-container--default.select2-container--focus .select2-selection--multiple {
+                border: solid #ff55a5 1px;
+            }
+
+            .select2-dropdown {
+                background-color: #2b2b31;
+                border: none;
+                font-size: 15px;
+                box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%);
+                border-radius: 0;
+                padding-inline: 0;
+            }
+
+            .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+                background-color: #2b2b31;
+                color: #ff55a5
+            }
+            .select2-container--default .select2-results__option--selected {
+                background-color: #424247;
+                color: white;
+            }
+            .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                background-color: #424247;
+                border: none;
+                vertical-align: unset;
+            }
+        </style>
+
+        <style>
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+
             div.card__cover img {
                 margin-inline: auto;
                 max-height: 150px;
@@ -25,360 +77,621 @@
 <body style="; background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">-->
 <body >
 <!-- header -->
-    <div th:replace="fragments/navbar :: operador('crear')"></div>
+    <div th:replace="fragments/navbar :: operador('funcion')"></div>
 <!-- end header -->
-<div class="content">
-    <div class="container" style="margin-bottom: 30px;opacity: 200%">
-        <div class="row">
+    <div class="content" style="padding: 0">
 
-            <form method="post" th:action="@{'/operador/funciones/guardar'}" th:object="${funcion}" enctype="multipart/form-data">
+        <div class="sign">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sign__content" style="margin-top: 70px">
 
-                <div class="card" style="margin-left: 3%;background-color:#e64166">
-                    <div class="card-header" style="text-align: center;color: #FFFFFF">
-                        <span style="font-family: 'Barlow', sans-serif; font-size: xx-large"
-                              th:text="${funcion.id == 0 ? 'Crear función' : 'Editar función'}"></span>
-                    </div>
-                    <div class="card-body" style="background-color:#e64166">
-                        <div class="row">
-                            <div class="row">
-                                <div class="col-12" style="width: fit-content">
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                        <strong th:text="${err}"></strong>
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <!-- authorization form -->
+                            <form class="sign__form" method="post" th:object="${funcion}" th:action="@{/operador/funciones/guardar}" enctype="multipart/form-data">
+                                <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;"
+                                    th:text="${funcion.id == 0 ? 'Crear función' : 'Editar función'}"></h3>
+
+                                <div class="row">
+                                    <div class="col-12" style="width: fit-content">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong th:text="${err}"></strong>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-5">
 
-                                    <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
 
-                                        <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
-                                        <option th:each="imagen : ${imagenes}"
-                                                th:id="|img-${imagen.id}|"
-                                                th:value="${imagen.id}"></option>
-                                    </select>
+                                        <input hidden th:field="*{id}">
 
-                                    <div class="form-group row" style="padding-top: 5%">
-                                        <input type="hidden" th:field="*{id}">
-                                        <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 10%;padding-bottom: 2%">
-                                            <u>Información de la función</u></h5>
-                                        <label  class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Nombre de la
-                                            función: </label>
-                                        <div class="col-sm-8">
-                                            <input type="text" style="text-align: center" class="form-control" th:field="*{nombre}"
-                                                   placeholder="Nombre">
-                                            <div class="text" th:if="${#fields.hasErrors('nombre')}"
-                                                 th:errors="*{nombre}" style="color:#8b122d"></div>
-                                        </div>
-                                        <label  class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Fecha-hora de la
-                                            función: </label>
-                                        <div class='col-sm-8' th:if="${val==null}">
-                                            <input id="fecha" type="datetime-local" th:value="|${funcion.getFecha()}T${funcion.getInicio()}|" name="fechamasinicio"
-                                                   th:min="${fechaactual}" max="2022-06-14T00:00"
-                                                   style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px" required>
-                                            <div class="text" th:if="${#fields.hasErrors('fecha')}"
-                                                 th:errors="*{fecha}" style="color:#8b122d"></div>
+                                        <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
 
-                                        </div>
-                                        <div class='col-sm-8' th:if="${val!=null}">
-                                            <input id="fecha1" type="datetime-local" th:value="${fechamasinicio}" name="fechamasinicio"
-                                                   th:min="${fechaactual}" max="2022-06-14T00:00"
-                                                   style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px" required>
-                                            <div class="text-danger" th:if="${msgfecha!=null}" th:text="${msgfecha}"></div>
+                                            <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
+                                            <option th:each="imagen : ${imagenes}"
+                                                    th:id="|img-${imagen.id}|"
+                                                    th:value="${imagen.id}"></option>
+                                        </select>
 
+                                        <div class="sign__group">
+                                            <label for="nombre">Nombre</label>
+                                            <input class="sign__input"  style="width: 100%"
+                                                   th:field="*{nombre}"
+                                                   th:classappend="${#fields.hasErrors('nombre')? 'is-invalid':''}"
+                                                   placeholder="Nombre" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}"
+                                                 th:errors="*{nombre}"></div>
                                         </div>
 
-
-                                        <label  class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Restricción de
-                                            edad</label>
-                                        <div class="col-sm-8" style="padding-top: 30px;padding-bottom: 30px">
-                                            <div class="col-sm-10" id="restriccion">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="restriccionedad"
-                                                           id="1" value="1" th:checked="${funcion.getRestriccionedad() == 1}">
-                                                    <label class="form-check-label" for="1"
-                                                           style="color: #FFFFFF;font-size: large">
-                                                        Sí
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="restriccionedad"
-                                                           id="0" value="0" th:checked="${funcion.getRestriccionedad() == 0}">
-                                                    <label class="form-check-label" for="0"
-                                                           style="color: #FFFFFF;font-size: large">
-                                                        No
-                                                    </label>
-                                                </div>
-                                                <div class="text" th:if="${#fields.hasErrors('restriccionedad')}"
-                                                     th:errors="*{restriccionedad}" style="color:#8b122d"></div>
-                                            </div>
-                                        </div>
-                                        <label for="duracion1" class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Duracion(en
-                                            minutos):
-                                        </label>
-                                        <div class='col-sm-8'>
-                                            <input id="duracion1" th:value="|${duracion}|" name="duracion" type="number" min="0" th:if="${durval==1}"
-                                                   style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
-                                            <input id="duracion2" th:value="|${funcion.id==0 ? '' : duracion}|" name="duracion" type="number" min="0" th:unless="${durval==1}"
-                                                   style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
-
-                                            <div class="text" th:if="${msgduracion!=null}" th:text="${msgduracion}" style="color:#8b122d"></div>
-
-                                        </div>
-                                        <label  class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Precio por
-                                            entrada:
-                                        </label>
-                                        <div class='col-sm-8' style="padding-top: 10px;">
-                                            <input  type="number" min="5"  step="0.5" th:field="*{precioentrada}"
-                                                   style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
-                                            <div class="text" th:if="${#fields.hasErrors('precioentrada')}"
-                                                 th:errors="*{precioentrada}" style="color:#8b122d"></div>
-                                        </div>
-                                        <label for="Sede" class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Sede:
-                                        </label>
-                                        <div class='col-sm-8' style="padding-top: 10px;">
-                                            <input id="Sede" type="text"  disabled th:value="${session.usuario.getIdsede().getNombre()}"
-                                                   style="width: 100%;height: 80%;text-align: center;background-color: #FFFFFF;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
+                                        <div class="sign__group">
+                                            <label for="fecha">Fecha y Hora</label>
+                                            <input class="sign__input" style="width: 100%"
+                                                   th:field="*{fecha}" type="datetime-local"
+                                                   th:classappend="${#fields.hasErrors('fecha')? 'is-invalid':''}"
+                                                   placeholder="Fecha y Hora" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('fecha')}"
+                                                 th:errors="*{fecha}"></div>
                                         </div>
 
-                                        <label  class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Sala:
-                                        </label>
-                                        <div class='col-sm-8' style="padding-top: 10px;">
-
-                                            <select  th:field="*{sala}" class="col-12" style="display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff; background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;" onchange="getAforoMax()">
-                                                <option value="0" data-aforo="-" >Seleccione una sala:</option>
-                                                <option th:each="sala : ${listaSalasporSede}"
-                                                        th:text="|Sala-${sala.getNumero()}|"
-                                                        th:value="${sala.getId()}"
-                                                        th:data-aforo="${sala.aforo}"></option>
-                                            </select>
-                                            <div class="text" th:if="${msgsala!=null}" th:text="${msgsala}" style="color:#8b122d"></div>
-                                            <div style="display: flex;justify-content: end">
-                                                <b id="aforofuncion_obra_span">
-                                                    Aforo máx: </b>
-                                            </div>
-
-
-                                        </div>
-                                        <label class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Stock:
-                                        </label>
-                                        <div class='col-sm-8' style="padding-top: 3px;">
-                                            <input  type="number" min="0" th:field="*{stockentradas}"
-                                                   style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
-                                            <div class="text" th:if="${#fields.hasErrors('stockentradas')}"
-                                                 th:errors="*{stockentradas}" style="color:#8b122d"></div>
-                                        </div>
-
-                                        <label for="descripcion" class="col-sm-4"
-                                               style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Descripcion
-                                        </label>
-                                        <div class='col-sm-8' style="padding-top: 10px;">
-                                            <textarea id="descripcion" class="form-control" rows="4" maxlength="500" th:field="*{descripcion}"
-                                                      style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
-                                            </textarea>
-                                            <div class="text" th:if="${#fields.hasErrors('descripcion')}"
-                                                 th:errors="*{descripcion}" style="color:#8b122d"></div>
+                                        <div class="sign__group">
+                                            <label for="precioentrada">Precio de Entrada</label>
+                                            <input th:field="*{precioentrada}" class="sign__input" style="width: 100%"
+                                                   th:classappend="${#fields.hasErrors('precioentrada')? 'is-invalid':''}"
+                                                   placeholder="Precio" type="number" min="5" step="0.01" required>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('precioentrada')}"
+                                                 th:errors="*{precioentrada}"></div>
                                         </div>
                                     </div>
 
+                                    <!--Selector Imagenes-->
+                                    <div class="col-md-6 col-12" style="padding-left: 10px">
 
-                            </div>
-                            <div class="col-1" style="text-align: center">
+                                        <!--Encabezado-->
+                                        <section class="section section--first" style="margin: 0; padding:10px">
+                                            <div class="row">
+                                                <div class="col-md-9 col-10">
+                                                    <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
+                                                </div>
+                                                <div class="col-md-3 col-2">
+                                                    <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
+                                                        <i class="icon ion-ios-arrow-round-back"></i>
+                                                    </button>
+                                                    <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
+                                                        <i class="icon ion-ios-arrow-round-forward"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </section>
 
-                            </div>
-<!--                            <div class="col-5" style="margin-top: 2%">-->
-<!--                                <div class="col-4">-->
-<!--                                    <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>-->
-<!--                                </div>-->
-<!--                                <div class="col-1">-->
-<!--                                    <button class="home__nav home__nav&#45;&#45;next" type="button" style="margin-right: 2px">-->
-<!--                                        <i class="icon ion-ios-arrow-round-forward"></i>-->
-<!--                                    </button>-->
-<!--                                </div>-->
-<!--                                <div class="image-upload" style="align-content: center;margin-top: 2%">-->
-<!--                                    <label for="file-input" style="margin-left: 15%">-->
-<!--                                        <img src="https://cdn-icons-png.flaticon.com/512/56/56887.png"-->
-<!--                                             style="background-color: #FFFFFF;width: 50%;height: 50%;position: center;border-radius: 10px"-->
-<!--                                             alt="imagenes">-->
-<!--                                    </label>-->
-<!--                                    <input id="file-input" type="file" multiple/>-->
-<!--                                </div>-->
-<!--                                <br>-->
-<!--                                <h5 style="color: #FFFFFF;margin-left: 12%"><b>Seleccione dando click</b></h5>-->
-<!--                            </div>-->
+                                        <div>
+                                            <div class="row align-items-center">
+                                                <div class="col-12 col-sm-12">
 
-                            <!--Selector Imagenes-->
-                            <div class="col-md-6 col-8" style="padding-left: 10px">
+                                                    <!--Visor de Imagenes-->
+                                                    <div class="owl-carousel photo__carousel" id="img_container">
 
-                                <!--Encabezado-->
-                                <section class="section section--first" style="margin: 0; padding:10px">
-                                    <div class="row">
-                                        <div class="col-md-9 col-6">
-                                            <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
-                                        </div>
-                                        <div class="col-md-3 col-2">
-                                            <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
-                                                <i class="icon ion-ios-arrow-round-back"></i>
-                                            </button>
-                                            <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
-                                                <i class="icon ion-ios-arrow-round-forward"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </section>
+                                                        <div class="item old" th:each="foto : ${imagenes}">
+                                                            <div class="card__cover">
 
-                                <div>
-                                    <div class="row align-items-center">
-                                        <div class="col-8 col-sm-8">
+                                                                <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
 
-                                            <!--Visor de Imagenes-->
-                                            <div class="owl-carousel photo__carousel" id="img_container">
+                                                                <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
+                                                                    <i class="bi bi-x" style="color: white"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="item" th:each="foto : ${imagenes}">
-                                                    <div th:id="|old-${foto.numero-1}|" class="card__cover">
-
-                                                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
-
-                                                        <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
-                                                            <i class="bi bi-x" style="color: white"></i>
-                                                        </a>
+                                                    <!-- Boton para agregar imagenes -->
+                                                    <div class="card__wrap">
+                                                        <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
+                                                            Nueva Foto
+                                                        </label>
+                                                        <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg"
+                                                               style="display: none" onchange="preview()" multiple>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                            <!-- Boton para agregar imagenes -->
-                                            <div class="card__wrap">
-                                                <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
-                                                    Nueva Foto
-                                                </label>
-                                                <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg, image/jpg"
-                                                       style="display: none" onchange="preview()" multiple >
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="sign__group">
+                                            <label for="genero">Géneros</label>
+                                            <select class="select2 genero" id="genero" name="idgenero" style="width: 100%" required multiple>
+                                                <option th:each="genero : ${listGeneros}"
+                                                        th:text="|${genero.nombre}|"
+                                                        th:value="${genero.id}"
+                                                        th:selected="${#arrays.contains(generosFuncion,genero.id)}"></option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="duracion">Duración (minutos)</label>
+                                            <input name="duracion" id="duracion" class="sign__input" style="width: 100%"
+                                                   th:value="${duracion != null ? duracion : ''}"
+                                                   placeholder="Duración" type="number" min="0" required>
+                                            <div class="invalid-feedback"
+                                                 th:if="${msgduracion!=null}" th:text="${msgduracion}"></div>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="restriccionedad">Restricción de Edad</label>
+                                            <select class="sign__input" th:field="*{restriccionedad}" style="width: 100%" required>
+                                                <option value="1" th:selected="${funcion.restriccionedad == 0}">No</option>
+                                                <option value="0" th:selected="${funcion.restriccionedad == 1}">Sí</option>
+                                            </select>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('restriccionedad')}"
+                                                 th:errors="*{restriccionedad}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12">
+                                        <div class="sign__group">
+                                            <label for="sede">Sede</label>
+                                            <input class="sign__input" style="width: 100%"
+                                                   id="sede" th:value="${session.usuario.idsede.nombre}" disabled>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="sala">Sala</label>
+                                            <select class="sign__input" th:field="*{sala}" style="width: 100%" onchange="getAforoMax()" required>
+                                                <option th:each="sala : ${listaSalasporSede}"
+                                                        th:text="|Sala-${sala.numero}|"
+                                                        th:value="${sala.id}"
+                                                        th:data-aforo="${sala.aforo}"></option>
+                                            </select>
+                                            <div class="invalid-feedback" th:if="${msgsala!=null}" th:text="${msgsala}"></div>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="stockentradas">Número de Entradas</label>
+                                            <input class="sign__input" th:field="*{stockentradas}" style="width: 100%"
+                                                   th:classappend="${#fields.hasErrors('stockentradas')? 'is-invalid':''}"
+                                                   placeholder="Número de Entradas" type="number" min="0" required>
+                                            <label><b id="aforofuncion_obra_span">Aforo máx: </b></label>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('stockentradas')}"
+                                                 th:errors="*{stockentradas}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="sign__group">
+                                            <label for="descripcion">Descripción</label>
+                                            <textarea th:field="*{descripcion}" class="sign__input" style="width: 100%; height: 8em; resize: none"
+                                                      th:classappend="${#fields.hasErrors('descripcion')? 'is-invalid':''}"
+                                                      rows="4" maxlength="500" required>
+                                            </textarea>
+                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}"
+                                                 th:errors="*{descripcion}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="sign__group">
+                                            <label for="actor">Actores</label>
+                                            <select class="select2 actor" id="actor" name="idactor" style="width: 100%" required multiple>
+                                                <option th:each="actores,indice : ${listActores}"
+                                                        th:text="|${actores.nombres} ${actores.apellidos}|"
+                                                        th:value="${actores.id}"
+                                                        th:selected="${#arrays.contains(actoresFuncion,actores.id)}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12">
+                                        <div class="sign__group">
+                                            <label for="director">Directores</label>
+                                            <select class="select2 director" id="director" name="iddirector" style="width: 100%" required multiple>
+                                                <option th:each="directores : ${listDirectores}"
+                                                        th:text="|${directores.nombres} ${directores.apellidos}|"
+                                                        th:value="${directores.id}"
+                                                        th:selected="${#arrays.contains(directoresFuncion,directores.id)}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-6" style="justify-content: center">
+                                        <a th:href="@{/operador/funciones/lista}" class="sign__btn">Cancelar</a>
+                                    </div>
+
+                                    <div class="col-6" style="justify-content: center">
+                                        <button class="sign__btn" type="submit">Guardar
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <!-- end authorization form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container" style="margin-bottom: 30px;opacity: 200%">
+            <div class="row">
+
+                <form method="post" th:action="@{'/operador/funciones/guardar'}" th:object="${funcion}" enctype="multipart/form-data">
+
+                    <div class="card" style="margin-left: 3%;background-color:#e64166">
+                        <div class="card-header" style="text-align: center;color: #FFFFFF">
+                            <span style="font-family: 'Barlow', sans-serif; font-size: xx-large"
+                                  th:text="${funcion.id == 0 ? 'Crear función' : 'Editar función'}"></span>
+                        </div>
+                        <div class="card-body" style="background-color:#e64166">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-12" style="width: fit-content">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong th:text="${err}"></strong>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-5">
+
+                                        <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
+
+                                            <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
+                                            <option th:each="imagen : ${imagenes}"
+                                                    th:id="|img-${imagen.id}|"
+                                                    th:value="${imagen.id}"></option>
+                                        </select>
+
+                                        <div class="form-group row" style="padding-top: 5%">
+                                            <input type="hidden" th:field="*{id}">
+                                            <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 10%;padding-bottom: 2%">
+                                                <u>Información de la función</u></h5>
+                                            <label  class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Nombre de la
+                                                función: </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" style="text-align: center" class="form-control" th:field="*{nombre}"
+                                                       placeholder="Nombre">
+                                                <div class="text" th:if="${#fields.hasErrors('nombre')}"
+                                                     th:errors="*{nombre}" style="color:#8b122d"></div>
+                                            </div>
+                                            <label  class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Fecha-hora de la
+                                                función: </label>
+                                            <div class='col-sm-8' th:if="${val==null}">
+                                                <input id="fecha" type="datetime-local" th:value="|${funcion.getFecha()}T${funcion.getInicio()}|" name="fechamasinicio"
+                                                       th:min="${fechaactual}" max="2022-06-14T00:00"
+                                                       style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px" required>
+                                                <div class="text" th:if="${#fields.hasErrors('fecha')}"
+                                                     th:errors="*{fecha}" style="color:#8b122d"></div>
+
+                                            </div>
+                                            <div class='col-sm-8' th:if="${val!=null}">
+                                                <input id="fecha1" type="datetime-local" th:value="${fechamasinicio}" name="fechamasinicio"
+                                                       th:min="${fechaactual}" max="2022-06-14T00:00"
+                                                       style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px" required>
+                                                <div class="text-danger" th:if="${msgfecha!=null}" th:text="${msgfecha}"></div>
+
+                                            </div>
+
+
+                                            <label  class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Restricción de
+                                                edad</label>
+                                            <div class="col-sm-8" style="padding-top: 30px;padding-bottom: 30px">
+                                                <div class="col-sm-10" id="restriccion">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="restriccionedad"
+                                                               id="1" value="1" th:checked="${funcion.getRestriccionedad() == 1}">
+                                                        <label class="form-check-label" for="1"
+                                                               style="color: #FFFFFF;font-size: large">
+                                                            Sí
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="restriccionedad"
+                                                               id="0" value="0" th:checked="${funcion.getRestriccionedad() == 0}">
+                                                        <label class="form-check-label" for="0"
+                                                               style="color: #FFFFFF;font-size: large">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                    <div class="text" th:if="${#fields.hasErrors('restriccionedad')}"
+                                                         th:errors="*{restriccionedad}" style="color:#8b122d"></div>
+                                                </div>
+                                            </div>
+                                            <label for="duracion1" class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Duracion(en
+                                                minutos):
+                                            </label>
+                                            <div class='col-sm-8'>
+                                                <input id="duracion1" th:value="|${duracion}|" name="duracion" type="number" min="0" th:if="${durval==1}"
+                                                       style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
+                                                <input id="duracion2" th:value="|${funcion.id==0 ? '' : duracion}|" name="duracion" type="number" min="0" th:unless="${durval==1}"
+                                                       style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
+
+                                                <div class="text" th:if="${msgduracion!=null}" th:text="${msgduracion}" style="color:#8b122d"></div>
+
+                                            </div>
+                                            <label  class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Precio por
+                                                entrada:
+                                            </label>
+                                            <div class='col-sm-8' style="padding-top: 10px;">
+                                                <input  type="number" min="5"  step="0.5" th:field="*{precioentrada}"
+                                                       style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
+                                                <div class="text" th:if="${#fields.hasErrors('precioentrada')}"
+                                                     th:errors="*{precioentrada}" style="color:#8b122d"></div>
+                                            </div>
+                                            <label for="Sede" class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Sede:
+                                            </label>
+                                            <div class='col-sm-8' style="padding-top: 10px;">
+                                                <input id="Sede" type="text"  disabled th:value="${session.usuario.getIdsede().getNombre()}"
+                                                       style="width: 100%;height: 80%;text-align: center;background-color: #FFFFFF;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
+                                            </div>
+
+                                            <label  class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Sala:
+                                            </label>
+                                            <div class='col-sm-8' style="padding-top: 10px;">
+
+                                                <select  th:field="*{sala}" class="col-12" style="display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff; background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;" onchange="getAforoMax()">
+                                                    <option value="0" data-aforo="-" >Seleccione una sala:</option>
+                                                    <option th:each="sala : ${listaSalasporSede}"
+                                                            th:text="|Sala-${sala.getNumero()}|"
+                                                            th:value="${sala.getId()}"
+                                                            th:data-aforo="${sala.aforo}"></option>
+                                                </select>
+                                                <div class="text" th:if="${msgsala!=null}" th:text="${msgsala}" style="color:#8b122d"></div>
+                                                <div style="display: flex;justify-content: end">
+                                                    <b id="aforofuncion_obra_span">
+                                                        Aforo máx: </b>
+                                                </div>
+
+
+                                            </div>
+                                            <label class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Stock:
+                                            </label>
+                                            <div class='col-sm-8' style="padding-top: 3px;">
+                                                <input  type="number" min="0" th:field="*{stockentradas}"
+                                                       style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
+                                                <div class="text" th:if="${#fields.hasErrors('stockentradas')}"
+                                                     th:errors="*{stockentradas}" style="color:#8b122d"></div>
+                                            </div>
+
+                                            <label for="descripcion" class="col-sm-4"
+                                                   style="font-family:'Barlow';color: #FFFFFF;font-size: large">•Descripcion
+                                            </label>
+                                            <div class='col-sm-8' style="padding-top: 10px;">
+                                                <textarea id="descripcion" class="form-control" rows="4" maxlength="500" th:field="*{descripcion}"
+                                                          style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
+                                                </textarea>
+                                                <div class="text" th:if="${#fields.hasErrors('descripcion')}"
+                                                     th:errors="*{descripcion}" style="color:#8b122d"></div>
+                                            </div>
+                                        </div>
+
+
+                                </div>
+                                <div class="col-1" style="text-align: center">
+
+                                </div>
+    <!--                            <div class="col-5" style="margin-top: 2%">-->
+    <!--                                <div class="col-4">-->
+    <!--                                    <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>-->
+    <!--                                </div>-->
+    <!--                                <div class="col-1">-->
+    <!--                                    <button class="home__nav home__nav&#45;&#45;next" type="button" style="margin-right: 2px">-->
+    <!--                                        <i class="icon ion-ios-arrow-round-forward"></i>-->
+    <!--                                    </button>-->
+    <!--                                </div>-->
+    <!--                                <div class="image-upload" style="align-content: center;margin-top: 2%">-->
+    <!--                                    <label for="file-input" style="margin-left: 15%">-->
+    <!--                                        <img src="https://cdn-icons-png.flaticon.com/512/56/56887.png"-->
+    <!--                                             style="background-color: #FFFFFF;width: 50%;height: 50%;position: center;border-radius: 10px"-->
+    <!--                                             alt="imagenes">-->
+    <!--                                    </label>-->
+    <!--                                    <input id="file-input" type="file" multiple/>-->
+    <!--                                </div>-->
+    <!--                                <br>-->
+    <!--                                <h5 style="color: #FFFFFF;margin-left: 12%"><b>Seleccione dando click</b></h5>-->
+    <!--                            </div>-->
+
+                                <!--Selector Imagenes-->
+                                <div class="col-md-6 col-8" style="padding-left: 10px">
+
+                                    <!--Encabezado-->
+                                    <section class="section section--first" style="margin: 0; padding:10px">
+                                        <div class="row">
+                                            <div class="col-md-9 col-6">
+                                                <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
+                                            </div>
+                                            <div class="col-md-3 col-2">
+                                                <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
+                                                    <i class="icon ion-ios-arrow-round-back"></i>
+                                                </button>
+                                                <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
+                                                    <i class="icon ion-ios-arrow-round-forward"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <div>
+                                        <div class="row align-items-center">
+                                            <div class="col-8 col-sm-8">
+
+                                                <!--Visor de Imagenes-->
+                                                <div class="owl-carousel photo__carousel" id="img_container">
+
+                                                    <div class="item" th:each="foto : ${imagenes}">
+                                                        <div th:id="|old-${foto.numero-1}|" class="card__cover">
+
+                                                            <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
+
+                                                            <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
+                                                                <i class="bi bi-x" style="color: white"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Boton para agregar imagenes -->
+                                                <div class="card__wrap">
+                                                    <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
+                                                        Nueva Foto
+                                                    </label>
+                                                    <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg, image/jpg"
+                                                           style="display: none" onchange="preview()" multiple >
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div style="display: flex;justify-content: center">
-                            <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;padding-bottom: 0.5%">
-                                <u>Genero</u></h5>
-                        </div>
-                        <div class="row">
-                            <div class="col-5">
-                                <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 0.5%">
-                                    <u>Generos</u></h5>
-                                <label style="color: #FFFFFF"><b>Seleccione los géneros</b></label>
-                                <br>
-                                <select class="select2" name="idgenero" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:if="${sval==1}" required>
-                                    <option disabled>Seleccione los generos:</option>
-                                    <option th:each="genero : ${listGeneros}"
-                                            th:text="|${genero.nombre}|"
-                                            th:value="${genero.id}"
-                                            th:selected="${#arrays.contains(generosFuncion,genero.id)}"></option>
-                                </select>
+                            <div style="display: flex;justify-content: center">
+                                <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;padding-bottom: 0.5%">
+                                    <u>Genero</u></h5>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 0.5%">
+                                        <u>Generos</u></h5>
+                                    <label style="color: #FFFFFF"><b>Seleccione los géneros</b></label>
+                                    <br>
+                                    <select class="select2" name="idgenero" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:if="${sval==1}" required>
+                                        <option disabled>Seleccione los generos:</option>
+                                        <option th:each="genero : ${listGeneros}"
+                                                th:text="|${genero.nombre}|"
+                                                th:value="${genero.id}"
+                                                th:selected="${#arrays.contains(generosFuncion,genero.id)}"></option>
+                                    </select>
 
 
-                                <select class="select2" name="idgenero" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
-                                    <option disabled>Seleccione los géneros:</option>
-                                    <option th:each="genero : ${listGeneros}"
-                                            th:text="|${genero.nombre}|"
-                                            th:value="${genero.id}"></option>
-                                </select>
+                                    <select class="select2" name="idgenero" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
+                                        <option disabled>Seleccione los géneros:</option>
+                                        <option th:each="genero : ${listGeneros}"
+                                                th:text="|${genero.nombre}|"
+                                                th:value="${genero.id}"></option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div style="display: flex;justify-content: center">
+                                <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;padding-bottom: 0.5%">
+                                    <u>Elenco de artistas</u></h5>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-5">
+                                    <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 0.5%">
+                                        <u>Actores</u></h5>
+                                    <label style="color: #FFFFFF"><b>Seleccione los actores</b></label>
+                                    <br>
+                                    <select class="select2" name="idactor" multiple="multiple" style="width: 100%; background-color: #2b2b31"  th:if="${sval==1}" required>
+                                        <option disabled>Seleccione los actores:</option>
+                                        <option th:each="actores,indice : ${listActores}"
+                                                th:text="|${actores.nombres} ${actores.apellidos}|"
+                                                th:value="${actores.id}"
+                                                th:selected="${#arrays.contains(actoresFuncion,actores.id)}"></option>
+                                    </select>
+
+                                    <select class="select2" name="idactor" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
+                                        <option disabled>Seleccione los actores:</option>
+                                        <option th:each="actores,indice : ${listActores}"
+                                                th:text="|${actores.nombres} ${actores.apellidos}|"
+                                                th:value="${actores.id}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-2">
+
+                                </div>
+                                <div class="col-5">
+                                    <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 2%">
+                                        <u>Directores</u></h5>
+
+
+                                    <label  style="color: #FFFFFF"><b>Seleccione los directores</b></label>
+                                    <br>
+                                    <select class="select2" name="iddirector" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:if="${sval==1}" required>
+                                        <option disabled>Seleccione los Directores:</option>
+                                        <option th:each="directores : ${listDirectores}"
+                                                th:text="|${directores.nombres} ${directores.apellidos}|"
+                                                th:value="${directores.id}"
+                                        th:selected="${#arrays.contains(directoresFuncion,directores.id)}"></option>
+                                    </select>
+
+                                    <select class="select2" name="iddirector" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
+                                        <option disabled>Seleccione los Directores:</option>
+                                        <option th:each="directores : ${listDirectores}"
+                                                th:text="|${directores.nombres} ${directores.apellidos}|"
+                                                th:value="${directores.id}"></option>
+                                    </select>
+
+                                </div>
                             </div>
 
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <a class="sign__btn" type="submit" th:href="@{/operador/funciones/lista}" >
+                                Regresar
+                            </a>
 
-                        <div style="display: flex;justify-content: center">
-                            <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;padding-bottom: 0.5%">
-                                <u>Elenco de artistas</u></h5>
+
+                        </div>
+                        <div class="col-6">
+
                         </div>
 
-                        <div class="row">
-                            <div class="col-5">
-                                <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 0.5%">
-                                    <u>Actores</u></h5>
-                                <label style="color: #FFFFFF"><b>Seleccione los actores</b></label>
-                                <br>
-                                <select class="select2" name="idactor" multiple="multiple" style="width: 100%; background-color: #2b2b31"  th:if="${sval==1}" required>
-                                    <option disabled>Seleccione los actores:</option>
-                                    <option th:each="actores,indice : ${listActores}"
-                                            th:text="|${actores.nombres} ${actores.apellidos}|"
-                                            th:value="${actores.id}"
-                                            th:selected="${#arrays.contains(actoresFuncion,actores.id)}"></option>
-                                </select>
-
-                                <select class="select2" name="idactor" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
-                                    <option disabled>Seleccione los actores:</option>
-                                    <option th:each="actores,indice : ${listActores}"
-                                            th:text="|${actores.nombres} ${actores.apellidos}|"
-                                            th:value="${actores.id}"></option>
-                                </select>
-                            </div>
-                            <div class="col-2">
-
-                            </div>
-                            <div class="col-5">
-                                <h5 style="color: #FFFFFF;font-family:'Barlow';font-size: xx-large;margin-left: 20%;padding-bottom: 2%">
-                                    <u>Directores</u></h5>
-
-
-                                <label  style="color: #FFFFFF"><b>Seleccione los directores</b></label>
-                                <br>
-                                <select class="select2" name="iddirector" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:if="${sval==1}" required>
-                                    <option disabled>Seleccione los Directores:</option>
-                                    <option th:each="directores : ${listDirectores}"
-                                            th:text="|${directores.nombres} ${directores.apellidos}|"
-                                            th:value="${directores.id}"
-                                    th:selected="${#arrays.contains(directoresFuncion,directores.id)}"></option>
-                                </select>
-
-                                <select class="select2" name="iddirector" multiple="multiple" style="width: 100%; background-color: #2b2b31" th:unless="${sval==1}" required>
-                                    <option disabled>Seleccione los Directores:</option>
-                                    <option th:each="directores : ${listDirectores}"
-                                            th:text="|${directores.nombres} ${directores.apellidos}|"
-                                            th:value="${directores.id}"></option>
-                                </select>
-
-                            </div>
+                        <div class="col-3">
+                            <button class="sign__btn" type="submit"
+                            >Guardar
+                            </button>
                         </div>
-
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <a class="sign__btn" type="submit" th:href="@{/operador/funciones/lista}" >
-                            Regresar
-                        </a>
+                </form>
+            </div>
+            <br>
 
-
-                    </div>
-                    <div class="col-6">
-
-                    </div>
-
-                    <div class="col-3">
-                        <button class="sign__btn" type="submit"
-                        >Guardar
-                        </button>
-                    </div>
-                </div>
-            </form>
         </div>
-        <br>
-
     </div>
-</div>
+
     <div th:replace="fragments/footer :: js(~{::script})">
 
+        <script>
+            $(document).ready(function() {
+                $('.select2.genero').select2({
+                    placeholder: 'Géneros',
+                    closeOnSelect: false
+                });
+                $('.select2.actor').select2({
+                    placeholder: 'Actores',
+                    closeOnSelect: false
+                });
+                $('.select2.director').select2({
+                    placeholder: 'Directores',
+                    closeOnSelect: false
+                });
+            });
+        </script>
 
         <script>
             // El input donde se agregan las imágenes
@@ -493,13 +806,6 @@
                 document.getElementById("stockentradas").max = aforo;
                 $("#aforofuncion_obra").prop("disabled", false);
             }
-
-            $(document).ready(function() {
-                $('.select2').select2({
-                    placeholder: 'Escoger del listado',
-                    closeOnSelect: false
-                });
-            });
 
         </script>
 

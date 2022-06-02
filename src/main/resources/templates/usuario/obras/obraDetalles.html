@@ -1,123 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Detalles obra</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-              crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@900&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@900&family=Open+Sans&display=swap"
-              rel="stylesheet">
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                $("#sede").change(function () {
-                    var val = $(this).val();
-                    if (val == "item1") {
-                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">A113</option><option value='test2' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">A112</option>");
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
-                    } else if (val == "item2") {
-                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test3' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">B113</option>");
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
-                    } else if (val == "item3") {
-                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test4' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">C113</option><option value='test5' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">C112</option>");
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
-                    } else if (val == "item4") {
-                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test6' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">D113</option><option value='test7' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">D112</option>");
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
-                    } else if (val == "") {
-                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
-                        $("#a").html("<h2 style=\"font-family: 'Open Sans', sans-serif;\" class=\"text-light\"> --- </h2>")
-                        $("#b").html("<h2 style=\"font-family: 'Open Sans', sans-serif;\" --- </h2>")
-                        $("#boletosRestantes").html("<b style=\"font-family: 'Open Sans', sans-serif; color: #fff\"\n" +
-                            "                                       id=\"boletosRestantes\"> --- </b>")
-                    }
-                });
-            });
-
-            $(document).ready(function () {
-                $("#sala").change(function () {
-                    var val = $(this).val();
-                    if (val == "test") {
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Vie 30 Agosto 2023 16:00h</option>");
-                    } else if (val == "test2") {
-                        $("#horario").html("<option value=''>Horario</option><option value='horario'>SAB 31 AGOSTO 2023 14:00h</option>");
-
-                    } else if (val == "test3") {
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Dom 01 Septiembre 2023 16:00h</option>");
-                    } else if (val == "test4") {
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Lun 01 Septiembre 2023 20:00h</option>");
-                    } else if (val == "test5") {
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Mar 01 Septiembre 2023 12:00h</option>");
-                    } else if (val == "test6") {
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Jue 01 Septiembre 2023 13:00h</option>");
-                    } else if (val == "test7") {
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Mie 01 Septiembre 2023 10:00h</option>");
-                    } else if (val == "") {
-                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
-                    }
-                });
-            });
-
-            $(document).ready(function () {
-                $("#horario").change(function () {
-                    var val = $(this).val();
-                    if (val == "horario") {
-                        $("#a").html("<h2 style=\"font-family: 'Open Sans', sans-serif; color:#ffffff;\" class='text-light' id='counting''></h2>")
-                        $("#b").html("<h2 style=\"font-family: 'Open Sans', sans-serif;\" id='costototal'></h2>")
-                        $("#boletosRestantes").html("<b style=\"font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 20px;\" id='boletosResstantes'>23</b>")
-                    }
-                });
-            });
-        </script>
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="fragments/header :: head('Detalles Obra',~{::style})">
+        <style>
+            .card__cover{
+                overflow-x: hidden;
+            }
+            .card__cover img{
+                object-fit: cover;
+                object-position: 50% 50%;
+                margin-top: 0;
+                height: 20em;
+            }
+            @media(max-width: 720px){
+                .card__cover img{height: 35vh;}
+            }
+        </style>
     </head>
     <body style="background-image: url('/static/img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="position: sticky; top: 0; z-index: 100;">
-            <div class="container mt-2">
-                <div class="container-fluid">
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <h1 style="margin-right: 20px">
-                            <span style="font-family: 'Barlow', sans-serif; color:#ffffff">Tele </span>
-                            <span style="font-family: 'Barlow', sans-serif; color:#e64166">Millonario</span>
-                        </h1>
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item text-light">
-                                <a class="nav-link text-light" aria-current="page"
-                                   style="font-family: 'Open Sans', sans-serif;  opacity: 0.6;" href="#">Inicio</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active text-light"
-                                   style="font-family: 'Open Sans', sans-serif;" href="#">Cartelera</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light"
-                                   style="font-family: 'Open Sans', sans-serif; opacity: 0.6;" href="#">Sedes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled text-light" style="font-family: 'Open Sans', sans-serif; opacity: 0.6;">Actores</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled text-light" style="font-family: 'Open Sans', sans-serif; opacity: 0.6;">Directores</a>
-                            </li>
-                        </ul>
-                        <a class="btn btn-primary" style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif;" href="/templates/login/inicioSesion.html" role="button">Ingresar</a>
-                    </div>
-                </div>
-            </div>
-
-        </nav>
-
+        <div th:replace="fragments/navbar :: usuario('Detalles Obra')"></div>
         <div class="container mt-5">
             <div class="container pt-2 me-auto" style="margin-bottom: 45px">
 
@@ -155,74 +55,10 @@
                             Curth, Martha Noceda</b></h5>
                     </div>
                     <div class="col-sm-3">
-                        <div class="row mt-2" style="padding-left: 50px;">
-                            <a class="btn btn-primary"
-                               style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; width: 500px; height: 70px; padding-top: 11px;"
-                               href="#" role="button">Inicie sesión para la compra de boletos</a>
+                        <div class="row mt-2" style="padding-left: 50px;" sec:authorize="isAnonymous()">
+                            <a class="btn btn-primary" style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; width: 500px; height: 70px; padding-top: 11px;"
+                               th:href="@{/login}" role="button">Comprar boletos</a>
                         </div>
-                        <!--
-                        <div class="row mt-2">
-                            <a class="btn btn-primary"
-                               style="background-color: #e64166; border-color: #e64166; font-family: 'Open Sans', sans-serif; width: 500px; height: 46px; padding-top: 11px;"
-                               href="#" role="button"><i class="bi bi-ticket-perforated-fill"></i> Comprar
-                                boletos</a>
-                            <div class="mt-2"
-                                 style="text-align: center; background-color: #FFFFFF; border-radius: 2px" id="b">
-                                <h2 style="font-family: 'Open Sans', sans-serif;"> --- </h2>
-                            </div>
-                            <div class="col-sm-4 mt-2" style="text-align: center;  padding-left: 45px">
-                                <button type="button" class="btn btn-secondary" style="width: 40px; height: 46px;"
-                                        onclick="decrement(); multiplicate()"><i class="bi bi-dash"></i></button>
-                            </div>
-                            <div class="col-sm-4 mt-2" id="a" style="text-align: center">
-                                <h2 style="font-family: 'Open Sans', sans-serif;" class="text-light"> --- </h2>
-                            </div>
-
-                            <div class="col-sm-4 mt-2" style="text-align: center;  padding-right: 45px">
-                                <button type="button" class="btn btn-secondary" style="width: 40px; height: 46px;"
-                                        onclick="increment(); multiplicate()"><i class="bi bi-plus"></i></button>
-                            </div>
-
-                            <div class="mt-2"
-                                 style="padding-left: 0px; padding-right: 0px; display: flex; justify-content: center;">
-                                <h6 class="text-light"
-                                    style="background-color: #cccccc; border-radius: 6px; padding-left: 17px; padding-right: 17px; padding-bottom: 18px; text-align: center; font-family: 'Open Sans', sans-serif; color: #fff">
-                                    <br>
-                                    <b style="font-family: 'Open Sans', sans-serif; color: #fff"
-                                       id="boletosRestantes"> --- </b> <b>BOLETOS RESTANTES</b>
-                                    <br>
-                                </h6>
-                            </div>
-                        </div>
-                        <div class="row mt-2 justify-content-center">
-                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 25px"><b>Sede</b></label>
-                            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
-                                    style="color: #fff; background-color: #48cfae; border-color: #48cfae; height: 50px"
-                                    id="sede">
-                                <option value="" selected><b>Sede</b></option>
-                                <option value="item1"><b>Gran Teatro Nacional</b></option>
-                                <option value="item2"><b>Teatro Municipal de Lima</b></option>
-                                <option value="item3"><b>Microteatro de Lima</b></option>
-                                <option value="item4"><b>Teatro Municipal de Tacna</b></option>
-                            </select>
-                        </div>
-                        <div class="row mt-2 justify-content-center">
-                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 25px"><b>Sala</b></label>
-                            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
-                                    style="color: #fff; background-color: #4fc0e8; border-color: #4fc0e8; height: 50px"
-                                    id="sala">
-                                <option value="" style="font-family: 'Open Sans', sans-serif; color: #fff"> ---</option>
-                            </select>
-                        </div>
-                        <div class="row mt-2 justify-content-center">
-                            <label style="font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 25px"><b>Fecha y hora</b></label>
-                            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
-                                    style="color: #fff; background-color: #d85716; border-color: #d85716; height: 50px"
-                                    id="horario">
-                                <option value="" style="font-family: 'Open Sans', sans-serif; color: #fff"> ---</option>
-                            </select>
-                        </div>
-                        -->
                     </div>
                 </div>
                 <div class="row">
@@ -348,6 +184,81 @@
 
         </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            $(document).ready(function () {
+                $("#sede").change(function () {
+                    var val = $(this).val();
+                    if (val == "item1") {
+                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">A113</option><option value='test2' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">A112</option>");
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
+                    } else if (val == "item2") {
+                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test3' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">B113</option>");
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
+                    } else if (val == "item3") {
+                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test4' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">C113</option><option value='test5' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">C112</option>");
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
+                    } else if (val == "item4") {
+                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Sala</option><option value='test6' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">D113</option><option value='test7' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">D112</option>");
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
+                    } else if (val == "") {
+                        $("#sala").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
+                        $("#a").html("<h2 style=\"font-family: 'Open Sans', sans-serif;\" class=\"text-light\"> --- </h2>")
+                        $("#b").html("<h2 style=\"font-family: 'Open Sans', sans-serif;\" --- </h2>")
+                        $("#boletosRestantes").html("<b style=\"font-family: 'Open Sans', sans-serif; color: #fff\"\n" +
+                            "                                       id=\"boletosRestantes\"> --- </b>")
+                    }
+                });
+            });
+
+            $(document).ready(function () {
+                $("#sala").change(function () {
+                    var val = $(this).val();
+                    if (val == "test") {
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Vie 30 Agosto 2023 16:00h</option>");
+                    } else if (val == "test2") {
+                        $("#horario").html("<option value=''>Horario</option><option value='horario'>SAB 31 AGOSTO 2023 14:00h</option>");
+
+                    } else if (val == "test3") {
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Dom 01 Septiembre 2023 16:00h</option>");
+                    } else if (val == "test4") {
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Lun 01 Septiembre 2023 20:00h</option>");
+                    } else if (val == "test5") {
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Mar 01 Septiembre 2023 12:00h</option>");
+                    } else if (val == "test6") {
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Jue 01 Septiembre 2023 13:00h</option>");
+                    } else if (val == "test7") {
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Horario</option><option value='horario' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\">Mie 01 Septiembre 2023 10:00h</option>");
+                    } else if (val == "") {
+                        $("#horario").html("<option value='' style=\"font-family: 'Open Sans', sans-serif; color:#ffffff\"> --- </option>");
+                    }
+                });
+            });
+
+            $(document).ready(function () {
+                $("#horario").change(function () {
+                    var val = $(this).val();
+                    if (val == "horario") {
+                        $("#a").html("<h2 style=\"font-family: 'Open Sans', sans-serif; color:#ffffff;\" class='text-light' id='counting''></h2>")
+                        $("#b").html("<h2 style=\"font-family: 'Open Sans', sans-serif;\" id='costototal'></h2>")
+                        $("#boletosRestantes").html("<b style=\"font-family: 'Open Sans', sans-serif; color:#ffffff; font-size: 20px;\" id='boletosResstantes'>23</b>")
+                    }
+                });
+            });
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                 crossorigin="anonymous"></script>
