@@ -203,16 +203,14 @@ public class ActorController {
 
         //System.out.println("Imágenes a Agregar: " + imagenes.length);
 
-        if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")){
+        // Verifica que la casilla de imágenes no se vaya a quedar vacía
+        if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")) {
             model.addAttribute("err", "Se debe de tener al menos 1 imagen");
-            model.addAttribute("imagenes",fotoRepository.findByIdpersonaOrderByNumero(actor.getId()));
+            model.addAttribute("imagenes", fotoRepository.findByIdpersonaOrderByNumero(actor.getId()));
             return "Administrador/Actor/editarActor";
-
-        } else if(imagenes[0].getContentType().equals("application/octet-stream")) {
-            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
-            return "redirect:/admin/actores";
         }
 
+        // Elimina las fotos
         for (Foto foto : fotosParaEliminar){
             // Borrado de la DB
             fotoRepository.delete(foto);
@@ -222,6 +220,12 @@ public class ActorController {
             String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
 
             fileService.eliminarArchivo(nombreFoto);
+        }
+
+        // Regresa si no se han agregado más fotos
+        if(imagenes[0].getContentType().equals("application/octet-stream")) {
+            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
+            return "redirect:/admin/actores";
         }
 
         //-----------------------------------------------
