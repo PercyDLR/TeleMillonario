@@ -117,7 +117,7 @@
                                         <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
 
                                     <td><a class="circulo_visibilidad" th:title="${sala.estado == 1 ? 'Inhabilitar Sala':'Habilitar Sala'}"
-                                           th:onclick="|advertencia(${sala.id},${sala.estado})|" th:id="${sala.id}">
+                                           th:onclick="|advertencia(${sala.id},${sala.estado},${idsede})|" th:id="${sala.id}">
                                         <i style="font-size: 2rem; color: #e64166; padding-left: 9px;padding-top: 2px;" class="bi" th:classappend="${sala.estado == 1 ? 'bi-eye-slash-fill' : 'bi-eye-fill'}"></i></a></td>
                                 </tr>
 
@@ -137,7 +137,7 @@
                     <div class="sign__content">
                         <form action="#" class="sign__form">
                             <a class="sign__logo">
-                                <img th:src="@{img/tele.png}" alt="logo">
+                                <img th:src="@{/img/tele.png}" alt="logo">
                             </a>
                             <div class="sign__group">
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
@@ -153,13 +153,13 @@
 
         <div th:replace="fragments/footer :: js(~{::script})">
             <script th:inline="javascript">
-                function advertencia(idsala,estado) {
+                function advertencia(idsala,estado,idsede) {
                     let popup = document.getElementById('popup');
 
                     let opcion = estado == 0 ? 'Habilitar' : 'Deshabilitar';
 
                     popup.getElementsByTagName("h5").item(0).innerText = '¿Estás Seguro de Querer ' +opcion+ ' esta Sala?'
-                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/salas/disponibilidad?id='}]] + idsala;
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/salas/disponibilidad?id='}]] + idsala+'&idsede='+idsede;
                     popup.getElementsByTagName("a").item(2).text = opcion + ' Sala';
                     popup.style.display = 'block';
                 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,12 +122,18 @@ public class DirectorController {
                     // Se verifica que el tamaño no sea superior a 20 MB
                     if (tamanho > 1048576*20){
                         model.addAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
+                        if (director.getId() != null){
+                            model.addAttribute("imagenes", fotoRepository.findByIdpersonaOrderByNumero(director.getId()));
+                        }
                         return "Administrador/Director/editarDirector";
                     }
                     break;
 
                 default:
                     model.addAttribute("err","Solo se deben de enviar imágenes");
+                    if (director.getId() != null){
+                        model.addAttribute("imagenes", fotoRepository.findByIdpersonaOrderByNumero(director.getId()));
+                    }
                     return "Administrador/Director/editarDirector";
             }
         }
@@ -141,10 +149,8 @@ public class DirectorController {
             director.setIdrol(rol);
             director.setEstado(1);
 
-            personaRepository.save(director);
+            director = personaRepository.save(director);
 
-            // Se obtienen el ID del actor recién creado
-            director = personaRepository.findFirstByNombresOrderByIdDesc(director.getNombres());
         } catch (Exception e){
             System.out.println(e.getMessage());
             attr.addFlashAttribute("err","Hubo un problema al guardar los datos de Director");
@@ -152,74 +158,76 @@ public class DirectorController {
         }
 
         //-----------------------------------------------
-        //            Eliminar Foto de la DB
+        //    Validación de Fotos a Eliminar en la DB
         //-----------------------------------------------
 
         // Número de fotos Ya Guardadas en la DB
         int fotosGuardadas = 0;
+        List<Foto> fotosParaEliminar = new ArrayList<>();
 
-        if(director.getId() != null){
-            //System.out.println("Imágenes a Eliminar: " + ids.length);
+        // Se obtienen las fotos guardadas en DB
+        List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(director.getId());
+        fotosGuardadas = fotosEnDB.size();
 
-            // Se obtienen las fotos guardadas en DB
-            List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(director.getId());
-            fotosGuardadas = fotosEnDB.size();
+        for(int i = 0; i < fotosEnDB.size(); i++){
+            boolean fotoBorrada = false;
 
-            for(int i = 0; i < fotosEnDB.size(); i++){
-                boolean fotoBorrada = false;
+            Foto fotoEnDB = fotosEnDB.get(i);
 
-                Foto fotoEnDB = fotosEnDB.get(i);
+            for(int j = 0; j < ids.length; j++) {
+                try{
+                    int id = Integer.parseInt(ids[j]);
 
-                for(int j = 0; j < ids.length; j++) {
-                    try{
-                        int id = Integer.parseInt(ids[j]);
+                    // Se compara el ID de la foto en DB con el de la foto que se quiere remover
+                    if (fotoEnDB.getId() == id){
 
-                        // Se compara el ID de la foto en DB con el de la foto que se quiere remover
-                        if (fotoEnDB.getId() == id){
+                        fotosParaEliminar.add(fotoEnDB);
 
-                            // Borrado de la DB
-                            fotoRepository.delete(fotoEnDB);
-
-                            // Borrado del fileService
-                            String ruta = fotosEnDB.get(i).getRuta();
-                            String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
-                            //System.out.println("Nombre de la foto a eliminar: " + nombreFoto);
-                            fileService.eliminarArchivo(nombreFoto);
-
-                            fotosGuardadas--;
-                            fotoBorrada = true;
-                            break;
-                        }
-
-                    } catch (Exception e){
-                        System.out.println(e.getMessage());
+                        fotosGuardadas--;
+                        fotoBorrada = true;
                         break;
                     }
-                }
-                // Cuando se elimina una foto todos los números posteriores se corren por 1
-                int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
 
-                if(!fotoBorrada && fotosEliminadas > 0){
-                    fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
-                    fotoRepository.save(fotoEnDB);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                    break;
                 }
             }
+            // Cuando se elimina una foto todos los números posteriores se corren por 1
+            int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
+
+            if(!fotoBorrada && fotosEliminadas > 0){
+                fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
+                fotoRepository.save(fotoEnDB);
+            }
         }
-
-        //-----------------------------------------------
-        //            Agregar Foto de la DB
-        //-----------------------------------------------
-
         //System.out.println("Imágenes a Agregar: " + imagenes.length);
 
         if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")){
             model.addAttribute("err", "Se debe de tener al menos 1 imagen");
+            model.addAttribute("imagenes", fotosEnDB);
             return "Administrador/Director/editarDirector";
 
         } else if(imagenes[0].getContentType().equals("application/octet-stream")) {
             attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
             return "redirect:/admin/directores";
         }
+
+        for (Foto foto : fotosParaEliminar){
+            // Borrado de la DB
+            fotoRepository.delete(foto);
+
+            // Borrado del fileService
+            String ruta = foto.getRuta();
+            String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
+
+            fileService.eliminarArchivo(nombreFoto);
+        }
+
+        //-----------------------------------------------
+        //            Agregar Foto de la DB
+        //-----------------------------------------------
+
 
         // Se guarda imagen por imagen (en ese orden se les dará número)
         for(int i = 0; i< imagenes.length; i++){
