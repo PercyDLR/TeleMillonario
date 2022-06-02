@@ -64,7 +64,7 @@ public class Funcion {
     @Column(name = "cantidadasistentes")
     private Integer cantidadasistentes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idsala")
     private Sala sala=new Sala();
 

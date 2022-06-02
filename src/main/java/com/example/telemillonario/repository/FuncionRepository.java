@@ -19,4 +19,9 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
             "limit ?2,?3")
     List<Funcion> buscarFuncion( int estado, int pag, int salasporpag);
 
+
+   @Query(nativeQuery = true,value = "SELECT * FROM funcion WHERE estado = 1 ORDER BY calificacion DESC LIMIT 4")
+   List<Funcion> obtenerFuncionesDestacadasPaginaPrincipal();
+
+
 }

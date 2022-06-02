@@ -22,4 +22,7 @@ public interface FuncionGeneroRepository extends JpaRepository<Funciongenero,Int
             "where (f.estado = 1) and (f.restriccionedad like %?1%) and (g.id like %?2%) and (f.nombre like %?3%) order by fg.idfuncion")
     List<Funciongenero> buscarFuncionGeneroPorFiltros(String restriccionEdad, String genero, String nombreFuncion);
 
+
+
+
 }
