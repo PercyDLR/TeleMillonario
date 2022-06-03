@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,14 +172,14 @@ public class FuncionesController {
         }
 
         // Se verifica si el ID de la Función corresponde a una real
-        Optional<Funcion> optFuncionEncontr = funcionRepository.findById(idfuncion);
+        Optional<Funcion> funcionEnDB = funcionRepository.findById(idfuncion);
         Persona persona = (Persona) session.getAttribute("usuario");
 
         // Retorna el formulario
-        if (optFuncionEncontr.isPresent()) {
+        if (funcionEnDB.isPresent()) {
 
             // Datos de la funcion
-            funcion = optFuncionEncontr.get();
+            funcion = funcionEnDB.get();
 
             // Listas para los select
             retornarValores(model,funcion,persona);
@@ -232,7 +233,7 @@ public class FuncionesController {
 
             model.addAttribute("duracion",duracion);
             if(duracionInt <= 0) {
-                model.addAttribute("msgduracion", "La duración ingresada es incorrecta");
+                model.addAttribute("msgduracion", "La duración no es válida");
             }
 
             model.addAttribute("fechamasinicio",fechamasinicio);
@@ -245,26 +246,11 @@ public class FuncionesController {
             return "Operador/crearFuncion";
         }
 
-        //VALIDACIONES Fotos
-
-        //Se verifica que se haya subido al menos una foto al crear un formulario
-        if(funcion.getId()==0 && imagenes[0].getContentType().equals("application/octet-stream")){
-
-            model.addAttribute("err","Se debe de tener al menos 1 imagen");
-            model.addAttribute("listActores", personaRepository.listarActores("", 0, 100000));
-            model.addAttribute("listDirectores", personaRepository.listarDirectores());
-            model.addAttribute("listGeneros", generoRepository.findAll());
-            model.addAttribute("fechaactual", now);
-            model.addAttribute("duracion", duracion);
-            model.addAttribute("fechamasinicio", fechamasinicio);
-
-            //listado de salas por sede disponibles
-            model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(), 1));
-            return "Operador/crearFuncion";
-
-        }
-
+        //-----------------------------------------------
+        //      Validación de las Imágenes enviadas
+        //-----------------------------------------------
         long tamanho = 0;
+
         for (MultipartFile img : imagenes){
 
             // Se verifica que los archivos enviados sean imágenes
@@ -278,478 +264,82 @@ public class FuncionesController {
                     // Se verifica que el tamaño no sea superior a 20 MB
                     if (tamanho > 1048576*20){
                         model.addAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
-                        model.addAttribute("listActores", personaRepository.listarActores("", 0, 100000));
-                        model.addAttribute("listDirectores", personaRepository.listarDirectores());
-                        model.addAttribute("listGeneros", generoRepository.findAll());
-                        model.addAttribute("fechaactual", now);
-                        if (funcion.getId() == 0){
-                            model.addAttribute("duracion", duracion);
-                            model.addAttribute("fechamasinicio", fechamasinicio);
-                            model.addAttribute("val", 2);
-                            model.addAttribute("durval",1);
-                            //listado de salas por sede disponibles
-                            model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(), 1));
 
-                        }else{
-                            Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                            Funcion funcencon = optFuncionEncontr.get();
-                            model.addAttribute("funcion", funcion);
-                            model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                            model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                            model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                            model.addAttribute("sval",1);
+                        // Listas para los select
+                        retornarValores(model,funcion,persona);
 
-                            model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                            model.addAttribute("val",2);
+                        // Se regresan elementos ya seleccionados
+                        model.addAttribute("actoresFuncion",idactor);
+                        model.addAttribute("directoresFuncion",iddirector);
+                        model.addAttribute("generosFuncion",idgenero);
+                        model.addAttribute("duracion",duracion);
+                        model.addAttribute("fechamasinicio",fechamasinicio);
 
-                            String[] horafinstr = funcencon.getFin().toString().split(":");
-                            String horafinstr1 = horafinstr[0];
-                            String minfinstr2 = horafinstr[1];
-                            int horafinint = Integer.parseInt(horafinstr1);
-                            System.out.println(horafinint*60);
-                            int minfinint = Integer.parseInt(minfinstr2);
-                            int minhorafinint =horafinint*60;
-
-
-                            int mintotfin=minhorafinint+minfinint;
-
-                            String[] horaininstr = funcencon.getInicio().toString().split(":");
-                            String horaininstr1 = horaininstr[0];
-                            String horaininstr2 = horaininstr[1];
-                            int horainiint = Integer.parseInt(horaininstr1);
-                            int mininiint = Integer.parseInt(horaininstr2);
-                            int minhorainiint =horainiint*60;
-
-                            int mintotini=minhorainiint+mininiint;
-
-                            model.addAttribute("duracion",mintotfin-mintotini);
-
-                            List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                            model.addAttribute("imagenes", fotos);
-
-
-                            //listado de salas por sede disponibles
-                            model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-
-                        }
                         return "Operador/crearFuncion";
                     }
                     break;
 
                 default:
-                    model.addAttribute("err","Solo puede subir imagenes con formato jpg ,jpeg y png");
-                    model.addAttribute("listActores", personaRepository.listarActores("", 0, 100000));
-                    model.addAttribute("listDirectores", personaRepository.listarDirectores());
-                    model.addAttribute("listGeneros", generoRepository.findAll());
-                    model.addAttribute("fechaactual", now);
+                    model.addAttribute("err","Solo se deben de enviar imágenes");
 
-                    if (funcion.getId() == 0){
-                        model.addAttribute("duracion", duracion);
-                        model.addAttribute("fechamasinicio", fechamasinicio);
-                        model.addAttribute("val", 2);
-                        model.addAttribute("durval",1);
-                        //listado de salas por sede disponibles
-                        model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(), 1));
-                    }else{
-                        Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                        Funcion funcencon = optFuncionEncontr.get();
-                        model.addAttribute("funcion", funcion);
-                        model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                        model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                        model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                        model.addAttribute("sval",1);
+                    // Listas para los select
+                    retornarValores(model,funcion,persona);
 
-                        model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                        model.addAttribute("val",2);
+                    // Se regresan elementos ya seleccionados
+                    model.addAttribute("actoresFuncion",idactor);
+                    model.addAttribute("directoresFuncion",iddirector);
+                    model.addAttribute("generosFuncion",idgenero);
+                    model.addAttribute("duracion",duracion);
+                    model.addAttribute("fechamasinicio",fechamasinicio);
 
-                        String[] horafinstr = funcencon.getFin().toString().split(":");
-                        String horafinstr1 = horafinstr[0];
-                        String minfinstr2 = horafinstr[1];
-                        int horafinint = Integer.parseInt(horafinstr1);
-                        System.out.println(horafinint*60);
-                        int minfinint = Integer.parseInt(minfinstr2);
-                        int minhorafinint =horafinint*60;
-
-
-                        int mintotfin=minhorafinint+minfinint;
-
-                        String[] horaininstr = funcencon.getInicio().toString().split(":");
-                        String horaininstr1 = horaininstr[0];
-                        String horaininstr2 = horaininstr[1];
-                        int horainiint = Integer.parseInt(horaininstr1);
-                        int mininiint = Integer.parseInt(horaininstr2);
-                        int minhorainiint =horainiint*60;
-
-                        int mintotini=minhorainiint+mininiint;
-
-                        model.addAttribute("duracion",mintotfin-mintotini);
-
-                        List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                        model.addAttribute("imagenes", fotos);
-
-
-                        //listado de salas por sede disponibles
-                        model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-
-                    }
                     return "Operador/crearFuncion";
             }
         }
 
-
-
-        //Validaciones extras
-
-
-            //validacion fecha vacia
-            if (fechamasinicio.equals("")){
-                model.addAttribute("listActores", personaRepository.listarActores("", 0, 100000));
-                model.addAttribute("listDirectores", personaRepository.listarDirectores());
-                model.addAttribute("listGeneros", generoRepository.findAll());
-                model.addAttribute("fechaactual", now);
-                if(funcion.getId()==0) {
-                    model.addAttribute("durval",1);
-                    model.addAttribute("duracion", duracion);
-
-                    model.addAttribute("msgfecha", "Debe ingresar una fecha");
-                    model.addAttribute("fechamasinicio", fechamasinicio);
-                    model.addAttribute("val", 2);
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(), 1));
-                    return "Operador/crearFuncion";
-                }else{
-                    //para form de editar
-                    Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                    Funcion funcencon = optFuncionEncontr.get();
-                    model.addAttribute("funcion", funcion);
-                    model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                    model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                    model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                    model.addAttribute("sval",1);
-                    model.addAttribute("msgfecha", "Debe ingresar una fecha");
-
-                    model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                    model.addAttribute("val",2);
-
-                    String[] horafinstr = funcencon.getFin().toString().split(":");
-                    String horafinstr1 = horafinstr[0];
-                    String minfinstr2 = horafinstr[1];
-                    int horafinint = Integer.parseInt(horafinstr1);
-                    System.out.println(horafinint*60);
-                    int minfinint = Integer.parseInt(minfinstr2);
-                    int minhorafinint =horafinint*60;
-
-
-                    int mintotfin=minhorafinint+minfinint;
-
-                    String[] horaininstr = funcencon.getInicio().toString().split(":");
-                    String horaininstr1 = horaininstr[0];
-                    String horaininstr2 = horaininstr[1];
-                    int horainiint = Integer.parseInt(horaininstr1);
-                    int mininiint = Integer.parseInt(horaininstr2);
-                    int minhorainiint =horainiint*60;
-
-                    int mintotini=minhorainiint+mininiint;
-
-                    model.addAttribute("duracion",mintotfin-mintotini);
-
-                    List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                    model.addAttribute("imagenes", fotos);
-
-//            System.out.println(funcencon.getFin()-funcencon.getInicio());
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-
-                }
-            }
-
-            LocalDateTime fecha = LocalDateTime
-                    .parse(fechamasinicio);
-            if (now.isAfter(fecha)){
-                model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
-                model.addAttribute("listDirectores",personaRepository.listarDirectores());
-                model.addAttribute("listGeneros",generoRepository.findAll());
-                model.addAttribute("fechaactual",now);
-
-                if(funcion.getId()==0) {
-                    model.addAttribute("duracion",duracion);
-                    model.addAttribute("durval",1);
-                    model.addAttribute("msgfecha","La fecha ingresada no debe ser menor a la actual");
-                    model.addAttribute("fechamasinicio",fechamasinicio);
-                    model.addAttribute("val",2);
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-
-                }else{
-
-                    //para form de editar
-                    Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                    Funcion funcencon = optFuncionEncontr.get();
-                    model.addAttribute("funcion", funcion);
-                    model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                    model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                    model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                    model.addAttribute("sval",1);
-                    model.addAttribute("msgfecha", "La fecha ingresada no debe ser menor a la actual");
-
-                    model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                    model.addAttribute("val",2);
-
-                    String[] horafinstr = funcencon.getFin().toString().split(":");
-                    String horafinstr1 = horafinstr[0];
-                    String minfinstr2 = horafinstr[1];
-                    int horafinint = Integer.parseInt(horafinstr1);
-                    System.out.println(horafinint*60);
-                    int minfinint = Integer.parseInt(minfinstr2);
-                    int minhorafinint =horafinint*60;
-
-
-                    int mintotfin=minhorafinint+minfinint;
-
-                    String[] horaininstr = funcencon.getInicio().toString().split(":");
-                    String horaininstr1 = horaininstr[0];
-                    String horaininstr2 = horaininstr[1];
-                    int horainiint = Integer.parseInt(horaininstr1);
-                    int mininiint = Integer.parseInt(horaininstr2);
-                    int minhorainiint =horainiint*60;
-
-                    int mintotini=minhorainiint+mininiint;
-
-                    model.addAttribute("duracion",mintotfin-mintotini);
-
-                    List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                    model.addAttribute("imagenes", fotos);
-
-//            System.out.println(funcencon.getFin()-funcencon.getInicio());
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-
-                }
-
-
-
-            }
-
-
-            if (duracion.equals("")){
-                model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
-                model.addAttribute("listDirectores",personaRepository.listarDirectores());
-                model.addAttribute("listGeneros",generoRepository.findAll());
-                model.addAttribute("fechaactual",now);
-
-                if(funcion.getId()==0) {
-                    model.addAttribute("duracion",duracion);
-
-                    model.addAttribute("msgduracion","Debe ingresar una duracion");
-                    model.addAttribute("fechamasinicio",fechamasinicio);
-                    model.addAttribute("val",2);
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-
-
-                }else{
-                    //para form de editar
-                    Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                    Funcion funcencon = optFuncionEncontr.get();
-                    model.addAttribute("funcion", funcion);
-                    model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                    model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                    model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                    model.addAttribute("sval",1);
-                    model.addAttribute("msgduracion","Debe ingresar una duracion");
-
-                    model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                    model.addAttribute("val",2);
-
-                    String[] horafinstr = funcencon.getFin().toString().split(":");
-                    String horafinstr1 = horafinstr[0];
-                    String minfinstr2 = horafinstr[1];
-                    int horafinint = Integer.parseInt(horafinstr1);
-                    System.out.println(horafinint*60);
-                    int minfinint = Integer.parseInt(minfinstr2);
-                    int minhorafinint =horafinint*60;
-
-
-                    int mintotfin=minhorafinint+minfinint;
-
-                    String[] horaininstr = funcencon.getInicio().toString().split(":");
-                    String horaininstr1 = horaininstr[0];
-                    String horaininstr2 = horaininstr[1];
-                    int horainiint = Integer.parseInt(horaininstr1);
-                    int mininiint = Integer.parseInt(horaininstr2);
-                    int minhorainiint =horainiint*60;
-
-                    int mintotini=minhorainiint+mininiint;
-
-                    model.addAttribute("duracion",mintotfin-mintotini);
-
-                    List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                    model.addAttribute("imagenes", fotos);
-
-//            System.out.println(funcencon.getFin()-funcencon.getInicio());
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-
-                }
-
-
-
-
-            }
-
-
-            if (!duracion.matches("[+-]?\\d*(\\.\\d+)?")){
-                model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
-                model.addAttribute("listDirectores",personaRepository.listarDirectores());
-                model.addAttribute("listGeneros",generoRepository.findAll());
-                model.addAttribute("fechaactual",now);
-
-                if(funcion.getId()==0) {
-                    model.addAttribute("duracion",duracion);
-
-                    model.addAttribute("msgduracion","Debe ingresar un número");
-                    model.addAttribute("fechamasinicio",fechamasinicio);
-                    model.addAttribute("val",2);
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-
-                }else{
-                    //para form de editar
-                    Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                    Funcion funcencon = optFuncionEncontr.get();
-                    model.addAttribute("funcion", funcion);
-                    model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                    model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                    model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                    model.addAttribute("sval",1);
-                    model.addAttribute("msgduracion","Debe ingresar un número");
-
-                    model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                    model.addAttribute("val",2);
-
-                    String[] horafinstr = funcencon.getFin().toString().split(":");
-                    String horafinstr1 = horafinstr[0];
-                    String minfinstr2 = horafinstr[1];
-                    int horafinint = Integer.parseInt(horafinstr1);
-                    System.out.println(horafinint*60);
-                    int minfinint = Integer.parseInt(minfinstr2);
-                    int minhorafinint =horafinint*60;
-
-
-                    int mintotfin=minhorafinint+minfinint;
-
-                    String[] horaininstr = funcencon.getInicio().toString().split(":");
-                    String horaininstr1 = horaininstr[0];
-                    String horaininstr2 = horaininstr[1];
-                    int horainiint = Integer.parseInt(horaininstr1);
-                    int mininiint = Integer.parseInt(horaininstr2);
-                    int minhorainiint =horainiint*60;
-
-                    int mintotini=minhorainiint+mininiint;
-
-                    model.addAttribute("duracion",mintotfin-mintotini);
-
-                    List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                    model.addAttribute("imagenes", fotos);
-
-//            System.out.println(funcencon.getFin()-funcencon.getInicio());
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-
-
-                }
-
-            }
-
-
-
-            if (funcion.getSala()==null){
-                model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
-                model.addAttribute("listDirectores",personaRepository.listarDirectores());
-                model.addAttribute("listGeneros",generoRepository.findAll());
-                model.addAttribute("fechaactual",now);
-                if(funcion.getId()==0) {
-                    model.addAttribute("duracion",duracion);
-                    model.addAttribute("durval",1);
-                    model.addAttribute("msgsala","Debe seleccionar una sala");
-                    model.addAttribute("fechamasinicio",fechamasinicio);
-                    model.addAttribute("val",2);
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-                }else{
-                    //para form de editar
-                    Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                    Funcion funcencon = optFuncionEncontr.get();
-                    model.addAttribute("funcion", funcion);
-                    model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                    model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                    model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                    model.addAttribute("sval",1);
-                    model.addAttribute("msgsala","Debe seleccionar una sala");
-
-                    model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                    model.addAttribute("val",2);
-
-                    String[] horafinstr = funcencon.getFin().toString().split(":");
-                    String horafinstr1 = horafinstr[0];
-                    String minfinstr2 = horafinstr[1];
-                    int horafinint = Integer.parseInt(horafinstr1);
-                    System.out.println(horafinint*60);
-                    int minfinint = Integer.parseInt(minfinstr2);
-                    int minhorafinint =horafinint*60;
-
-
-                    int mintotfin=minhorafinint+minfinint;
-
-                    String[] horaininstr = funcencon.getInicio().toString().split(":");
-                    String horaininstr1 = horaininstr[0];
-                    String horaininstr2 = horaininstr[1];
-                    int horainiint = Integer.parseInt(horaininstr1);
-                    int mininiint = Integer.parseInt(horaininstr2);
-                    int minhorainiint =horainiint*60;
-
-                    int mintotini=minhorainiint+mininiint;
-
-                    model.addAttribute("duracion",mintotfin-mintotini);
-
-                    List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                    model.addAttribute("imagenes", fotos);
-
-//            System.out.println(funcencon.getFin()-funcencon.getInicio());
-
-                    //listado de salas por sede disponibles
-                    model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                    return "Operador/crearFuncion";
-                }
-
-
-            }
-
-
-
-
+        //-----------------------------------------------
+        //          Validación de la Fecha
+        //-----------------------------------------------
+
+        LocalDateTime fecha;
+        try{
+            fecha = LocalDateTime.parse(fechamasinicio);
+            System.out.println(fecha);
+        } catch (DateTimeParseException e){
+
+            // Listas para los select
+            retornarValores(model,funcion,persona);
+
+            // Se regresan elementos ya seleccionados
+            model.addAttribute("actoresFuncion",idactor);
+            model.addAttribute("directoresFuncion",iddirector);
+            model.addAttribute("generosFuncion",idgenero);
+            model.addAttribute("duracion",duracion);
+            model.addAttribute("fechamasinicio",fechamasinicio);
+
+            model.addAttribute("msgfecha", "Debe ingresar una fecha");
+
+            return "Operador/crearFuncion";
+        }
+
+        if (now.isAfter(fecha)){
+            // Listas para los select
+            retornarValores(model,funcion,persona);
+
+            // Se regresan elementos ya seleccionados
+            model.addAttribute("actoresFuncion",idactor);
+            model.addAttribute("directoresFuncion",iddirector);
+            model.addAttribute("generosFuncion",idgenero);
+            model.addAttribute("duracion",duracion);
+            model.addAttribute("fechamasinicio",fechamasinicio);
+
+            model.addAttribute("msgfecha", "Debe ingresar una fecha");
+
+            return "Operador/crearFuncion";
+        }
+
+        //-----------------------------------------------
+        //          Guardar datos de la Función
+        //-----------------------------------------------
 
             //GUARDAR NEW FORM
             if(funcion.getId()==0){

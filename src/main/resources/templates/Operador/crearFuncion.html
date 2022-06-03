@@ -79,6 +79,12 @@
                 resize: none;
                 padding: 10px 10px;
             }
+            .error-form{
+                margin-top: 0.25rem;
+                font-size: .875em;
+                color: #dc3545;
+                width: 100%
+            }
         </style>
     </head>
 <!--
@@ -138,8 +144,7 @@
                                                    th:value="${fechamasinicio != null ? fechamasinicio : ''}"
                                                    th:classappend="${#fields.hasErrors('fecha')? 'is-invalid':''}"
                                                    placeholder="Fecha y Hora" th:min="${fechaactual}" required>
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('fecha')}"
-                                                 th:errors="*{fecha}"></div>
+                                            <div class="error-form" th:if="${msgfecha != null}" th:text="${msgfecha}"></div>
                                         </div>
 
                                         <div class="sign__group">
@@ -213,8 +218,7 @@
                                             <input name="duracion" id="duracion" class="sign__input"
                                                    th:value="${duracion != null ? duracion : ''}"
                                                    placeholder="Duración" type="number" min="0" required>
-                                            <div class="invalid-feedback"
-                                                 th:if="${msgduracion!=null}" th:text="${msgduracion}"></div>
+                                            <div class="error-form" th:if="${msgduracion!=null}" th:text="${msgduracion}"></div>
                                         </div>
 
                                         <div class="sign__group">
@@ -253,7 +257,7 @@
                                                         th:value="${sala.id}"
                                                         th:data-aforo="${sala.aforo}"></option>
                                             </select>
-                                            <div class="invalid-feedback" th:if="${msgsala!=null}" th:text="${msgsala}"></div>
+                                            <div class="error-form" th:if="${msgsala!=null}" th:text="${msgsala}"></div>
                                         </div>
 
                                         <div class="sign__group">
