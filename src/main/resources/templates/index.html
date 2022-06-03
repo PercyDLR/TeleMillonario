@@ -44,6 +44,50 @@
             border: none;
             vertical-align: unset;
         }
+		#map {
+			height: 30%;
+			width: 30%;
+		}
+
+		/*
+         * Optional: Makes the sample page fill the window.
+         */
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		#floating-panel {
+			position: absolute;
+			top: 10px;
+			left: 25%;
+			z-index: 5;
+			background-color: #fff;
+			padding: 5px;
+			border: 1px solid #999;
+			text-align: center;
+			font-family: "Roboto", "sans-serif";
+			line-height: 30px;
+			padding-left: 10px;
+		}
+
+		#floating-panel {
+			position: absolute;
+			top: 5px;
+			left: 50%;
+			margin-left: -180px;
+			width: 350px;
+			z-index: 5;
+			background-color: #fff;
+			padding: 5px;
+			border: 1px solid #999;
+		}
+
+		#latlng {
+			width: 225px;
+		}
     </style>
 </head>
 
@@ -159,6 +203,14 @@
 		</div>
 	</section>
 	<!-- end home -->
+
+	<div onload="initMap()">
+		<input id="latlng" type="text" value="40.714224,-73.961452" />
+		<input id="submit" type="button" value="Reverse Geocode" />
+	</div>
+	<div id="map"></div>
+
+
 
     <form method="post" th:action="@{/ejemplo/subir}" enctype="multipart/form-data">
         <label style="color: white" for="imagenes">Agregar</label>
@@ -393,7 +445,48 @@
                     closeOnSelect: false
                 });
             });
+			function initMap() {
+				const map = new google.maps.Map(document.getElementById("map"), {
+					zoom: 8,
+					center: { lat: 40.731, lng: -73.997 },
+				});
+				const geocoder = new google.maps.Geocoder();
+				const infowindow = new google.maps.InfoWindow();
+				latlnga="40.714224,-73.961452";
+				geocodeLatLng(geocoder, map, infowindow,latlnga);
+			}
+
+			function geocodeLatLng(geocoder, map, infowindow,latlnga) {
+				const input = latlnga
+				const latlngStr = input.split(",", 2);
+				const latlng = {
+					lat: parseFloat(latlngStr[0]),
+					lng: parseFloat(latlngStr[1]),
+				};
+
+				geocoder
+						.geocode({ location: latlng })
+						.then((response) => {
+							if (response.results[0]) {
+								map.setZoom(11);
+
+								const marker = new google.maps.Marker({
+									position: latlng,
+									map: map,
+								});
+
+								infowindow.setContent(response.results[0].formatted_address);
+								infowindow.open(map, marker);
+							} else {
+								window.alert("No results found");
+							}
+						})
+						.catch((e) => window.alert("Geocoder failed due to: " + e));
+			}
+
+			window.initMap = initMap;
         </script>
+
     </div>
 </body>
 

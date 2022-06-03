@@ -5,6 +5,51 @@
             input::placeholder {
                 color: #000000;
             }
+
+            #map {
+                height: 150px;
+                width: 150px;
+            }
+
+            /*
+             * Optional: Makes the sample page fill the window.
+             */
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #floating-panel {
+                position: absolute;
+                top: 10px;
+                left: 25%;
+                z-index: 5;
+                background-color: #fff;
+                padding: 5px;
+                border: 1px solid #999;
+                text-align: center;
+                font-family: "Roboto", "sans-serif";
+                line-height: 30px;
+                padding-left: 10px;
+            }
+
+            #floating-panel {
+                position: absolute;
+                top: 5px;
+                left: 50%;
+                margin-left: -180px;
+                width: 350px;
+                z-index: 5;
+                background-color: #fff;
+                padding: 5px;
+                border: 1px solid #999;
+            }
+
+            #latlng {
+                width: 225px;
+            }
         </style>
     </head>
 
@@ -111,12 +156,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="foto : ${listaSedes}">
+                                <tr th:each="foto: ${listaSedes}">
                                     <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" th:src="${foto.ruta}"></center></th>
                                     <td th:text="${foto.getSede().getNombre()}">Gran Teatro Nacional</td>
                                     <td th:text="${foto.getSede().getIddistrito().getNombre()}">San Miguel</td>
                                     <td th:text="${foto.getSede().getDireccion()}">Av. Grau</td>
-                                    <td th:text="${foto.getSede().getCoordenadas()}"></td>
+                                    <td><div th:data-latlong="${foto.getSede().getCoordenadas()}"
+                                            th:onload="initMap(this.getAttribute('data-latlong'))">
+                                    </div>
+                                        <div id="map"></div></td>
                                     <td>
                                         <button style="cursor: pointer">
                                             <a class="circulo_botones" th:href="@{'/admin/salas'+'?idsede='+ ${foto.getSede().getId()}}">
@@ -178,7 +226,46 @@
                     popup.getElementsByTagName("a").item(2).href = [[@{'/admin/sedes/borrar?idsede='}]] + idsede;
                     popup.style.display = 'block';
                 }
+                function initMap(latlnga) {
+                    const map = new google.maps.Map(document.getElementById("map"), {
+                        zoom: 8,
+                        center: { lat: 40.731, lng: -73.997 },
+                    });
+                    const geocoder = new google.maps.Geocoder();
+                    const infowindow = new google.maps.InfoWindow();
+                    latlnga="40.714224,-73.961452";
+                    geocodeLatLng(geocoder, map, infowindow,latlnga);
+                }
 
+                function geocodeLatLng(geocoder, map, infowindow,latlnga) {
+                    const input = latlnga
+                    const latlngStr = input.split(",", 2);
+                    const latlng = {
+                        lat: parseFloat(latlngStr[0]),
+                        lng: parseFloat(latlngStr[1]),
+                    };
+
+                    geocoder
+                        .geocode({ location: latlng })
+                        .then((response) => {
+                            if (response.results[0]) {
+                                map.setZoom(11);
+
+                                const marker = new google.maps.Marker({
+                                    position: latlng,
+                                    map: map,
+                                });
+
+                                infowindow.setContent(response.results[0].formatted_address);
+                                infowindow.open(map, marker);
+                            } else {
+                                window.alert("No results found");
+                            }
+                        })
+                        .catch((e) => window.alert("Geocoder failed due to: " + e));
+                }
+
+                window.initMap = initMap;
             </script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
