@@ -44,7 +44,24 @@
             border: none;
             vertical-align: unset;
         }
-		#map {
+		#map0 {
+			height: 30%;
+			width: 30%;
+		}
+		#map1 {
+			height: 30%;
+			width: 30%;
+		}
+		#map2 {
+			height: 30%;
+			width: 30%;
+		}
+		/*#mapa {*/
+		/*	height: 30%;*/
+		/*	width: 30%;*/
+		/*}*/
+
+		#map_canvas{
 			height: 30%;
 			width: 30%;
 		}
@@ -57,32 +74,6 @@
 			height: 100%;
 			margin: 0;
 			padding: 0;
-		}
-
-		#floating-panel {
-			position: absolute;
-			top: 10px;
-			left: 25%;
-			z-index: 5;
-			background-color: #fff;
-			padding: 5px;
-			border: 1px solid #999;
-			text-align: center;
-			font-family: "Roboto", "sans-serif";
-			line-height: 30px;
-			padding-left: 10px;
-		}
-
-		#floating-panel {
-			position: absolute;
-			top: 5px;
-			left: 50%;
-			margin-left: -180px;
-			width: 350px;
-			z-index: 5;
-			background-color: #fff;
-			padding: 5px;
-			border: 1px solid #999;
 		}
 
 		#latlng {
@@ -204,13 +195,23 @@
 	</section>
 	<!-- end home -->
 
-	<div onload="initMap()">
+	<div>
 		<input id="latlng" type="text" value="40.714224,-73.961452" />
 		<input id="submit" type="button" value="Reverse Geocode" />
 	</div>
-	<div id="map"></div>
+	<div id="map0"></div>
+	<div id="map1"></div>
+	<div id="map2"></div>
+<!--	<div>-->
+<!--		<input id="latlng1" type="text" value="40.714224,-73.961452" />-->
+<!--		<input id="submit1" type="button" value="Reverse Geocode" />-->
+<!--	</div>-->
+<!--	<div id="mapa"></div>-->
+<!--	<div id="map123" class="maps" data-gps="46.1461154,17.1580882"></div>-->
+<!--	<div id="map456" class="maps" data-gps="45.1461154,13.1080882"></div>-->
 
-
+<!--	<div id="map_canvas" style="width:30%; height:30%; margin-left:80px;"></div>-->
+<!--	<div id="map_canvas2" style="width:30%; height:30%; margin-left:80px;"></div>-->
 
     <form method="post" th:action="@{/ejemplo/subir}" enctype="multipart/form-data">
         <label style="color: white" for="imagenes">Agregar</label>
@@ -446,14 +447,27 @@
                 });
             });
 			function initMap() {
-				const map = new google.maps.Map(document.getElementById("map"), {
+				const map0 = new google.maps.Map(document.getElementById("map0"), {
 					zoom: 8,
 					center: { lat: 40.731, lng: -73.997 },
 				});
+				const map1 = new google.maps.Map(document.getElementById("map1"), {
+					zoom: 8,
+					center: { lat: 40.731, lng: -73.997 },
+				});
+				const map2 = new google.maps.Map(document.getElementById("map2"), {
+					zoom: 8,
+					center: { lat: 40.731, lng: -73.997 },
+				});
+
 				const geocoder = new google.maps.Geocoder();
 				const infowindow = new google.maps.InfoWindow();
+
 				latlnga="40.714224,-73.961452";
-				geocodeLatLng(geocoder, map, infowindow,latlnga);
+				latlnga1="40.714224,-73.934413";
+				geocodeLatLng(geocoder, map0, infowindow,latlnga);
+				geocodeLatLng(geocoder, map1, infowindow,latlnga1);
+				geocodeLatLng(geocoder, map2, infowindow,latlnga1);
 			}
 
 			function geocodeLatLng(geocoder, map, infowindow,latlnga) {
@@ -475,8 +489,8 @@
 									map: map,
 								});
 
-								infowindow.setContent(response.results[0].formatted_address);
-								infowindow.open(map, marker);
+								// infowindow.setContent(response.results[0].formatted_address);
+								// infowindow.open(map, marker);
 							} else {
 								window.alert("No results found");
 							}
@@ -485,6 +499,60 @@
 			}
 
 			window.initMap = initMap;
+			// var map;
+			// function initialize() {
+			// 	// Get all map canvas with ".maps" and store them to a variable.
+			// 	var maps = document.getElementsByClassName("maps");
+			//
+			// 	var ids, gps, mapId = '';
+			//
+			// 	// Loop: Explore all elements with ".maps" and create a new Google Map object for them
+			// 	for(var i=0; i<maps.length; i++) {
+			//
+			// 		// Get ID of single div
+			// 		mapId = document.getElementById(maps[i].id);
+			//
+			// 		// Get LatLng stored in data attribute.
+			// 		// !!! Make sure there is no space in data-attribute !!!
+			// 		// !!! and the values are separated with comma !!!
+			// 		gps = mapId.getAttribute('data-gps');
+			//
+			// 		// Convert LatLng to an array
+			// 		gps = gps.split(",");
+			//
+			// 		// Create new Google Map object for single canvas
+			// 		map = new google.maps.Map(mapId, {
+			// 			zoom: 15,
+			// 			// Use our LatLng array bellow
+			// 			center: new google.maps.LatLng(parseFloat(gps[0]), parseFloat(gps[1])),
+			// 			mapTypeId: 'roadmap',
+			// 			mapTypeControl: true,
+			// 			zoomControlOptions: {
+			// 				position: google.maps.ControlPosition.RIGHT_TOP
+			// 			}
+			// 		});
+			//
+			// 		// Create new Google Marker object for new map
+			// 		var marker = new google.maps.Marker({
+			// 			// Use our LatLng array bellow
+			// 			position: new google.maps.LatLng(parseFloat(gps[0]), parseFloat(gps[1])),
+			// 			map: map
+			// 		});
+			// 	}
+			// }
+			// var map, map2;
+			//
+			// function initialize() {
+			// 	// create the maps
+			// 	var myOptions = {
+			// 		zoom: 8,
+			// 		center: { lat: 40.731, lng: -73.997 },
+			// 	}
+			// 	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+			//
+			// 	map2 = new google.maps.Map(document.getElementById("map_canvas2"), myOptions);
+			// }
+
         </script>
 
     </div>

@@ -75,4 +75,8 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     Persona buscarPersonaPorTokensito(String tokensito);
 
 
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.persona " +
+            "where idsede=?1 and estado=1 ")
+    Integer valborrSedePers(int idsede);
+
 }
