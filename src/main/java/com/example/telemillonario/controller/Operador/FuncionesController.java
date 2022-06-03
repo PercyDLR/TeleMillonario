@@ -207,7 +207,7 @@ public class FuncionesController {
 
     @PostMapping("/guardar")
     public String guardarFuncion(@ModelAttribute("funcion") @Valid Funcion funcion, BindingResult bindingResult,
-                                 Model model, HttpSession session,
+                                 Model model, HttpSession session, RedirectAttributes attr,
                                  @RequestParam(value="fechamasinicio") String fechamasinicio,
                                  @RequestParam(value="duracion") String duracion,
                                  @RequestParam(value="idactor") String[] idactor,
@@ -418,86 +418,119 @@ public class FuncionesController {
         }
 
         //-----------------------------------------------
-        //              Guardar Imágenes
+        //    Validación de Fotos a Eliminar en la DB
         //-----------------------------------------------
 
-        //GUARDAR NEW FORM
-        if(funcion.getId()==0) {
+        // Número de fotos Ya Guardadas en la DB
+        List<Foto> fotosParaEliminar = new ArrayList<>();
 
-            System.out.println("\nImágenes a Agregar: " + imagenes.length);
-            if (!imagenes[0].getOriginalFilename().equals("")) {
-                int i = 1;
-                for (MultipartFile img : imagenes) {
-                    System.out.println("Nombre: " + img.getOriginalFilename());
-                    System.out.println("Nombre: " + img.getOriginalFilename().length());
-                    System.out.println("Tipo: " + img.getContentType());
-                    MultipartFile file_aux = fileService.formatearArchivo(img, "foto");
-                    if (fileService.subirArchivo(file_aux)) {
-                        System.out.println("Archivo subido correctamente");
-                        Foto foto = new Foto();
-                        foto.setEstado(1);
-                        foto.setFuncion(funcion);
+        // Se obtienen las fotos guardadas en DB
+        List<Foto> fotosEnDB = fotoRepository.buscarFotosFuncion(funcion.getId());
+        int fotosGuardadas = fotosEnDB.size();
 
-                        foto.setIdpersona(persona.getId());
-                        foto.setSede(persona.getIdsede());
-                        foto.setNumero(i);
-                        foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
-                        fotoRepository.save(foto);
-                    } else {
-                        System.out.println("El archivo" + img.getOriginalFilename() + "No se pude subir de manera correcta");
+        for(int i = 0; i < fotosEnDB.size(); i++){
+            boolean fotoBorrada = false;
+
+            Foto fotoEnDB = fotosEnDB.get(i);
+
+            for(int j = 0; j < ids.length; j++) {
+                try{
+                    int id = Integer.parseInt(ids[j]);
+
+                    // Se compara el ID de la foto en DB con el de la foto que se quiere remover
+                    if (fotoEnDB.getId() == id){
+
+                        fotosParaEliminar.add(fotoEnDB);
+
+                        fotosGuardadas--;
+                        fotoBorrada = true;
+                        break;
                     }
-                    i++;
-                }
 
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                    break;
+                }
             }
-        //GUARDAR FORM EDITAR
-        }else{
+            // Cuando se elimina una foto todos los números posteriores se corren por 1
+            int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
 
-            //eliminar imagenes
-            System.out.println("Imágenes a Eliminar: " + ids.length);
-            if(!ids[0].equals("a")){
-                for(String id : ids){
-                    System.out.println("ID: " + id);
-                    int idfoto= Integer.parseInt(id);
-
-                    Foto fot=fotoRepository.findById(idfoto).get();
-                    String [] urlfoto=fot.getRuta().split("/telemillonario/");
-                    String nombrefoto= urlfoto[1];
-                    fileService.eliminarArchivo(nombrefoto);
-                    fotoRepository.deleteById(idfoto);
-
-                }
-
-            }
-
-
-            //agregar imagenes
-
-            System.out.println("\nImágenes a Agregar: " + imagenes.length);
-            if(!imagenes[0].getOriginalFilename().equals("")) {
-                int i = 1;
-                for (MultipartFile img : imagenes) {
-                    System.out.println("Nombre: " + img.getOriginalFilename());
-                    System.out.println("Tipo: " + img.getContentType());
-                    MultipartFile file_aux = fileService.formatearArchivo(img, "foto");
-                    if (fileService.subirArchivo(file_aux)) {
-                        System.out.println("Archivo subido correctamente");
-                        Foto foto = new Foto();
-                        foto.setEstado(1);
-                        foto.setFuncion(funcion);
-
-                        foto.setIdpersona(persona.getId());
-                        foto.setSede(persona.getIdsede());
-                        foto.setNumero(i);
-                        foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
-                        fotoRepository.save(foto);
-                    } else {
-                        System.out.println("El archivo" + img.getOriginalFilename() + "No se pude subir de manera correcta");
-                    }
-                    i++;
-                }
+            if(!fotoBorrada && fotosEliminadas > 0){
+                fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
+                fotoRepository.save(fotoEnDB);
             }
         }
+
+        // Verifica que la casilla de imágenes no se vaya a quedar vacía
+        if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")) {
+            model.addAttribute("err", "Se debe de tener al menos 1 imagen");
+
+            retornarValores(model,funcion,persona);
+
+            // Se regresan elementos ya seleccionados
+            model.addAttribute("actoresFuncion",idactor);
+            model.addAttribute("directoresFuncion",iddirector);
+            model.addAttribute("generosFuncion",idgenero);
+            model.addAttribute("duracion",duracion);
+            model.addAttribute("fechamasinicio",fechamasinicio);
+
+            return "Operador/crearFuncion";
+        }
+
+        // Elimina las fotos
+        for (Foto foto : fotosParaEliminar){
+            // Borrado de la DB
+            fotoRepository.delete(foto);
+
+            // Borrado del fileService
+            String ruta = foto.getRuta();
+            String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
+
+            fileService.eliminarArchivo(nombreFoto);
+        }
+
+        // Regresa si no se han agregado más fotos
+        if(imagenes[0].getContentType().equals("application/octet-stream")) {
+            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
+            return "redirect:/operador/funciones";
+        }
+
+        //-----------------------------------------------
+        //            Agregar Fotos a la DB
+        //-----------------------------------------------
+
+        // Se guarda imagen por imagen (en ese orden se les dará número)
+        for(int i = 0; i< imagenes.length; i++){
+            MultipartFile img = imagenes[i];
+            try {
+                // Se almacenan los datos en un objeto Foto
+                Foto foto = new Foto();
+                foto.setEstado(1);
+                foto.setFuncion(funcion);
+                foto.setNumero(fotosGuardadas + i);
+
+                // Guardar en el Servidor
+                MultipartFile imgRenombrada = fileService.formatearArchivo(img, "funcion");
+                if(fileService.subirArchivo(imgRenombrada)){
+
+                    // Si se guarda exitosamente, se obtiene el url de la foto
+                    foto.setRuta(fileService.obtenerUrl(imgRenombrada.getOriginalFilename()));
+                } else {
+                    attr.addFlashAttribute("err","No se pudo conectar con el Contenedor De Archivos");
+                    return "redirect:/operador/funciones";
+                }
+
+                // Guardado en la DB
+                System.out.println(imgRenombrada.getOriginalFilename());
+                fotoRepository.save(foto);
+
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                attr.addFlashAttribute("err", "Hubo un problema al guardar las Imagenes");
+                return "redirect:/operador/funciones";
+            }
+        }
+        attr.addFlashAttribute("msg","Actor Guardado Exitosamente");
         return "redirect:/operador/funciones";
     }
 
