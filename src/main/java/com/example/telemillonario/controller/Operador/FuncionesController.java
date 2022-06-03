@@ -231,12 +231,12 @@ public class FuncionesController {
 
             retornarValores(model,funcion,persona);
 
+            model.addAttribute("fechamasinicio",fechamasinicio);
             model.addAttribute("duracion",duracion);
+
             if(duracionInt <= 0) {
                 model.addAttribute("msgduracion", "La duración no es válida");
             }
-
-            model.addAttribute("fechamasinicio",fechamasinicio);
 
             // También los elementos seleccionados
             model.addAttribute("actoresFuncion",idactor);
@@ -303,8 +303,11 @@ public class FuncionesController {
         LocalDateTime fecha;
         try{
             fecha = LocalDateTime.parse(fechamasinicio);
-            System.out.println(fecha);
-        } catch (DateTimeParseException e){
+
+            if(now.isAfter(fecha)){
+                throw new Exception();
+            }
+        } catch (Exception e){
 
             // Listas para los select
             retornarValores(model,funcion,persona);
@@ -316,23 +319,7 @@ public class FuncionesController {
             model.addAttribute("duracion",duracion);
             model.addAttribute("fechamasinicio",fechamasinicio);
 
-            model.addAttribute("msgfecha", "Debe ingresar una fecha");
-
-            return "Operador/crearFuncion";
-        }
-
-        if (now.isAfter(fecha)){
-            // Listas para los select
-            retornarValores(model,funcion,persona);
-
-            // Se regresan elementos ya seleccionados
-            model.addAttribute("actoresFuncion",idactor);
-            model.addAttribute("directoresFuncion",iddirector);
-            model.addAttribute("generosFuncion",idgenero);
-            model.addAttribute("duracion",duracion);
-            model.addAttribute("fechamasinicio",fechamasinicio);
-
-            model.addAttribute("msgfecha", "Debe ingresar una fecha");
+            model.addAttribute("msgfecha", "La fecha no es válida");
 
             return "Operador/crearFuncion";
         }
@@ -341,244 +328,178 @@ public class FuncionesController {
         //          Guardar datos de la Función
         //-----------------------------------------------
 
-            //GUARDAR NEW FORM
-            if(funcion.getId()==0){
+        //fecha
+        LocalDate dia = fecha.toLocalDate();
+        //hora inicio
+        LocalTime hora = fecha.toLocalTime();
 
-                //separamos el formato de la vista
-                String[] pipipi = fechamasinicio.split("T");
-                String pipipi1 = pipipi[0];
-                String pipipi2 = pipipi[1]+ ":00";
+        // Se guarda la fecha
+        funcion.setEstado(1);
+        funcion.setFecha(dia);
+        funcion.setInicio(hora);
+        funcion.setFin(hora.plusMinutes(duracionInt));
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm:00");
-                //fecha
-                LocalDate datetime = LocalDate.parse(pipipi1, formatter);
-                //hora inicio
-                LocalTime datetime1 = LocalTime.parse(pipipi2, formatter1);
+        // Se guardan los cambios a la funcion
+        funcion = funcionRepository.save(funcion);
 
-                //Estado 1 =habilitado
-                funcion.setEstado(1);
-                funcion.setFecha(datetime);
-                funcion.setInicio(datetime1);
+        //-----------------------------------------------
+        //      Guardar datos del Elenco y Género
+        //-----------------------------------------------
 
-                System.out.println(datetime1);
-                Long durac=Long.parseLong(duracion);
-                funcion.setFin(datetime1.plusMinutes(durac));
+        // Se obtiene el elenco de la función
+        List<Funcionelenco> elencoEnDB = funcionElencoRepository.buscarFuncionElenco(funcion.getId());
+        List<Integer> elencoSeleccionado = new ArrayList<>();
 
+        // Se obtienen los géneros de la Función
+        List<Funciongenero> generosEnDB = funcionGeneroRepository.buscarFuncionGenero(funcion.getId());
+        List<Integer> generosSeleccionados = new ArrayList<>();
 
+        // Se comparan los datos de elenco ingresados con los de la DB
+        int maxSeleccionados = Math.max(Math.max(idactor.length,iddirector.length),idgenero.length) ;
+        int maxEnDB = Math.max(elencoEnDB.size(), generosEnDB.size()) ;
 
-                funcionRepository.save(funcion);
+        for(int ii=0; ii < maxSeleccionados; ii++ ){
 
-                //guardar elenco(actores y directores)
-                Funcion func=funcionRepository.findTopByOrderByIdDesc();
-                //String[] idsact = idactor.split(",");
+            boolean generoCoincide = false;
+            boolean elencoCoincide = false;
 
-                for (int i=0;i<idactor.length;i++){
-                    Funcionelenco funcelen = new Funcionelenco();
-                    int idsactint=Integer.parseInt(idactor[i]);
-                    funcelen.setIdpersona(personaRepository.findById(idsactint).get());
-                    funcelen.setIdfuncion(func);
-                    //estado habilitado
-                    funcelen.setEstado(1);
-                    funcionElencoRepository.save(funcelen);
+            for(int jj=0; jj < maxEnDB; jj++){
+
+                // Valida los generos seleccionados
+                if(ii<idgenero.length && jj<generosEnDB.size() && idgenero[ii].equals(generosEnDB.get(jj).toString())){
+                    generosSeleccionados.add(generosEnDB.get(jj).getIdgenero().getId());
+                    generoCoincide = true;
                 }
 
-                //String[] iddir = iddirector.split(",");
+                // Valida los miembros del elenco seleccionados
+                if(ii < idactor.length && jj<elencoEnDB.size() && idactor[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
+                    elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
+                    elencoCoincide = true;
 
-                for (int i=0;i<iddirector.length;i++){
-
-                    Funcionelenco funcelen = new Funcionelenco();
-                    int idsdictint=Integer.parseInt(iddirector[i]);
-                    funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
-                    funcelen.setIdfuncion(func);
-                    //estado habilitado
-                    funcelen.setEstado(1);
-                    funcionElencoRepository.save(funcelen);
+                } else if(ii < iddirector.length && jj<elencoEnDB.size() && iddirector[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
+                    elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
+                    elencoCoincide = true;
                 }
+            }
 
-                //guardar genero
-                //String[] idgen = idgenero.split(",");
-                for (int i=0;i<idgenero.length;i++){
-                    Funciongenero fungen = new Funciongenero();
-                    int idgenint=Integer.parseInt(idgenero[i]);
-                    fungen.setIdgenero(generoRepository.findById(idgenint).get());
-                    fungen.setIdfuncion(func);
-                    //estado habilitado
-                    fungen.setEstado(1);
-                    funcionGeneroRepository.save(fungen);
-                }
+            // Si un miembro del elenco no está en DB, se agrega
+            if(!elencoCoincide){
+                Funcionelenco funcelen = new Funcionelenco();
+                int idsdictint = Integer.parseInt(iddirector[ii]);
+                funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
+                funcelen.setIdfuncion(funcion);
+                funcelen.setEstado(1);
+                funcionElencoRepository.save(funcelen);
+            }
+            // Si un género no está en DB, se agrega
+            if(!generoCoincide){
+                Funciongenero funcgen = new Funciongenero();
+                int idgen = Integer.parseInt(idgenero[ii]);
+                funcgen.setIdgenero(generoRepository.findById(idgen).get());
+                funcgen.setIdfuncion(funcion);
+                funcgen.setEstado(1);
+                funcionGeneroRepository.save(funcgen);
+            }
+        }
 
-                System.out.println("\nImágenes a Agregar: " + imagenes.length);
-                if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =1;
-                    for(MultipartFile img : imagenes){
-                        System.out.println("Nombre: " + img.getOriginalFilename());
-                        System.out.println("Nombre: " + img.getOriginalFilename().length());
-                        System.out.println("Tipo: " + img.getContentType());
-                        MultipartFile file_aux = fileService.formatearArchivo(img,"foto");
-                        if(fileService.subirArchivo(file_aux)){
-                            System.out.println("Archivo subido correctamente");
-                            Foto foto = new Foto();
-                            foto.setEstado(1);
-                            foto.setFuncion(func);
+        // Si un miembro del elenco ya no ha sido seleccionado, se elimina
+        for(Funcionelenco fe : elencoEnDB) {
+            int id = fe.getIdpersona().getId();
+            if (!elencoSeleccionado.contains(id)){
+                funcionElencoRepository.deleteById(fe.getId());
+            }
+        }
+        // Si un miembro del elenco ya no ha sido seleccionado, se elimina
+        for(Funciongenero fg : generosEnDB) {
+            int id = fg.getIdgenero().getId();
+            if (!generosSeleccionados.contains(id)){
+                funcionGeneroRepository.deleteById(fg.getId());
+            }
+        }
 
-                            foto.setIdpersona(persona.getId());
-                            foto.setSede(persona.getIdsede());
-                            foto.setNumero(i);
-                            foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
-                            fotoRepository.save(foto);
-                        }else{
-                            System.out.println("El archivo"+img.getOriginalFilename()+"No se pude subir de manera correcta");
-                        }
-                        i++;
+        //-----------------------------------------------
+        //              Guardar Imágenes
+        //-----------------------------------------------
+
+        //GUARDAR NEW FORM
+        if(funcion.getId()==0) {
+
+            System.out.println("\nImágenes a Agregar: " + imagenes.length);
+            if (!imagenes[0].getOriginalFilename().equals("")) {
+                int i = 1;
+                for (MultipartFile img : imagenes) {
+                    System.out.println("Nombre: " + img.getOriginalFilename());
+                    System.out.println("Nombre: " + img.getOriginalFilename().length());
+                    System.out.println("Tipo: " + img.getContentType());
+                    MultipartFile file_aux = fileService.formatearArchivo(img, "foto");
+                    if (fileService.subirArchivo(file_aux)) {
+                        System.out.println("Archivo subido correctamente");
+                        Foto foto = new Foto();
+                        foto.setEstado(1);
+                        foto.setFuncion(funcion);
+
+                        foto.setIdpersona(persona.getId());
+                        foto.setSede(persona.getIdsede());
+                        foto.setNumero(i);
+                        foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
+                        fotoRepository.save(foto);
+                    } else {
+                        System.out.println("El archivo" + img.getOriginalFilename() + "No se pude subir de manera correcta");
                     }
-
-                }
-            //GUARDAR FORM EDITAR
-            }else{
-                Funcion func=funcionRepository.findById(funcion.getId()).get();
-                //separamos el formato de la vista
-                String[] pipipi = fechamasinicio.split("T");
-                String pipipi1 = pipipi[0];
-                String pipipi2 = pipipi[1]+ ":00";
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm:00");
-                //fecha
-                LocalDate datetime = LocalDate.parse(pipipi1, formatter);
-                //hora inicio
-                LocalTime datetime1 = LocalTime.parse(pipipi2, formatter1);
-
-                //Estado 1 =habilitado
-                func.setEstado(1);
-                func.setFecha(datetime);
-                func.setInicio(datetime1);
-                Long durac=Long.parseLong(duracion);
-                System.out.println(datetime1);
-
-                func.setFin(datetime1.plusMinutes(durac));
-                func.setRestriccionedad(funcion.getRestriccionedad());
-                func.setPrecioentrada(funcion.getPrecioentrada());
-                func.setStockentradas(funcion.getStockentradas());
-                func.setNombre(funcion.getNombre());
-                func.setDescripcion(funcion.getDescripcion());
-
-                funcionRepository.save(func);
-
-                //guardar elenco(actores y directores)
-                //String[] idsact = idactor.split(",");
-
-                List<Funcionelenco> listactydire =funcionElencoRepository.buscarFuncionElenco(funcion.getId());
-
-                List <Integer> idsactydir= new ArrayList<>();
-                for (Funcionelenco elenco : listactydire){
-                    idsactydir.add(elenco.getId());
+                    i++;
                 }
 
-                funcionElencoRepository.deleteAllById(idsactydir);
+            }
+        //GUARDAR FORM EDITAR
+        }else{
 
-                for (int i=0;i<idactor.length;i++){
-                    Funcionelenco funcelen = new Funcionelenco();
+            //eliminar imagenes
+            System.out.println("Imágenes a Eliminar: " + ids.length);
+            if(!ids[0].equals("a")){
+                for(String id : ids){
+                    System.out.println("ID: " + id);
+                    int idfoto= Integer.parseInt(id);
 
-                    int idsactint=Integer.parseInt(idactor[i]);
-                    funcelen.setIdpersona(personaRepository.findById(idsactint).get());
-                    funcelen.setIdfuncion(func);
-                    //estado habilitado
-                    funcelen.setEstado(1);
-                    funcionElencoRepository.save(funcelen);
-                }
-
-                //String[] iddir = iddirector.split(",");
-
-                for (int i=0;i<iddirector.length;i++){
-
-                    Funcionelenco funcelen = new Funcionelenco();
-                    int idsdictint=Integer.parseInt(iddirector[i]);
-                    funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
-                    funcelen.setIdfuncion(func);
-                    //estado habilitado
-                    funcelen.setEstado(1);
-                    funcionElencoRepository.save(funcelen);
-                }
-
-
-                List<Funciongenero> listfungen =funcionGeneroRepository.buscarFuncionGenero(funcion.getId());
-                List <Integer> listidgene= new ArrayList<>();
-                for (Funciongenero generos : listfungen){
-                    listidgene.add(generos.getId());
-                }
-
-                funcionGeneroRepository.deleteAllById(listidgene);
-
-
-                //guardar genero
-                //String[] idgen = idgenero.split(",");
-                for (int i=0;i<idgenero.length;i++){
-                    Funciongenero fungen = new Funciongenero();
-                    int idgenint=Integer.parseInt(idgenero[i]);
-                    fungen.setIdgenero(generoRepository.findById(idgenint).get());
-                    fungen.setIdfuncion(func);
-                    //estado habilitado
-                    fungen.setEstado(1);
-                    funcionGeneroRepository.save(fungen);
-                }
-
-
-                //eliminar imagenes
-                System.out.println("Imágenes a Eliminar: " + ids.length);
-                if(!ids[0].equals("a")){
-                    for(String id : ids){
-                        System.out.println("ID: " + id);
-                        int idfoto= Integer.parseInt(id);
-
-                        Foto fot=fotoRepository.findById(idfoto).get();
-                        String [] urlfoto=fot.getRuta().split("/telemillonario/");
-                        String nombrefoto= urlfoto[1];
-                        fileService.eliminarArchivo(nombrefoto);
-                        fotoRepository.deleteById(idfoto);
-
-                    }
+                    Foto fot=fotoRepository.findById(idfoto).get();
+                    String [] urlfoto=fot.getRuta().split("/telemillonario/");
+                    String nombrefoto= urlfoto[1];
+                    fileService.eliminarArchivo(nombrefoto);
+                    fotoRepository.deleteById(idfoto);
 
                 }
-
-
-                //agregar imagenes
-
-                System.out.println("\nImágenes a Agregar: " + imagenes.length);
-                if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =1;
-                    for(MultipartFile img : imagenes){
-                        System.out.println("Nombre: " + img.getOriginalFilename());
-                        System.out.println("Tipo: " + img.getContentType());
-                        MultipartFile file_aux = fileService.formatearArchivo(img,"foto");
-                        if(fileService.subirArchivo(file_aux)){
-                            System.out.println("Archivo subido correctamente");
-                            Foto foto = new Foto();
-                            foto.setEstado(1);
-                            foto.setFuncion(func);
-
-                            foto.setIdpersona(persona.getId());
-                            foto.setSede(persona.getIdsede());
-                            foto.setNumero(i);
-                            foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
-                            fotoRepository.save(foto);
-                        }else{
-                            System.out.println("El archivo"+img.getOriginalFilename()+"No se pude subir de manera correcta");
-                        }
-                        i++;
-                    }
-
-                }
-
 
             }
 
 
+            //agregar imagenes
 
+            System.out.println("\nImágenes a Agregar: " + imagenes.length);
+            if(!imagenes[0].getOriginalFilename().equals("")) {
+                int i = 1;
+                for (MultipartFile img : imagenes) {
+                    System.out.println("Nombre: " + img.getOriginalFilename());
+                    System.out.println("Tipo: " + img.getContentType());
+                    MultipartFile file_aux = fileService.formatearArchivo(img, "foto");
+                    if (fileService.subirArchivo(file_aux)) {
+                        System.out.println("Archivo subido correctamente");
+                        Foto foto = new Foto();
+                        foto.setEstado(1);
+                        foto.setFuncion(funcion);
 
-
-            return "redirect:/operador/funciones";
+                        foto.setIdpersona(persona.getId());
+                        foto.setSede(persona.getIdsede());
+                        foto.setNumero(i);
+                        foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
+                        fotoRepository.save(foto);
+                    } else {
+                        System.out.println("El archivo" + img.getOriginalFilename() + "No se pude subir de manera correcta");
+                    }
+                    i++;
+                }
+            }
         }
+        return "redirect:/operador/funciones";
+    }
 
 
     @PostMapping("/buscar")
