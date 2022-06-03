@@ -1,6 +1,7 @@
 package com.example.telemillonario.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 @Entity
@@ -12,24 +13,41 @@ public class Sede implements Serializable {
     private int id;
 
     @Column(name = "nombre", length = 100)
+    @NotBlank(message = "El nombre no puede estar vacío")
+    @Size(max=100,message = "Nombre no mayor a 40 caracteres")
     private String nombre;
 
+//    @NotBlank(message = "La descripción no puede estar vacío")
+//    @Size(max=500,message = "Descripción no mayor a 500 caracteres")
     @Column(name = "descripcion", length = 500)
     private String descripcion;
 
     @Column(name = "direccion", length = 100)
+    @NotBlank(message = "La dirección no puede estar vacío")
+    @Size(max=100,message = "Dirección no mayor a 100 caracteres")
     private String direccion;
 
     @Column(name = "coordenadas", length = 100)
+    @NotBlank(message = "Las coordenadas no pueden estar vacías")
+    @Size(max=100,message = "Coordenadas no mayor a 100 caracteres")
     private String coordenadas;
 
     @Column(name = "telefono", length = 20)
+    @NotBlank(message = "El telefono no pueden estar vacíos")
+    @Size(max=20,message = "Teléfono no mayor a 20 caracteres")
     private String telefono;
 
     @Column(name = "numerosalas")
-    private int numerosalas;
+    @Positive
+    @Min(value = 1, message = "El valor mínimo de salas es 1")
+    @Digits(integer = 2, fraction = 0, message = "Debe ser un número entero y menor a 3 cifras")
+    @NotNull(message = "La cantidad de salas no debe estar vacio")
+    private Integer numerosalas;
 
-    @Column(name = "calificacion")
+//    @Positive
+//    @Digits(integer = 2, fraction = 2, message = "Debe contener solo 2 decimales")
+//    @NotNull(message = "El precio no debe estar vacio")
+//    @Column(name = "calificacion")
     private Double calificacion;
 
     @Column(name = "estado")
@@ -63,11 +81,11 @@ public class Sede implements Serializable {
         this.calificacion = calificacion;
     }
 
-    public int getNumerosalas() {
+    public Integer getNumerosalas() {
         return numerosalas;
     }
 
-    public void setNumerosalas(int numerosalas) {
+    public void setNumerosalas(Integer numerosalas) {
         this.numerosalas = numerosalas;
     }
 

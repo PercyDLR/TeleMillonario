@@ -1,13 +1,7 @@
 package com.example.telemillonario.controller.Usuario;
 
-import com.example.telemillonario.entity.Foto;
-import com.example.telemillonario.entity.Funcion;
-import com.example.telemillonario.entity.Funciongenero;
-import com.example.telemillonario.entity.Persona;
-import com.example.telemillonario.repository.FotoRepository;
-import com.example.telemillonario.repository.FuncionGeneroRepository;
-import com.example.telemillonario.repository.FuncionRepository;
-import com.example.telemillonario.repository.PersonaRepository;
+import com.example.telemillonario.entity.*;
+import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.validation.Perfil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +43,9 @@ public class UsuarioController {
 
     @Autowired
     FuncionGeneroRepository funcionGeneroRepository;
+
+    @Autowired
+    SedeRepository sedeRepository;
 
     @GetMapping("")
     public String paginaPrincipal(Model model){
@@ -211,7 +208,92 @@ public class UsuarioController {
 
 
     /*Compra de tickets*/
+    @PostMapping("/compra")
+    public String compraBoletos(@RequestParam(value = "Obra") String idObraStr, @RequestParam(value = "idSede") String idSedeStr,
+                                @RequestParam(value = "cantBoletos") String cantBoletosStr,
+                                @RequestParam(value = "fechaHora")String fechaHoraStr, RedirectAttributes redirectAttributes){
 
+        int idObra;
+
+        int idSede;
+        boolean errorIdSede = false;
+
+        int cantBoletos;
+        boolean errorCantBoletos = false;
+
+
+        Funcion obra = null;
+        Sede sede = null;
+        String fecha = null;
+        String hora = null;
+
+        try{
+            idObra = Integer.parseInt(idObraStr);
+            if(idObra <= 0){
+                return "anErrorHasOcurred";
+            }else{
+                Optional<Funcion> funcion = funcionRepository.findById(idObra);
+                if(funcion.isPresent()){
+                    obra = funcion.get();
+
+                    try{
+                        idSede = Integer.parseInt(idSedeStr);
+                        if(idSede <= 0){
+                            errorIdSede = true;
+                        }else{
+                            Optional<Sede> sede1 = sedeRepository.findById(idSede);
+                            if(sede1.isPresent()){
+                                sede = sede1.get();
+                            }else{
+                                errorIdSede = true;
+                            }
+                        }
+                    }catch (NumberFormatException e){
+                        errorIdSede = true;
+                    }
+
+                    try{
+                        cantBoletos = Integer.parseInt(cantBoletosStr);
+                        if(cantBoletos <= 0){
+                            errorCantBoletos = true;
+                        }
+                    }catch (NumberFormatException e){
+                        errorCantBoletos = true;
+                    }
+
+                    /*
+                        Validacion fecha y hora
+                    */
+
+                    if(errorIdSede || errorCantBoletos){
+                        if(errorIdSede){
+                            redirectAttributes.addFlashAttribute("mensajeErrorSede","El id de sede no es valido");
+                        }
+                        if(errorCantBoletos){
+                            redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos","El numero de boletos es incorrecto");
+                        }
+
+                        return "redirect:/detallesObra?Obra="+obra.getId();
+                    }
+
+                }else{
+                    return "anErrorHasOcurred";
+                }
+            }
+        }catch (NumberFormatException e){
+            return "anErrorHasOcurred";
+        }
+
+        /*Si no ha ocurrido ningun error ya tengo la funcion - sede - boletos - fecha y hora*/
+
+        //Toca validar de que exista una funcion a dicha hora en esa sede en especifico
+        Funcion funcion = funcionRepository.encontrarFuncionHoraSede(obra.getId(),sede.getId(),fecha,hora);
+
+        //Una vez validado toca realizar la logica para comprar
+
+
+        return "detallesObra";
+    }
 
 
 

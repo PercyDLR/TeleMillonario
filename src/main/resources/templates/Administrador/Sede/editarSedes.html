@@ -90,10 +90,14 @@
                                     <div class="col-md-6 form-group mb-3">
                                         <label class="col-form-label"><b>Nombre</b></label>
                                         <input type="text" class="form-control" th:field="*{nombre}">
+                                        <div class="text-danger" th:if="${#fields.hasErrors('nombre')}"
+                                             th:errors="*{nombre}"></div>
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label class="col-form-label"><b>Dirección</b></label>
                                         <input type="text" class="form-control" th:field="*{direccion}">
+                                        <div class="text-danger" th:if="${#fields.hasErrors('direccion')}"
+                                             th:errors="*{direccion}"></div>
                                     </div>
                                 </div>
                                 <br>
@@ -101,10 +105,14 @@
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Coordenadas</b></label>
                                         <input type="text" class="form-control" th:field="*{coordenadas}">
+                                        <div class="text-danger" th:if="${#fields.hasErrors('coordenadas')}"
+                                             th:errors="*{coordenadas}"></div>
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Teléfono</b></label>
                                         <input type="text" class="form-control" th:field="*{telefono}">
+                                        <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
+                                             th:errors="*{telefono}"></div>
                                     </div>
                                 </div>
                                 <br>
@@ -112,6 +120,8 @@
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Número de Salas</b></label>
                                         <input type="text" class="form-control" th:field="*{numerosalas}">
+                                        <div class="text-danger" th:if="${#fields.hasErrors('numerosalas')}"
+                                             th:errors="*{numerosalas}"></div>
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label  class="col-form-label"><b>Distrito</b></label>
@@ -136,14 +146,14 @@
                                         <input class="form-check-input" type="radio" name="estado" value="1"
                                                id="disponible" th:checked="${sede.estado == 1}">
                                         <label class="form-check-label text-light" for="disponible">
-                                            Sala disponible
+                                            Sede disponible
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input text-light" type="radio" name="estado" value="0"
                                                id="nodisponible" th:checked="${sede.estado == 0}">
                                         <label class="form-check-label text-light" for="nodisponible">
-                                            Sala no disponible
+                                            Sede no disponible
                                         </label>
                                     </div>
                                 </div>
@@ -199,12 +209,20 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="row" style="padding-top: 30px;">
+                                    <div class="col-12" style="width: fit-content">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong th:text="${err}"></strong>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                                 <br>
                                 <div style="display: flex;justify-content: center">
-                                    <button style="border-radius: 20px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" th:href="@{/admin}">Cancelar</a></button>
+                                    <button style="border-radius: 20px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" th:href="@{/admin/sedes/lista}">Cancelar</a></button>
                                     <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;" th:text="${sede.id == 0? 'Registrar': 'Actualizar'}" class="sign__btn" type="submit"><a style="color: white" >Registrar</a></button>
                                 </div>
 

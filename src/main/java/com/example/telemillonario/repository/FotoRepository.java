@@ -60,4 +60,7 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "idsede=?1 and idfuncion IS NULL")
     List<Foto> buscarFotosSede(int idfuncion);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos where (idfuncion = ?1) and (numero = 0);")
+    Foto caratulaDeObra(int idfuncion);
+
 }

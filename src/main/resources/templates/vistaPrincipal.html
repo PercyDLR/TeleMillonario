@@ -37,12 +37,12 @@
                         <div class="owl-carousel home__carousel">
                             <div class="item" th:each="funcion : ${listaFunciones}">
                                 <!-- card -->
-                                <div class="card card--big" style="cursor: pointer">
+                                <div class="card card--big"  style="cursor: pointer">
                                     <div class="card__cover">
-                                        <a th:href="@{'/detallesObra'+'?Obra='+${funcion.id}}"><img th:src="@{/img/covers/HistoriasDeArena.png}"></a>
+                                        <a th:href="@{'/detallesObra'+'?Obra='+${funcion.id} }"><img th:src="@{/img/covers/HistoriasDeArena.png}"></a>
                                     </div>
                                     <div class="card__content">
-                                        <h3 class="card__title" th:text="${funcion.nombre}"><a href="#">Historias de Arena</a></h3>
+                                        <h3 class="card__title" th:text="${funcion.nombre}">Historias de Arena</h3>
                                         <span class="card__category" style="color: #ff5860" th:each="fG : ${funcionGenero}" th:if="(${fG.idfuncion.id} == ${funcion.id}) and (${fG.estado} == 1)"
                                               th:text="${fG.idgenero.nombre}">
                                             Tragedia
