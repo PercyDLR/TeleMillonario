@@ -3,6 +3,7 @@ package com.example.telemillonario.controller.Operador;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
+import com.nimbusds.oauth2.sdk.id.Actor;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,7 +56,6 @@ public class FuncionesController {
 
     @Autowired
     FuncionGeneroRepository funcionGeneroRepository;
-
 
     @GetMapping(value = {"", "/","/lista"})
     public String listadoFunciones(Model model,@RequestParam(value = "pag",required = false) String pag,HttpSession session){
@@ -117,67 +117,87 @@ public class FuncionesController {
     @GetMapping(value = {"/crear"})
     public String programarFuncionesForm(@ModelAttribute("funcion")Funcion funcion, Model model, HttpSession session){
 
+        // Listas para los selectores
         model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
         model.addAttribute("listDirectores",personaRepository.listarDirectores());
         model.addAttribute("listGeneros",generoRepository.findAll());
         model.addAttribute("fechaactual",LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
-//        System.out.println(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+
+        // Listas vacias para evitar errores
+        ArrayList<Integer> listaVacia = new ArrayList<>();
+        model.addAttribute("generosFuncion",listaVacia);
+        model.addAttribute("actoresFuncion",listaVacia);
+        model.addAttribute("directoresFuncion",listaVacia);
+
+        //listado de salas para la Sede del Operador
         Persona persona = (Persona) session.getAttribute("usuario");
-        //listado de salas por sede disponibles
-        model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
+        model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
         return "Operador/crearFuncion";
     }
 
+    private void retornarValores(Model model, Funcion funcion, Persona persona) {
+
+        // Variables para hacer más entendible el código
+        List<Persona> listActores = personaRepository.listarActores("",0,100000);
+        List<Persona> listDirectores = personaRepository.listarDirectores();
+        List<Genero> listGeneros = generoRepository.findAll();
+        List<Foto> fotosEnDB = fotoRepository.buscarFotosFuncion(funcion.getId());
+        List<Sala> listaSalasporSede = salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1);
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+
+        // Se regresan nuevamente los elementos de las listas
+        model.addAttribute("funcion",funcion);
+        model.addAttribute("listActores",listActores);
+        model.addAttribute("listDirectores",listDirectores);
+        model.addAttribute("listGeneros",listGeneros);
+        model.addAttribute("fechaactual",now);
+        model.addAttribute("imagenes", fotosEnDB);
+        model.addAttribute("listaSalasporSede",listaSalasporSede);
+    }
+
     @GetMapping(value = {"/editar"})
-    public String editarFuncionesForm(Model model,@RequestParam("idfuncion") int idfuncion, HttpSession session){
+    public String editarFuncionesForm(@ModelAttribute("funcion") Funcion funcion,
+                                      @RequestParam("idfuncion") String idStr,
+                                      Model model, HttpSession session,
+                                      RedirectAttributes attr){
 
+        // Se verifica que el ID sea un número
+        int idfuncion = 0;
+        try{
+            idfuncion = Integer.parseInt(idStr);
+        } catch (NumberFormatException e){
+            attr.addFlashAttribute("err", "El ID ingresado es inválido");
+            return "redirect:/operador/funciones/lista";
+        }
+
+        // Se verifica si el ID de la Función corresponde a una real
         Optional<Funcion> optFuncionEncontr = funcionRepository.findById(idfuncion);
-        Persona persona=(Persona) session.getAttribute("usuario");
+        Persona persona = (Persona) session.getAttribute("usuario");
 
+        // Retorna el formulario
         if (optFuncionEncontr.isPresent()) {
-            Funcion funcencon = optFuncionEncontr.get();
-            model.addAttribute("funcion", funcencon);
-            model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
+
+            // Datos de la funcion
+            funcion = optFuncionEncontr.get();
+
+            // Listas para los select
+            retornarValores(model,funcion,persona);
+
+            // Lista de los elementos YA seleccionados
             model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(idfuncion));
-            model.addAttribute("listDirectores",personaRepository.listarDirectores());
             model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(idfuncion));
-            model.addAttribute("listGeneros",generoRepository.findAll());
             model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(idfuncion));
-            model.addAttribute("fechaactual",LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
-            model.addAttribute("sval",1);
 
-            String[] horafinstr = funcencon.getFin().toString().split(":");
-            String horafinstr1 = horafinstr[0];
-            String minfinstr2 = horafinstr[1];
-            int horafinint = Integer.parseInt(horafinstr1);
-            System.out.println(horafinint*60);
-            int minfinint = Integer.parseInt(minfinstr2);
-            int minhorafinint =horafinint*60;
+            // Tiempo
+            long duracion = funcion.getInicio().until(funcion.getFin(),ChronoUnit.MINUTES);
+            model.addAttribute("duracion",duracion);
 
+            String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
+            model.addAttribute("fechamasinicio",fechamasinicio);
 
-            int mintotfin=minhorafinint+minfinint;
-
-            String[] horaininstr = funcencon.getInicio().toString().split(":");
-            String horaininstr1 = horaininstr[0];
-            String horaininstr2 = horaininstr[1];
-            int horainiint = Integer.parseInt(horaininstr1);
-            int mininiint = Integer.parseInt(horaininstr2);
-            int minhorainiint =horainiint*60;
-
-            int mintotini=minhorainiint+mininiint;
-
-            model.addAttribute("duracion",mintotfin-mintotini);
-
-            List<Foto> fotos = fotoRepository.buscarFotosFuncion(idfuncion);
-
-            model.addAttribute("imagenes", fotos);
-
-//            System.out.println(funcencon.getFin()-funcencon.getInicio());
-
-            //listado de salas por sede disponibles
-            model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
             return "Operador/crearFuncion";
         } else {
+            attr.addFlashAttribute("err", "La función que busca no existe");
             return "redirect:/operador/funciones/lista";
         }
 
@@ -185,19 +205,45 @@ public class FuncionesController {
 
 
     @PostMapping("/guardar")
-    public String guardarFuncion(@ModelAttribute("funcion") @Valid Funcion funcion, BindingResult bindingResult,Model model, HttpSession session,
+    public String guardarFuncion(@ModelAttribute("funcion") @Valid Funcion funcion, BindingResult bindingResult,
+                                 Model model, HttpSession session,
                                  @RequestParam(value="fechamasinicio") String fechamasinicio,
                                  @RequestParam(value="duracion") String duracion,
-                                 @RequestParam(value="idactor") String idactor,
-                                 @RequestParam(value="iddirector") String iddirector,
-                                 @RequestParam(value="idgenero") String idgenero,
-                                 @RequestParam(value = "eliminar", defaultValue = "a") String[] ids,
+                                 @RequestParam(value="idactor") String[] idactor,
+                                 @RequestParam(value="iddirector") String[] iddirector,
+                                 @RequestParam(value="idgenero") String[] idgenero,
+                                 @RequestParam(value="eliminar", defaultValue="") String[] ids,
                                  @RequestParam(value="imagenes") MultipartFile[] imagenes) throws IOException {
 
+        Persona persona = (Persona) session.getAttribute("usuario");
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
-        Persona persona = (Persona) session.getAttribute("usuario");
+        //-----------------------------------------------
+        //    Validación de Datos Ingresados
+        //-----------------------------------------------
+        int duracionInt = 0;
+        try{
+            duracionInt = Integer.parseInt(duracion);
+        } catch(NumberFormatException e){}
 
+        if (bindingResult.hasErrors() || duracionInt <= 0) {
+
+            retornarValores(model,funcion,persona);
+
+            model.addAttribute("duracion",duracion);
+            if(duracionInt <= 0) {
+                model.addAttribute("msgduracion", "La duración ingresada es incorrecta");
+            }
+
+            model.addAttribute("fechamasinicio",fechamasinicio);
+
+            // También los elementos seleccionados
+            model.addAttribute("actoresFuncion",idactor);
+            model.addAttribute("directoresFuncion",iddirector);
+            model.addAttribute("generosFuncion",idgenero);
+
+            return "Operador/crearFuncion";
+        }
 
         //VALIDACIONES Fotos
 
@@ -210,16 +256,13 @@ public class FuncionesController {
             model.addAttribute("listGeneros", generoRepository.findAll());
             model.addAttribute("fechaactual", now);
             model.addAttribute("duracion", duracion);
-            model.addAttribute("durval",1);
             model.addAttribute("fechamasinicio", fechamasinicio);
-            model.addAttribute("val", 2);
 
             //listado de salas por sede disponibles
             model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(), 1));
             return "Operador/crearFuncion";
 
         }
-
 
         long tamanho = 0;
         for (MultipartFile img : imagenes){
@@ -358,76 +401,6 @@ public class FuncionesController {
 
 
         //Validaciones extras
-
-
-        if (bindingResult.hasErrors()) {
-
-            model.addAttribute("listActores",personaRepository.listarActores("",0,100000));
-            model.addAttribute("listDirectores",personaRepository.listarDirectores());
-            model.addAttribute("listGeneros",generoRepository.findAll());
-            model.addAttribute("fechaactual",now);
-            //para form crear
-            if(funcion.getId()==0){
-                model.addAttribute("duracion",duracion);
-                model.addAttribute("fechamasinicio",fechamasinicio);
-
-                model.addAttribute("durval",1);
-                model.addAttribute("val",2);
-
-
-                //listado de salas por sede disponibles
-                model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                return "Operador/crearFuncion";
-
-            }else{
-                //para form de editar
-                Optional<Funcion> optFuncionEncontr = funcionRepository.findById(funcion.getId());
-                Funcion funcencon = optFuncionEncontr.get();
-                model.addAttribute("funcion", funcion);
-                model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
-                model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(funcion.getId()));
-                model.addAttribute("listDirectores",personaRepository.listarDirectores());
-                model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(funcion.getId()));
-                model.addAttribute("listGeneros",generoRepository.findAll());
-                model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(funcion.getId()));
-                model.addAttribute("sval",1);
-                model.addAttribute("fechamasinicio",funcencon.getFecha().toString()+'T'+funcencon.getInicio().toString());
-                model.addAttribute("val",2);
-
-                String[] horafinstr = funcencon.getFin().toString().split(":");
-                String horafinstr1 = horafinstr[0];
-                String minfinstr2 = horafinstr[1];
-                int horafinint = Integer.parseInt(horafinstr1);
-                System.out.println(horafinint*60);
-                int minfinint = Integer.parseInt(minfinstr2);
-                int minhorafinint =horafinint*60;
-
-
-                int mintotfin=minhorafinint+minfinint;
-
-                String[] horaininstr = funcencon.getInicio().toString().split(":");
-                String horaininstr1 = horaininstr[0];
-                String horaininstr2 = horaininstr[1];
-                int horainiint = Integer.parseInt(horaininstr1);
-                int mininiint = Integer.parseInt(horaininstr2);
-                int minhorainiint =horainiint*60;
-
-                int mintotini=minhorainiint+mininiint;
-
-                model.addAttribute("duracion",mintotfin-mintotini);
-
-                List<Foto> fotos = fotoRepository.buscarFotosFuncion(funcion.getId());
-
-                model.addAttribute("imagenes", fotos);
-
-//            System.out.println(funcencon.getFin()-funcencon.getInicio());
-
-                //listado de salas por sede disponibles
-                model.addAttribute("listaSalasporSede",salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
-                return "Operador/crearFuncion";
-            }
-
-        } else {
 
 
             //validacion fecha vacia
@@ -808,11 +781,11 @@ public class FuncionesController {
 
                 //guardar elenco(actores y directores)
                 Funcion func=funcionRepository.findTopByOrderByIdDesc();
-                String[] idsact = idactor.split(",");
+                //String[] idsact = idactor.split(",");
 
-                for (int i=0;i<idsact.length;i++){
+                for (int i=0;i<idactor.length;i++){
                     Funcionelenco funcelen = new Funcionelenco();
-                    int idsactint=Integer.parseInt(idsact[i]);
+                    int idsactint=Integer.parseInt(idactor[i]);
                     funcelen.setIdpersona(personaRepository.findById(idsactint).get());
                     funcelen.setIdfuncion(func);
                     //estado habilitado
@@ -820,12 +793,12 @@ public class FuncionesController {
                     funcionElencoRepository.save(funcelen);
                 }
 
-                String[] iddir = iddirector.split(",");
+                //String[] iddir = iddirector.split(",");
 
-                for (int i=0;i<iddir.length;i++){
+                for (int i=0;i<iddirector.length;i++){
 
                     Funcionelenco funcelen = new Funcionelenco();
-                    int idsdictint=Integer.parseInt(iddir[i]);
+                    int idsdictint=Integer.parseInt(iddirector[i]);
                     funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
                     funcelen.setIdfuncion(func);
                     //estado habilitado
@@ -834,10 +807,10 @@ public class FuncionesController {
                 }
 
                 //guardar genero
-                String[] idgen = idgenero.split(",");
-                for (int i=0;i<idgen.length;i++){
+                //String[] idgen = idgenero.split(",");
+                for (int i=0;i<idgenero.length;i++){
                     Funciongenero fungen = new Funciongenero();
-                    int idgenint=Integer.parseInt(idgen[i]);
+                    int idgenint=Integer.parseInt(idgenero[i]);
                     fungen.setIdgenero(generoRepository.findById(idgenint).get());
                     fungen.setIdfuncion(func);
                     //estado habilitado
@@ -903,7 +876,7 @@ public class FuncionesController {
                 funcionRepository.save(func);
 
                 //guardar elenco(actores y directores)
-                String[] idsact = idactor.split(",");
+                //String[] idsact = idactor.split(",");
 
                 List<Funcionelenco> listactydire =funcionElencoRepository.buscarFuncionElenco(funcion.getId());
 
@@ -914,10 +887,10 @@ public class FuncionesController {
 
                 funcionElencoRepository.deleteAllById(idsactydir);
 
-                for (int i=0;i<idsact.length;i++){
+                for (int i=0;i<idactor.length;i++){
                     Funcionelenco funcelen = new Funcionelenco();
 
-                    int idsactint=Integer.parseInt(idsact[i]);
+                    int idsactint=Integer.parseInt(idactor[i]);
                     funcelen.setIdpersona(personaRepository.findById(idsactint).get());
                     funcelen.setIdfuncion(func);
                     //estado habilitado
@@ -925,12 +898,12 @@ public class FuncionesController {
                     funcionElencoRepository.save(funcelen);
                 }
 
-                String[] iddir = iddirector.split(",");
+                //String[] iddir = iddirector.split(",");
 
-                for (int i=0;i<iddir.length;i++){
+                for (int i=0;i<iddirector.length;i++){
 
                     Funcionelenco funcelen = new Funcionelenco();
-                    int idsdictint=Integer.parseInt(iddir[i]);
+                    int idsdictint=Integer.parseInt(iddirector[i]);
                     funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
                     funcelen.setIdfuncion(func);
                     //estado habilitado
@@ -949,10 +922,10 @@ public class FuncionesController {
 
 
                 //guardar genero
-                String[] idgen = idgenero.split(",");
-                for (int i=0;i<idgen.length;i++){
+                //String[] idgen = idgenero.split(",");
+                for (int i=0;i<idgenero.length;i++){
                     Funciongenero fungen = new Funciongenero();
-                    int idgenint=Integer.parseInt(idgen[i]);
+                    int idgenint=Integer.parseInt(idgenero[i]);
                     fungen.setIdgenero(generoRepository.findById(idgenint).get());
                     fungen.setIdfuncion(func);
                     //estado habilitado
@@ -1016,11 +989,6 @@ public class FuncionesController {
 
             return "redirect:/operador/funciones";
         }
-
-
-
-
-    }
 
 
     @PostMapping("/buscar")
