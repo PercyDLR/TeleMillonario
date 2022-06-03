@@ -6,171 +6,105 @@
             input::placeholder {
                 color: #000000;
             }
+            .price img{
+                object-fit: cover;
+                object-position: 50% 50%;
+                margin-top: 0;
+                height: 240px;
+            }
         </style>
     </head>
 
 <body class="body">
     <div th:replace="fragments/navbar :: operador('funciones')"></div>
-<div class="content">
-    <div class="container" style="margin-bottom: 30px;opacity: 200%">
-        <div class="row">
-            <div class="col-12" style="margin-top: 30px;">
-                <div class="row">
-                    <div class="col-5">
-                        <h1 class="details__title"
-                            style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: x-large">
-                            Programacion de funciones
-                        </h1>
-                    </div>
-                    <div class="col-2"></div>
-                    <form style="display: contents;" method="post" th:action="@{'/operador/funciones/buscar'}">
-                        <div class="col-3"><div class="input-group" style="padding-top: 10px">
-                            <input name="parametro" class="form-control text-light" type="text"
-                                   style="text-align: center; height: auto ;background-color: transparent; border-radius: 5px; border-color: #7c7676"
-                                   placeholder="Buscar por Nombre de Funcion" th:value="${parametro == null ? '' : parametro}">
-                        </div></div>
-                        <div class="col-2">
 
-                            <div class="col-12 d-flex justify-content-center">
-                                <button type="submit" class="filter__btn" style="margin-top:6px;">
-                                    <a>Buscar</a>
-                                </button>
+    <div class="content" style="margin-top: 15px">
+        <div class="container" style="margin-bottom: 30px">
+
+            <div class="row">
+                <div class="col-md-10 col-12" style="margin-top: 30px;">
+                    <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3rem">
+                        Programación de Funciones
+                    </h1>
+                </div>
+
+                <div class="col-md-2 col-12 d-flex justify-content-center">
+                    <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
+                        <a th:href="@{/operador/funciones/crear}">
+                            <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
+                        </a>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong th:text="${msg}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${err}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" th:action="@{/admin/actores/buscar}">
+                <div class="row justify-content-center" style="margin-top: 50px">
+                    <div class="col-md-8 col-12">
+
+                        <div class="input-group d-flex justify-content-center" style="margin-bottom: 5px">
+                            <input type="text" placeholder="Buscar Función por Nombre" th:value="${busqueda != null ? busqueda : ''}" name="busqueda" class="src" style="width: inherit;color: #000000">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="filter__btn">
+                                <a>Buscar</a>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+            <br>
+
+            <div class="row" >
+                <div class="col-12 col-md-6 col-lg-4 my-4" th:each="foto : ${listfunc}">
+
+                    <div class="price price--premium">
+                        <div class="price__item price__item--first">
+                            <span th:text="${foto.funcion.nombre}"></span>
+                            <span th:text="|Sala ${foto.funcion.sala.numero}|"></span>
+                        </div>
+
+                        <img class="card-img-top mt-3" th:src="${foto.ruta}" th:alt="${foto.funcion.nombre}">
+
+                        <div class="price__item"><span th:text="|Fecha: ${foto.funcion.fecha}|"></span></div>
+                        <div class="price__item"><span th:text="|Hora: ${foto.funcion.inicio}|"></span></div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <a th:href="@{'/operador/funciones/editar?idfuncion=' + ${foto.funcion.id}}" class="price__btn">Editar</a>
+                            </div>
+                            <div class="col-6">
+                                <a class="cancel__btn" type="button" th:onclick="|advertencia(${foto.funcion.id})|">Eliminar</a>
                             </div>
                         </div>
-                    </form>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null)}">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        <strong th:text="${msg}">Mensaje</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg1 != null)}">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <strong th:text="${msg1}"></strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
+
+            <br>
+
+            <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/funciones/lista?')"></div>
         </div>
-        <br>
-        <div class="row" >
-
-            <div class="col-2" th:each="foto : ${listfunc1}" style="margin-right: 190px">
-                <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-
-
-                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
-                         style="width: 270px;height: 240px;margin-left: 7px;">
-<!--                    <div class="card__cover" >-->
-
-<!--&lt;!&ndash;                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">&ndash;&gt;-->
-<!--                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
-<!--                             style="width: 270px;height: 240px;margin-left: 7px;">-->
-<!--                        <a class="card__play" style="border:none" href="#">-->
-<!--                            <i style="color: white">Ver mas fotos</i>-->
-<!--                        </a>-->
-<!--                    </div>-->
-
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
-                        <p class="card-text" style="font-size: 130%" ><b>Sala:</b><p th:text="${foto.getFuncion().getSala().getNumero()}"> 5</p></p>
-                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
-                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
-                    </div>
-                    <div style="display: flex;justify-content: center">
-                        <button>
-                            <a class="circulo_botones" th:href="@{'/operador/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
-                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
-                            </a>
-                        </button>
-                        <button>
-                            <a class="circulo_botones" href="#popup">
-                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getFuncion().getId()})|" th:src="@{/img/iconTrash2.png}">
-                            </a>
-                        </button>
-                    </div>
-
-                </div>
-
-            </div>
-<!--            <div class="col-3"></div>-->
-<!--            <div class="col-2">-->
-<!--                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">-->
-<!--                    <img class="card-img-top" th:src="@{/img/covers/LaTernura.png}" alt="Card image cap"-->
-<!--                         style="width: 300px;height: 250px">-->
-<!--                    <div class="card-body">-->
-<!--                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independencia</b></u></h5>-->
-<!--                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>-->
-<!--                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>-->
-<!--                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>-->
-<!--                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-3"></div>-->
-<!--            <div class="col-2">-->
-<!--                <div class="card" style="width: 18rem;background-color: #DD4063;opacity: 80%;color: #FFFFFF">-->
-<!--                    <img class="card-img-top" th:src="@{/img/covers/Independencia.png}" alt="Card image cap"-->
-<!--                         style="width: 300px;height: 250px">-->
-<!--                    <div class="card-body">-->
-<!--                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%" ><u><b>Independicia</b></u></h5>-->
-<!--                        <p class="card-text" style="font-size: 130%"><b>Hora:</b> 11:00 p.m</p>-->
-<!--                        <p class="card-text" style="font-size: 130%"><b>Sala:</b> 5</p>-->
-<!--                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>-->
-<!--                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-3"></div>-->
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-2" th:each="foto : ${listfunc2}" style="margin-right: 190px">
-                <div class="card" style="width: 18rem;margin-right: 20px;background-color: #DD4063;opacity: 80%;color: #FFFFFF">
-
-<!--                    <div class="card__cover" >-->
-
-<!--                        &lt;!&ndash;                        <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">&ndash;&gt;-->
-<!--                        <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"-->
-<!--                             style="width: 270px;height: 240px;margin-left: 7px;">-->
-<!--                        <a class="card__play" style="border:none" href="#">-->
-<!--                            <i style="color: white">Ver mas fotos</i>-->
-<!--                        </a>-->
-<!--                    </div>-->
-
-
-                    <img class="card-img-top" th:src="${foto.ruta}" alt="Card image cap"
-                         style="width: 270px;height: 240px;margin-left: 7px;">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: #FFFFFF; font-size: 150%;margin-bottom: 8%"  ><u><b th:text="${foto.getFuncion().getNombre()}">Independencia</b></u></h5>
-                        <p class="card-text" style="font-size: 130%" ><b>Hora:</b > <p th:text="${foto.getFuncion().getInicio()}"> 11:00 p.m</p></p>
-                        <p class="card-text" style="font-size: 130%" ><b>Sala:</b><p th:text="${foto.getFuncion().getSala().getNumero()}"> 5</p></p>
-                        <a href="#" style="margin-left: 25%;margin-right: 25%"><i class="icon-pencil icon-2x" style="color: #FFFFFF;"></i></a>
-                        <a href="#"><i class="icon-trash icon-2x" style="color: #FFFFFF;"></i></a>
-                    </div>
-                    <div style="display: flex;justify-content: center">
-                        <button>
-                            <a class="circulo_botones" th:href="@{'/operador/funciones/editar' + '?idfuncion=' + ${foto.getFuncion().getId()}}">
-                                <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
-                            </a>
-                        </button>
-                        <button>
-                            <a class="circulo_botones" href="#popup">
-                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getFuncion().getId()})|" th:src="@{/img/iconTrash2.png}">
-                            </a>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="col-3">
-            <a class="btn btn-primary" style="display: table-cell;background-color: #DD4063FF;text-align: center;width: 350%;color: #FFFFFF;margin-top: 10px" th:href="@{/operador/funciones/crear}">Programar función</a>
-        </div>
-        <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/funciones/lista?')"></div>
-        <div style="height: 10px"></div>
     </div>
-</div>
 
     <div id="popup" class="overlay">
         <div class="row">

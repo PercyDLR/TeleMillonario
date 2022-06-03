@@ -229,7 +229,7 @@ public class ActorController {
         }
 
         //-----------------------------------------------
-        //            Agregar Foto de la DB
+        //            Agregar Foto a la DB
         //-----------------------------------------------
 
         // Se guarda imagen por imagen (en ese orden se les dará número)
@@ -242,7 +242,7 @@ public class ActorController {
                 foto.setIdpersona(actor.getId());
                 foto.setNumero(fotosGuardadas + i);
 
-                // Guardar en el Sevidor
+                // Guardar en el Servidor
                 MultipartFile imgRenombrada = fileService.formatearArchivo(img, "actor");
                 if(fileService.subirArchivo(imgRenombrada)){
 

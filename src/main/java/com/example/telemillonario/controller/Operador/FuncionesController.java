@@ -73,42 +73,10 @@ public class FuncionesController {
         Persona persona=(Persona) session.getAttribute("usuario");
 
         List<Foto> listfuncfoto= fotoRepository.buscarFotoFunciones(persona.getIdsede().getId(),(int)funcionesporpagina*pagina, (int)funcionesporpagina);
-//        List<Funcion> listfunc= funcionRepository.buscarFuncion(estado,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
-        // crea 2 listas vacias
-        List<Foto> listfunc1 = new ArrayList<Foto>();
-        List<Foto> listfunc2 = new ArrayList<Foto>();
-        if(listfuncfoto.size()>3){
-            // Se agrega las 3 primeras funciones
-            for (int i = 0; i < size; i++) {
-                listfunc1.add(listfuncfoto.get(i));
-            }
-
-            if(listfuncfoto.size()>3 && listfuncfoto.size() <6){
-                for (int i = size; i < listfuncfoto.size(); i++) {
-                    listfunc2.add(listfuncfoto.get(i));
-                }
-
-            }else{
-                //Se agrega las 3 funciones restantes
-                for (int i = size; i < size*2; i++) {
-                    listfunc2.add(listfuncfoto.get(i));
-                }
-
-            }
-        }else{
-            // Se agrega las funciones
-            for (int i = 0; i < listfuncfoto.size(); i++) {
-                listfunc1.add(listfuncfoto.get(i));
-            }
-
-        }
-
         List<Foto> listfunctotal= fotoRepository.buscarFuncionesParaContar(persona.getIdsede().getId());
-
         int cantFunc= listfunctotal.size();
 
-        model.addAttribute("listfunc1",listfunc1);
-        model.addAttribute("listfunc2",listfunc2);
+        model.addAttribute("listfunc",listfuncfoto);
 
         model.addAttribute("pagActual",pagina);
         model.addAttribute("pagTotal",(int) Math.ceil(cantFunc/funcionesporpagina));
@@ -559,46 +527,10 @@ public class FuncionesController {
                 Persona persona=(Persona) session.getAttribute("usuario");
 
                 List<Foto> listfuncfoto= fotoRepository.buscarFotoFuncionesPorNombre(persona.getIdsede().getId(),parametro,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
-//        List<Funcion> listfunc= funcionRepository.buscarFuncion(estado,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
-                // crea 2 listas vacias
-                List<Foto> listfunc1 = new ArrayList<Foto>();
-                List<Foto> listfunc2 = new ArrayList<Foto>();
-
-
-                if(listfuncfoto.size()>3){
-                    // Se agrega las 3 primeras funciones
-                    for (int i = 0; i < size; i++) {
-                        listfunc1.add(listfuncfoto.get(i));
-                    }
-
-                    if(listfuncfoto.size()>3 && listfuncfoto.size() <6){
-                        for (int i = size; i < listfuncfoto.size(); i++) {
-                            listfunc2.add(listfuncfoto.get(i));
-                        }
-
-                    }else{
-                        //Se agrega las 3 funciones restantes
-                        for (int i = size; i < size*2; i++) {
-                            listfunc2.add(listfuncfoto.get(i));
-                        }
-
-                    }
-                }else{
-                    // Se agrega las funciones
-                    for (int i = 0; i < listfuncfoto.size(); i++) {
-                        listfunc1.add(listfuncfoto.get(i));
-                    }
-
-                }
-
-
-
                 List<Foto> listfunctotal= fotoRepository.buscarFuncionesParaContarPorNombre(persona.getIdsede().getId(),parametro);
-
                 int cantFunc= listfunctotal.size();
 
-                model.addAttribute("listfunc1",listfunc1);
-                model.addAttribute("listfunc2",listfunc2);
+                model.addAttribute("listfunc",listfuncfoto);
 
                 model.addAttribute("pagActual",pagina);
                 model.addAttribute("pagTotal",(int) Math.ceil(cantFunc/funcionesporpagina));

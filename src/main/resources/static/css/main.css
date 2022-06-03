@@ -125,13 +125,36 @@ div.cuenta{
 }
 
 /* Quitar el color blanco al autcompletar */
-input:-webkit-autofill{
+input.sign__input:-webkit-autofill{
   -webkit-text-fill-color: #fff !important;
-  -webkit-box-shadow: 0 0 0 30px #2b2b31 inset !important;
+  box-shadow: 0 0 0 30px #2b2b31 inset !important;
+  transition: box-shadow 0ms;
 }
-input:autofill {
+input.sign__input:-webkit-autofill:focus{
+  -webkit-text-fill-color: #fff !important;
+  box-shadow: 0 0 10px 0 rgba(255,88,96,0.5),
+  0 0 0 30px #2b2b31 inset !important;
+}
+input.sign__input:autofill {
   background: #2b2b31;
   color: #fff;
+}
+
+.cancel__btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  opacity: 0.85;
+  font-size: 13px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-top: 25px;
 }
 
 /*==============================
@@ -2100,7 +2123,7 @@ ul {
   letter-spacing: 1px;
   margin-top: 20px;
 }
-.price__btn:hover {
+.price__btn:hover, .cancel__btn:hover {
   opacity: 1;
   color: #fff;
 }
@@ -3240,13 +3263,15 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   padding: 0 20px;
   letter-spacing: 0.2px;
   font-family: 'Open Sans', sans-serif;
+  transition: box-shadow 0.25s ease-out;
 }
 input.sign__input:disabled , input.sign__input:disabled{
   color: rgba(255,255,255,0.5);
 }
 
-input.sign__input:focus, select.sign__input:focus{
+input.sign__input:focus, select.sign__input:focus, textarea.sign__input:focus{
   border: solid #ff55a5 1px;
+  box-shadow: 0 0 10px 0 rgba(255,88,96,0.5);
 }
 
 .sign__group {
