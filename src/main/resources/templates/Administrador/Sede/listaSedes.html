@@ -52,9 +52,37 @@
                             <strong>Se ha eliminado la sede</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '3')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>No se puede borrar una sede que no existe"</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '4')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>Hubo un error al borrar una sede</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong th:text="|Sede creada exitosamente|"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '1')}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong th:text="|Sede actualizada exitosamente|"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong th:text="|Sede borrada exitosamente|"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
                 <form method="post" th:action="@{/admin/sedes/buscar}">
                     <div class="row justify-content-center">
                         <div class="col-md-6 col-12">
@@ -124,7 +152,7 @@
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:src="@{/img/iconTrash2.png}">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getSede().getId()})|" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -161,6 +189,15 @@
         </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">
+            <script th:inline="javascript">
+                function advertencia(idsede) {
+                    let popup = document.getElementById('popup');
+
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/sedes/borrar?idsede='}]] + idsede;
+                    popup.style.display = 'block';
+                }
+
+            </script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                     crossorigin="anonymous">
