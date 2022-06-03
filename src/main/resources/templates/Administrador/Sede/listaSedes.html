@@ -49,7 +49,7 @@
                         </div>
                         <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
                             <i class="bi bi-info-circle-fill"></i>
-                            <strong>Se ha eliminado la sede</strong>
+                            <strong>Se ha eliminado la sede exitosamente</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '3')}">
@@ -64,25 +64,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
-                            <i class="bi bi-check-circle-fill"></i>
-                            <strong th:text="|Sede creada exitosamente|"></strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '1')}">
-                            <i class="bi bi-check-circle-fill"></i>
-                            <strong th:text="|Sede actualizada exitosamente|"></strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
-                            <i class="bi bi-info-circle-fill"></i>
-                            <strong th:text="|Sede borrada exitosamente|"></strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
+
                 <form method="post" th:action="@{/admin/sedes/buscar}">
                     <div class="row justify-content-center">
                         <div class="col-md-6 col-12">

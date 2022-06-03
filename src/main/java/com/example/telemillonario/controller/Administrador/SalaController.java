@@ -118,6 +118,7 @@ public class SalaController {
             model.addAttribute("sede", sala.getIdsede());
             return "Administrador/Sala/editarSalas";
         } else {
+
             Optional<Sala> optSala = salaRepository.findById(sala.getId());
             if(!optSala.isPresent()){
                 //Crea automaticamente el numero de la sala
@@ -128,6 +129,13 @@ public class SalaController {
                         b = s.getNumero();
                     }
                 }
+                //Se valida que la cantidad de salas creadas no supere el maximo
+                Sede sede =sedeRepository.findById(sala.getIdsede().getId()).get();
+                if(sede.getNumerosalas()<(b+1)){
+                    a.addFlashAttribute("msg","-2");
+                    return "redirect:/admin/salas?idsede="+sala.getIdsede().getId();
+                }
+
                 sala.setNumero(b+1);
 
                 //Crea automaticamente el identificador de la sala
