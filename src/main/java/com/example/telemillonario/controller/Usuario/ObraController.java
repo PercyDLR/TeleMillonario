@@ -39,10 +39,16 @@ public class ObraController {
 
     @GetMapping(value = "")
     public String listarFuncionesGenero(Model model,
-                                        @RequestParam(value = "restriccionEdad", required = false, defaultValue = "0") Integer restriccionEdad,
-                                        @RequestParam(value = "genero", required = false, defaultValue = "") Genero genero,
+                                        @RequestParam(value = "restriccionEdad", required = false, defaultValue = "") String restriccionEdad,
+                                        @RequestParam(value = "genero", required = false, defaultValue = "") String genero,
                                         @RequestParam(value = "busqueda", required = false, defaultValue = "") String busqueda,
                                         @RequestParam(value = "pag", required = false, defaultValue = "0") String pag){
+
+        System.out.println("Valores recibidos:");
+        System.out.println("restriccionedad: " + restriccionEdad);
+        System.out.println("busqueda: " + busqueda);
+        System.out.println("genero: " + genero);
+
         int pagina;
         try{
             pagina = Integer.parseInt(pag);
@@ -50,7 +56,7 @@ public class ObraController {
             pagina=0;
         }
 
-        List<Funciongenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros("","","");
+        List<Funciongenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad,genero,busqueda);
 
         //System.out.println("Lista funcionesGenero que retorna el query");
         //for (Funciongenero f : listaFuncionGenero) {
@@ -158,7 +164,16 @@ public class ObraController {
         //    System.out.println("=====================");
         //}
 
-        model.addAttribute("genero", genero);
+        int generoId;
+        String generoIdStr = "";
+        try {
+            generoId = Integer.parseInt(genero);
+            model.addAttribute("genero", generoId);
+        } catch (Exception e) {
+            model.addAttribute("genero", generoIdStr);
+        }
+
+
         model.addAttribute("busqueda", busqueda);
         model.addAttribute("restriccionEdad",restriccionEdad);
 
@@ -171,13 +186,18 @@ public class ObraController {
     }
 
     @PostMapping("/BusquedaYFiltros")
-    String busqueda(@RequestParam(value = "restriccionEdad", defaultValue = "0") Integer restriccionEdad,
-                    @RequestParam(value = "genero", defaultValue = "") Genero genero,
+    String busqueda(@RequestParam(value = "restriccionEdad", defaultValue = "") String restriccionEdad,
+                    @RequestParam(value = "genero", defaultValue = "") String genero,
                     @RequestParam(value = "busqueda", defaultValue = "") String busqueda,
                     @RequestParam(value = "pag",defaultValue = "0") String pag,
                     RedirectAttributes attr){
 
-        return "redirect:/cartelera?restriccionEdad="+restriccionEdad+"&genero="+genero.getId()+"&busqueda="+busqueda+"&pag="+pag;
+        System.out.println("Valores recibidos en POST:");
+        System.out.println("restriccionedad: " + restriccionEdad);
+        System.out.println("busqueda: " + busqueda);
+        System.out.println("genero: " + genero);
+
+        return "redirect:/cartelera?restriccionEdad="+restriccionEdad+"&genero="+genero+"&busqueda="+busqueda+"&pag="+pag;
     }
 
 }
