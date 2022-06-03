@@ -35,28 +35,23 @@ public class ObraController {
     FuncionRepository funcionRepository;
 
     //Variables Importantes
-    int funcionesxpagina=12;
+    int funcionesxpagina = 12;
 
     @GetMapping(value = "")
     public String listarFuncionesGenero(Model model,
                                         @RequestParam(value = "restriccionEdad", required = false, defaultValue = "") String restriccionEdad,
                                         @RequestParam(value = "genero", required = false, defaultValue = "") String genero,
                                         @RequestParam(value = "busqueda", required = false, defaultValue = "") String busqueda,
-                                        @RequestParam(value = "pag", required = false, defaultValue = "0") String pag){
-
-        System.out.println("Valores recibidos:");
-        System.out.println("restriccionedad: " + restriccionEdad);
-        System.out.println("busqueda: " + busqueda);
-        System.out.println("genero: " + genero);
+                                        @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
 
         int pagina;
-        try{
+        try {
             pagina = Integer.parseInt(pag);
-        }catch(Exception e) {
-            pagina=0;
+        } catch (Exception e) {
+            pagina = 0;
         }
 
-        List<Funciongenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad,genero,busqueda);
+        List<Funciongenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
 
         //System.out.println("Lista funcionesGenero que retorna el query");
         //for (Funciongenero f : listaFuncionGenero) {
@@ -95,7 +90,7 @@ public class ObraController {
         for (Map.Entry<Funcion, ArrayList<Genero>> h : funcionGenero.entrySet()) {
             Funcion funcionAEvaluar = h.getKey();
             if (!listaNombres.containsKey(funcionAEvaluar.getNombre())) {
-                listaNombres.put(funcionAEvaluar.getNombre(),0);
+                listaNombres.put(funcionAEvaluar.getNombre(), 0);
             }
         }
 //        System.out.println("Lista de nombres de funciones");
@@ -106,23 +101,23 @@ public class ObraController {
 //            System.out.println("=====================");
 //        }
 
-        ArrayList<Funcion> listaFuncionesAEliminar = new ArrayList<>();
-        for (Map.Entry<Funcion, ArrayList<Genero>> h : funcionGenero.entrySet()) {
-            Funcion funcionAEvaluar = h.getKey();
-            for (Map.Entry<String, Integer> j : listaNombres.entrySet()) {
-                String nombre = j.getKey();
-                if (funcionAEvaluar.getNombre().equals(nombre)) {
-                    if (j.getValue() == 0) {
-                        listaNombres.put(nombre,1);
-                    } else {
-                        listaFuncionesAEliminar.add(h.getKey());
-                    }
-                }
-            }
-        }
-        for (Funcion a : listaFuncionesAEliminar) {
-            funcionGenero.remove(a);
-        }
+//        ArrayList<Funcion> listaFuncionesAEliminar = new ArrayList<>();
+//        for (Map.Entry<Funcion, ArrayList<Genero>> h : funcionGenero.entrySet()) {
+//            Funcion funcionAEvaluar = h.getKey();
+//            for (Map.Entry<String, Integer> j : listaNombres.entrySet()) {
+//                String nombre = j.getKey();
+//                if (funcionAEvaluar.getNombre().equals(nombre)) {
+//                    if (j.getValue() == 0) {
+//                        listaNombres.put(nombre, 1);
+//                    } else {
+//                        listaFuncionesAEliminar.add(h.getKey());
+//                    }
+//                }
+//            }
+//        }
+//        for (Funcion a : listaFuncionesAEliminar) {
+//            funcionGenero.remove(a);
+//        }
 
         System.out.println("Tamanio hashmap funcionGenero segundo vistazo tras eliminacion: " + funcionGenero.size());
         //System.out.println("Lista Funcion Genero actualizada");
@@ -141,8 +136,8 @@ public class ObraController {
         LinkedHashMap<Funcion, ArrayList<Genero>> listaFuncionesGeneroAEnviar = new LinkedHashMap<>();
         int i = 0;
         for (Map.Entry<Funcion, ArrayList<Genero>> h : funcionGenero.entrySet()) {
-            if (i >= pagina*funcionesxpagina && i < pagina*funcionesxpagina + funcionesxpagina && i < tamanhoLista) {
-                listaFuncionesGeneroAEnviar.put(h.getKey(),h.getValue());
+            if (i >= pagina * funcionesxpagina && i < pagina * funcionesxpagina + funcionesxpagina && i < tamanhoLista) {
+                listaFuncionesGeneroAEnviar.put(h.getKey(), h.getValue());
             }
             i = i + 1;
         }
@@ -175,10 +170,10 @@ public class ObraController {
 
 
         model.addAttribute("busqueda", busqueda);
-        model.addAttribute("restriccionEdad",restriccionEdad);
+        model.addAttribute("restriccionEdad", restriccionEdad);
 
-        model.addAttribute("pagActual",pagina);
-        model.addAttribute("pagTotal",(int) Math.ceil(listaFuncionGenero.size()/funcionesxpagina));
+        model.addAttribute("pagActual", pagina);
+        model.addAttribute("pagTotal", (int) Math.ceil(listaFuncionGenero.size() / funcionesxpagina));
         model.addAttribute("listaFuncionesGenero", listaFuncionesGeneroAEnviar);
         model.addAttribute("listaCaratulas", listaCaratulas);
         model.addAttribute("generos", generoRepository.findAll());
@@ -189,15 +184,33 @@ public class ObraController {
     String busqueda(@RequestParam(value = "restriccionEdad", defaultValue = "") String restriccionEdad,
                     @RequestParam(value = "genero", defaultValue = "") String genero,
                     @RequestParam(value = "busqueda", defaultValue = "") String busqueda,
-                    @RequestParam(value = "pag",defaultValue = "0") String pag,
-                    RedirectAttributes attr){
+                    @RequestParam(value = "pag", defaultValue = "0") String pag,
+                    RedirectAttributes attr) {
 
         System.out.println("Valores recibidos en POST:");
         System.out.println("restriccionedad: " + restriccionEdad);
         System.out.println("busqueda: " + busqueda);
         System.out.println("genero: " + genero);
 
-        return "redirect:/cartelera?restriccionEdad="+restriccionEdad+"&genero="+genero+"&busqueda="+busqueda+"&pag="+pag;
+        return "redirect:/cartelera?restriccionEdad=" + restriccionEdad + "&genero=" + genero + "&busqueda=" + busqueda + "&pag=" + pag;
+    }
+
+    @GetMapping("/DetallesObra")
+    String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a) {
+
+        Optional<Funcion> opt = funcionRepository.findById(id);
+        if (opt.isPresent()) {
+            Funcion funcion = opt.get();
+            List<Foto> listaFotos = fotoRepository.fotosFuncion(id);
+
+            model.addAttribute("funcion", funcion);
+            model.addAttribute("listaFotos", listaFotos);
+            return "usuario/obras/carteleraObraDetalles";
+        } else {
+            a.addFlashAttribute("msg", -1);
+            return "redirect:/cartelera";
+        }
+
     }
 
 }

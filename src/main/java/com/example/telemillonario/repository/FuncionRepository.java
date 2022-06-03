@@ -29,4 +29,6 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
    /*Validacion si la funcion existe en esa sede a dicha hora*/
     @Query(nativeQuery = true,value = "SELECT funcion.id FROM funcion INNER JOIN sala ON ( funcion.idsala = sala.id) INNER JOIN sede ON ( sala.idsede = sede.id) WHERE funcion.id = ?1 AND sede.id = ?2 AND funcion.fecha = ?3 AND funcion.inicio = ?4")
     Funcion encontrarFuncionHoraSede(int idFuncion, int idSede, String fecha, String hora);
-}
+
+    List<Funcion> findByNombre(String nombreObra);
+ }

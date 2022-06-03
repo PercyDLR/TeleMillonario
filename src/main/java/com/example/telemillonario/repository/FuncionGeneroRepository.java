@@ -19,7 +19,8 @@ public interface FuncionGeneroRepository extends JpaRepository<Funciongenero,Int
     @Query(nativeQuery = true, value = "SELECT fg.* FROM telemillonario.funciongenero fg\n" +
             "inner join telemillonario.funcion f on (f.id = fg.idfuncion)\n" +
             "inner join telemillonario.genero g on (fg.idgenero = g.id)\n" +
-            "where (f.estado = 1) and (f.restriccionedad like %?1%) and (g.id like %?2%) and (f.nombre like %?3%) order by fg.idfuncion")
+            "where (f.estado = 1) and (f.restriccionedad like %?1%) and (g.id like %?2%) and (f.nombre like %?3%) \n" +
+            "order by fg.idfuncion")
     List<Funciongenero> buscarFuncionGeneroPorFiltros(String restriccionEdad, String genero, String nombreFuncion);
 
 
