@@ -124,6 +124,16 @@ div.cuenta{
   }
 }
 
+/* Quitar el color blanco al autcompletar */
+input:-webkit-autofill{
+  -webkit-text-fill-color: #fff !important;
+  -webkit-box-shadow: 0 0 0 30px #2b2b31 inset !important;
+}
+input:autofill {
+  background: #2b2b31;
+  color: #fff;
+}
+
 /*==============================
 	Common styles
 ==============================*/
@@ -3225,7 +3235,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   color: #fff;
   font-size: 15px;
   width: 250px;
-  color: #fff;
   -webkit-border-radius: 0;
   border-radius: 0;
   padding: 0 20px;
@@ -3234,6 +3243,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 input.sign__input:disabled , input.sign__input:disabled{
   color: rgba(255,255,255,0.5);
+}
+
+input.sign__input:focus, select.sign__input:focus{
+  border: solid #ff55a5 1px;
 }
 
 .sign__group {

@@ -39,6 +39,7 @@ public class Sede implements Serializable {
 
     @Column(name = "numerosalas")
     @Positive
+    @Min(value = 1, message = "El valor mínimo de salas es 1")
     @Digits(integer = 2, fraction = 0, message = "Debe ser un número entero y menor a 3 cifras")
     @NotNull(message = "La cantidad de salas no debe estar vacio")
     private Integer numerosalas;

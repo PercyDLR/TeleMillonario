@@ -22,7 +22,7 @@ public class Funcion {
     private int estado;
 
     @Column(name = "fecha")
-    @Future(message = "La fecha que ingresaste ya pasó")
+    @FutureOrPresent(message = "La fecha que ingresaste ya pasó")
     private LocalDate fecha;
 
     @Column(name = "inicio")
@@ -35,7 +35,7 @@ public class Funcion {
     private Double calificacion;
 
     @Column(name = "restriccionedad")
-    @NotNull(message = "La restriccion de edad no debe estar vacia")
+    @NotNull(message = "Defina la Restricción de Edad")
     private Integer restriccionedad;
 
     @Column(name = "precioentrada")
@@ -66,7 +66,7 @@ public class Funcion {
 
     @ManyToOne
     @JoinColumn(name = "idsala")
-    private Sala sala=new Sala();
+    private Sala sala = new Sala();
 
     public Sala getSala() {
         return sala;

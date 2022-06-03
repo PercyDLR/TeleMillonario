@@ -48,7 +48,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     @Query(value = "SELECT fe.idpersona FROM funcionelenco fe\n" +
             "inner join persona p on (fe.idpersona=p.id)\n" +
             "where fe.idfuncion=?1 and fe.estado=1 and p.idrol=5",nativeQuery = true)
-    List<Integer> actoresPorFuncion(int idfuncion);
+    List<String> actoresPorFuncion(int idfuncion);
 
 
 
@@ -68,7 +68,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     @Query(value = "SELECT fe.idpersona FROM funcionelenco fe\n" +
             "inner join persona p on (fe.idpersona=p.id)\n" +
             "where fe.idfuncion=?1 and fe.estado=1 and p.idrol=4",nativeQuery = true)
-    List<Integer> directoresPorFuncion(int idfuncion);
+    List<String> directoresPorFuncion(int idfuncion);
 
     //Busca a un usuario por su token de password
     @Query(value = "select * from persona where persona.passwordtoken = ?1",nativeQuery = true)
