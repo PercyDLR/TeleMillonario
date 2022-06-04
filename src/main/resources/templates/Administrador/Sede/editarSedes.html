@@ -222,7 +222,7 @@
 
                                 <br>
                                 <div style="display: flex;justify-content: center">
-                                    <button style="border-radius: 20px; margin-top: 30px;" class="sign__btn" type="submit"><a style="color: white" th:href="@{/admin/sedes/lista}">Cancelar</a></button>
+                                    <button class="sign__btn" type="submit"><a style="color: white" th:href="@{/admin/sedes/lista}">Cancelar</a></button>
                                     <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;" th:text="${sede.id == 0? 'Registrar': 'Actualizar'}" class="sign__btn" type="submit"><a style="color: white" >Registrar</a></button>
                                 </div>
 
@@ -241,12 +241,12 @@
                 <div class="sign__content">
                     <form action="#" class="sign__form">
                         <a href="index.html" class="sign__logo">
-                            <img src="img/tele.PNG" alt="">
+                            <img th:src="@{img/tele.PNG}" alt="logo">
                         </a>
                         <div class="sign__group">
                             <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de editar esta Sede?</h5>
                         </div>
-                        <a th:href="@{/editarSede}" class="sign__btn">Cancelar</a>
+                        <a th:href="@{/editarSede}" class="cancel__btn">Cancelar</a>
                         <a href="#" class="sign__btn">Continuar</a>
                     </form>
                 </div>

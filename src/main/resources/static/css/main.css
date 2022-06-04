@@ -2091,6 +2091,13 @@ ul {
 .price__item--first:before {
   display: none;
 }
+.price__item--first span:first-child {
+  max-width: 65%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
 .price__item--first span:last-child {
   font-weight: 500;
   background-image: -webkit-linear-gradient(0deg, #ff55a5 0%, #ff5860 100%);
