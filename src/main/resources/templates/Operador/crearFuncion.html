@@ -33,7 +33,7 @@
             }
 
             .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-                background-color: #2b2b31;
+                background-color: #28282d;
                 color: #ff55a5
             }
             .select2-container--default .select2-results__option--selected {
@@ -229,8 +229,8 @@
                                         <div class="sign__group">
                                             <label for="restriccionedad">Restricción de Edad</label>
                                             <select class="sign__input" th:field="*{restriccionedad}" required>
-                                                <option value="1" th:selected="${funcion.restriccionedad == 0}">No</option>
-                                                <option value="0" th:selected="${funcion.restriccionedad == 1}">Sí</option>
+                                                <option value="0" th:selected="${funcion.restriccionedad == 0}">No</option>
+                                                <option value="1" th:selected="${funcion.restriccionedad == 1}">Sí</option>
                                             </select>
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('restriccionedad')}"
                                                  th:errors="*{restriccionedad}"></div>

@@ -52,12 +52,12 @@
                 </div>
             </div>
 
-            <form method="post" th:action="@{/admin/actores/buscar}">
+            <form method="post" th:action="@{/operador/funciones/buscar}">
                 <div class="row justify-content-center" style="margin-top: 50px">
                     <div class="col-md-8 col-12">
 
                         <div class="input-group d-flex justify-content-center" style="margin-bottom: 5px">
-                            <input type="text" placeholder="Buscar Función por Nombre" th:value="${busqueda != null ? busqueda : ''}" name="busqueda" class="src" style="width: inherit;color: #000000">
+                            <input type="text" placeholder="Buscar Función por Nombre" th:value="${parametro != null ? parametro : ''}" name="parametro" class="src" style="width: inherit;color: #000000">
                         </div>
                     </div>
                     <div class="col-md-4 col-12">
@@ -85,8 +85,12 @@
 
                         <img class="card-img-top mt-3" th:src="${foto.ruta}" th:alt="${foto.funcion.nombre}">
 
+                        <div class="price__item"><span th:text="|Restricción de Edad: ${foto.funcion.restriccionedad == 1 ? 'Sí':'No'}|"></span></div>
+                        <div class="price__item"><span th:text="|Precio: S/${foto.funcion.precioentrada}|"></span></div>
                         <div class="price__item"><span th:text="|Fecha: ${foto.funcion.fecha}|"></span></div>
                         <div class="price__item"><span th:text="|Hora: ${foto.funcion.inicio}|"></span></div>
+                        <div class="price__item"><span th:text="|Aforo: ${foto.funcion.sala.aforo}|"></span></div>
+                        <div class="price__item"><span th:text="|Stock: ${foto.funcion.stockentradas}|"></span></div>
 
                         <div class="row">
                             <div class="col-6">
