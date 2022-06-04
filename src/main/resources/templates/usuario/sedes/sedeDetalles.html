@@ -1,160 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Detalles sede</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-              crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@900&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@900&family=Open+Sans&display=swap"
-              rel="stylesheet">
-
+    <head th:replace="fragments/header :: head('Sede Detalles',~{::style})">
         <style>
-
-            .page-link {
-                position: relative;
-                display: block;
-                color: #fff;
-                text-decoration: none;
-                background-color: #e64166;
-                border: 1px solid #be1931;
-                transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+            input::placeholder {
+                color: #000000;
             }
-
-            .page-link:hover {
-                z-index: 2;
-                border-color: rgba(211, 114, 1, 0.87);
-                background-color: #e64166;
-                border-color: #be1931;
-                color: #fff
+            #map0 {
+                height: 450px;
             }
-
-            .page-link:focus {
-                z-index: 3;
-                border-color: rgba(201, 201, 201, 0.87);
-                background-color: #e64166;
-                outline: 0;
-                box-shadow: 0 0 0 .25rem rgba(253, 151, 49, 0.5);
-                color: #fff
-            }
-
-            .page-item.active .page-link {
-                z-index: 3;
-                color: #fff;
-                background-color: #be1931;
-                border-color: #be1931
-            }
-
-            .page-item.disabled .page-link {
-                color: #be1931;
-                pointer-events: none;
-                background-color: #e64166;
-                border-color: #be1931
-            }
-
         </style>
-
     </head>
-    <body style="background-image: url('/static/img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="position: sticky; top: 0; z-index: 100;">
-            <div class="container mt-2">
-                <div class="container-fluid">
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <h1 style="margin-right: 20px">
-                            <span style="font-family: 'Barlow', sans-serif; color:#ffffff">Tele </span>
-                            <span style="font-family: 'Barlow', sans-serif; color:#e64166">Millonario</span>
-                        </h1>
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item text-light">
-                                <a class="nav-link text-light"
-                                   style="font-family: 'Open Sans', sans-serif;  opacity: 0.6;" href="#">Inicio</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light"
-                                   style="font-family: 'Open Sans', sans-serif; opacity: 0.6;" href="#">Cartelera</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active text-light" aria-current="page"
-                                   style="font-family: 'Open Sans', sans-serif;" href="#">Sedes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled text-light"
-                                   style="font-family: 'Open Sans', sans-serif; opacity: 0.6;">Actores</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled text-light"
-                                   style="font-family: 'Open Sans', sans-serif; opacity: 0.6;">Directores</a>
-                            </li>
-                        </ul>
-                        <i class="bi bi-cart4 mb-2 me-md-4 mt-1" style="color:#e64166; font-size: 30px"></i>
-                        <b class="mb-2 text-light me-md-2 mt-2" style="font-family: 'Open Sans', sans-serif;">Luna</b>
-                        <a role="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                           aria-controls="offcanvasRight">
-                            <img src="/static/img/home/images-profile.jpg" width="50" style="border-radius: 50%;">
-                        </a>
+    <body class="body">
+        <div th:replace="fragments/navbar :: usuario('sede')"></div>
 
-                    </div>
-                </div>
-            </div>
-        </nav>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
-             style="width: 18%; background-color: #000000;">
-            <div class="offcanvas-header">
-                <div class="container mt-5">
-                    <div class="container" style="display: flex; justify-content: center">
-                        <img src="/static/img/home/images-profile.jpg" width="100" style="border-radius: 50%;">
-                    </div>
-                    <div class="container mt-3" style="display: flex; justify-content: center">
-                        <h5 id="offcanvasRightLabel" class="text-light">
-                            <b class="mb-2 text-light mt-2" style="font-family: 'Open Sans', sans-serif;">Luna
-                                Adanson</b>
-                        </h5>
-                    </div>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                            aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="offcanvas-body">
-                <div class="container mt-1 mb-5">
-                    <div class="container" style="display: flex; justify-content: center">
-                        <h6>
-                            <a class="nav-link" style="font-family: 'Open Sans', sans-serif; color: #FFFFFF"
-                               href="#"><b>Ver perfil</b></a>
-                        </h6>
-                    </div>
-                    <div class="container" style="display: flex; justify-content: center">
-                        <h6>
-                            <a class="nav-link" style="font-family: 'Open Sans', sans-serif; color: #FFFFFF"
-                               href="#"><b>Historial de compras</b></a>
-                        </h6>
-                    </div>
-                </div>
-                <div class="container mt-5" style="position: relative; top: 225px;">
-                    <hr style="margin: 1rem 0; color:#e64166; background-color: currentColor; border: 0; opacity: 0.9">
-                    <div class="container">
-                        <div class="container mt-2 mt-lg-0" style="display: flex; justify-content: center">
-                            <h6>
-                                <a class="nav-link" style="font-family: 'Open Sans', sans-serif; color: #e64166"
-                                   href="/templates/vistaPrincipal.html"><b><i class="bi bi-box-arrow-in-left"></i> Cerrar sesión</b></a>
-                            </h6>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="container mt-5">
-            <div class="container pt-2 me-auto" style="margin-bottom: 45px">
+        <div class="container mt-5" style="margin-top: 100px">
+            <div class="container pt-2 me-auto" style="margin-bottom: 45px;margin-top: 100px" >
 
                 <div class="row">
                     <div class="col-sm-10">
@@ -170,67 +32,58 @@
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                             <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="2" aria-label="Slide 3"></button>
+<!--                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="2" aria-label="Slide 3"></button>-->
                         </div>
                         <div class="carousel-inner" style="padding-right: 50px; padding-left: 50px; height: 220px; margin-bottom: 45px">
                             <div class="carousel-item active">
-                                <div class="row">
-                                    <div class="col-sm-4">
+                                <div class="row" th:each="foto : ${imagenes}">
+                                    <div class="col-sm-4" >
                                         <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
+                                            <img th:src="${foto.ruta}" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
                                         </a>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
-                                        </a>
-                                    </div>
+
                                 </div>
 
                             </div>
-                            <div class="carousel-item">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="#">
-                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+<!--                            <div class="carousel-item">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-sm-4">-->
+<!--                                        <a href="#">-->
+<!--                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-sm-4">-->
+<!--                                        <a href="#">-->
+<!--                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-sm-4">-->
+<!--                                        <a href="#">-->
+<!--                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="carousel-item">-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-sm-4">-->
+<!--                                        <a href="#">-->
+<!--                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-sm-4">-->
+<!--                                        <a href="#">-->
+<!--                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-sm-4">-->
+<!--                                        <a href="#">-->
+<!--                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -239,8 +92,7 @@
                     <div class="col-sm-10">
                         <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Ubicación</b></h1>
                     </div>
-
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2127.2348218269417!2d-77.00399537513053!3d-12.08709231688355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c7d374af6eef%3A0xdd62873e6d53e56b!2sGran%20Teatro%20Nacional%20del%20Per%C3%BA!5e0!3m2!1ses-419!2spe!4v1650815297610!5m2!1ses-419!2spe" width="1100" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div th:data-latlong="${sede.getCoordenadas()}" id="map0"></div>
                 </div>
 
                 <div class="row mt-5">
@@ -250,7 +102,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-sm-6">
-                        <form method="post" th:action="@{}">
+                        <form method="post">
                             <div class="input-group">
                                 <input name="campo" class="form-control text-light" type="text" style="background-color: transparent; border-radius: 5px; border-color: #7c7676" placeholder="Buscar por nombre de la obra"/>
                                 <button type="submit" class="btn btn-secondary">
@@ -279,14 +131,14 @@
                 </div>
             </div>
 
-            <div class="container" style="padding-right: 200px; padding-left: 200px; height: 455px; margin-bottom: 45px">
+            <div class="container" style="height: 455px; margin-bottom: 45px">
                 <div class="row mt-5">
-                    <div class="col-sm-3">
+                    <div class="col-sm-3" th:each="foto: ${funcionessede}">
                         <a href="#">
-                            <img src="/static/img/covers/HistoriasDeArena.png" style="width: 207px; height: 320px; object-fit: cover;">
+                            <img th:src="${foto.ruta}" style="width: 207px; height: 320px; object-fit: cover;">
                         </a>
                         <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>
+                            <h6><b th:text="${foto.getFuncion().getNombre()}" style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>
                         </div>
                         <div class="container" style="text-align: left; margin-top: 10px">
                             <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Tragedia</b></h6>
@@ -296,169 +148,10 @@
                         </div>
 
                     </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/LaTernura.png" style="width: 207px; height: 320px; object-fit: cover; object-position: 24% 0;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">La Ternura</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Comedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/Independencia.png" style="width: 207px; height: 320px; object-fit: cover;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Independencia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Drama</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/LosTambores.png" style="width: 207px; height: 320px; object-fit: cover; object-position: 30% 0;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Los Tambores</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Comedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
+
                 </div>
 
-                <div class="row mt-5">
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/obras-de-teatro-en-cdmx.jpg" style="width: 207px; height: 320px; object-fit: cover;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Tragedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
 
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/obras-teatrales-caperucita-roja.jpg" style="width: 207px; height: 320px; object-fit: cover; object-position: 45% 0;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">La Ternura</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Comedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/teatro.jpg" style="width: 207px; height: 320px; object-fit: cover; object-position: 20% 0;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Independencia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Drama</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/wences-y-lala.jpg" style="width: 207px; height: 320px; object-fit: cover; object-position: 10% 0;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Los Tambores</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Comedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-5">
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/HistoriasDeArena.png" style="width: 207px; height: 320px; object-fit: cover;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Tragedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/LaTernura.png" style="width: 207px; height: 320px; object-fit: cover; object-position: 24% 0;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">La Ternura</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Comedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/Independencia.png" style="width: 207px; height: 320px; object-fit: cover;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Independencia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Drama</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="#">
-                            <img src="/static/img/covers/LosTambores.png" style="width: 207px; height: 320px; object-fit: cover; object-position: 30% 0;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Los Tambores</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Comedia</b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="container mt-4 mb-5">
                     <nav aria-label="Page navigation example">
@@ -482,8 +175,64 @@
 
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script th:inline="javascript">
+                function advertencia(idsede) {
+                    let popup = document.getElementById('popup');
+
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/sedes/borrar?idsede='}]] + idsede;
+                    popup.style.display = 'block';
+                }
+                function initMap() {
+                    const geocoder = new google.maps.Geocoder();
+                    const infowindow = new google.maps.InfoWindow();
+                    if (document.getElementById("map0")) {
+                        const map0 = new google.maps.Map(document.getElementById("map0"), {
+                            zoom: 8,
+                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
+                        });
+                        var latlonga0=document.getElementById('map0').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map0, infowindow,latlonga0);
+                    }
+
+
+                }
+
+                function geocodeLatLng(geocoder, map, infowindow,latlnga) {
+                    const input = latlnga
+                    const latlngStr = input.split(",", 2);
+                    const latlng = {
+                        lat: parseFloat(latlngStr[0]),
+                        lng: parseFloat(latlngStr[1]),
+                    };
+
+                    geocoder
+                        .geocode({ location: latlng })
+                        .then((response) => {
+                            if (response.results[0]) {
+                                map.setZoom(10);
+
+                                const marker = new google.maps.Marker({
+                                    position: latlng,
+                                    map: map,
+                                });
+
+                                infowindow.setContent(response.results[0].formatted_address);
+                                infowindow.open(map, marker);
+                            } else {
+                                window.alert("No results found");
+                            }
+                        })
+                        .catch((e) => window.alert("Geocoder failed due to: " + e));
+                }
+
+                window.initMap = initMap;
+
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
     </body>
 </html>

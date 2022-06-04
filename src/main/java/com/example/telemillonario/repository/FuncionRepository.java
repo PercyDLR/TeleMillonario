@@ -31,4 +31,6 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     Funcion encontrarFuncionHoraSede(int idFuncion, int idSede, String fecha, String hora);
 
     List<Funcion> findByNombre(String nombreObra);
+
+
  }

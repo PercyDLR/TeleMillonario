@@ -296,8 +296,30 @@ public class UsuarioController {
     }
 
 
+    @GetMapping("/sedes")
+    public String listaSedesUsuario(Model model){
+        //lista de sedes habilitadas
+        model.addAttribute("listSedes",fotoRepository.listSedesHabilitadas());
+        return "usuario/sedes/sedes";
+    }
 
+    @GetMapping("/sedes/sede")
+    public String infoSedeDetalles(@RequestParam(value = "idsede") String idsedeStr,Model model,RedirectAttributes attr){
+        //lista de sedes habilitadas
 
-
+        // Se verifica que el ID sea un número
+        int idsede = 0;
+        try{
+            idsede = Integer.parseInt(idsedeStr);
+        } catch (NumberFormatException e){
+            attr.addFlashAttribute("err", "El ID ingresado no es inválido");
+            return "redirect:/sedes";
+        }
+        List<Foto> fotosSede= fotoRepository.buscarFotosSede(idsede);
+        model.addAttribute("imagenes",fotosSede);
+        model.addAttribute("funcionessede",fotoRepository.buscarFotoFuncionesTotal(idsede));
+        model.addAttribute("sede",sedeRepository.findById(idsede).get());
+        return "usuario/sedes/sedeDetalles";
+    }
 
 }
