@@ -17,4 +17,7 @@ public interface SedeRepository extends JpaRepository<Sede,Integer> {
     @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.sede where estado=?1")
     Integer buscarSedesTotal(int estado);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sede where estado=?1")
+    List<Sede> listaSedesHabilitadas(int estado);
+
 }

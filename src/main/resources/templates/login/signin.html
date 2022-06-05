@@ -25,7 +25,7 @@
 									<input type="text" class="sign__input" name="username" placeholder="Correo" autofocus>
 								</div>
 								<div class="sign__group" style="margin-bottom: 0">
-									<input type="password" name="password" class="sign__input" placeholder="Contraseña">
+									<input type="password" autocomplete="current-password" id="current-password" name="password" class="sign__input" placeholder="Contraseña">
 								</div>
 								<div class="invalid-feedback d-block" th:if="${param.error}" style="text-align: center">Correo o contraseña incorrectos</div>
 								<button class="sign__btn" type="submit">Ingresar</button>

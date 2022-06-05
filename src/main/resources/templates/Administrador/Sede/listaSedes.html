@@ -6,7 +6,23 @@
                 color: #000000;
             }
 
-            #map {
+            #map0 {
+                height: 150px;
+                width: 150px;
+            }
+            #map1 {
+                height: 150px;
+                width: 150px;
+            }
+            #map2 {
+                height: 150px;
+                width: 150px;
+            }
+            #map3 {
+                height: 150px;
+                width: 150px;
+            }
+            #map4 {
                 height: 150px;
                 width: 150px;
             }
@@ -19,32 +35,6 @@
                 height: 100%;
                 margin: 0;
                 padding: 0;
-            }
-
-            #floating-panel {
-                position: absolute;
-                top: 10px;
-                left: 25%;
-                z-index: 5;
-                background-color: #fff;
-                padding: 5px;
-                border: 1px solid #999;
-                text-align: center;
-                font-family: "Roboto", "sans-serif";
-                line-height: 30px;
-                padding-left: 10px;
-            }
-
-            #floating-panel {
-                position: absolute;
-                top: 5px;
-                left: 50%;
-                margin-left: -180px;
-                width: 350px;
-                z-index: 5;
-                background-color: #fff;
-                padding: 5px;
-                border: 1px solid #999;
             }
 
             #latlng {
@@ -107,6 +97,11 @@
                             <strong>Hubo un error al borrar una sede</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '5')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>No puede borrar una Sede que tenga salas y un operador</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     </div>
                 </div>
 
@@ -156,15 +151,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="foto: ${listaSedes}">
+                                <tr th:each="foto,index: ${listaSedes}">
                                     <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" th:src="${foto.ruta}"></center></th>
                                     <td th:text="${foto.getSede().getNombre()}">Gran Teatro Nacional</td>
                                     <td th:text="${foto.getSede().getIddistrito().getNombre()}">San Miguel</td>
                                     <td th:text="${foto.getSede().getDireccion()}">Av. Grau</td>
-                                    <td><div th:data-latlong="${foto.getSede().getCoordenadas()}"
-                                            th:onload="initMap(this.getAttribute('data-latlong'))">
-                                    </div>
-                                        <div id="map"></div></td>
+                                    <td>
+                                        <div th:data-latlong="${foto.getSede().getCoordenadas()}" th:id="|map${index.index}|"></div></td>
                                     <td>
                                         <button style="cursor: pointer">
                                             <a class="circulo_botones" th:href="@{'/admin/salas'+'?idsede='+ ${foto.getSede().getId()}}">
@@ -226,15 +219,71 @@
                     popup.getElementsByTagName("a").item(2).href = [[@{'/admin/sedes/borrar?idsede='}]] + idsede;
                     popup.style.display = 'block';
                 }
-                function initMap(latlnga) {
-                    const map = new google.maps.Map(document.getElementById("map"), {
-                        zoom: 8,
-                        center: { lat: 40.731, lng: -73.997 },
-                    });
+                function initMap() {
                     const geocoder = new google.maps.Geocoder();
                     const infowindow = new google.maps.InfoWindow();
-                    latlnga="40.714224,-73.961452";
-                    geocodeLatLng(geocoder, map, infowindow,latlnga);
+                    if (document.getElementById("map0")) {
+                        const map0 = new google.maps.Map(document.getElementById("map0"), {
+                            zoom: 8,
+                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
+                        });
+                        var latlonga0=document.getElementById('map0').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map0, infowindow,latlonga0);
+                    }
+                    if (document.getElementById("map1")) {
+                        const map1 = new google.maps.Map(document.getElementById("map1"), {
+                            zoom: 8,
+                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
+                        });
+                        var latlonga1 = document.getElementById('map1').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map1, infowindow,latlonga1);
+                    }
+
+
+                    if (document.getElementById("map2")) {
+                        const map2 = new google.maps.Map(document.getElementById("map2"), {
+                            zoom: 8,
+                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
+                        });
+                        var latlonga2 = document.getElementById('map2').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map2, infowindow,latlonga2);
+                    }
+                    if (document.getElementById("map3")) {
+                        const map3 = new google.maps.Map(document.getElementById("map3"), {
+                            zoom: 8,
+                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
+                        });
+                        var latlonga3 = document.getElementById('map3').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map3, infowindow,latlonga3);
+                    }
+                    if (document.getElementById("map4")){
+                        const map4 = new google.maps.Map(document.getElementById("map4"), {
+                            zoom: 8,
+                            center: { lat: -12.043644056140575, lng: -77.04265001225203 },
+                        });
+                        var latlonga4=document.getElementById('map4').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map4, infowindow,latlonga4);
+                    }
+
+                    if (document.getElementById("map5")) {
+                        const map5 = new google.maps.Map(document.getElementById("map5"), {
+                            zoom: 8,
+                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
+                        });
+                        var latlonga5 = document.getElementById('map5').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map5, infowindow,latlonga5);
+                    }
+
+                    if (document.getElementById("map6")) {
+                        const map5 = new google.maps.Map(document.getElementById("map6"), {
+                            zoom: 8,
+                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
+                        });
+                        var latlonga6 = document.getElementById('map6').getAttribute("data-latlong")
+                        geocodeLatLng(geocoder, map6, infowindow,latlonga6);
+                    }
+
+
                 }
 
                 function geocodeLatLng(geocoder, map, infowindow,latlnga) {
@@ -249,15 +298,15 @@
                         .geocode({ location: latlng })
                         .then((response) => {
                             if (response.results[0]) {
-                                map.setZoom(11);
+                                map.setZoom(10);
 
                                 const marker = new google.maps.Marker({
                                     position: latlng,
                                     map: map,
                                 });
 
-                                infowindow.setContent(response.results[0].formatted_address);
-                                infowindow.open(map, marker);
+                                // infowindow.setContent(response.results[0].formatted_address);
+                                // infowindow.open(map, marker);
                             } else {
                                 window.alert("No results found");
                             }
@@ -266,6 +315,7 @@
                 }
 
                 window.initMap = initMap;
+
             </script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

@@ -37,15 +37,20 @@
                         <div class="owl-carousel home__carousel">
                             <div class="item" th:each="funcion : ${listaFunciones}">
                                 <!-- card -->
-                                <div class="card card--big"  style="cursor: pointer">
+                                <div class="card card--big">
                                     <div class="card__cover">
-                                        <a th:href="@{'/detallesObra'+'?Obra='+${funcion.id} }"><img th:src="@{/img/covers/HistoriasDeArena.png}"></a>
+                                        <img th:src="@{/img/covers/HistoriasDeArena.png}">
+
+                                        <a class="card__play" th:href="@{'/detallesObra'+'?Obra='+${funcion.id}}">
+                                            <i class="icon ion-ios-play"></i>
+                                        </a>
                                     </div>
                                     <div class="card__content">
                                         <h3 class="card__title" th:text="${funcion.nombre}">Historias de Arena</h3>
-                                        <span class="card__category" style="color: #ff5860" th:each="fG : ${funcionGenero}" th:if="(${fG.idfuncion.id} == ${funcion.id}) and (${fG.estado} == 1)"
-                                              th:text="${fG.idgenero.nombre}">
-                                            Tragedia
+                                        <span class="card__category">
+                                            <a th:each="fG : ${funcionGenero}"
+                                               th:if="(${fG.idfuncion.id} == ${funcion.id}) and (${fG.estado} == 1)"
+                                               th:text="${fG.idgenero.nombre}"></a>
                                         </span>
                                         <span class="card__rate" th:text="${funcion.calificacion}"><i class="icon ion-ios-star"></i>4.5</span>
                                     </div>

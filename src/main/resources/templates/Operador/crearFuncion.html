@@ -16,9 +16,11 @@
                 height: auto;
                 border-radius: 0;
                 padding-block: 5px;
+                transition: box-shadow 0.25s ease-out;
             }
             .select2-container--default.select2-container--focus .select2-selection--multiple {
                 border: solid #ff55a5 1px;
+                box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
             }
 
             .select2-dropdown {
@@ -31,7 +33,7 @@
             }
 
             .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-                background-color: #2b2b31;
+                background-color: #28282d;
                 color: #ff55a5
             }
             .select2-container--default .select2-results__option--selected {
@@ -85,13 +87,16 @@
                 color: #dc3545;
                 width: 100%
             }
+            .sign__form, .sign__form .row {
+                width: 100%;
+            }
         </style>
     </head>
 <!--
 <body style="; background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">-->
 <body class="body">
 <!-- header -->
-    <div th:replace="fragments/navbar :: operador('funcion')"></div>
+    <div th:replace="fragments/navbar :: operador('funciones')"></div>
 <!-- end header -->
     <div class="content" style="padding: 0">
 
@@ -166,7 +171,7 @@
                                                 <div class="col-md-9 col-10">
                                                     <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
                                                 </div>
-                                                <div class="col-md-3 col-2">
+                                                <div class="col-md-3 col-2" style="position: static">
                                                     <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
                                                         <i class="icon ion-ios-arrow-round-back"></i>
                                                     </button>
@@ -224,8 +229,8 @@
                                         <div class="sign__group">
                                             <label for="restriccionedad">Restricción de Edad</label>
                                             <select class="sign__input" th:field="*{restriccionedad}" required>
-                                                <option value="1" th:selected="${funcion.restriccionedad == 0}">No</option>
-                                                <option value="0" th:selected="${funcion.restriccionedad == 1}">Sí</option>
+                                                <option value="0" th:selected="${funcion.restriccionedad == 0}">No</option>
+                                                <option value="1" th:selected="${funcion.restriccionedad == 1}">Sí</option>
                                             </select>
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('restriccionedad')}"
                                                  th:errors="*{restriccionedad}"></div>
@@ -317,7 +322,7 @@
 
                                 <div class="row">
                                     <div class="col-6" style="justify-content: center">
-                                        <a th:href="@{/operador/funciones/lista}" class="sign__btn">Cancelar</a>
+                                        <a th:href="@{/operador/funciones/lista}" class="cancel__btn">Cancelar</a>
                                     </div>
 
                                     <div class="col-6" style="justify-content: center">

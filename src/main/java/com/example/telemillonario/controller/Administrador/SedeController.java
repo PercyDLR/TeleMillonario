@@ -1,9 +1,7 @@
 package com.example.telemillonario.controller.Administrador;
 
 import com.example.telemillonario.entity.*;
-import com.example.telemillonario.repository.DistritoRepository;
-import com.example.telemillonario.repository.FotoRepository;
-import com.example.telemillonario.repository.SedeRepository;
+import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +34,14 @@ public class SedeController {
 
     @Autowired
     SedeRepository sedeRepository;
-    float sedesporpagina=15;
+
+    @Autowired
+    SalaRepository salaRepository;
+
+    @Autowired
+    PersonaRepository personaRepository;
+
+    float sedesporpagina=6;
     @GetMapping(value = {"", "/","/lista"})
     public String listaSedes(Model model, @RequestParam(value = "pag",required = false) String pag,
                             @RequestParam(value="parametro",required = false,defaultValue = "") String parametro,
@@ -290,6 +295,12 @@ public class SedeController {
         //buscar las fotos a eliminar en el filemanager de Azure
 
         try{
+            int a=salaRepository.valCantSal(idsede);
+            int b=personaRepository.valborrSedePers(idsede);
+            if( a!=0 || b!=0){
+                attr.addFlashAttribute("msg", "5");
+                return "redirect:/admin/sedes/lista";
+            }
             List<Foto> fotos = fotoRepository.buscarFotosSede(idsede);
 
             if(fotos.size()!=0){
