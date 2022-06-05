@@ -7,10 +7,21 @@
             }
 
             .card__cover img {
+                display: block;
+                width: 100%;
                 object-fit: cover;
                 object-position: 50% 50%;
                 margin-top: 0;
                 height: 20em;
+            }
+
+            .sign__group{
+                padding-inline: 5px;
+            }
+            .sign__input{
+                border: solid 1px #61616c;
+                width: 100%;
+                border-radius: 5px;
             }
 
             @media (max-width: 720px) {
@@ -40,74 +51,74 @@
                     </div>
 
                     <!--<div class="col-12">-->
-                    <div class="col-12 mt-4">
+                    <div class="col-12 my-5">
                         <form method="post" th:action="@{/cartelera/BusquedaYFiltros}">
                             <div class="row justify-content-center">
-                                <div class="col-md-4 col-12 sign__group">
-                                    <input type="text" class="sign__input" style="width: 400px"
-                                           placeholder="Busque el nombre de una obra"
-                                           name="busqueda" th:value="${busqueda}" maxlength="100">
-                                    <button type="submit" class="sign__btn" style="width: 70px; margin: 0px">
-                                        <i class="bi bi-search"></i>
-                                    </button>
+                                <div class="col-lg-4 col-12 sign__group">
+
+                                    <input type="text" class="sign__input"
+                                           placeholder="Busque una Obra"
+                                           th:field="${busqueda}" maxlength="100">
                                 </div>
-                                <div class="col-md-4 col-12 sign__group">
-                                    <select class="sign__input" aria-label="Default select example" name="genero">
+                                <div class="col-lg-3 col-md-5 col-6 sign__group">
+                                    <select class="sign__input" name="genero">
                                         <option th:selected="${genero == ''}" value="">Todos los géneros</option>
                                         <option th:each="g : ${generos}" th:value="${g.getId()}"
                                                 th:text="${g.getNombre()}"
                                                 th:selected="${g.getId() == genero}"></option>
                                     </select>
                                 </div>
-                                <div class="col-md-4 col-12 sign__group">
-                                    <div class="sign__group sign__group--checkbox" style="text-align: center">
-                                        <input class="form-check-input" type="checkbox" value="1"
-                                               id="disponibilidad" name="restriccionEdad"
-                                               th:checked="${restriccionEdad == '1'}">
-                                        <label for="disponibilidad">
-                                            <b>Restricción de edad</b>
-                                        </label>
-                                    </div>
+                                <div class="col-lg-3 col-md-5 col-6 sign__group">
 
+                                    <select class="sign__input" name="restriccionEdad">
+                                        <option value="0" th:selected="${restriccionEdad == ''}">Para toda la familia</option>
+                                        <option value="1" th:selected="${restriccionEdad == '1'}">Con contenido sensible</option>
+                                    </select>
                                 </div>
+
+                                <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                                    <button type="submit" class="form__btn" style="width: 50%; margin: 0;">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+
                             </div>
                         </form>
                     </div>
-                    <div class="col-12">
-                        <div class="row">
+                </div>
 
-                            <div class="item" style="width: 252px; margin-right: 30px"
-                                 th:each=" funciongenero : ${listaFuncionesGenero}">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:each="caratula : ${listaCaratulas}"
-                                             th:if="${caratula.getFuncion().getId() == funciongenero.getKey().getId()}"
-                                             th:src="${caratula.getRuta()}" alt="">
-                                        <a th:href="@{'/cartelera/DetallesObra?id=' + ${funciongenero.getKey().getId()}}" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title" th:text="${funciongenero.getKey().getNombre()}"><a
-                                                href="#"></a></h3>
-                                        <span class="card__category">
-										    <a href="#" th:each="generos : ${funciongenero.getValue()}"
-                                               th:text="${generos.getNombre()}"></a>
-									    </span>
-                                        <span class="card__category">
-                                            <a href="#" th:text="${funciongenero.getKey().getSala().getIdsede().getNombre}"></a>
-                                        </span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>4.5</span>
-                                    </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-12" th:each=" funciongenero : ${listaFuncionesGenero}">
+                        <div class="item" style="">
+                            <!-- card -->
+                            <div class="card card--big">
+                                <div class="card__cover">
+                                    <img th:each="caratula : ${listaCaratulas}"
+                                         th:if="${caratula !=null && caratula.getFuncion().getId() == funciongenero.getKey().getId()}"
+                                         th:src="${caratula.getRuta()}" alt="portada">
+                                    <a th:href="@{'/cartelera/DetallesObra?id=' + ${funciongenero.getKey().getId()}}" class="card__play">
+                                        <i class="icon ion-ios-play"></i>
+                                    </a>
                                 </div>
-                                <!-- end card -->
+                                <div class="card__content">
+                                    <h3 class="card__title" th:text="${funciongenero.getKey().getNombre()}"><a
+                                            href="#"></a></h3>
+                                    <span class="card__category">
+                                        <a href="#" th:each="generos : ${funciongenero.getValue()}"
+                                           th:text="${generos.getNombre()}"></a>
+                                    </span>
+                                    <span class="card__category">
+                                        <a href="#" th:text="${funciongenero.getKey().getSala().getIdsede().getNombre}"></a>
+                                    </span>
+                                    <span class="card__rate"><i class="icon ion-ios-star"></i>4.5</span>
+                                </div>
                             </div>
-
+                            <!-- end card -->
                         </div>
                     </div>
                     <!--</div>-->
                 </div>
+
                 <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/cartelera?restriccionEdad='+${restriccionEdad}+'&genero='+${genero}+'&busqueda='+${busqueda}+'&')"></div>
             </div>
         </section>
