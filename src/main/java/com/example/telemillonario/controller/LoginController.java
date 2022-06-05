@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -69,14 +70,27 @@ public class LoginController {
         personita.setNombres(name);
         personita.setApellidos(lastname);
         personita.setCorreo(email);
-        Rol rol = new Rol(2,1,"Usuario");
-        personita.setIdrol(rol);
-        model.addAttribute("usuario",personita);
-        model.addAttribute("google", 1);
-        /*
-        * Faltarian contraseña, fecha de nacimiento, dni, direccion y estado
-        * */
-        return "login/signup";
+        String password = new BCryptPasswordEncoder().encode("123456789abcdefg");
+        Persona persona = personaRepository.findByCorreo(email);
+        if (!persona.getCorreo().equals(personita.getCorreo())){
+            Rol rol = new Rol(2,1,"Usuario");
+            personita.setIdrol(rol);
+            personita.setContrasenia(password);
+            model.addAttribute("usuario",personita);
+            model.addAttribute("google", 1);
+            /*
+             * Faltarian contraseña, fecha de nacimiento, dni, direccion y estado
+             * */
+            return "login/signup";
+        }else if (persona.getCorreo().equals(personita.getCorreo()) && !persona.getContrasenia().equals(password)){
+            /*Aca debe ir mensaje de error*/
+            return "redirect:/login";
+        }else if (persona.getCorreo().equals(personita.getCorreo()) && persona.getContrasenia().equals(password)){
+            /*Aca se ingresa al sistema*/
+            return "redirect:/login";
+        }else {
+            return "redirect:/login";
+        }
     }
 
     @GetMapping("/login")
