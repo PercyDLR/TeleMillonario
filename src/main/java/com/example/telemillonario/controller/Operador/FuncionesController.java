@@ -73,8 +73,7 @@ public class FuncionesController {
         Persona persona=(Persona) session.getAttribute("usuario");
 
         List<Foto> listfuncfoto= fotoRepository.buscarFotoFunciones(persona.getIdsede().getId(),(int)funcionesporpagina*pagina, (int)funcionesporpagina);
-        List<Foto> listfunctotal= fotoRepository.buscarFuncionesParaContar(persona.getIdsede().getId());
-        int cantFunc= listfunctotal.size();
+        int cantFunc= fotoRepository.contarFunciones(persona.getIdsede().getId());
 
         model.addAttribute("listfunc",listfuncfoto);
 
@@ -329,7 +328,8 @@ public class FuncionesController {
         for(int ii=0; ii < maxSeleccionados; ii++ ){
 
             boolean generoCoincide = false;
-            boolean elencoCoincide = false;
+            boolean actorCoincide = false;
+            boolean directorCoincide = false;
 
             for(int jj=0; jj < maxEnDB; jj++){
 
@@ -342,25 +342,34 @@ public class FuncionesController {
                 // Valida los miembros del elenco seleccionados
                 if(ii < idactor.length && jj<elencoEnDB.size() && idactor[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
                     elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
-                    elencoCoincide = true;
+                    actorCoincide = true;
 
                 } else if(ii < iddirector.length && jj<elencoEnDB.size() && iddirector[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
                     elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
-                    elencoCoincide = true;
+                    directorCoincide = true;
                 }
             }
 
             // Si un miembro del elenco no está en DB, se agrega
-            if(!elencoCoincide){
+            if(ii<iddirector.length && !directorCoincide){
                 Funcionelenco funcelen = new Funcionelenco();
                 int idsdictint = Integer.parseInt(iddirector[ii]);
                 funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
                 funcelen.setIdfuncion(funcion);
                 funcelen.setEstado(1);
                 funcionElencoRepository.save(funcelen);
+
+            } else if(ii<idactor.length && !actorCoincide){
+                Funcionelenco funcelen = new Funcionelenco();
+                int idsdictint = Integer.parseInt(idactor[ii]);
+                funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
+                funcelen.setIdfuncion(funcion);
+                funcelen.setEstado(1);
+                funcionElencoRepository.save(funcelen);
             }
             // Si un género no está en DB, se agrega
-            if(!generoCoincide){
+
+            if(ii<idgenero.length && !generoCoincide){
                 Funciongenero funcgen = new Funciongenero();
                 int idgen = Integer.parseInt(idgenero[ii]);
                 funcgen.setIdgenero(generoRepository.findById(idgen).get());
@@ -475,6 +484,7 @@ public class FuncionesController {
                 Foto foto = new Foto();
                 foto.setEstado(1);
                 foto.setFuncion(funcion);
+                foto.setSede(funcion.getSala().getIdsede());
                 foto.setNumero(fotosGuardadas + i);
 
                 // Guardar en el Servidor
@@ -489,7 +499,6 @@ public class FuncionesController {
                 }
 
                 // Guardado en la DB
-                System.out.println(imgRenombrada.getOriginalFilename());
                 fotoRepository.save(foto);
 
             } catch (Exception e){
@@ -498,7 +507,7 @@ public class FuncionesController {
                 return "redirect:/operador/funciones";
             }
         }
-        attr.addFlashAttribute("msg","Actor Guardado Exitosamente");
+        attr.addFlashAttribute("msg","Función Guardada Exitosamente");
         return "redirect:/operador/funciones";
     }
 
