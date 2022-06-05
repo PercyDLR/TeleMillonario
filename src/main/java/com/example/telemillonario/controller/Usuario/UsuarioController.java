@@ -3,26 +3,26 @@ package com.example.telemillonario.controller.Usuario;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
-import com.example.telemillonario.validation.Perfil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -46,6 +46,9 @@ public class UsuarioController {
 
     @Autowired
     SedeRepository sedeRepository;
+
+    @Autowired
+    CompraRepository compraRepository;
 
     @GetMapping("")
     public String paginaPrincipal(Model model){
@@ -208,19 +211,30 @@ public class UsuarioController {
 
 
     /*Compra de tickets*/
+    //NO ES GUARDADO EN CARRITO
     @PostMapping("/compra")
-    public String compraBoletos(@RequestParam(value = "Obra") String idObraStr, @RequestParam(value = "idSede") String idSedeStr,
+    public String compraBoletos(@RequestParam(value = "Obra") String idObraStr,
+                                @RequestParam(value = "idSede") String idSedeStr,
                                 @RequestParam(value = "cantBoletos") String cantBoletosStr,
-                                @RequestParam(value = "fechaHora")String fechaHoraStr, RedirectAttributes redirectAttributes){
+                                @RequestParam(value = "fecha")String fechaStr,
+                                @RequestParam(value = "hora")String horaStr,RedirectAttributes redirectAttributes,HttpSession session){
 
-        int idObra;
+        //Se supone que la persona lo mapeamos a la variable "usuario"
+        Persona persona = (Persona) session.getAttribute("usuario");
 
-        int idSede;
+        int idObra = 0;
+
+        int idSede = 0;
         boolean errorIdSede = false;
 
-        int cantBoletos;
+        int cantBoletos = 0;
         boolean errorCantBoletos = false;
 
+        ///Date fechaHoraFuncion;
+        ///SimpleDateFormat fechaHora = new SimpleDateFormat("dd/MM hh:mm");
+        LocalDate fechaFuncion = null;
+        LocalTime horaFuncion = null;
+        boolean errorFechaHora = false;
 
         Funcion obra = null;
         Sede sede = null;
@@ -236,6 +250,10 @@ public class UsuarioController {
                 if(funcion.isPresent()){
                     obra = funcion.get();
 
+                    if(obra.getEstado() == 0){
+                        return "anErrorHasOcurred";
+                    }
+
                     try{
                         idSede = Integer.parseInt(idSedeStr);
                         if(idSede <= 0){
@@ -244,6 +262,11 @@ public class UsuarioController {
                             Optional<Sede> sede1 = sedeRepository.findById(idSede);
                             if(sede1.isPresent()){
                                 sede = sede1.get();
+
+                                if(sede.getEstado() == 0){
+                                    errorIdSede = true;
+                                }
+
                             }else{
                                 errorIdSede = true;
                             }
@@ -257,20 +280,31 @@ public class UsuarioController {
                         if(cantBoletos <= 0){
                             errorCantBoletos = true;
                         }
-                    }catch (NumberFormatException e){
+                    }catch (NumberFormatException m){
                         errorCantBoletos = true;
                     }
 
-                    /*
-                        Validacion fecha y hora
-                    */
+                    ///Validacion fecha y hora
+                    try{
+                        //fechaHoraFuncion = fechaHora.parse(fechaHoraStr);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM");
+                        fechaFuncion = LocalDate.parse(fechaStr,formatter);
 
-                    if(errorIdSede || errorCantBoletos){
+                        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm");
+                        horaFuncion = LocalTime.parse(horaStr,formatter1);
+                    }catch (Exception a){
+                        errorFechaHora = true;
+                    }
+
+                    if(errorIdSede || errorCantBoletos || errorFechaHora){
                         if(errorIdSede){
-                            redirectAttributes.addFlashAttribute("mensajeErrorSede","El id de sede no es valido");
+                            redirectAttributes.addFlashAttribute("mensajeErrorSede","La sede no es valido");
                         }
                         if(errorCantBoletos){
                             redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos","El numero de boletos es incorrecto");
+                        }
+                        if(errorFechaHora){
+                            redirectAttributes.addFlashAttribute("mensajeErrorFechaHora","Fecha - Hora no disponible");
                         }
 
                         return "redirect:/detallesObra?Obra="+obra.getId();
@@ -280,19 +314,77 @@ public class UsuarioController {
                     return "anErrorHasOcurred";
                 }
             }
-        }catch (NumberFormatException e){
+        }catch (NumberFormatException j){
             return "anErrorHasOcurred";
         }
 
+        LocalDate fechaFuncionDB = obra.getFecha();
+        LocalTime horaFuncionDB = obra.getInicio();
+        if(fechaFuncionDB != fechaFuncion || horaFuncionDB != horaFuncion){
+            redirectAttributes.addFlashAttribute("mensajeErrorFechaHora","Fecha - Hora no disponible");
+            return "redirect:/detallesObra?Obra="+obra.getId();
+        }
+
         /*Si no ha ocurrido ningun error ya tengo la funcion - sede - boletos - fecha y hora*/
-
         //Toca validar de que exista una funcion a dicha hora en esa sede en especifico
-        Funcion funcion = funcionRepository.encontrarFuncionHoraSede(obra.getId(),sede.getId(),fecha,hora);
+        Funcion funcion = funcionRepository.encontrarFuncionHoraSede(obra.getId(),sede.getId(),fechaFuncion,horaFuncion);
 
-        //Una vez validado toca realizar la logica para comprar
+        if(funcion == null){
+            //Se decide por mostrarle un mensaje al usuario de que la funcion no existe
+            //Tambien se pudo optar por redirigir a la vista de error
+            redirectAttributes.addFlashAttribute("mensajeNoExisteFuncion","La funcion no se encuentra disponible");
+            return "redirect:/detallesObra?Obra="+obra.getId();
+        }else{
+            int stockFuncion = funcion.getStockentradas();
+            if(stockFuncion > 0 && cantBoletos <= stockFuncion){
+                LocalDate fechaActual = LocalDate.now();
+                LocalDate fechaNacimientoUsuario = persona.getNacimiento();
+                Period period = Period.between(fechaNacimientoUsuario,fechaActual);
+                int edad = period.getYears();
 
+                if((funcion.getRestriccionedad() == 1 && edad>=18) || funcion.getRestriccionedad() == 0){
+                    /*Calculo del monto total*/
+                    double precioEntradaFuncion = funcion.getPrecioentrada();
+                    double montoTotal = precioEntradaFuncion*cantBoletos;
+                    int cantidadAsistentes = funcion.getCantidadasistentes();
 
-        return "detallesObra";
+                    //Guardado de la compra
+                    Compra compra = new Compra();
+                    compra.setEstado(0); //Se compro
+                    compra.setCantidad(cantBoletos);
+                    compra.setMontoTotal(montoTotal);
+                    compra.setFuncion(funcion);
+                    compra.setPersona(persona);
+                    compraRepository.save(compra);
+
+                    int stockRestanteFuncion = stockFuncion - cantBoletos;
+                    cantidadAsistentes = cantidadAsistentes + cantBoletos;
+                    if(stockRestanteFuncion == 0){
+                        funcion.setStockentradas(0);
+                        funcion.setEstado(0);
+                        funcion.setCantidadasistentes(cantidadAsistentes);
+                        funcionRepository.save(funcion);
+
+                    }else{
+                        funcion.setStockentradas(stockRestanteFuncion);
+                        funcion.setCantidadasistentes(cantidadAsistentes);
+                        funcionRepository.save(funcion);
+                    }
+                    redirectAttributes.addFlashAttribute("compraExitosa","Se ha realizado su compra correctamente. ");
+                    return "redirect:/detallesObra?Obra="+obra.getId();
+
+                }else{
+                    redirectAttributes.addFlashAttribute("mensajeFaltaEdad","La funcion tiene restriccion de edad");
+                    return "redirect:/detallesObra?Obra="+obra.getId();
+
+                }
+            }
+            else{
+                redirectAttributes.addFlashAttribute("mensajeNoHayStock","Ya no hay stock disponible");
+                return "redirect:/detallesObra?Obra="+obra.getId();
+            }
+        }
+
     }
 
 
