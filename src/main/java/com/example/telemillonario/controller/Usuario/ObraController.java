@@ -2,10 +2,7 @@ package com.example.telemillonario.controller.Usuario;
 
 import com.azure.core.annotation.Get;
 import com.example.telemillonario.entity.*;
-import com.example.telemillonario.repository.FotoRepository;
-import com.example.telemillonario.repository.FuncionGeneroRepository;
-import com.example.telemillonario.repository.FuncionRepository;
-import com.example.telemillonario.repository.GeneroRepository;
+import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +30,9 @@ public class ObraController {
 
     @Autowired
     FuncionRepository funcionRepository;
+
+    @Autowired
+    FuncionElencoRepository funcionElencoRepository;
 
     //Variables Importantes
     int funcionesxpagina = 12;
@@ -203,8 +203,34 @@ public class ObraController {
             Funcion funcion = opt.get();
             List<Foto> listaFotos = fotoRepository.fotosFuncion(id);
 
+            //Mandar los generos de la obra de la funcion
+            ArrayList<Genero> listaGeneros = new ArrayList<>();
+            List<Funciongenero> listaFuncionesGenero = funcionGeneroRepository.buscarFuncionGenero(id);
+            for (Funciongenero f : listaFuncionesGenero) {
+                listaGeneros.add(f.getIdgenero());
+            }
+
+            //Mandar director y actores
+            LinkedHashMap<Persona, ArrayList<Persona>> listaDirectorYActores = new LinkedHashMap<>();
+            List<Funcionelenco> listaFuncionelenco = funcionElencoRepository.buscarFuncionElenco(id);
+            Persona director = new Persona();
+            for (Funcionelenco f : listaFuncionelenco) {
+                if (f.getIdpersona().getIdrol().getId() == 4) {
+                    director = f.getIdpersona();
+                }
+            }
+            ArrayList<Persona> listaActores = new ArrayList<>();
+            for (Funcionelenco f : listaFuncionelenco) {
+                if (f.getIdpersona().getIdrol().getId() != 4) {
+                    listaActores.add(f.getIdpersona());
+                }
+            }
+            listaDirectorYActores.put(director ,listaActores);
+
             model.addAttribute("funcion", funcion);
             model.addAttribute("listaFotos", listaFotos);
+            model.addAttribute("listaGeneros", listaGeneros);
+            model.addAttribute("listaDirectorYActores", listaDirectorYActores);
             return "usuario/obras/carteleraObraDetalles";
         } else {
             a.addFlashAttribute("msg", -1);
