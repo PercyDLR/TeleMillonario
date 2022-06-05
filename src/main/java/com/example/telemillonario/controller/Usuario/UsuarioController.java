@@ -210,8 +210,8 @@ public class UsuarioController {
     }
 
 
-    /*Compra de tickets*/
-    //NO ES GUARDADO EN CARRITO
+    /*"Compra" de tickets*/
+    //Se le pasa a carrito donde aca se le agrega la tarjeta y se compra
     @PostMapping("/compra")
     public String compraBoletos(@RequestParam(value = "Obra") String idObraStr,
                                 @RequestParam(value = "idSede") String idSedeStr,
@@ -346,7 +346,7 @@ public class UsuarioController {
                     /*Calculo del monto total*/
                     double precioEntradaFuncion = funcion.getPrecioentrada();
                     double montoTotal = precioEntradaFuncion*cantBoletos;
-                    int cantidadAsistentes = funcion.getCantidadasistentes();
+                    //int cantidadAsistentes = funcion.getCantidadasistentes();
 
                     //Guardado de la compra
                     Compra compra = new Compra();
@@ -355,9 +355,14 @@ public class UsuarioController {
                     compra.setMontoTotal(montoTotal);
                     compra.setFuncion(funcion);
                     compra.setPersona(persona);
-                    compraRepository.save(compra);
 
-                    int stockRestanteFuncion = stockFuncion - cantBoletos;
+                    /*FALTA EL ENVIO AL CARRITO DE COMPRAS DE LA PERSONA*/
+                    redirectAttributes.addFlashAttribute("compraExitosa","Se ha realizado su 'compra' correctamente. ");
+                    return "redirect:/detallesObra?Obra="+obra.getId();
+
+
+                    /*compraRepository.save(compra);
+                    /int stockRestanteFuncion = stockFuncion - cantBoletos;
                     cantidadAsistentes = cantidadAsistentes + cantBoletos;
                     if(stockRestanteFuncion == 0){
                         funcion.setStockentradas(0);
@@ -372,7 +377,7 @@ public class UsuarioController {
                     }
                     redirectAttributes.addFlashAttribute("compraExitosa","Se ha realizado su compra correctamente. ");
                     return "redirect:/detallesObra?Obra="+obra.getId();
-
+                    */
                 }else{
                     redirectAttributes.addFlashAttribute("mensajeFaltaEdad","La funcion tiene restriccion de edad");
                     return "redirect:/detallesObra?Obra="+obra.getId();
