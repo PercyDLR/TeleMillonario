@@ -32,12 +32,36 @@
                     </div>
 
                     <!--<div class="col-12">-->
-                    <div class="col-12 mt-4">
+                    <div class="col-12 mt-4" style="padding-left: 0px;">
                         <div class="col-sm-4">
                             <img th:src="${listaFotos.get(0).getRuta()}"
                                  style="width: 400px; height: 600px;object-fit: cover;">
                         </div>
+                        <div class="col-sm-8">
+                            <h5 class="text-light"><b>Género: </b><h5 th:each="g : ${listaGeneros}" th:text="${g.nombre}"></h5></h5>
+                            <h5 class="text-light" th:if="${funcion.getRestriccionedad() eq 1}"><b>Posee restricción de edad</b></h5>
+                            <h5 class="text-light"><b>Duración: 2hrs 10min</b></h5>
+                            <h5 class="text-light"><b>Aforo: </b><h5 th:text="${funcion.sala.aforo}"></h5></h5>
+                            <br>
+                            <h5 class="text-light" style="text-align: justify" th:text="${funcion.descripcion}"></h5>
+                            <br>
+                        </div>
                     </div>
+
+                    <div class="col-12">
+                        <div class="owl-carousel home__carousel">
+                            <div class="item" th:each="foto : ${listaFotos}">
+                                <!-- card -->
+                                <div class="card card--big"  style="cursor: pointer">
+                                    <div class="card__cover">
+                                        <img th:if="${foto.getNumero() != 0}" th:src="@{foto.ruta}">
+                                    </div>
+                                </div>
+                                <!-- end card -->
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>

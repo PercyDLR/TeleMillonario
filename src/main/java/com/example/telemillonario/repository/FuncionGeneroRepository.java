@@ -26,4 +26,6 @@ public interface FuncionGeneroRepository extends JpaRepository<Funciongenero,Int
 
 
 
+
+
 }
