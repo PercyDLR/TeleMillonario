@@ -19,9 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -392,13 +390,45 @@ public class UsuarioController {
 
     }
 
-
+    float sedesxpagina=2;
     @GetMapping("/sedes")
-    public String listaSedesUsuario(Model model){
+    public String listaSedesUsuario(Model model,@RequestParam(value = "busqueda",defaultValue = "") String busqueda,
+                                    @RequestParam(value = "pag",defaultValue = "0") String pag){
         //lista de sedes habilitadas
-        model.addAttribute("listSedes",fotoRepository.listSedesHabilitadas());
+        int pagina;
+        int estado=1;
+        int cantSedes = sedeRepository.buscarSedesTotal();
+        try{
+            pagina = Integer.parseInt(pag);
+        }catch(Exception e) {
+            pagina=0;
+        }
+        if (busqueda.equals("")) { // verifica que no esté vacío
+
+            List<Foto> listSedesConFoto= fotoRepository.listadoSedes(estado,(int)sedesxpagina*pagina, (int)sedesxpagina);
+            model.addAttribute("listSedes",listSedesConFoto);
+        }else{
+            List<Foto> listSedesConFoto= fotoRepository.buscarSedePorNombre(busqueda, estado, (int)sedesxpagina*pagina, (int)sedesxpagina);
+            model.addAttribute("listSedes",listSedesConFoto);
+        }
+
+        model.addAttribute("pagActual",pagina);
+        model.addAttribute("pagTotal",(int) Math.ceil(cantSedes/sedesxpagina));
+
+        model.addAttribute("busqueda", busqueda);
+
         return "usuario/sedes/sedes";
     }
+
+    @PostMapping("/sedes/buscar")
+    String busquedaSedesUsuario(@RequestParam(value="busqueda", defaultValue = "") String busqueda){
+
+        return "redirect:/admin/actores?busqueda="+busqueda;
+    }
+
+
+
+
 
     @GetMapping("/sedes/sede")
     public String infoSedeDetalles(@RequestParam(value = "idsede") String idsedeStr,Model model,RedirectAttributes attr){
@@ -414,7 +444,16 @@ public class UsuarioController {
         }
         List<Foto> fotosSede= fotoRepository.buscarFotosSede(idsede);
         model.addAttribute("imagenes",fotosSede);
-        model.addAttribute("funcionessede",fotoRepository.buscarFotoFuncionesTotal(idsede));
+
+        List<Foto> listFuncSede=fotoRepository.buscarFotoFuncionesTotal(idsede);
+        LinkedHashMap<Foto, List<Funciongenero>> fotoFuncionGenero = new LinkedHashMap<>();
+        for (Foto func : listFuncSede) {
+
+            fotoFuncionGenero.put(func, funcionGeneroRepository.buscarFuncionGenero(func.getFuncion().getId()));
+
+        }
+
+        model.addAttribute("funcionessede",fotoFuncionGenero);
         model.addAttribute("sede",sedeRepository.findById(idsede).get());
         return "usuario/sedes/sedeDetalles";
     }

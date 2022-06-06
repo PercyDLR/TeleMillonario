@@ -186,7 +186,7 @@
                     </div>
                 </div>
                 <br>
-                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/sedes?')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/sedes?parametro='+${parametro}+'&buscador='+${buscador}+'&')"></div>
 
             </div>
         </div>

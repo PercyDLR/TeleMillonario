@@ -135,13 +135,14 @@
                 <div class="row mt-5">
                     <div class="col-sm-3" th:each="foto: ${funcionessede}">
                         <a href="#">
-                            <img th:src="${foto.ruta}" style="width: 207px; height: 320px; object-fit: cover;">
+                            <img th:src="${foto.getKey().getRuta()}" style="width: 207px; height: 320px; object-fit: cover;">
                         </a>
                         <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b th:text="${foto.getFuncion().getNombre()}" style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>
+                            <h6><b th:text="${foto.getKey().getFuncion().getNombre()}" style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>
                         </div>
                         <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166">Tragedia</b></h6>
+                            <h6><b th:each="generos : ${foto.getValue()}"
+                                   th:text="|${generos.getIdgenero().getNombre()} |" style="font-family: 'Open Sans', sans-serif; color: #e64166"></b></h6>
                         </div>
                         <div class="container" style="text-align: left; margin-top: 4px">
                             <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
