@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Controller
@@ -43,6 +45,11 @@ public class ObraController {
                                         @RequestParam(value = "genero", required = false, defaultValue = "") String genero,
                                         @RequestParam(value = "busqueda", required = false, defaultValue = "") String busqueda,
                                         @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
+
+        System.out.println("Valores recibidos en POST:");
+        System.out.println("restriccionedad: " + restriccionEdad);
+        System.out.println("busqueda: " + busqueda);
+        System.out.println("genero: " + genero);
 
         int pagina;
         try {
@@ -227,10 +234,33 @@ public class ObraController {
             }
             listaDirectorYActores.put(director ,listaActores);
 
+            //Mandar la duracion de la funcion
+            Long duracionMinutos = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
+            Long horas = duracionMinutos/(long) 60;
+            Long minutos = duracionMinutos%(long) 60;
+
+            String horastr;
+            String minutostr;
+            if (horas < 10) {
+                horastr = "0" + String.valueOf(horas);
+            } else {
+                horastr = String.valueOf(horas);
+            }
+            if (minutos < 10) {
+                minutostr = "0" + String.valueOf(minutos);
+            } else {
+                minutostr = String.valueOf(minutos);
+            }
+
+            String duracion = horastr + ":" + minutostr;
+            int boletosrestantes = funcion.getStockentradas() - funcion.getCantidadasistentes();
+
             model.addAttribute("funcion", funcion);
             model.addAttribute("listaFotos", listaFotos);
             model.addAttribute("listaGeneros", listaGeneros);
             model.addAttribute("listaDirectorYActores", listaDirectorYActores);
+            model.addAttribute("duracion", duracion);
+            model.addAttribute("boletosrestantes", boletosrestantes);
             return "usuario/obras/carteleraObraDetalles";
         } else {
             a.addFlashAttribute("msg", -1);
