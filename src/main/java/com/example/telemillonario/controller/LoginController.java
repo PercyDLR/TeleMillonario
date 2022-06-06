@@ -72,8 +72,8 @@ public class LoginController {
         if (persona == null){
             Rol rol = new Rol(2,1,"Usuario");
             personita.setIdrol(rol);
-            personita.setContrasenia(password); //Campo password
-            model.addAttribute("recontrasenia",password);
+            personita.setContrasenia("123456789abcdefg"); //Campo password
+            model.addAttribute("recontrasenia","123456789abcdefg");
             model.addAttribute("usuario",personita);
             model.addAttribute("google", 1);
             /*
