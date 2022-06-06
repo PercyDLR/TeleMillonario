@@ -311,9 +311,7 @@ public class LoginController {
                         String sentenciaSQL = "DROP EVENT IF EXISTS telemillonario.eventoborrar" + personita.getId() + ";";
                         try (Connection conn = DriverManager.getConnection(url, user, pass);
                              PreparedStatement pstmt = conn.prepareStatement(sentenciaSQL);) {
-                            System.out.println("llego aca");
                             pstmt.execute();
-                            System.out.println("pase la prueba");
                         }
                     } catch (SQLException e) {
                         return "redirect:/anErrorHasOcurred";
@@ -321,6 +319,14 @@ public class LoginController {
 
                     usuarioService.updatePassword(personita, password);
                     redirectAttributes.addFlashAttribute("msgexitoso", "Su contraseña se ha cambiado satisfactoriamente.");
+
+                    //Envio de correo donde le indica que su contraseña se cambio exitosamente
+                    try {
+                        sendEmailSuccessRegistration(personita.getCorreo());
+                    } catch (MessagingException | UnsupportedEncodingException e) {
+                        return "redirect:/anErrorHasOcurred";
+                    }
+
                     return "redirect:/sucessPassword";
                 } else {
                     redirectAttributes.addFlashAttribute("msg2", "Las constraseñas deben coincidir");
