@@ -66,7 +66,7 @@
 								<input type="text" class="sign__input" placeholder="Dirección" name="direccion" th:value="${usuario.getDireccion()}" required maxlength="100">
 							</div>
 
-							<div class="sign__group">
+							<!--div class="sign__group">
 								<input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" id="contrasenia" required maxlength="200"
 									   th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
@@ -76,7 +76,7 @@
 								<input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" name="recontrasenia" required maxlength="200">
 								<div class="invalid-feedback" id="coindicencia">Las contraseñas no coinciden</div>
 								<div class="invalid-feedback d-block" th:if="${(errRecontrasenia != null) && (errRecontrasenia eq 1)}">Ambos campos de contraseña deben ser llenados</div>
-							</div>
+							</div-->
 
 							<button class="sign__btn" type="submit" id="btnSubmit" onclick="return Validate()">Registrarse</button>
 
