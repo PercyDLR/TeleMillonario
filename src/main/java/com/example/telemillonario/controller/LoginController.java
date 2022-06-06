@@ -69,7 +69,7 @@ public class LoginController {
         personita.setCorreo(email);
         String password = new BCryptPasswordEncoder().encode("123456789abcdefg");
         Persona persona = personaRepository.findByCorreo(email);
-        if (!persona.getCorreo().equals(personita.getCorreo())){
+        if (persona == null){
             Rol rol = new Rol(2,1,"Usuario");
             personita.setIdrol(rol);
             personita.setContrasenia(password); //Campo password
