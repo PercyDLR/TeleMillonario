@@ -50,6 +50,9 @@ public class UsuarioController {
     @Autowired
     CompraRepository compraRepository;
 
+    @Autowired
+    CarritoRepository carritoRepository;
+
     @GetMapping("")
     public String paginaPrincipal(Model model){
         List<Funcion> listaFunciones = funcionRepository.obtenerFuncionesDestacadasPaginaPrincipal();
@@ -210,8 +213,9 @@ public class UsuarioController {
     }
 
 
-    /*"Compra" de tickets*/
+    /*Reserva de tickets*/
     //Se le pasa a carrito donde aca se le agrega la tarjeta y se compra
+    //Se establecera un limite de tiempo para la reserva?
     @PostMapping("/compra")
     public String compraBoletos(@RequestParam(value = "Obra") String idObraStr,
                                 @RequestParam(value = "idSede") String idSedeStr,
@@ -346,23 +350,18 @@ public class UsuarioController {
                     /*Calculo del monto total*/
                     double precioEntradaFuncion = funcion.getPrecioentrada();
                     double montoTotal = precioEntradaFuncion*cantBoletos;
-                    //int cantidadAsistentes = funcion.getCantidadasistentes();
+                    int cantidadAsistentes = funcion.getCantidadasistentes();
 
                     //Guardado de la compra
                     Compra compra = new Compra();
-                    compra.setEstado(0); //Se compro
+                    compra.setEstado(1); //Se reserva , cuando ya se compra en el carrito esto se pone en 0
                     compra.setCantidad(cantBoletos);
                     compra.setMontoTotal(montoTotal);
                     compra.setFuncion(funcion);
                     compra.setPersona(persona);
+                    carritoRepository.save(compra);
 
-                    /*FALTA EL ENVIO AL CARRITO DE COMPRAS DE LA PERSONA*/
-                    redirectAttributes.addFlashAttribute("compraExitosa","Se ha realizado su 'compra' correctamente. ");
-                    return "redirect:/detallesObra?Obra="+obra.getId();
-
-
-                    /*compraRepository.save(compra);
-                    /int stockRestanteFuncion = stockFuncion - cantBoletos;
+                    int stockRestanteFuncion = stockFuncion - cantBoletos;
                     cantidadAsistentes = cantidadAsistentes + cantBoletos;
                     if(stockRestanteFuncion == 0){
                         funcion.setStockentradas(0);
@@ -375,9 +374,10 @@ public class UsuarioController {
                         funcion.setCantidadasistentes(cantidadAsistentes);
                         funcionRepository.save(funcion);
                     }
+
                     redirectAttributes.addFlashAttribute("compraExitosa","Se ha realizado su compra correctamente. ");
                     return "redirect:/detallesObra?Obra="+obra.getId();
-                    */
+
                 }else{
                     redirectAttributes.addFlashAttribute("mensajeFaltaEdad","La funcion tiene restriccion de edad");
                     return "redirect:/detallesObra?Obra="+obra.getId();
@@ -418,5 +418,15 @@ public class UsuarioController {
         model.addAttribute("sede",sedeRepository.findById(idsede).get());
         return "usuario/sedes/sedeDetalles";
     }
+
+    @GetMapping("/carrito")
+    public String carritoUsuario(HttpSession session,Model model) {
+        //Se supone que la persona lo mapeamos a la variable "usuario"
+        Persona persona = (Persona) session.getAttribute("usuario");
+        List<Compra> carritoUsuario = carritoRepository.obtenerCarritoUsuario(persona.getId());
+        model.addAttribute("carrito",carritoUsuario);
+        return "usuario/carritoCompras";
+    }
+
 
 }
