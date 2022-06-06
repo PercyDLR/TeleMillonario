@@ -1539,7 +1539,7 @@ ul {
   font-family: 'Open Sans', sans-serif;
 }
 .card__category a:after {
-  content: ',';
+  content: ', ';
   position: absolute;
   display: block;
   left: 100%;

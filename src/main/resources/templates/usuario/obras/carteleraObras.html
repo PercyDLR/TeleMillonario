@@ -51,8 +51,8 @@
                                 <div class="col-lg-4 col-12 sign__group">
 
                                     <input type="text" class="sign__input"
-                                           placeholder="Busque una Obra"
-                                           th:field="${busqueda}" maxlength="100">
+                                           placeholder="Busque una Obra" name="busqueda"
+                                           th:value="${busqueda}" maxlength="100">
                                 </div>
                                 <div class="col-lg-3 col-md-5 col-6 sign__group">
                                     <select class="sign__input" name="genero">
@@ -119,7 +119,7 @@
                                                     <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
 
                                                     <ul class="card__list">
-                                                        <li th:text="${funciongenero.key.restriccionedad == '1' ? '16+': 'Todo Público'}"></li>
+                                                        <li th:text="${funciongenero.key.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>
                                                     </ul>
                                                 </div>
 
