@@ -79,7 +79,7 @@ public class LoginController {
             model.addAttribute("usuario",personita);
             model.addAttribute("google", 1);
             /*
-             * Faltarian contraseña, fecha de nacimiento, dni, direccion y estado
+             * Faltarian fecha de nacimiento, dni, direccion y estado
              * */
             return "login/signup";
         }else if (persona.getCorreo().equals(personita.getCorreo()) && !persona.getContrasenia().equals(password)){
@@ -87,7 +87,8 @@ public class LoginController {
             return "redirect:/login";
         }else if (persona.getCorreo().equals(personita.getCorreo()) && persona.getContrasenia().equals(password)){
             /*Aca se ingresa al sistema*/
-            return "redirect:/login";
+            session.setAttribute("usuario",persona);
+            return "redirect:/redirectByRole";
         }else {
             return "redirect:/login";
         }
@@ -107,8 +108,12 @@ public class LoginController {
     @GetMapping("/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session){
 
-        Persona persona = personaRepository.findByCorreo(auth.getName());
-        session.setAttribute("usuario",persona);
+        Persona persona = (Persona) session.getAttribute("usuario");
+        if (session.getAttribute("usuario") == null){
+            Persona persona = personaRepository.findByCorreo(auth.getName());
+            session.setAttribute("usuario",persona);
+        }
+
 
         switch(persona.getIdrol().getNombre()){
             case "Administrador":
