@@ -1,20 +1,17 @@
 package com.example.telemillonario.controller;
 
-import com.example.telemillonario.entity.Foto;
+
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Rol;
 import com.example.telemillonario.repository.FotoRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.repository.RolRepository;
-import com.example.telemillonario.service.DniAPI;
-import com.example.telemillonario.service.UsuarioAPI;
 import com.example.telemillonario.service.UsuarioService;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -72,10 +69,11 @@ public class LoginController {
         personita.setCorreo(email);
         String password = new BCryptPasswordEncoder().encode("123456789abcdefg");
         Persona persona = personaRepository.findByCorreo(email);
-        if (!persona.getCorreo().equals(personita.getCorreo())){
+        if (persona == null){
             Rol rol = new Rol(2,1,"Usuario");
             personita.setIdrol(rol);
-            personita.setContrasenia(password);
+            personita.setContrasenia("123456789abcdefg"); //Campo password
+            model.addAttribute("recontrasenia","123456789abcdefg");
             model.addAttribute("usuario",personita);
             model.addAttribute("google", 1);
             /*
@@ -108,10 +106,12 @@ public class LoginController {
     @GetMapping("/redirectByRole")
     public String redirectByRole(Authentication auth, HttpSession session){
 
-        Persona persona = (Persona) session.getAttribute("usuario");
+        Persona persona = null;
         if (session.getAttribute("usuario") == null){
-            Persona persona = personaRepository.findByCorreo(auth.getName());
+            persona = personaRepository.findByCorreo(auth.getName());
             session.setAttribute("usuario",persona);
+        }else{
+            persona = (Persona) session.getAttribute("usuario");
         }
 
 
