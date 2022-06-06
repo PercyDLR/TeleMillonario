@@ -15,8 +15,12 @@ public interface SedeRepository extends JpaRepository<Sede,Integer> {
     List<Sede> findByEstado(int estado);
 
     @Query(nativeQuery = true, value = "Select count(*) from " +
-            "(select * from fotos where idfuncion IS NULL and idsede is not null and estado=1 group by idsede ) as Result;")
-    Integer cantSedesTotal();
+            "(select fo.* from fotos fo where fo.idfuncion IS NULL and fo.idsede is not null and fo.estado=1 group by idsede ) as Result;")
+    Integer cantSedesTotalAdmin();
+
+    @Query(nativeQuery = true, value = "Select count(*) from " +
+            "(select fo.* from fotos fo inner join sede s on (fo.idsede=s.id) where s.estado=1 and  fo.idfuncion IS NULL and fo.idsede is not null and fo.estado=1 group by idsede ) as Result;")
+    Integer cantSedesTotalUsuar();
 
     @Query(nativeQuery = true, value = "Select count(*) from " +
             "(select fo.* from fotos fo inner join sede s on (fo.idsede=s.id) inner join distrito d on (s.iddistrito=d.id) " +

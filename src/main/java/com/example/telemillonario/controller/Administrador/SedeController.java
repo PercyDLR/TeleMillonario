@@ -48,7 +48,7 @@ public class SedeController {
                              @RequestParam(value="buscador",required = false,defaultValue = "") String buscador){
         int pagina;
         int estado=1;
-        int cantSedes = sedeRepository.cantSedesTotal();
+        int cantSedes = sedeRepository.cantSedesTotalAdmin();
         try{
             pagina = Integer.parseInt(pag);
         }catch(Exception e) {
@@ -57,7 +57,7 @@ public class SedeController {
 
         if (parametro.equals("")) { // verifica que no esté vacío
 
-            List<Foto> listSedesConFoto= fotoRepository.listadoSedes(estado,(int)sedesporpagina*pagina, (int)sedesporpagina);
+            List<Foto> listSedesConFoto= fotoRepository.listadoSedesAdmin(estado,(int)sedesporpagina*pagina, (int)sedesporpagina);
             model.addAttribute("listaSedes",listSedesConFoto);
 
         }else{
@@ -65,7 +65,7 @@ public class SedeController {
             List<Foto> listSedesConFoto = switch (buscador) {
                 case "nombre" -> fotoRepository.buscarSedePorNombre(parametro, estado, (int)sedesporpagina*pagina, (int)sedesporpagina);
                 case "distrito" -> fotoRepository.buscarSedePorDistrito(parametro, estado, (int)sedesporpagina*pagina, (int)sedesporpagina);
-                default -> fotoRepository.listadoSedes(estado,(int)sedesporpagina*pagina, (int)sedesporpagina);
+                default -> fotoRepository.listadoSedesAdmin(estado,(int)sedesporpagina*pagina, (int)sedesporpagina);
             };
             model.addAttribute("listaSedes",listSedesConFoto);
         }

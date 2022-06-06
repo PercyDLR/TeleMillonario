@@ -53,8 +53,8 @@ public class SedesController {
         }
         if (busqueda.equals("")) { // verifica que no esté vacío
 
-            List<Foto> listSedesConFoto= fotoRepository.listadoSedes(estado,(int)sedesxpagina*pagina, (int)sedesxpagina);
-            int cantSedes = sedeRepository.cantSedesTotal();
+            List<Foto> listSedesConFoto= fotoRepository.listadoSedesUsuar(estado,(int)sedesxpagina*pagina, (int)sedesxpagina);
+            int cantSedes = sedeRepository.cantSedesTotalUsuar();
             model.addAttribute("pagTotal",(int) Math.ceil(cantSedes/sedesxpagina));
             model.addAttribute("listSedes",listSedesConFoto);
         }else{
