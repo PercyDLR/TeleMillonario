@@ -20,12 +20,28 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "limit ?2,?3")
     List<Foto> buscarFotoFunciones(int idsede, int pag, int salasporpag);
 
-    @Query(nativeQuery = true, value = "select * from fotos where " +
-            "idsede=?1 and estado=1 and idfuncion IS NOT NULL  group by idfuncion")
-    List<Foto> buscarFotoFuncionesTotal(int idsede);
+    @Query(nativeQuery = true, value = "select * from fotos fo inner join funcion f on (fo.idfuncion=f.id) where " +
+            "fo.idsede=?1 and fo.estado=1 and lower(f.nombre) like %?2% and fo.idfuncion IS NOT NULL  group by fo.idfuncion limit ?3,?4")
+    List<Foto> buscarFotoFuncionesPorPag(int idsede,String nombre,int pag, int salasporpag);
+
+    @Query(nativeQuery = true, value = "select * from fotos fo " +
+                        "inner join funcion f on (fo.idfuncion=f.id) where idsede=?1 and (f.restriccionedad=?2 or ?2>=2)and lower(f.nombre) like %?3% and fo.estado=1 and idfuncion IS NOT NULL  group by idfuncion limit ?4,?5")
+    List<Foto> buscarFotoFuncionesFiltrPorPag(int idsede,int restriccion,String nombre,int pag, int salasporpag);
+
+
+
+    @Query(nativeQuery = true, value = "select * from fotos fo inner join funcion f on (fo.idfuncion=f.id) where " +
+            "fo.idsede=?1 and fo.estado=1 and lower(f.nombre) like %?2% and fo.idfuncion IS NOT NULL  group by fo.idfuncion")
+    List<Foto> fotFuncTotal(int idsede,String nombre);
+
+    @Query(nativeQuery = true, value = "select * from fotos fo " +
+            "inner join funcion f on (fo.idfuncion=f.id) where idsede=?1 and (f.restriccionedad=?2 or ?2>=2)and lower(f.nombre) like %?3% and fo.estado=1 and idfuncion IS NOT NULL  group by idfuncion ")
+    List<Foto> fotFuncFiltrTotal(int idsede,int restriccion,String nombre);
+
+
 
     @Query(nativeQuery = true, value = "select * from telemillonario.fotos fo inner join funcion fu on (fu.id=fo.idfuncion) where " +
-            "fo.idsede=?1 and idfuncion IS NOT NULL and fu.nombre like %?2% group by idfuncion " +
+            "fo.idsede=?1 and fo.idfuncion IS NOT NULL and fu.nombre like %?2% group by idfuncion " +
             "limit ?3,?4")
     List<Foto> buscarFotoFuncionesPorNombre(int idsede,String parametro, int pag, int salasporpag);
 

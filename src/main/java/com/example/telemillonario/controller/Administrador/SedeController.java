@@ -48,7 +48,7 @@ public class SedeController {
                              @RequestParam(value="buscador",required = false,defaultValue = "") String buscador){
         int pagina;
         int estado=1;
-        int cantSedes = sedeRepository.buscarSedesTotal();
+        int cantSedes = sedeRepository.cantSedesTotal();
         try{
             pagina = Integer.parseInt(pag);
         }catch(Exception e) {
