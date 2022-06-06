@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LoginController {
@@ -68,6 +69,7 @@ public class LoginController {
         personita.setApellidos(lastname);
         personita.setCorreo(email);
         String password = new BCryptPasswordEncoder().encode("123456789abcdefg");
+        System.out.println(password);
         Persona persona = personaRepository.findByCorreo(email);
         if (persona == null){
             Rol rol = new Rol(2,1,"Usuario");
@@ -80,10 +82,10 @@ public class LoginController {
              * Faltarian fecha de nacimiento, dni, direccion y estado
              * */
             return "login/signup";
-        }else if (persona.getCorreo().equals(personita.getCorreo()) && !persona.getContrasenia().equals(password)){
+        }else if (persona.getCorreo().equals(personita.getCorreo()) && persona.getContrasenia().equals(password)){
             /*Aca debe ir mensaje de error*/
             return "redirect:/login";
-        }else if (persona.getCorreo().equals(personita.getCorreo()) && persona.getContrasenia().equals(password)){
+        }else if (persona.getCorreo().equals(personita.getCorreo())){
             /*Aca se ingresa al sistema*/
             session.setAttribute("usuario",persona);
             return "redirect:/redirectByRole";
@@ -113,7 +115,6 @@ public class LoginController {
         }else{
             persona = (Persona) session.getAttribute("usuario");
         }
-
 
         switch(persona.getIdrol().getNombre()){
             case "Administrador":
@@ -189,6 +190,7 @@ public class LoginController {
         } else {
 
             //generamos su bcript de contraseña
+            System.out.println(usuario.getContrasenia());
             String contraseniaBCrypt = new BCryptPasswordEncoder().encode(usuario.getContrasenia());
             usuario.setContrasenia(contraseniaBCrypt);
 

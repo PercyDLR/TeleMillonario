@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -48,8 +48,6 @@ public class UsuarioController {
     @Autowired
     CompraRepository compraRepository;
 
-    @Autowired
-    CarritoRepository carritoRepository;
 
     @GetMapping("")
     public String paginaPrincipal(Model model){
@@ -214,7 +212,7 @@ public class UsuarioController {
     /*Reserva de tickets*/
     //Se le pasa a carrito donde aca se le agrega la tarjeta y se compra
     //Se establecera un limite de tiempo para la reserva?
-    @PostMapping("/compra")
+    @PostMapping("/reserva")
     public String compraBoletos(@RequestParam(value = "Obra") String idObraStr,
                                 @RequestParam(value = "idSede") String idSedeStr,
                                 @RequestParam(value = "cantBoletos") String cantBoletosStr,
@@ -289,10 +287,10 @@ public class UsuarioController {
                     ///Validacion fecha y hora
                     try{
                         //fechaHoraFuncion = fechaHora.parse(fechaHoraStr);
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM");
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                         fechaFuncion = LocalDate.parse(fechaStr,formatter);
 
-                        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm");
+                        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("hh:mm:ss");
                         horaFuncion = LocalTime.parse(horaStr,formatter1);
                     }catch (Exception a){
                         errorFechaHora = true;
@@ -357,7 +355,15 @@ public class UsuarioController {
                     compra.setMontoTotal(montoTotal);
                     compra.setFuncion(funcion);
                     compra.setPersona(persona);
-                    carritoRepository.save(compra);
+
+                    //https://www.baeldung.com/java-linked-hashmap
+                    //Se le mapea la fecha de reserva ya que va a tener un tiempo limitado para poder efectuar su compra sino
+                    //se le borra de carrito y el stock de la funcion vuelve a como estaba
+                    DateTimeFormatter fch = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
+                    String fechaDeReservaCompra = fch.format(LocalDateTime.now());
+                    LinkedHashMap<String,Compra> carritoDeComprasDeUsuario = new LinkedHashMap<>();
+                    carritoDeComprasDeUsuario.put(fechaDeReservaCompra,compra);
+                    session.setAttribute("carritoDeComprasDeUsuario",carritoDeComprasDeUsuario);
 
                     int stockRestanteFuncion = stockFuncion - cantBoletos;
                     cantidadAsistentes = cantidadAsistentes + cantBoletos;
@@ -373,7 +379,8 @@ public class UsuarioController {
                         funcionRepository.save(funcion);
                     }
 
-                    redirectAttributes.addFlashAttribute("compraExitosa","Se ha realizado su compra correctamente. ");
+                    redirectAttributes.addFlashAttribute("reservaExitosa","Se ha realizado su reserva correctamente.Puede encontrarla " +
+                            "dirigiendose a su carrito de compras ");
                     return "redirect:/detallesObra?Obra="+obra.getId();
 
                 }else{
@@ -392,11 +399,7 @@ public class UsuarioController {
 
 
     @GetMapping("/carrito")
-    public String carritoUsuario(HttpSession session,Model model) {
-        //Se supone que la persona lo mapeamos a la variable "usuario"
-        Persona persona = (Persona) session.getAttribute("usuario");
-        List<Compra> carritoUsuario = carritoRepository.obtenerCarritoUsuario(persona.getId());
-        model.addAttribute("carrito",carritoUsuario);
+    public String carritoUsuario() {
         return "usuario/carritoCompras";
     }
 

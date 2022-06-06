@@ -67,7 +67,7 @@
 							</div>
 
 							<div class="sign__group">
-								<input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" id="contrasenia"  required maxlength="200"
+								<input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" id="contrasenia" required maxlength="200" th:value="${usuario.getContrasenia()}"
 									   th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
 									 th:errors="*{contrasenia}"></div>
