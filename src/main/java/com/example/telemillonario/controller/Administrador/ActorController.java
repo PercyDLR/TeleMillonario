@@ -239,7 +239,7 @@ public class ActorController {
                 // Se almacenan los datos en un objeto Foto
                 Foto foto = new Foto();
                 foto.setEstado(1);
-                foto.setIdpersona(actor.getId());
+                foto.setIdpersona(actor);
                 foto.setNumero(fotosGuardadas + i);
 
                 // Guardar en el Servidor

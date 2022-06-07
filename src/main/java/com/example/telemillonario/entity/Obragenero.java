@@ -3,30 +3,30 @@ package com.example.telemillonario.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "funciongenero")
-public class Funciongenero {
+@Table(name = "obragenero")
+public class Obragenero {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "idfuncion")
-    private Funcion idfuncion;
-
-    @ManyToOne
-    @JoinColumn(name = "idgenero")
-    private Genero idgenero;
-
     @Column(name = "estado")
     private Integer estado;
 
-    public Integer getEstado() {
-        return estado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idgenero")
+    private Genero idgenero;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idobra", referencedColumnName = "id")
+    private Obra idobra;
+
+    public Obra getIdobra() {
+        return idobra;
     }
 
-    public void setEstado(Integer estado) {
-        this.estado = estado;
+    public void setIdobra(Obra idobra) {
+        this.idobra = idobra;
     }
 
     public Genero getIdgenero() {
@@ -37,12 +37,12 @@ public class Funciongenero {
         this.idgenero = idgenero;
     }
 
-    public Funcion getIdfuncion() {
-        return idfuncion;
+    public Integer getEstado() {
+        return estado;
     }
 
-    public void setIdfuncion(Funcion idfuncion) {
-        this.idfuncion = idfuncion;
+    public void setEstado(Integer estado) {
+        this.estado = estado;
     }
 
     public Integer getId() {

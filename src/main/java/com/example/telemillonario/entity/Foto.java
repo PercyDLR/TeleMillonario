@@ -19,39 +19,40 @@ public class Foto {
     @Column(name = "numero")
     private Integer numero;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idpersona")
-    private Integer idpersona;
+    private Persona idpersona;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idsede")
-    private Sede sede;
+    private Sede idsede;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idfuncion")
-    private Funcion funcion;
+    @JoinColumn(name = "idobra", referencedColumnName = "id")
+    private Obra idobra;
 
-    public Integer getIdpersona() {
+    public Obra getIdobra() {
+        return idobra;
+    }
+
+    public void setIdobra(Obra idobra) {
+        this.idobra = idobra;
+    }
+
+    public Sede getIdsede() {
+        return idsede;
+    }
+
+    public void setIdsede(Sede idsede) {
+        this.idsede = idsede;
+    }
+
+    public Persona getIdpersona() {
         return idpersona;
     }
 
-    public void setIdpersona(Integer idpersona) {
+    public void setIdpersona(Persona idpersona) {
         this.idpersona = idpersona;
-    }
-
-    public Sede getSede() {
-        return sede;
-    }
-
-    public void setSede(Sede sede) {
-        this.sede = sede;
-    }
-
-    public Funcion getFuncion() {
-        return funcion;
-    }
-
-    public void setFuncion(Funcion funcion) {
-        this.funcion = funcion;
     }
 
     public Integer getNumero() {

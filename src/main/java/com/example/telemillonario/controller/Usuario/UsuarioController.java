@@ -54,7 +54,7 @@ public class UsuarioController {
         List<Funcion> listaFunciones = funcionRepository.obtenerFuncionesDestacadasPaginaPrincipal();
         model.addAttribute("listaFunciones",listaFunciones);
 
-        List<Funciongenero> funcionGenero = funcionGeneroRepository.findAll();
+        List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
         model.addAttribute("funcionGenero",funcionGenero);
         return "vistaPrincipal";
     }
@@ -154,7 +154,7 @@ public class UsuarioController {
 
                         // Guardado de la Foto en DB
                         fotoPerfil.setNumero(0);
-                        fotoPerfil.setIdpersona(usuario.getId());
+                        fotoPerfil.setIdpersona(usuario);
                         fotoPerfil.setEstado(1);
 
                         fotoRepository.save(fotoPerfil);
@@ -198,7 +198,7 @@ public class UsuarioController {
         Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
 
         if(funcion.isPresent()){
-            List<Funciongenero> funcionGenero = funcionGeneroRepository.findAll();
+            List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
             model.addAttribute("funcionGenero",funcionGenero);
             return "usuario/obras/obraDetalles";
 
@@ -342,7 +342,7 @@ public class UsuarioController {
                 Period period = Period.between(fechaNacimientoUsuario,fechaActual);
                 int edad = period.getYears();
 
-                if((funcion.getRestriccionedad() == 1 && edad>=18) || funcion.getRestriccionedad() == 0){
+                if((funcion.getIdobra().getRestriccionedad() == 1 && edad>=18) || funcion.getIdobra().getRestriccionedad() == 0){
                     /*Calculo del monto total*/
                     double precioEntradaFuncion = funcion.getPrecioentrada();
                     double montoTotal = precioEntradaFuncion*cantBoletos;

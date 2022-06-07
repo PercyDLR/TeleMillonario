@@ -58,7 +58,7 @@ public class ObraController {
             pagina = 0;
         }
 
-        List<Funciongenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
+        List<Obragenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
 
         //System.out.println("Lista funcionesGenero que retorna el query");
         //for (Funciongenero f : listaFuncionGenero) {
@@ -67,18 +67,18 @@ public class ObraController {
         //    System.out.println("=============================");
         //} //BIEN
 
-        LinkedHashMap<Funcion, ArrayList<Genero>> funcionGenero = new LinkedHashMap<>();
-        for (Funciongenero f : listaFuncionGenero) {
-            System.out.println("Turno de: " + f.getIdfuncion().getNombre());
-            System.out.println("Guardo: " + !funcionGenero.containsKey(f.getIdfuncion()));
-            if (!funcionGenero.containsKey(f.getIdfuncion())) {
-                System.out.println("He guardado: " + f.getIdfuncion().getNombre());
-                funcionGenero.put(f.getIdfuncion(), new ArrayList<>());
+        LinkedHashMap<Obra, ArrayList<Genero>> funcionGenero = new LinkedHashMap<>();
+        for (Obragenero f : listaFuncionGenero) {
+            //System.out.println("Turno de: " + f.getIdfuncion().getNombre());
+            //System.out.println("Guardo: " + !funcionGenero.containsKey(f.getIdfuncion()));
+            if (!funcionGenero.containsKey(f.getIdobra())) {
+                //System.out.println("He guardado: " + f.getIdobra().getNombre());
+                funcionGenero.put(f.getIdobra(), new ArrayList<>());
             }
-            if (!funcionGenero.get(f.getIdfuncion()).contains(f.getIdgenero())) {
-                ArrayList<Genero> listaAGuardar = funcionGenero.get(f.getIdfuncion());
+            if (!funcionGenero.get(f.getIdobra()).contains(f.getIdgenero())) {
+                ArrayList<Genero> listaAGuardar = funcionGenero.get(f.getIdobra());
                 listaAGuardar.add(f.getIdgenero());
-                funcionGenero.put(f.getIdfuncion(), listaAGuardar);
+                funcionGenero.put(f.getIdobra(), listaAGuardar);
             }
         }
 
@@ -94,8 +94,8 @@ public class ObraController {
 //        }
 
         LinkedHashMap<String, Integer> listaNombres = new LinkedHashMap<>();
-        for (Map.Entry<Funcion, ArrayList<Genero>> h : funcionGenero.entrySet()) {
-            Funcion funcionAEvaluar = h.getKey();
+        for (Map.Entry<Obra, ArrayList<Genero>> h : funcionGenero.entrySet()) {
+            Obra funcionAEvaluar = h.getKey();
             if (!listaNombres.containsKey(funcionAEvaluar.getNombre())) {
                 listaNombres.put(funcionAEvaluar.getNombre(), 0);
             }
@@ -140,9 +140,9 @@ public class ObraController {
         //Una vez obtengo la lista de obras no repetidas, requiero indicar aquellas que se enviaran
         int tamanhoLista = funcionGenero.size();
         System.out.println("Tamanio de la lista: " + tamanhoLista);
-        LinkedHashMap<Funcion, ArrayList<Genero>> listaFuncionesGeneroAEnviar = new LinkedHashMap<>();
+        LinkedHashMap<Obra, ArrayList<Genero>> listaFuncionesGeneroAEnviar = new LinkedHashMap<>();
         int i = 0;
-        for (Map.Entry<Funcion, ArrayList<Genero>> h : funcionGenero.entrySet()) {
+        for (Map.Entry<Obra, ArrayList<Genero>> h : funcionGenero.entrySet()) {
             if (i >= pagina * funcionesxpagina && i < pagina * funcionesxpagina + funcionesxpagina && i < tamanhoLista) {
                 listaFuncionesGeneroAEnviar.put(h.getKey(), h.getValue());
             }
@@ -150,7 +150,7 @@ public class ObraController {
         }
 
         ArrayList<Foto> listaCaratulas = new ArrayList<>();
-        for (Map.Entry<Funcion, ArrayList<Genero>> h : listaFuncionesGeneroAEnviar.entrySet()) {
+        for (Map.Entry<Obra, ArrayList<Genero>> h : listaFuncionesGeneroAEnviar.entrySet()) {
             listaCaratulas.add(fotoRepository.caratulaDeObra(h.getKey().getId()));
         }
 
@@ -212,8 +212,8 @@ public class ObraController {
 
             //Mandar los generos de la obra de la funcion
             ArrayList<Genero> listaGeneros = new ArrayList<>();
-            List<Funciongenero> listaFuncionesGenero = funcionGeneroRepository.buscarFuncionGenero(id);
-            for (Funciongenero f : listaFuncionesGenero) {
+            List<Obragenero> listaFuncionesGenero = funcionGeneroRepository.buscarFuncionGenero(id);
+            for (Obragenero f : listaFuncionesGenero) {
                 listaGeneros.add(f.getIdgenero());
             }
 

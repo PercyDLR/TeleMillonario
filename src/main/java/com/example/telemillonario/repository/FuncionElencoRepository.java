@@ -1,6 +1,5 @@
 package com.example.telemillonario.repository;
 
-import com.example.telemillonario.entity.Foto;
 import com.example.telemillonario.entity.Funcionelenco;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

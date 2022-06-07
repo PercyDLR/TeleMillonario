@@ -318,7 +318,7 @@ public class FuncionesController {
         List<Integer> elencoSeleccionado = new ArrayList<>();
 
         // Se obtienen los géneros de la Función
-        List<Funciongenero> generosEnDB = funcionGeneroRepository.buscarFuncionGenero(funcion.getId());
+        List<Obragenero> generosEnDB = funcionGeneroRepository.buscarFuncionGenero(funcion.getId());
         List<Integer> generosSeleccionados = new ArrayList<>();
 
         // Se comparan los datos de elenco ingresados con los de la DB
@@ -370,7 +370,7 @@ public class FuncionesController {
             // Si un género no está en DB, se agrega
 
             if(ii<idgenero.length && !generoCoincide){
-                Funciongenero funcgen = new Funciongenero();
+                Obragenero funcgen = new Obragenero();
                 int idgen = Integer.parseInt(idgenero[ii]);
                 funcgen.setIdgenero(generoRepository.findById(idgen).get());
                 funcgen.setIdfuncion(funcion);
@@ -483,7 +483,7 @@ public class FuncionesController {
                 // Se almacenan los datos en un objeto Foto
                 Foto foto = new Foto();
                 foto.setEstado(1);
-                foto.setFuncion(funcion);
+                foto.(funcion);
                 foto.setSede(funcion.getSala().getIdsede());
                 foto.setNumero(fotosGuardadas + i);
 

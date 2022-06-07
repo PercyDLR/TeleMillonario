@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -243,7 +242,7 @@ public class DirectorController {
                 // Se almacenan los datos en un objeto Foto
                 Foto foto = new Foto();
                 foto.setEstado(1);
-                foto.setIdpersona(director.getId());
+                foto.setIdpersona(director);
                 foto.setNumero(fotosGuardadas + i);
 
                 // Guardar en el Sevidor

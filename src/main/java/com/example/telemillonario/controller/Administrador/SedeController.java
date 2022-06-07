@@ -220,8 +220,8 @@ public class SedeController {
                             System.out.println("Archivo subido correctamente");
                             Foto foto = new Foto();
                             foto.setEstado(1);
-                            foto.setIdpersona(persona.getId());
-                            foto.setSede(sedeCreada);
+                            foto.setIdpersona(persona);
+                            foto.setIdsede(sedeCreada);
                             foto.setNumero(i);
                             foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
                             fotoRepository.save(foto);
@@ -267,8 +267,8 @@ public class SedeController {
                             System.out.println("Archivo subido correctamente");
                             Foto foto = new Foto();
                             foto.setEstado(1);
-                            foto.setIdpersona(persona.getId());
-                            foto.setSede(sedeCreada);
+                            foto.setIdpersona(persona);
+                            foto.setIdsede(sedeCreada);
                             foto.setNumero(i);
                             foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
                             fotoRepository.save(foto);

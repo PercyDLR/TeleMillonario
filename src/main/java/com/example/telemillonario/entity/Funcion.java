@@ -1,10 +1,5 @@
 package com.example.telemillonario.entity;
 
-import com.example.telemillonario.validation.Elenco;
-import com.example.telemillonario.validation.Operador;
-import com.example.telemillonario.validation.Usuario;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -16,10 +11,10 @@ public class Funcion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
 
     @Column(name = "estado")
-    private int estado;
+    private Integer estado;
 
     @Column(name = "fecha")
     @FutureOrPresent(message = "La fecha que ingresaste ya pasó")
@@ -31,49 +26,45 @@ public class Funcion {
     @Column(name = "fin")
     private LocalTime fin;
 
-    @Column(name = "calificacion")
-    private Double calificacion;
 
-    @Column(name = "restriccionedad")
-    @NotNull(message = "Defina la Restricción de Edad")
-    private Integer restriccionedad;
-
-    @Column(name = "precioentrada")
     @Positive
     @Digits(integer = 4, fraction = 2, message = "Debe contener solo 2 decimales")
     @Min(value = 5, message = "El precio mínimo es 5")
     @NotNull(message = "El precio no debe estar vacio")
+    @Column(name = "precioentrada")
     private Double precioentrada;
 
-    @Column(name = "stockentradas")
     @Positive
     @Digits(integer = 3, fraction = 0, message = "Debe ser un número entero")
     @NotNull(message = "El stock no debe estar vacio")
+    @Column(name = "stockentradas")
     private Integer stockentradas;
-
-    @NotBlank(message = "El nombre no puede estar vacío")
-    @Size(max=40,message = "Nombre no mayor a 40 caracteres")
-    @Column(name = "nombre", length = 100)
-    private String nombre;
-
-    @Column(name = "descripcion", length = 5000)
-    @Size(max=40,message = "La descripcion no puede ser mayor a 5000 caracteres")
-    @NotBlank(message = "La descripcion no puede estar vacia")
-    private String descripcion;
 
     @Column(name = "cantidadasistentes")
     private Integer cantidadasistentes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idsala")
-    private Sala sala = new Sala();
+    private Sala idsala;
 
-    public Sala getSala() {
-        return sala;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idobra", referencedColumnName = "id")
+    private Obra idobra;
+
+    public Obra getIdobra() {
+        return idobra;
     }
 
-    public void setSala(Sala sala) {
-        this.sala = sala;
+    public void setIdobra(Obra idobra) {
+        this.idobra = idobra;
+    }
+
+    public Sala getIdsala() {
+        return idsala;
+    }
+
+    public void setIdsala(Sala idsala) {
+        this.idsala = idsala;
     }
 
     public Integer getCantidadasistentes() {
@@ -82,22 +73,6 @@ public class Funcion {
 
     public void setCantidadasistentes(Integer cantidadasistentes) {
         this.cantidadasistentes = cantidadasistentes;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public Integer getStockentradas() {
@@ -114,22 +89,6 @@ public class Funcion {
 
     public void setPrecioentrada(Double precioentrada) {
         this.precioentrada = precioentrada;
-    }
-
-    public Integer getRestriccionedad() {
-        return restriccionedad;
-    }
-
-    public void setRestriccionedad(Integer restriccionedad) {
-        this.restriccionedad = restriccionedad;
-    }
-
-    public Double getCalificacion() {
-        return calificacion;
-    }
-
-    public void setCalificacion(Double calificacion) {
-        this.calificacion = calificacion;
     }
 
     public LocalTime getFin() {
@@ -156,19 +115,19 @@ public class Funcion {
         this.fecha = fecha;
     }
 
-    public int getEstado() {
+    public Integer getEstado() {
         return estado;
     }
 
-    public void setEstado(int estado) {
+    public void setEstado(Integer estado) {
         this.estado = estado;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }
