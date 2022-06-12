@@ -91,7 +91,6 @@ public class UsuarioController {
                                        @RequestParam("imagen") MultipartFile img,
                                        BindingResult bindingResult, Model model,
                                        RedirectAttributes a, HttpSession session) {
-        //@Validated(Perfil.class)
 
         Persona usuarioSesion = (Persona) session.getAttribute("usuario");
         if (bindingResult.hasErrors()) {
