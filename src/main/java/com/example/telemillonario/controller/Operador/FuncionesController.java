@@ -83,6 +83,7 @@ public class FuncionesController {
     public String programarFuncionesForm(@ModelAttribute("funcion")Funcion funcion, Model model, HttpSession session){
 
         // Listas para los selectores
+        model.addAttribute("listObras",obraRepository.findAll());
         model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
         model.addAttribute("listDirectores",personaRepository.listarDirectores());
         model.addAttribute("listGeneros",generoRepository.findAll());
@@ -103,6 +104,7 @@ public class FuncionesController {
     private void retornarValores(Model model, Funcion funcion, Persona persona) {
 
         // Variables para hacer más entendible el código
+        List<Obra> listObras = obraRepository.findAll();
         List<Persona> listActores = personaRepository.listarActores("",0,100000);
         List<Persona> listDirectores = personaRepository.listarDirectores();
         List<Genero> listGeneros = generoRepository.findAll();
@@ -112,6 +114,7 @@ public class FuncionesController {
 
         // Se regresan nuevamente los elementos de las listas
         model.addAttribute("funcion",funcion);
+        model.addAttribute("listObras",listObras);
         model.addAttribute("listActores",listActores);
         model.addAttribute("listDirectores",listDirectores);
         model.addAttribute("listGeneros",listGeneros);

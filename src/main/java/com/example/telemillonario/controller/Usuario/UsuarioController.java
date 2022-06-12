@@ -46,16 +46,19 @@ public class UsuarioController {
     SedeRepository sedeRepository;
 
     @Autowired
+    ObraRepository obraRepository;
+
+    @Autowired
     CompraRepository compraRepository;
 
 
     @GetMapping("")
     public String paginaPrincipal(Model model){
-        List<Funcion> listaFunciones = funcionRepository.obtenerFuncionesDestacadasPaginaPrincipal();
-        model.addAttribute("listaFunciones",listaFunciones);
+        List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
+        model.addAttribute("listaObras",listaObras);
 
-        List<Obragenero> funcionGenero = obraGeneroRepository.findAll();
-        model.addAttribute("funcionGenero",funcionGenero);
+        List<Obragenero> obraGenero = obraGeneroRepository.findAll();
+        model.addAttribute("obraGenero",obraGenero);
         return "vistaPrincipal";
     }
 
