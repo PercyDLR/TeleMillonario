@@ -1,7 +1,9 @@
 package com.example.telemillonario.controller.Usuario;
 
+import com.azure.core.annotation.Get;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
+import com.example.telemillonario.service.DatosTarjeta;
 import com.example.telemillonario.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,6 +50,8 @@ public class UsuarioController {
     @Autowired
     CompraRepository compraRepository;
 
+    @Autowired
+    ObraRepository obraRepository;
 
     @GetMapping("")
     public String paginaPrincipal(Model model){
@@ -58,6 +62,15 @@ public class UsuarioController {
         model.addAttribute("funcionGenero",funcionGenero);
         return "vistaPrincipal";
     }
+
+    @GetMapping("/historial")
+    public String historialCompraPersona(Model model,HttpSession session){
+        Persona personita = (Persona) session.getAttribute("usuario");
+        List<Compra> historialCompras = compraRepository.historialCompras(personita.getId());
+        model.addAttribute("historialCompras",historialCompras);
+        return "/usuario/historial";
+    }
+
 
     @GetMapping("/perfil")
     public String verPerfilUsuario(@ModelAttribute("usuario") Persona usuario, Model model, HttpSession session) {
@@ -186,7 +199,10 @@ public class UsuarioController {
 
     /*Redireccion para ver los detalles de la obra para comprar tickets*/
     @GetMapping("/detallesObra")
-    public String detallesObras(@RequestParam(value = "Obra") String funcionID,Model model){
+    public String detallesObras(@RequestParam(value = "Obra") String funcionID,Model model,HttpSession session){
+        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        compraEnProceso = null;
+        session.setAttribute("compraEnProceso",compraEnProceso);
 
         int idFuncion;
         try{
@@ -213,11 +229,12 @@ public class UsuarioController {
     //Se le pasa a carrito donde aca se le agrega la tarjeta y se compra
     //Se establecera un limite de tiempo para la reserva?
     @PostMapping("/reserva")
-    public String compraBoletos(@RequestParam(value = "Obra") String idObraStr,
+    public String reservaBoletos(@RequestParam(value = "Obra") String idObraStr,
                                 @RequestParam(value = "idSede") String idSedeStr,
                                 @RequestParam(value = "cantBoletos") String cantBoletosStr,
                                 @RequestParam(value = "fecha")String fechaStr,
                                 @RequestParam(value = "hora")String horaStr,RedirectAttributes redirectAttributes,HttpSession session){
+
 
         //Se supone que la persona lo mapeamos a la variable "usuario"
         Persona persona = (Persona) session.getAttribute("usuario");
@@ -236,7 +253,8 @@ public class UsuarioController {
         LocalTime horaFuncion = null;
         boolean errorFechaHora = false;
 
-        Funcion obra = null;
+        //Funcion obra = null;
+        Obra obra = null;
         Sede sede = null;
         String fecha = null;
         String hora = null;
@@ -246,7 +264,8 @@ public class UsuarioController {
             if(idObra <= 0){
                 return "anErrorHasOcurred";
             }else{
-                Optional<Funcion> funcion = funcionRepository.findById(idObra);
+                //Optional<Funcion> funcion = funcionRepository.findById(idObra);
+                Optional<Obra> funcion = obraRepository.findById(idObra);
                 if(funcion.isPresent()){
                     obra = funcion.get();
 
@@ -318,12 +337,12 @@ public class UsuarioController {
             return "anErrorHasOcurred";
         }
 
-        LocalDate fechaFuncionDB = obra.getFecha();
+        /*LocalDate fechaFuncionDB = obra.getFecha();
         LocalTime horaFuncionDB = obra.getInicio();
         if(fechaFuncionDB != fechaFuncion || horaFuncionDB != horaFuncion){
             redirectAttributes.addFlashAttribute("mensajeErrorFechaHora","Fecha - Hora no disponible");
             return "redirect:/detallesObra?Obra="+obra.getId();
-        }
+        }*/
 
         /*Si no ha ocurrido ningun error ya tengo la funcion - sede - boletos - fecha y hora*/
         //Toca validar de que exista una funcion a dicha hora en esa sede en especifico
@@ -342,54 +361,197 @@ public class UsuarioController {
                 Period period = Period.between(fechaNacimientoUsuario,fechaActual);
                 int edad = period.getYears();
 
-                if((funcion.getIdobra().getRestriccionedad() == 1 && edad>=18) || funcion.getIdobra().getRestriccionedad() == 0){
+                //if((funcion.getIdobra().getRestriccionedad() == 1 && edad>=18) || funcion.getIdobra().getRestriccionedad() == 0){
+                if((obra.getRestriccionedad() == 1 && edad>=18) || obra.getRestriccionedad() == 0){
+                        /*Calculo del monto total*/
+                        double precioEntradaFuncion = funcion.getPrecioentrada();
+                        double montoTotal = precioEntradaFuncion*cantBoletos;
+                        int cantidadAsistentes = funcion.getCantidadasistentes();
+
+                        //Guardado de la compra
+                        Compra reserva = new Compra();
+                        reserva.setEstado(1); //Se reserva , cuando ya se compra en el carrito esto se pone en 0
+                        reserva.setCantidad(cantBoletos);
+                        reserva.setMontoTotal(montoTotal);
+                        reserva.setFuncion(funcion);
+                        reserva.setPersona(persona);
+
+                        //https://www.baeldung.com/java-linked-hashmap
+                        //Se le mapea la fecha de reserva ya que va a tener un tiempo limitado para poder efectuar su compra sino
+                        //se le borra de carrito y el stock de la funcion vuelve a como estaba
+                        DateTimeFormatter fch = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
+                        String fechaDeReservaCompra = fch.format(LocalDateTime.now());
+                        LinkedHashMap<String,Compra> carritoDeComprasDeUsuario = new LinkedHashMap<>();
+                        carritoDeComprasDeUsuario.put(fechaDeReservaCompra,reserva);
+                        session.setAttribute("carritoDeComprasDeUsuario",carritoDeComprasDeUsuario);
+
+                        int stockRestanteFuncion = stockFuncion - cantBoletos;
+                        cantidadAsistentes = cantidadAsistentes + cantBoletos;//Cantidad de asistentes lo mapeo como si fuera la cant. de boletos vendidos
+                        if(stockRestanteFuncion == 0){
+                            funcion.setStockentradas(0);
+                            funcion.setEstado(0);
+                            funcion.setCantidadasistentes(cantidadAsistentes);
+                            funcionRepository.save(funcion);
+
+                        }else{
+                            funcion.setStockentradas(stockRestanteFuncion);
+                            funcion.setCantidadasistentes(cantidadAsistentes);
+                            funcionRepository.save(funcion);
+                        }
+
+                        redirectAttributes.addFlashAttribute("reservaExitosa","Se ha realizado su reserva correctamente.Puede encontrarla " +
+                                "dirigiendose a su carrito de compras ");
+                        return "redirect:/detallesObra?Obra="+obra.getId();
+
+                    }else{
+                        redirectAttributes.addFlashAttribute("mensajeFaltaEdad","La funcion tiene restriccion de edad");
+                        return "redirect:/detallesObra?Obra="+obra.getId();
+
+                    }
+                }else{
+                    redirectAttributes.addFlashAttribute("mensajeNoHayStock","Ya no hay stock disponible");
+                    return "redirect:/detallesObra?Obra="+obra.getId();
+            }
+        }
+
+    }
+
+    //-----------------------------------------------------------------------------------
+    @PostMapping("/compra")
+    public String compraBoletos(@RequestParam(value = "Obra") String idObraStr,
+                                @RequestParam(value = "idSede") String idSedeStr,
+                                @RequestParam(value = "cantBoletos") String cantBoletosStr,
+                                @RequestParam(value = "fecha")String fechaStr,
+                                @RequestParam(value = "hora")String horaStr,RedirectAttributes redirectAttributes,HttpSession session){
+
+        Persona persona = (Persona) session.getAttribute("usuario");
+
+        int idObra = 0;
+
+        int idSede = 0;
+        boolean errorIdSede = false;
+
+        int cantBoletos = 0;
+        boolean errorCantBoletos = false;
+
+        LocalDate fechaFuncion = null;
+        LocalTime horaFuncion = null;
+        boolean errorFechaHora = false;
+
+        Obra obra = null;
+        Sede sede = null;
+        String fecha = null;
+        String hora = null;
+
+        try{
+            idObra = Integer.parseInt(idObraStr);
+            if(idObra <= 0){
+                return "anErrorHasOcurred";
+            }else{
+                Optional<Obra> funcion = obraRepository.findById(idObra);
+                if(funcion.isPresent()){
+                    obra = funcion.get();
+
+                    if(obra.getEstado() == 0){
+                        return "anErrorHasOcurred";
+                    }
+
+                    try{
+                        idSede = Integer.parseInt(idSedeStr);
+                        if(idSede <= 0){
+                            errorIdSede = true;
+                        }else{
+                            Optional<Sede> sede1 = sedeRepository.findById(idSede);
+                            if(sede1.isPresent()){
+                                sede = sede1.get();
+
+                                if(sede.getEstado() == 0){
+                                    errorIdSede = true;
+                                }
+
+                            }else{
+                                errorIdSede = true;
+                            }
+                        }
+                    }catch (NumberFormatException e){
+                        errorIdSede = true;
+                    }
+
+                    try{
+                        cantBoletos = Integer.parseInt(cantBoletosStr);
+                        if(cantBoletos <= 0){
+                            errorCantBoletos = true;
+                        }
+                    }catch (NumberFormatException m){
+                        errorCantBoletos = true;
+                    }
+
+                    try{
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        fechaFuncion = LocalDate.parse(fechaStr,formatter);
+
+                        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("hh:mm:ss");
+                        horaFuncion = LocalTime.parse(horaStr,formatter1);
+                    }catch (Exception a){
+                        errorFechaHora = true;
+                    }
+
+                    if(errorIdSede || errorCantBoletos || errorFechaHora){
+                        if(errorIdSede){
+                            redirectAttributes.addFlashAttribute("mensajeErrorSede","La sede no es valido");
+                        }
+                        if(errorCantBoletos){
+                            redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos","El numero de boletos es incorrecto");
+                        }
+                        if(errorFechaHora){
+                            redirectAttributes.addFlashAttribute("mensajeErrorFechaHora","Fecha - Hora no disponible");
+                        }
+
+                        return "redirect:/detallesObra?Obra="+obra.getId();
+                    }
+
+                }else{
+                    return "anErrorHasOcurred";
+                }
+            }
+        }catch (NumberFormatException j){
+            return "anErrorHasOcurred";
+        }
+
+        Funcion funcion = funcionRepository.encontrarFuncionHoraSede(obra.getId(),sede.getId(),fechaFuncion,horaFuncion);
+
+        if(funcion == null){
+            redirectAttributes.addFlashAttribute("mensajeNoExisteFuncion","La funcion no se encuentra disponible");
+            return "redirect:/detallesObra?Obra="+obra.getId();
+        }else{
+            int stockFuncion = funcion.getStockentradas();
+            if(stockFuncion > 0 && cantBoletos <= stockFuncion){
+                LocalDate fechaActual = LocalDate.now();
+                LocalDate fechaNacimientoUsuario = persona.getNacimiento();
+                Period period = Period.between(fechaNacimientoUsuario,fechaActual);
+                int edad = period.getYears();
+
+                if((obra.getRestriccionedad() == 1 && edad>=18) || obra.getRestriccionedad() == 0){
                     /*Calculo del monto total*/
                     double precioEntradaFuncion = funcion.getPrecioentrada();
                     double montoTotal = precioEntradaFuncion*cantBoletos;
-                    int cantidadAsistentes = funcion.getCantidadasistentes();
 
-                    //Guardado de la compra
-                    Compra compra = new Compra();
-                    compra.setEstado(1); //Se reserva , cuando ya se compra en el carrito esto se pone en 0
-                    compra.setCantidad(cantBoletos);
-                    compra.setMontoTotal(montoTotal);
-                    compra.setFuncion(funcion);
-                    compra.setPersona(persona);
+                    Compra compraEnProceso = new Compra();
+                    compraEnProceso.setEstado(1);//No es necesario
+                    compraEnProceso.setCantidad(cantBoletos);
+                    compraEnProceso.setMontoTotal(montoTotal);
+                    compraEnProceso.setFuncion(funcion);
+                    compraEnProceso.setPersona(persona);
 
-                    //https://www.baeldung.com/java-linked-hashmap
-                    //Se le mapea la fecha de reserva ya que va a tener un tiempo limitado para poder efectuar su compra sino
-                    //se le borra de carrito y el stock de la funcion vuelve a como estaba
-                    DateTimeFormatter fch = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
-                    String fechaDeReservaCompra = fch.format(LocalDateTime.now());
-                    LinkedHashMap<String,Compra> carritoDeComprasDeUsuario = new LinkedHashMap<>();
-                    carritoDeComprasDeUsuario.put(fechaDeReservaCompra,compra);
-                    session.setAttribute("carritoDeComprasDeUsuario",carritoDeComprasDeUsuario);
-
-                    int stockRestanteFuncion = stockFuncion - cantBoletos;
-                    cantidadAsistentes = cantidadAsistentes + cantBoletos;
-                    if(stockRestanteFuncion == 0){
-                        funcion.setStockentradas(0);
-                        funcion.setEstado(0);
-                        funcion.setCantidadasistentes(cantidadAsistentes);
-                        funcionRepository.save(funcion);
-
-                    }else{
-                        funcion.setStockentradas(stockRestanteFuncion);
-                        funcion.setCantidadasistentes(cantidadAsistentes);
-                        funcionRepository.save(funcion);
-                    }
-
-                    redirectAttributes.addFlashAttribute("reservaExitosa","Se ha realizado su reserva correctamente.Puede encontrarla " +
-                            "dirigiendose a su carrito de compras ");
-                    return "redirect:/detallesObra?Obra="+obra.getId();
+                    session.setAttribute("compraEnProceso",compraEnProceso);
+                    return "redirect:/compraprocess";
 
                 }else{
                     redirectAttributes.addFlashAttribute("mensajeFaltaEdad","La funcion tiene restriccion de edad");
                     return "redirect:/detallesObra?Obra="+obra.getId();
 
                 }
-            }
-            else{
+            }else{
                 redirectAttributes.addFlashAttribute("mensajeNoHayStock","Ya no hay stock disponible");
                 return "redirect:/detallesObra?Obra="+obra.getId();
             }
@@ -397,11 +559,114 @@ public class UsuarioController {
 
     }
 
+    @GetMapping("/compraprocess")
+    public String procesoDeCompra(@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta, HttpSession session){
+        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        if(compraEnProceso == null){
+            return "anErrorHasOcurred";
+        }
+        else{
+            return "/usuario/pago";
+        }
+
+    }
+
+    @PostMapping("/pago")
+    public String pagoDeCompra(@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta,BindingResult bindingResult,HttpSession session
+                                ,RedirectAttributes redirectAttributes){
+        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        if(bindingResult.hasErrors()){
+            return "/usuario/pago";
+        }else{
+            boolean todoOK = true;
+            /*
+
+                Validacion de la tarjeta
+
+            */
+
+            if(todoOK){
+                //Si t0d0 esta en orden se procede con la compra
+                int cantidadAsistentes = compraEnProceso.getFuncion().getCantidadasistentes();
+                int stockFuncion = compraEnProceso.getFuncion().getStockentradas();
+                int stockRestanteFuncion = stockFuncion - compraEnProceso.getCantidad();
+
+                cantidadAsistentes = cantidadAsistentes + compraEnProceso.getCantidad();
+                Funcion funcion = compraEnProceso.getFuncion();
+                if(stockRestanteFuncion == 0){
+                    funcion.setStockentradas(0);
+                    funcion.setEstado(0);
+                    funcion.setCantidadasistentes(cantidadAsistentes);
+                    funcionRepository.save(funcion);
+                }else{
+                    funcion.setStockentradas(stockRestanteFuncion);
+                    funcion.setCantidadasistentes(cantidadAsistentes);
+                    funcionRepository.save(funcion);
+                }
+
+                compraRepository.save(compraEnProceso);
+                compraEnProceso = null;
+                session.setAttribute("compraEnProceso",compraEnProceso);
+
+                redirectAttributes.addFlashAttribute("compraExitosa","Se ha realizado su compra correctamente.Puede encontrarla"+
+                        " dirigiendose a su historial de compras");
+
+                return "redirect:/";
+
+            }else{
+                /*
+                Se le envian los errores
+                 */
+                return "/usuario/pago";
+            }
+        }
+
+    }
+
+    //-----------------------------------------------------------------------------------
 
     @GetMapping("/carrito")
-    public String carritoUsuario() {
-        return "usuario/carritoCompras";
+    public String carritoUsuario(HttpSession session) {
+        LinkedHashMap<String,Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+        if(carrito.size() == 0){
+            return "usuario/carritoCompras";
+        }
+        else{
+            LinkedHashMap<String,Compra> reservasBorrarCarrito = new LinkedHashMap<>();
+
+            //Tengo que validar que sus reservas no hayan superado los 15 min, o menos?
+            Set<String> llaveDeHoras = carrito.keySet();
+            for(String fechaReserva : llaveDeHoras){
+                boolean estaATiempo = true;
+                /*
+                   Hago la validacion de si ya paso los 15min despues de su reserva
+                   Dicha validacion lo guardo en una variable
+                */
+                if(estaATiempo == false){
+                    /*
+                       Si ya paso el tiempo entonces se obtiene del carrito la compra y se le borra de  su carrito y le añado a la lista donde estan
+                       las compras que se han borrado
+                       -busco por la fecha la compra en carrito
+                       -lo borro y lo pongo en la nueva lista
+                     */
+
+                }
+            }
+
+            if(reservasBorrarCarrito.size() == 0){
+                return "usuario/carritoCompras";
+            }else{
+                //Mensajes de las reservas que se han borrado de su carrito , se enviara por correo o en la misma vista de carrito?
+                return "usuario/carritoCompras";
+            }
+        }
+
     }
+
+
+
+
+
 
 
 }

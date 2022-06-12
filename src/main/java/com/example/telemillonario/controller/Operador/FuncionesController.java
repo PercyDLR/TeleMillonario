@@ -171,7 +171,7 @@ public class FuncionesController {
 
     }
 
-
+    /*
     @PostMapping("/guardar")
     public String guardarFuncion(@ModelAttribute("funcion") @Valid Funcion funcion, BindingResult bindingResult,
                                  Model model, HttpSession session, RedirectAttributes attr,
@@ -509,7 +509,7 @@ public class FuncionesController {
         }
         attr.addFlashAttribute("msg","Función Guardada Exitosamente");
         return "redirect:/operador/funciones";
-    }
+    }*/
 
 
     @PostMapping("/buscar")
@@ -554,7 +554,7 @@ public class FuncionesController {
 
 
 
-
+    /*
     @GetMapping("/borrar")
     public String borrarFuncion(Model model,
                                 @RequestParam("idfuncion") int idfuncion,
@@ -603,5 +603,5 @@ public class FuncionesController {
 
 
     }
-
+    */
 }
