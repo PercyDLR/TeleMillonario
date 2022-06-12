@@ -34,7 +34,7 @@ public class SedesController {
     SedeRepository sedeRepository;
 
     @Autowired
-    FuncionGeneroRepository funcionGeneroRepository;
+    ObraGeneroRepository obraGeneroRepository;
 
     float sedesxpagina=2;
     @GetMapping("/sedes")
@@ -117,7 +117,7 @@ public class SedesController {
 
             for (Foto func : listFuncSede) {
 
-                fotoObraGenero.put(func, funcionGeneroRepository.buscarFuncionGenero(func.getIdobra().getId()));
+                fotoObraGenero.put(func, obraGeneroRepository.buscarFuncionGenero(func.getIdobra().getId()));
 
             }
             int cantfunc= fotoRepository.fotFuncTotal(idsede,busqueda).size();
@@ -126,7 +126,7 @@ public class SedesController {
             List<Foto> listFuncSedeFiltrv1=fotoRepository.buscarFotoFuncionesFiltrPorPag(idsede,restriccion,busqueda,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
             for (Foto func : listFuncSedeFiltrv1) {
 
-                fotoObraGenero.put(func, funcionGeneroRepository.buscarFuncionGenero(func.getIdobra().getId()));
+                fotoObraGenero.put(func, obraGeneroRepository.buscarFuncionGenero(func.getIdobra().getId()));
 
             }
 

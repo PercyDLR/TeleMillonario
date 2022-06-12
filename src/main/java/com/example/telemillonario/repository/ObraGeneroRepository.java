@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FuncionGeneroRepository extends JpaRepository<Obragenero,Integer> {
+public interface ObraGeneroRepository extends JpaRepository<Obragenero,Integer> {
 
     @Query(nativeQuery = true, value = "select * from telemillonario.obragenero where " +
             "idobra=?1")

@@ -40,7 +40,7 @@ public class UsuarioController {
     FuncionRepository funcionRepository;
 
     @Autowired
-    FuncionGeneroRepository funcionGeneroRepository;
+    ObraGeneroRepository obraGeneroRepository;
 
     @Autowired
     SedeRepository sedeRepository;
@@ -54,7 +54,7 @@ public class UsuarioController {
         List<Funcion> listaFunciones = funcionRepository.obtenerFuncionesDestacadasPaginaPrincipal();
         model.addAttribute("listaFunciones",listaFunciones);
 
-        List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
+        List<Obragenero> funcionGenero = obraGeneroRepository.findAll();
         model.addAttribute("funcionGenero",funcionGenero);
         return "vistaPrincipal";
     }
@@ -198,7 +198,7 @@ public class UsuarioController {
         Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
 
         if(funcion.isPresent()){
-            List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
+            List<Obragenero> funcionGenero = obraGeneroRepository.findAll();
             model.addAttribute("funcionGenero",funcionGenero);
             return "usuario/obras/obraDetalles";
 

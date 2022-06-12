@@ -1,6 +1,5 @@
 package com.example.telemillonario.controller.Usuario;
 
-import com.azure.core.annotation.Get;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
@@ -10,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -25,7 +23,7 @@ public class ObraController {
     FileService fileService;
 
     @Autowired
-    FuncionGeneroRepository funcionGeneroRepository;
+    ObraGeneroRepository obraGeneroRepository;
 
     @Autowired
     GeneroRepository generoRepository;
@@ -58,7 +56,7 @@ public class ObraController {
             pagina = 0;
         }
 
-        List<Obragenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
+        List<Obragenero> listaFuncionGenero = obraGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
 
         //System.out.println("Lista funcionesGenero que retorna el query");
         //for (Funciongenero f : listaFuncionGenero) {
@@ -212,7 +210,7 @@ public class ObraController {
 
             //Mandar los generos de la obra de la funcion
             ArrayList<Genero> listaGeneros = new ArrayList<>();
-            List<Obragenero> listaFuncionesGenero = funcionGeneroRepository.buscarFuncionGenero(id);
+            List<Obragenero> listaFuncionesGenero = obraGeneroRepository.buscarFuncionGenero(id);
             for (Obragenero f : listaFuncionesGenero) {
                 listaGeneros.add(f.getIdgenero());
             }
