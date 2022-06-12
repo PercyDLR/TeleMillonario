@@ -57,6 +57,12 @@ public class UsuarioController {
         List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
         model.addAttribute("listaObras",listaObras);
 
+        ArrayList<Foto> listaCaratulas = new ArrayList<>();
+        for (Obra o : listaObras) {
+            listaCaratulas.add(fotoRepository.caratulaDeObra(o.getId()));
+        }
+        model.addAttribute("listaCaratulas", listaCaratulas);
+
         List<Obragenero> obraGenero = obraGeneroRepository.findAll();
         model.addAttribute("obraGenero",obraGenero);
         return "vistaPrincipal";

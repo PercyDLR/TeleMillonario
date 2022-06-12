@@ -39,11 +39,17 @@
                                 <!-- card -->
                                 <div class="card card--big">
                                     <div class="card__cover">
-                                        <img th:src="@{/img/covers/HistoriasDeArena.png}">
-
-                                        <a class="card__play" th:href="@{'/detallesObra'+'?Obra='+${obra.id}}">
+                                        <img th:each="caratula : ${listaCaratulas}"
+                                        th:if="${caratula !=null && caratula.idobra.id == obra.id}"
+                                        th:src="${caratula.getRuta()}" alt="portada">
+                                        <a th:href="@{'/cartelera/DetallesObra?id=' + ${obra.id}}" class="card__play">
                                             <i class="icon ion-ios-play"></i>
                                         </a>
+<!--                                        <img th:src="@{/img/covers/HistoriasDeArena.png}">-->
+
+<!--                                        <a class="card__play" th:href="@{'/detallesObra'+'?Obra='+${obra.id}}">-->
+<!--                                            <i class="icon ion-ios-play"></i>-->
+<!--                                        </a>-->
                                     </div>
                                     <div class="card__content">
                                         <h3 class="card__title" th:text="${obra.nombre}">Historias de Arena</h3>
@@ -260,6 +266,7 @@
                         <a class="section__btn" href="#">Ver Más</a>
                     </div>
                 </div>
+
             </div>
         </section>
 

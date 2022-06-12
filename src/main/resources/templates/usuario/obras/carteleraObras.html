@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="col-12">
-                        <h1 class="home__title">BUSQUE LA <b>FUNCION</b> QUE SEA DE SU AGRADO</h1>
+                        <h1 class="home__title">BUSQUE LA <b>OBRA</b> QUE MÁS SEA DE SU AGRADO</h1>
                     </div>
 
                     <!--<div class="col-12">-->
@@ -85,15 +85,15 @@
                     <div class="container">
                         <div class="row">
                             <!-- card -->
-                            <div class="col-6 col-sm-12 col-lg-6" style="padding-inline: 5px" th:each=" funciongenero : ${listaFuncionesGenero}">
+                            <div class="col-6 col-sm-12 col-lg-6" style="padding-inline: 5px" th:each=" obragenero : ${listaObraGenero}">
                                 <div class="card card--list">
                                     <div class="row">
                                         <div class="col-12 col-sm-4">
                                             <div class="card__cover">
                                                 <img th:each="caratula : ${listaCaratulas}"
-                                                     th:if="${caratula !=null && caratula.getFuncion().getId() == funciongenero.getKey().getId()}"
+                                                     th:if="${caratula !=null && caratula.getIdobra().id == obragenero.getKey().getId()}"
                                                      th:src="${caratula.getRuta()}" alt="portada">
-                                                <a th:href="@{'/cartelera/DetallesObra?id=' + ${funciongenero.getKey().getId()}}" class="card__play">
+                                                <a th:href="@{'/cartelera/DetallesObra?id=' + ${obragenero.getKey().getId()}}" class="card__play">
                                                     <i class="icon ion-ios-play"></i>
                                                 </a>
                                             </div>
@@ -102,29 +102,29 @@
                                         <div class="col-12 col-sm-8">
                                             <div class="card__content" style="padding: 1px">
                                                 <h3 class="card__title">
-                                                    <a th:href="@{'/cartelera/DetallesObra?id=' + ${funciongenero.getKey().getId()}}"
-                                                       th:text="${funciongenero.getKey().getNombre()}"></a>
+                                                    <a th:href="@{'/cartelera/DetallesObra?id=' + ${obragenero.getKey().getId()}}"
+                                                       th:text="${obragenero.getKey().getNombre()}"></a>
                                                 </h3>
                                                 <span class="card__category">
-                                                    <a href="#" th:each="generos : ${funciongenero.getValue()}"
+                                                    <a href="#" th:each="generos : ${obragenero.getValue()}"
                                                        th:text="${generos.getNombre()}"></a>
                                                 </span>
 
-                                                <span class="card__category">
-                                                    <a href="#" style="background-color: #FFFFFF; background-image: none"
-                                                       th:text="${funciongenero.key.sala.idsede.nombre}"></a>
-                                                </span>
+<!--                                                <span class="card__category">-->
+<!--                                                    <a href="#" style="background-color: #FFFFFF; background-image: none"-->
+<!--                                                       th:text="${obragenero.key.sala.idsede.nombre}"></a>-->
+<!--                                                </span>-->
 
                                                 <div class="card__wrap">
                                                     <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
 
                                                     <ul class="card__list">
-                                                        <li th:text="${funciongenero.key.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>
+                                                        <li th:text="${obragenero.key.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>
                                                     </ul>
                                                 </div>
 
                                                 <div class="card__description">
-                                                    <p th:text="${funciongenero.key.descripcion}"></p>
+                                                    <p th:text="${obragenero.key.descripcion}"></p>
                                                 </div>
                                             </div>
                                         </div>

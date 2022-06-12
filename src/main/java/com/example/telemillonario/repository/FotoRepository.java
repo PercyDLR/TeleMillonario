@@ -86,10 +86,10 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
     List<Foto> buscarFotosSede(int idsede);
 
     @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos where (idobra = ?1) and (numero = 0);")
-    Foto caratulaDeObra(int idfuncion);
+    Foto caratulaDeObra(int idobra);
 
     @Query(nativeQuery = true, value = "select * from telemillonario.fotos where idobra = ?1 order by numero;")
-    List<Foto> fotosFuncion(int idfuncion);
+    List<Foto> fotosObra(int idobra);
 
 
     @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos where idobra IS NULL and estado=1 and idsede IS NOT NULL group by idsede")
