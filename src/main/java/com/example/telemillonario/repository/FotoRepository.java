@@ -57,7 +57,8 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
     List<Foto> buscarFuncionesParaContarPorNombre(int idsede,String parametro);
 
 
-    @Query(nativeQuery = true, value = "select fo.* from fotos fo where idobra IS NULL and idsede is not null and fo.estado=?1 " +
+    @Query(nativeQuery = true, value = "select any_value(fo.id),fo.estado,any_value(fo.ruta),any_value(fo.numero),any_value(fo.idpersona),any_value(fo.idsede),any_value(fo.idobra)" +
+            " from fotos fo where idobra IS NULL and idsede is not null and fo.estado=?1 " +
             "group by idsede "+
             "limit ?2,?3")
     List<Foto> listadoSedesAdmin(int estado,int pag, int salasporpag);
