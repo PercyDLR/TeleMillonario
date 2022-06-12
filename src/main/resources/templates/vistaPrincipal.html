@@ -35,145 +35,28 @@
 
                     <div class="col-12">
                         <div class="owl-carousel home__carousel">
-                            <div class="item" th:each="funcion : ${listaFunciones}">
+                            <div class="item" th:each="obra : ${listaObras}">
                                 <!-- card -->
                                 <div class="card card--big">
                                     <div class="card__cover">
                                         <img th:src="@{/img/covers/HistoriasDeArena.png}">
 
-                                        <a class="card__play" th:href="@{'/detallesObra'+'?Obra='+${funcion.id}}">
+                                        <a class="card__play" th:href="@{'/detallesObra'+'?Obra='+${obra.id}}">
                                             <i class="icon ion-ios-play"></i>
                                         </a>
                                     </div>
                                     <div class="card__content">
-                                        <h3 class="card__title" th:text="${funcion.nombre}">Historias de Arena</h3>
+                                        <h3 class="card__title" th:text="${obra.nombre}">Historias de Arena</h3>
                                         <span class="card__category">
-                                            <a th:each="fG : ${funcionGenero}"
-                                               th:if="(${fG.idfuncion.id} == ${funcion.id}) and (${fG.estado} == 1)"
-                                               th:text="${fG.idgenero.nombre}"></a>
+                                            <a th:each="oG : ${obraGenero}"
+                                               th:if="(${oG.idobra.id} == ${obra.id}) and (${oG.estado} == 1)"
+                                               th:text="${oG.idgenero.nombre}"></a>
                                         </span>
-                                        <span class="card__rate" th:text="${funcion.calificacion}"><i class="icon ion-ios-star"></i>4.5</span>
+                                        <span class="card__rate" th:text="${obra.calificacion}"><i class="icon ion-ios-star"></i>4.5</span>
                                     </div>
                                 </div>
                                 <!-- end card -->
                             </div>
-
-                            <!--div class="item">
-
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/covers/LaTernura.png}" alt="">
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">La Ternura</a></h3>
-                                        <span class="card__category">
-										<a href="#">Comedia</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>3.8</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/covers/Independencia.png}" alt="">
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Independencia</a></h3>
-                                        <span class="card__category">
-										    <a href="#">Drama</a>
-                                            <a href="#">Tragedia</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>3.9</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/covers/LosTambores.png}" alt="">
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Los Tambores</a></h3>
-                                        <span class="card__category">
-										<a href="#">Comedia</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>5</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/covers/HistoriasDeArena.png}" alt="">
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Historias de Arena</a></h3>
-                                        <span class="card__category">
-										<a href="#">Tragedia</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>4.5</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/covers/LaTernura.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">La Ternura</a></h3>
-                                        <span class="card__category">
-										<a href="#">Comedia</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>3.8</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/covers/Independencia.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Independencia</a></h3>
-                                        <span class="card__category">
-										    <a href="#">Drama</a>
-                                            <a href="#">Tragedia</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>3.9</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div-- class="item">
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/covers/LosTambores.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Los Tambores</a></h3>
-                                        <span class="card__category">
-										<a href="#">Comedia</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>5</span>
-                                    </div>
-                                </div>
-                            </div-->
                         </div>
                     </div>
                     <div class="col-12" style="margin-top: 10px">

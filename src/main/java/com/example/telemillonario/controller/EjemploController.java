@@ -1,5 +1,6 @@
 package com.example.telemillonario.controller;
 
+import com.example.telemillonario.entity.Foto;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.repository.FotoRepository;
 import com.example.telemillonario.repository.PersonaRepository;
