@@ -19,6 +19,7 @@
                 }
             }
         </style>
+
     </head>
     <body class="body">
         <div th:replace="fragments/navbar :: usuario('cartelera')"></div>
@@ -46,11 +47,11 @@
                                                        th:text="${g.nombre}" style="font-size: 16px;"></a>
                                                 </span>
 
-<!--                                    <span class="card__category">-->
-<!--                                                    <a href="#"-->
-<!--                                                       style="background-color: #FFFFFF; background-image: none; font-size: 16px;"-->
-<!--                                                       th:text="${funcion.sala.idsede.nombre}"></a>-->
-<!--                                                </span>-->
+                                    <!--                                    <span class="card__category">-->
+                                    <!--                                                    <a href="#"-->
+                                    <!--                                                       style="background-color: #FFFFFF; background-image: none; font-size: 16px;"-->
+                                    <!--                                                       th:text="${funcion.sala.idsede.nombre}"></a>-->
+                                    <!--                                                </span>-->
 
                                     <div class="card__wrap">
                                 <span class="card__rate" style="font-size: 16px;"><i
@@ -65,22 +66,19 @@
                                 <div class=" col-4">
                                     <form method="post" action="#">
                                         <div class="header__auth" style="margin-left: 0">
-                                            <a sec:authorize="isAnonymous()" th:href="@{/cartelera/carritoPrueba}" class="header__sign-in"> <!--th:href="@{/login}"-->
-                                                <i class="icon ion-ios-log-in"></i>
-                                                <span style="font-size: 8px; text-align: center;">Inicie sesión para comprar sus boletos</span>
-                                            </a>
+
 
                                             <!--Boton de numero de boletos (DEBE CAMBIARSE AHORA QUE SE ESTA MOSTRANDO LOS DETALLES DE LAS OBRAS)-->
-<!--                                            <div sec:authorize="isAuthenticated()">-->
-<!--                                                <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>-->
-<!--                                                <input type="number" name="cantidadBoletos" id="number" value="0" min="0" max="${boletosrestantes}"/>-->
-<!--                                                <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>-->
-<!--                                            </div>-->
+                                            <!--                                            <div sec:authorize="isAuthenticated()">-->
+                                            <!--                                                <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>-->
+                                            <!--                                                <input type="number" name="cantidadBoletos" id="number" value="0" min="0" max="${boletosrestantes}"/>-->
+                                            <!--                                                <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>-->
+                                            <!--                                            </div>-->
 
-<!--                                            <input sec:authorize="isAuthenticated()" th:value="${funcion.precioentrada}" name="precio a pagar">-->
-<!--                                            <button sec:authorize="isAuthenticated()" href="#" class="header__sign-in" type="submit">-->
-<!--                                                <span style="font-size: 11px">Comprar boletos</span>-->
-<!--                                            </button>-->
+                                            <!--                                            <input sec:authorize="isAuthenticated()" th:value="${funcion.precioentrada}" name="precio a pagar">-->
+                                            <!--                                            <button sec:authorize="isAuthenticated()" href="#" class="header__sign-in" type="submit">-->
+                                            <!--                                                <span style="font-size: 11px">Comprar boletos</span>-->
+                                            <!--                                            </button>-->
                                         </div>
                                     </form>
                                 </div>
@@ -90,7 +88,8 @@
                             <div class="card__description">
                                 <p th:text="${obra.descripcion}" style="font-size: 16px;"></p>
                             </div>
-                            <div class="card__description mt-4" th:each="directoresActores : ${listaDirectoresYActores}">
+                            <div class="card__description mt-4"
+                                 th:each="directoresActores : ${listaDirectoresYActores}">
 
                                 <p style="font-size: 16px;">Director:
                                     <span class="card__category">
@@ -108,25 +107,6 @@
                                            th:text="${actor.nombres} + ' ' + ${actor.apellidos}"></a>
                                 </span>
                                 </p>
-
-                                <!--CAMBIAR-->
-<!--                                <div class="row mt-2">-->
-<!--                                    <div class="col-6 col-md-4" style="padding-left: 15px;">-->
-<!--                                        <p style="font-size: 16px;">Fecha de la función:-->
-<!--                                            <span class="card__category" th:text="${funcion.fecha}"></span>-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-6 col-md-4" style="padding-left: 15px;">-->
-<!--                                        <p style="font-size: 16px;">Inicio de la función:-->
-<!--                                            <span class="card__category" th:text="${funcion.inicio} + 'h'"></span>-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-6 col-md-4" style="padding-left: 15px;">-->
-<!--                                        <p style="font-size: 16px;">Duración:-->
-<!--                                            <span class="card__category" th:text="${duracion} + 'h'"></span>-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
 
                             </div>
                         </div>
@@ -156,36 +136,68 @@
                     </div>
 
                     <!--col 7 y 5-->
-                    <div class="row justify-content-center">
+                    <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
                         <div class="col-lg-7 col-md-5 col-6 sign__group">
-                            <select class="sign__input" name="genero">
-                                <option th:selected="${genero == ''}" value="">Todos los géneros</option>
-                                <option th:each="g : ${generos}" th:value="${g.getId()}"
-                                        th:text="${g.getNombre()}"
-                                        th:selected="${g.getId() == genero}"></option>
-                            </select>
+                            <div class="row">
+                                <select class="sign__input" id="sedes" onchange="seleccionSede(this)">
+                                    <option value="" selected>Seleccione una sede</option>
+                                    <option th:each="sede, i : ${listaSedesConObra}"
+                                            th:text="${sede.nombre}" th:value="'sede'+${sede.id}"></option>
+                                </select>
+                            </div>
+                            <div class="row" id="selectDefecto">
+                                <select class="sign__input" name="funcion">
+                                    <option value="" selected>Seleccione una función de la sede</option>
+                                </select>
+                            </div>
+                            <div class="row" id="mostrarSelect" style="display: none">
+                                <select class="sign__input" name="funcion" th:each="a, i : ${funcionesDeLaSede}"
+                                        th:id="'sede'+${a.key.id}" style="display: none"
+                                        onchange="seleccionFuncion(this)">
+                                    <option value="" selected>Seleccione una función de la sede</option>
+                                    <option th:each="l, i : ${a.value}" th:value="${l.key.id}"
+                                            th:text="${l.value}"
+                                            th:id="'funcion'+${i.index + 1}"></option>
+                                </select>
+                            </div>
                         </div>
                         <div class="col-lg-5 col-12 sign__group">
 
-                            <input type="text" class="sign__input"
-                                   placeholder="Busque una Obra" name="busqueda"
-                                   th:value="${busqueda}" maxlength="100">
+                            <div th:each="a : ${funcionesDeLaSede}" id="funcionesDeLaSede" style="display: none">
+                                <div th:each="l, i : ${a.value}" th:id="${l.key.id}" style="display: none">
+                                    <input type="number" th:value="${l.key.cantidadasistentes}"
+                                           th:id="'cantidadasistentes'+${l.key.id}" hidden>
+                                    <input type="number" th:value="${l.key.stockentradas}"
+                                           th:id="'stockentradas'+${l.key.id}" hidden>
+                                    <h1 class="home__title" style="text-transform: none; font-size: 30px"
+                                        th:id="'boletosRestantes'+${l.key.id}"></h1>
+
+                                    <td class="ps-0 pt-0">
+                                        <div class="d-flex">
+                                            <div>
+                                                <div class="value-button" id="decrease" onclick="decreaseValue()"
+                                                     value="Decrease Value"><i class="bi bi-dash"></i></div>
+                                                <input type="number" name="cantidadBoletos" id="number" value="1"
+                                                       min="1"/>
+                                                <input type="number" name="funcion" id="funcion" th:value="${l.key.id}" disabled/>
+                                                <div class="value-button" id="increase" onclick="increaseValue()"
+                                                     value="Increase Value"><i class="bi bi-plus-lg"></i></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </div>
+                            </div>
+
                         </div>
 
-<!--                        <div class="col-lg-3 col-md-5 col-6 sign__group">-->
+                    </div>
 
-<!--                            <select class="sign__input" name="restriccionEdad">-->
-<!--                                <option value="" th:selected="${restriccionEdad == ''}">Para toda la familia</option>-->
-<!--                                <option value="1" th:selected="${restriccionEdad == '1'}">Con contenido sensible</option>-->
-<!--                            </select>-->
-<!--                        </div>-->
-
-<!--                        <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">-->
-<!--                            <button type="submit" class="form__btn" style="width: 50%; margin: 0;">-->
-<!--                                <i class="bi bi-search"></i>-->
-<!--                            </button>-->
-<!--                        </div>-->
-
+                    <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
+                        <a sec:authorize="isAnonymous()" th:href="@{/cartelera/carritoPrueba}"
+                           class="header__sign-in"> <!--th:href="@{/login}"-->
+                            <i class="icon ion-ios-log-in"></i>
+                            <span style="font-size: 8px; text-align: center;">Inicie sesión para comprar sus boletos</span>
+                        </a>
                     </div>
 
                 </div>
@@ -213,6 +225,44 @@
                     value--;
                     document.getElementById('number').value = value;
                 }
+
+                function seleccionSede(selectObject) {
+                    var value = selectObject.value;
+
+                    if (value == "") {
+                        document.getElementById("mostrarSelect").style.display = 'none';
+                        document.getElementById("selectDefecto").style.display = 'block';
+                    } else {
+                        document.getElementById("mostrarSelect").style.display = 'block';
+                        document.getElementById(value).style.display = 'block';
+                        document.getElementById("selectDefecto").style.display = 'none';
+                    }
+
+                }
+
+                function seleccionFuncion(ifFuncion) {
+                    var value1 = ifFuncion.value;
+
+                    if (value1 == "") {
+                        document.getElementById("funcionesDeLaSede").style.display = 'none';
+                    } else {
+                        document.getElementById("funcionesDeLaSede").style.display = 'block';
+                        document.getElementById(value1).style.display = 'block';
+
+                        var cantidadasistentes = document.getElementById("cantidadasistentes" + value1).value;
+                        var stockentradas = document.getElementById("stockentradas" + value1).value;
+                        var boletosrestantes = stockentradas - cantidadasistentes;
+                        document.getElementById("boletosRestantes" + value1).innerHTML = "<h1 class=\"home__title\" style=\"text-transform: none; font-size: 30px\">Boletos restantes: " + boletosrestantes + " </h1>";
+
+                        // <h1 className="home__title" style="text-transform: none; font-size: 30px">Boletos restantes: </h1>
+
+                    }
+
+                }
+
+                // <input type="number" name="cantidadBoletos" id="number" value="1" min="1"/>
+                // <input type="number" name="funcion" id="funcion" th:value="${l.key.id}" disabled/>
+
             </script>
 
         </div>

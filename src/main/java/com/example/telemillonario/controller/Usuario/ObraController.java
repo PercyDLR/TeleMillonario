@@ -285,7 +285,7 @@ public class ObraController {
                     LinkedHashMap<Funcion, String> idFuncionYStringDeOpcion = new LinkedHashMap<>();
                     List<Funcion> listaFunciones = funcionRepository.listaFuncionesConObra(id, s.getId(), sa.getId());
                     for (Funcion f : listaFunciones) {
-                        idFuncionYStringDeOpcion.put(f, "Sala " + sa.getNumero() + " - " + f.getFecha() + " " + f.getInicio());
+                        idFuncionYStringDeOpcion.put(f, "Sala " + sa.getNumero() + " > " + f.getFecha() + " " + f.getInicio());
                         funcionesDeLaSede.put(s, idFuncionYStringDeOpcion);
                     }
 
@@ -293,24 +293,26 @@ public class ObraController {
 
             }
 
-            for (Map.Entry<Sede, LinkedHashMap<Funcion, String>> h : funcionesDeLaSede.entrySet()) {
+            List<Sede> lista = sedeRepository.findAll();
 
-                System.out.println("Sede: " + h.getKey().getNombre());
-                System.out.println("Longitud value: " + h.getValue().size());
-                for (Map.Entry<Funcion, String> j : h.getValue().entrySet()) {
-                    System.out.println("Id de la funcion: " + j.getKey().getId());
-                    System.out.println("Opcion: " + j.getValue());
-                    System.out.println("**************************");
-                }
-                System.out.println("============================================");
-            }
+//            for (Map.Entry<Sede, LinkedHashMap<Funcion, String>> h : funcionesDeLaSede.entrySet()) {
+//
+//                System.out.println("Sede: " + h.getKey().getNombre());
+//                System.out.println("Longitud value: " + h.getValue().size());
+//                for (Map.Entry<Funcion, String> j : h.getValue().entrySet()) {
+//                    System.out.println("Id de la funcion: " + j.getKey().getId());
+//                    System.out.println("Opcion: " + j.getValue());
+//                    System.out.println("**************************");
+//                }
+//                System.out.println("============================================");
+//            }
 
             model.addAttribute("obra", obra);
             model.addAttribute("listaFotos", listaFotos);
             model.addAttribute("listaGeneros", listaGeneros);
             model.addAttribute("listaDirectoresYActores", listaDirectoresYActores);
-//            model.addAttribute("listaSedesConObra", listaSedesConObra);
-//            model.addAttribute("funcionesDeLaSede", funcionesDeLaSede);
+            model.addAttribute("listaSedesConObra", listaSedesConObra);
+            model.addAttribute("funcionesDeLaSede", funcionesDeLaSede);
             return "usuario/obras/carteleraObraDetalles";
         } else {
             a.addFlashAttribute("msg", -1);
