@@ -62,9 +62,6 @@ public class UsuarioController {
     CompraRepository compraRepository;
 
     @Autowired
-    ObraRepository obraRepository;
-
-    @Autowired
     PagoRepository pagoRepository;
 
     @GetMapping("")
@@ -87,11 +84,101 @@ public class UsuarioController {
 
     @GetMapping("/historial")
     public String historialCompraPersona(Model model, HttpSession session) {
+        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        compraEnProceso = null;
+        session.setAttribute("compraEnProceso", compraEnProceso);
+
         Persona personita = (Persona) session.getAttribute("usuario");
         List<Compra> historialCompras = compraRepository.historialCompras(personita.getId());
         model.addAttribute("historialCompras", historialCompras);
         return "/usuario/historial";
     }
+
+    @GetMapping("/borrarCompra")
+    public String borrarCompraDeHistorialPersona(Model model,@RequestParam(value = "idCompra")String idCompra,HttpSession session){
+        Persona usuario = (Persona) session.getAttribute("usuario");
+        int identificadorCompra = 0;
+        boolean errorIDCompra = false;
+        Compra compra = null;
+
+        if(idCompra == null || idCompra.equalsIgnoreCase("")){
+            errorIDCompra = true;
+        }else{
+            try{
+                identificadorCompra = Integer.parseInt(idCompra);
+                Optional<Compra> compra1 = compraRepository.findById(identificadorCompra);
+                if(compra1.isPresent()){
+                    compra = compra1.get();
+                }else{
+                    errorIDCompra = true;
+                }
+
+            }catch (NumberFormatException e){
+                errorIDCompra = true;
+            }
+
+        }
+
+        if(compra.getPersona().getId() != usuario.getId()){
+            errorIDCompra = true;
+        }
+
+        boolean estaATiempo = true;
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        LocalTime fechaHoraFuncion = compra.getFuncion().getInicio();
+        LocalTime fechaHoraActual = LocalTime.now();
+
+        Duration duration = Duration.between(fechaHoraFuncion, fechaHoraActual);
+        long minutes = duration.toMinutes();
+
+        if (minutes > 15) {
+            estaATiempo = false;
+        }
+
+
+        if(errorIDCompra == false){
+
+            if(estaATiempo == true){
+
+                Pago pago = pagoRepository.encontrarPagoPorIdCompra(compra.getId());
+                pago.setEstado("0");
+                pagoRepository.save(pago);
+
+
+                compra.setEstado(0);
+                compraRepository.save(compra);
+
+                /*
+
+                    Se le devuelve el dinero a la tarjeta al usuario y se invalida la QR asignada
+                 */
+
+                Optional<Funcion> funcion1 = funcionRepository.findById(compra.getFuncion().getId());
+                Funcion funcion = funcion1.get();
+                int cantidadAsistentes = funcion.getCantidadasistentes();
+                int stockFuncion = funcion.getStockentradas();
+                int stockRestanteFuncion = stockFuncion + compra.getCantidad();
+
+                cantidadAsistentes = cantidadAsistentes - compra.getCantidad();
+                funcion.setStockentradas(stockRestanteFuncion);
+                funcion.setCantidadasistentes(cantidadAsistentes);
+                funcionRepository.save(funcion);
+
+                model.addAttribute("compraBorradaExitosamente","Se ha eliminado la compra exitosamente.La devolucion de su dinero se realizara en los proximos minutos");
+                return "/usuario/historial";
+
+            }else{
+                model.addAttribute("errorBorrarCompra","Ya no se puede borrar su compra porque supero nuestro timepo limite de tolerancia.");
+                return "/usuario/historial";
+            }
+
+        }else{
+            model.addAttribute("errorBorrarCompra","Error al quere borrar la compra");
+            return "/usuario/historial";
+        }
+
+    }
+
 
 
     @GetMapping("/perfil")
@@ -113,6 +200,7 @@ public class UsuarioController {
                                        @RequestParam("imagen") MultipartFile img,
                                        BindingResult bindingResult, Model model,
                                        RedirectAttributes a, HttpSession session) {
+        //@Validated(Perfil.class)
 
         Persona usuarioSesion = (Persona) session.getAttribute("usuario");
         if (bindingResult.hasErrors()) {
@@ -703,6 +791,29 @@ public class UsuarioController {
                 //Aca va el set del codigo de operacion @Agustin
                 pagoRepository.save(pago);
 
+
+                String content = "<p>Cordiales Saludos: </p>"
+                        + "<p>Se ha efectuado correctamente la siguiente compra:</p>"
+                        + "<p>- Funcion de la obra:" + compraEnProceso.getFuncion().getIdobra().getNombre() + " " + "<p>"
+                        + "<p>- Sede:" + compraEnProceso.getFuncion().getIdsala().getIdsede().getNombre() + " " + "<p>"
+                        + "<p>- Sala:" + compraEnProceso.getFuncion().getIdsala().getNumero() + " " + "<p>"
+                        + "<p>- Fecha:" + compraEnProceso.getFuncion().getFecha() + " " + "<p>"
+                        + "<p>- Hora de inicio:" + compraEnProceso.getFuncion().getInicio() + " " + "<p>"
+                        + "<p>- Hora fin:" + compraEnProceso.getFuncion().getFin() + " " + "<p>"
+                        + "<p>- Cantidad de boletos: "+ compraEnProceso.getCantidad() + " " + "<p>";
+
+                        /*
+
+                        Falta poner el detalle del pago con el QR     @Agustin
+
+                         */
+
+                try {
+                    sendInfoCompraCorreo(compraEnProceso.getPersona().getCorreo(),content);
+                } catch (MessagingException | UnsupportedEncodingException e) {
+                    return "redirect:/anErrorHasOcurred";
+                }
+
                 compraEnProceso = null;
                 session.setAttribute("compraEnProceso", compraEnProceso);
 
@@ -888,7 +999,20 @@ public class UsuarioController {
         mailSender.send(message);
     }
 
+    private void sendInfoCompraCorreo(String correo,String content) throws  MessagingException,UnsupportedEncodingException{
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
 
+        helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
+        helper.setTo(correo);
+
+        String subject = "Compra Realizada";
+
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+        mailSender.send(message);
+    }
 
 
 
