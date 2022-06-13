@@ -13,20 +13,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="header__content">
-
                                 <!-- header logo -->
-                                <a sec:authorize="hasAuthority('Usuario') || isAnonymous()"
-                                   th:href="@{/}" class="header__logo" style="width: 12rem">
-                                    <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
-                                </a>
-
-                                <a sec:authorize="hasAuthority('Operador') || isAnonymous()"
-                                   th:href="@{/operador/funciones}" class="header__logo" style="width: 12rem">
-                                    <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
-                                </a>
-
-                                <a sec:authorize="hasAuthority('Administrador') || isAnonymous()"
-                                   th:href="@{/admin}" class="header__logo" style="width: 12rem">
+                                <a th:href="@{/}" class="header__logo" style="width: 12rem">
                                     <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
                                 </a>
                                 <!-- end header logo -->
@@ -133,7 +121,7 @@
                         <div class="col-12">
                             <div class="header__content">
                                 <!-- header logo -->
-                                <a th:href="@{/}" class="header__logo" style="width: 12rem">
+                                <a th:href="@{/operador/funciones}" class="header__logo" style="width: 12rem">
                                     <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
                                 </a>
                                 <!-- end header logo -->

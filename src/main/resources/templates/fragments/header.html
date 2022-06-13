@@ -38,7 +38,7 @@
         <!-- Estilos Propios-->
         <style th:inline="text">
             body{
-                background: url([[@{/img/home/fondo.jpg}]]) center / cover no-repeat fixed;
+                background: url([[@{/img/home/fondo.jpg}]]) center center / cover no-repeat fixed;
             }
 
             @media(min-width: 1200px){
@@ -53,20 +53,17 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                transition: opacity 500ms;
+                background: rgba(43,43,49,0.75);
+                transition: 500ms ease-in-out;
                 opacity: 0;
             }
             #popup {
                 position: fixed;
-                visibility: hidden;
                 top: 0;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                transition: opacity 500ms;
-                opacity: 0;
+                transition: 500ms ease-in-out;
                 display: none;
                 visibility: visible; /* Se regresa a hidden para ocultar */
                 opacity: 1;
