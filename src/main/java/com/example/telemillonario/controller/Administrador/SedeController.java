@@ -98,7 +98,7 @@ public class SedeController {
 
 
     @GetMapping("/editar")
-    public String editarEmployee(Model model, @RequestParam("idsede") int idsede) {
+    public String editarSede(Model model, @RequestParam("idsede") int idsede) {
 
         //COMPLETAR
 

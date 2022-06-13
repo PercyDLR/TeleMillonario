@@ -105,4 +105,8 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             " fo.estado=?1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra limit ?3,?4")
     List<Foto> buscarObrasFotoPorNombreAdmin(int estado,String nombre,int pag, int salasporpag);
 
+    @Query(nativeQuery = true, value = "select * from telemillonario.fotos where " +
+            "idobra=?1 and estado=1")
+    List<Foto> buscarFotosObra(int idobra);
+
 }
