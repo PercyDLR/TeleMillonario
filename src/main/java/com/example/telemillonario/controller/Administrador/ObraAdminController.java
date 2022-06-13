@@ -112,19 +112,23 @@ public class ObraAdminController {
                 return "Administrador/Obra/editarObra";
 
             }
-            //Se verifica que la sede no se quede sin fotos al eliminar en el form de editar
-            int cantidadfotos = fotoRepository.buscarFotosObra(obra.getId()).size();
-            if(cantidadfotos==1 && !ids[0].equals("a")){
-                model.addAttribute("err","Se debe de tener al menos 1 imagen");
-                Optional<Obra> optObraenc = obraRepository.findById(obra.getId());
-                Obra obraencon = optObraenc.get();
-                model.addAttribute("obra", obraencon);
+            //Se verifica que la obra no se quede sin fotos al eliminar en el form de editar
+            if(obra.getId()!=null){
+                int cantidadfotos = fotoRepository.buscarFotosObra(obra.getId()).size();
+                if(cantidadfotos==1 && !ids[0].equals("a")){
+                    model.addAttribute("err","Se debe de tener al menos 1 imagen");
+                    Optional<Obra> optObraenc = obraRepository.findById(obra.getId());
+                    Obra obraencon = optObraenc.get();
+                    model.addAttribute("obra", obraencon);
 
-                List<Foto> fotos = fotoRepository.buscarFotosObra(obra.getId());
+                    List<Foto> fotos = fotoRepository.buscarFotosObra(obra.getId());
 
-                model.addAttribute("imagenes", fotos);
-                return "Administrador/Sede/editarSedes";
+                    model.addAttribute("imagenes", fotos);
+                    return "Administrador/Sede/editarSedes";
+                }
             }
+
+
 
 
             long tamanho = 0;
@@ -177,7 +181,7 @@ public class ObraAdminController {
                 //agregar imagenes
 
                 obraRepository.save(obra);
-                //se busca el id del objeto sede creado
+                //se busca el id del objeto obra creado
                 Obra obraCreada=obraRepository.findTopByOrderByIdDesc();
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);
                 if(!imagenes[0].getOriginalFilename().equals("")){

@@ -30,7 +30,7 @@ public class Obra {
     @Column(name = "nombre", length = 100)
     private String nombre;
 
-    @Size(max=40,message = "La descripcion no puede ser mayor a 5000 caracteres")
+    @Size(max=40,message = "La descripcion no puede ser mayor a 500 caracteres")
     @NotBlank(message = "La descripcion no puede estar vacia")
     @Column(name = "descripcion", length = 500)
     private String descripcion;
