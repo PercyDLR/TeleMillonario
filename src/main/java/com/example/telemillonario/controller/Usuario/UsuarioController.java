@@ -62,9 +62,6 @@ public class UsuarioController {
     CompraRepository compraRepository;
 
     @Autowired
-    ObraRepository obraRepository;
-
-    @Autowired
     PagoRepository pagoRepository;
 
     @GetMapping("")

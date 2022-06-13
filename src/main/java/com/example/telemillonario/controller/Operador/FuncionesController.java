@@ -344,7 +344,7 @@ public class FuncionesController {
 
         attr.addFlashAttribute("msg","Función Guardada Exitosamente");
         return "redirect:/operador/funciones";
-    }*/
+    }
 
 
     @PostMapping("/buscar")
