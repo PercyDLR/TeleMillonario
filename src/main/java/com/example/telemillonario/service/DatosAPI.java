@@ -8,11 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DatosAPI {
-    private int numero;
+    private String success;
+
     private String nombres;
+
     private String apellido_materno;
+
     private String apellido_paterno;
-    private String sexo;
-    private String fecha_nacimiento;
 
 }

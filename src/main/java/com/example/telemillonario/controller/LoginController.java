@@ -6,6 +6,8 @@ import com.example.telemillonario.entity.Rol;
 import com.example.telemillonario.repository.FotoRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.repository.RolRepository;
+import com.example.telemillonario.service.DatosAPI;
+import com.example.telemillonario.service.DniAPI;
 import com.example.telemillonario.service.UsuarioService;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,17 +177,35 @@ public class LoginController {
             }
         }
 
-         /*
 
-                Aca va lo de la API DNI con tod0 y vlaidation
+        DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
+        /*
+        //Verificamos si existe el dni
+        if(datosPersona.getSuccess().equalsIgnoreCase("true")){
+            //pasamos a mayuscula los nombres apellidos de la persona que se registro
+            String nombresUpperCase = usuario.getNombres().toUpperCase();
+            String apellidosUpperCase = usuario.getApellidos().toUpperCase();
+            String nombresApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
 
-         */
+            //el punto aca es que cuando se registre tiene que ingresar todos sus nombres con todos sus apellidos
+            String nombresApellidosAPI = datosPersona.getNombres() + " " + datosPersona.getApellido_paterno() + " " + datosPersona.getApellido_materno();
 
+            if(!nombresApellidosUpperCase.equals(nombresApellidosAPI)){
+                model.addAttribute("errDniNoCorrespondePersona", 1);
+            }
+        }
+        else{
+            model.addAttribute("errDni", 1);
+        }*/
+        if(!datosPersona.getSuccess().equalsIgnoreCase("true")){
+            model.addAttribute("errDni", 1);
+        }
 
         if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
             }
+
             return "/login/signup";
         } else {
 
