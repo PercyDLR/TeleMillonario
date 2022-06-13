@@ -75,29 +75,28 @@
             <br>
 
             <div class="row" >
-                <div class="col-12 col-md-6 col-lg-4 my-4" th:each="foto : ${listfunc}">
+                <div class="col-12 col-md-6 col-lg-4 my-4" th:each="funcion : ${funcionesConFoto}">
 
                     <div class="price price--premium">
                         <div class="price__item price__item--first">
-                            <span th:text="${foto.funcion.nombre}"></span>
-                            <span th:text="|Sala ${foto.funcion.sala.numero}|"></span>
+                            <span th:text="${funcion.key.idobra.nombre}"></span>
+                            <span th:text="|Sala ${funcion.key.idsala.numero}|"></span>
                         </div>
 
-                        <img class="card-img-top mt-3" th:src="${foto.ruta}" th:alt="${foto.funcion.nombre}">
+                        <img class="card-img-top mt-3" th:src="${funcion.value.ruta}" th:alt="${funcion.key.idobra.nombre}">
 
-                        <div class="price__item"><span th:text="|Restricción de Edad: ${foto.funcion.restriccionedad == 1 ? 'Sí':'No'}|"></span></div>
-                        <div class="price__item"><span th:text="|Precio: S/${foto.funcion.precioentrada}|"></span></div>
-                        <div class="price__item"><span th:text="|Fecha: ${foto.funcion.fecha}|"></span></div>
-                        <div class="price__item"><span th:text="|Hora: ${foto.funcion.inicio}|"></span></div>
-                        <div class="price__item"><span th:text="|Aforo: ${foto.funcion.sala.aforo}|"></span></div>
-                        <div class="price__item"><span th:text="|Stock: ${foto.funcion.stockentradas}|"></span></div>
+                        <div class="price__item"><span th:text="|Restricción de Edad: ${funcion.key.idobra.restriccionedad == 1 ? 'Sí':'No'}|"></span></div>
+                        <div class="price__item"><span th:text="|Precio: S/${funcion.key.precioentrada}|"></span></div>
+                        <div class="price__item"><span th:text="|Fecha: ${funcion.key.fecha}|"></span></div>
+                        <div class="price__item"><span th:text="|Hora: ${funcion.key.inicio}|"></span></div>
+                        <div class="price__item"><span th:text="|Stock: ${funcion.key.stockentradas}|"></span></div>
 
                         <div class="row">
                             <div class="col-6">
-                                <a th:href="@{'/operador/funciones/editar?idfuncion=' + ${foto.funcion.id}}" class="price__btn">Editar</a>
+                                <a th:href="@{'/operador/funciones/editar?idfuncion=' + ${funcion.key.id}}" class="price__btn">Editar</a>
                             </div>
                             <div class="col-6">
-                                <a class="cancel__btn" type="button" th:onclick="|advertencia(${foto.funcion.id})|">Eliminar</a>
+                                <a class="cancel__btn" type="button" th:onclick="|advertencia(${funcion.key.id})|">Eliminar</a>
                             </div>
                         </div>
                     </div>

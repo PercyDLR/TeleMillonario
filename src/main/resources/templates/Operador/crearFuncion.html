@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
     <head th:replace="fragments/header :: head('Crear Funcion',~{::style})">
+
         <style>
-            .select-label, .select2-results__option, .select2-search__field, .select2-selection__choice__display{
+                .select2-container--default .select2-selection--single .select2-selection__arrow {
+                display: none;
+            }
+
+            .select-label, .select2-results__option, .select2-search__field,
+            .select2-selection__choice__display,
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
                 color: white;
                 width: 100%;
+                font-weight: 300;
+                padding: 6px 20px;
             }
             .select2-container .select2-search--inline .select2-search__field{
                 height: 1.25rem;
                 vertical-align: unset;
+                padding: 2px 20px;
             }
-            .select2-container--default .select2-selection--multiple{
+
+            .select2-container--default .select2-search--dropdown .select2-search__field {
+                background-color: #2b2b31;
+                color: white;
+                border: solid #ff55a5 1px;;
+            }
+
+            .select2-container--default .select2-selection--multiple,
+            .select2-container--default .select2-selection--single{
                 background-color: #2b2b31;
                 border: none;
-                height: auto;
+                min-height: 50px;
                 border-radius: 0;
                 padding-block: 5px;
-                transition: box-shadow 0.25s ease-out;
+                transition: 0.25s ease-out;
             }
-            .select2-container--default.select2-container--focus .select2-selection--multiple {
+            .select2-container--default.select2-container--focus .select2-selection--multiple,
+            .select2-container--default.select2-container--focus .select2-selection--single {
                 border: solid #ff55a5 1px;
                 box-shadow: 0 0 20px 0 rgba(255,88,96,0.5);
             }
@@ -40,7 +59,8 @@
                 background-color: #424247;
                 color: white;
             }
-            .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            .select2-container--default .select2-selection--multiple .select2-selection__choice,
+            .select2-container--default .select2-selection--single .select2-selection__choice{
                 background-color: #424247;
                 border: none;
                 vertical-align: unset;
@@ -59,20 +79,6 @@
                 -moz-appearance: textfield;
             }
 
-            div.card__cover img {
-                margin-inline: auto;
-                max-height: 150px;
-                max-width: fit-content;
-            }
-            #images{
-                width: 90%;
-                position: relative;
-                margin: auto;
-                display: flex;
-            }
-            .owl-dots{
-                height: 0;
-            }
             .sign__input{
                 width: 100%;
             }
@@ -87,7 +93,7 @@
                 color: #dc3545;
                 width: 100%
             }
-            .sign__form, .sign__form .row {
+            form.sign__form, form.sign__form .row {
                 width: 100%;
             }
         </style>
@@ -121,26 +127,21 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row mt-5">
+
                                     <div class="col-md-6 col-12">
 
                                         <input hidden th:field="*{id}">
 
-                                        <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
-
-                                            <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
-                                            <option th:each="imagen : ${imagenes}"
-                                                    th:id="|img-${imagen.id}|"
-                                                    th:value="${imagen.id}"></option>
-                                        </select>
-
                                         <div class="sign__group">
-                                            <label for="nombre">Nombre</label>
-                                            <input class="sign__input" th:field="*{nombre}"
-                                                   th:classappend="${#fields.hasErrors('nombre')? 'is-invalid':''}"
-                                                   placeholder="Nombre" required>
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}"
-                                                 th:errors="*{nombre}"></div>
+                                            <label for="idobra">Obra</label>
+                                            <select class="select2 obra" name="idobra" style="width: 100%" required>
+                                                <option th:each="obra : ${listObras}"
+                                                th:value="${obra.id}" th:text="${obra.nombre}"
+                                                th:selected="${funcion.idobra != null && funcion.idobra.id == obra.id}"></option>
+                                            </select>
+
+                                            <div class="error-form" th:if="${msgObra != null}" th:text="${msgObra}"></div>
                                         </div>
 
                                         <div class="sign__group">
@@ -160,63 +161,6 @@
                                             <div class="invalid-feedback" th:if="${#fields.hasErrors('precioentrada')}"
                                                  th:errors="*{precioentrada}"></div>
                                         </div>
-                                    </div>
-
-                                    <!--Selector Imagenes-->
-                                    <div class="col-md-6 col-12" style="padding-left: 10px">
-
-                                        <!--Encabezado-->
-                                        <section class="section section--first" style="margin: 0; padding:10px">
-                                            <div class="row">
-                                                <div class="col-md-9 col-10">
-                                                    <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
-                                                </div>
-                                                <div class="col-md-3 col-2" style="position: static">
-                                                    <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
-                                                        <i class="icon ion-ios-arrow-round-back"></i>
-                                                    </button>
-                                                    <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
-                                                        <i class="icon ion-ios-arrow-round-forward"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </section>
-
-                                        <div>
-                                            <div class="row align-items-center">
-                                                <div class="col-12 col-sm-12">
-
-                                                    <!--Visor de Imagenes-->
-                                                    <div class="owl-carousel photo__carousel" id="img_container">
-
-                                                        <div class="item old" th:each="foto : ${imagenes}">
-                                                            <div class="card__cover">
-
-                                                                <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
-
-                                                                <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
-                                                                    <i class="bi bi-x" style="color: white"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Boton para agregar imagenes -->
-                                                    <div class="card__wrap">
-                                                        <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
-                                                            Nueva Foto
-                                                        </label>
-                                                        <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg"
-                                                               style="display: none" onchange="preview()" multiple>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 col-12">
 
                                         <div class="sign__group">
                                             <label for="duracion">Duración (minutos)</label>
@@ -225,38 +169,19 @@
                                                    placeholder="Duración" type="number" min="0" required>
                                             <div class="error-form" th:if="${msgduracion!=null}" th:text="${msgduracion}"></div>
                                         </div>
-
-                                        <div class="sign__group">
-                                            <label for="restriccionedad">Restricción de Edad</label>
-                                            <select class="sign__input" th:field="*{restriccionedad}" required>
-                                                <option value="0" th:selected="${funcion.restriccionedad == 0}">No</option>
-                                                <option value="1" th:selected="${funcion.restriccionedad == 1}">Sí</option>
-                                            </select>
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('restriccionedad')}"
-                                                 th:errors="*{restriccionedad}"></div>
-                                        </div>
-
-                                        <div class="sign__group">
-                                            <label for="genero">Géneros</label>
-                                            <select class="select2 genero" id="genero" name="idgenero" style="width: 100%" required multiple>
-                                                <option th:each="genero : ${listGeneros}"
-                                                        th:text="|${genero.nombre}|"
-                                                        th:value="${genero.id}"
-                                                        th:selected="${#arrays.contains(generosFuncion,genero.id.toString())}"></option>
-                                            </select>
-                                        </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
+
                                         <div class="sign__group">
                                             <label for="sede">Sede</label>
-                                            <input class="sign__input"
-                                                   id="sede" th:value="${session.usuario.idsede.nombre}" disabled>
+                                            <input class="sign__input" id="sede" style="color:white"
+                                                   th:value="${session.usuario.idsede.nombre}" disabled>
                                         </div>
 
                                         <div class="sign__group">
-                                            <label for="sala">Sala</label>
-                                            <select class="sign__input" th:field="*{sala}" onchange="getAforoMax()" required>
+                                            <label for="idsala">Sala</label>
+                                            <select class="sign__input" th:field="*{idsala}" onchange="getAforoMax()" required>
                                                 <option th:each="sala : ${listaSalasporSede}"
                                                         th:text="|Sala-${sala.numero}|"
                                                         th:value="${sala.id}"
@@ -275,21 +200,6 @@
                                                  th:errors="*{stockentradas}"></div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="sign__group">
-                                            <label for="descripcion">Descripción</label>
-                                            <textarea th:field="*{descripcion}" class="sign__input"
-                                                      th:classappend="${#fields.hasErrors('descripcion')? 'is-invalid':''}"
-                                                      rows="4" maxlength="500" required>
-                                            </textarea>
-                                            <div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}"
-                                                 th:errors="*{descripcion}"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12"></div>
                                 </div>
 
                                 <div class="row">
@@ -338,15 +248,30 @@
                 </div>
             </div>
         </div>
+
+        <div id="popup" class="overlay">
+            <div class="row">
+                <div class="col-12">
+                    <div class="sign__content">
+                        <div class="sign__form">
+                            <div class="carga"></div>
+                            <div class="mt-3">
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                    Espera mientras actualizamos tus datos</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div th:replace="fragments/footer :: js(~{::script})">
 
         <script>
             $(document).ready(function() {
-                $('.select2.genero').select2({
-                    placeholder: 'Géneros',
-                    closeOnSelect: false
+                $('.select2.obra').select2({
+                    placeholder: 'Obra'
                 });
                 $('.select2.actor').select2({
                     placeholder: 'Actores',
@@ -358,139 +283,20 @@
                 });
                 getAforoMax()
             });
-        </script>
-
-        <script>
-            // El input donde se agregan las imágenes
-            let fileInput = document.getElementById("file-input");
-            // Donde se muestran las vistas previas
-            let imgContainer = document.getElementById("img_container");
-
-            // Agrega y quita imagenes de la vista previa e input
-            function preview(){
-
-                // Se conservan las fotos almacenadas en DB y las nuevas fotos
-                // se reemplazan cada vez que se sube un grupo de fotos
-                let itemsAntiguos = imgContainer.querySelectorAll(".owl-item:not(.cloned) > .old")
-                console.log(itemsAntiguos)
-
-                let contenido = "";
-
-                if(itemsAntiguos != null) {
-                    for (let ii = 0; ii<itemsAntiguos.length; ii++) {
-                        contenido += itemsAntiguos[ii].outerHTML;
-                        //console.log(contenido)
-                    }
-                }
-
-                // Deja solo las imágenes de la DB, para posteriormente agregar las nuevas
-                imgContainer.innerHTML = contenido
-
-                for(i of fileInput.files){
-
-                    let reader = new FileReader();
-
-                    // Contenedor de la imagen + botones
-                    let item = document.createElement("div");
-                    item.className="item";
-
-                    // Overlay para eliminar
-                    let cover = document.createElement("div");
-                    cover.className="card__cover";
-
-                    // Botón de eliminar
-                    let button = document.createElement("a");
-                    button.className = "card__play new";
-                    button.setAttribute("style","cursor: pointer")
-                    cover.appendChild(button)
-
-                    // Activar la opción de borrar imagen
-                    button.onclick = function (){
-
-                        const dt = new DataTransfer()
-
-                        //lista con todas las fotos NUEVAS (Agregadas al editar) en el imgContainer
-                        let items = document.querySelectorAll('div.owl-item:not( .cloned) > div > div > a.new');
-
-                        // console.log("Antes", fileInput.files)
-
-                        // Se quita del input la imagen mostrada
-                        for (let i = 0; i < items.length; i++) {
-                            let item = items[i].parentElement.parentElement.parentElement;
-
-                            if (item.className !== "owl-item active") {
-                                let file = fileInput.files[i];
-                                // console.log(file, item.className)
-                                dt.items.add(file);
-                            }
-                        }
-                        // Se actualiza el input
-                        fileInput.files = dt.files;
-                        // console.log("Despues",fileInput.files)
-
-                        // Se elimina la imagen en la vista previa
-                        cover.parentElement.parentElement.remove();
-                        refresh()
-                    };
-
-                    // Icono de la cruz
-                    let close = document.createElement("i");
-                    close.className = "bi bi-x";
-                    close.setAttribute("style","color: white")
-
-                    button.appendChild(close)
-
-                    // Crea las imágenes de la vista previa
-                    reader.onload=()=>{
-                        let img = document.createElement("img");
-                        img.setAttribute("src",reader.result);
-
-                        cover.appendChild(img);
-                    }
-                    item.appendChild(cover)
-
-                    imgContainer.appendChild(item);
-                    reader.readAsDataURL(i);
-                }
-
-                // Vuelve a cargar el deslizador
-                refresh()
-            }
-
-            // Actualiza la vista previa, despues de agregar o quitar imágenes
-            function refresh() {
-                $('.owl-carousel').trigger('destroy.owl.carousel');
-                var $owl = $('.owl-carousel').owlCarousel({
-                    loop: true,
-                    smartSpeed: 600,
-                    margin: 60,
-                    items: 1
-                });
-                $owl.trigger('refresh.owl.carousel');
-            }
-
-            // Marca una de las imágenes ya en la DB para ser eliminada
-            function eliminarEnDB(id){
-
-                // Se busca en un select la opción correspondiente a la imagen clickeada
-                let opcion = document.getElementById("img-"+id);
-                opcion.selected = "selected";
-
-                // Se busca la imagen en la vista previa y se elimina
-                let item = imgContainer.getElementsByClassName("active").item(0);
-                //console.log(item)
-                item.remove();
-
-                refresh()
-            }
 
             function getAforoMax() {
-                var aforo = $('#sala').find(":selected").attr("data-aforo");
+                var aforo = $('#idsala').find(":selected").attr("data-aforo");
                 document.getElementById("aforofuncion_obra_span").innerText = "Aforo max: " + aforo;
                 document.getElementById("stockentradas").max = aforo;
                 $("#aforofuncion_obra").prop("disabled", false);
             }
+        </script>
 
+        <script>
+            document.querySelector("form.sign__form").addEventListener("submit", function () {
+                let popup = document.getElementById('popup');
+                popup.style.display = 'block';
+            })
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

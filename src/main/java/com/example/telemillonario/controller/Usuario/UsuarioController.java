@@ -50,10 +50,13 @@ public class UsuarioController {
     FuncionRepository funcionRepository;
 
     @Autowired
-    FuncionGeneroRepository funcionGeneroRepository;
+    ObraGeneroRepository obraGeneroRepository;
 
     @Autowired
     SedeRepository sedeRepository;
+
+    @Autowired
+    ObraRepository obraRepository;
 
     @Autowired
     CompraRepository compraRepository;
@@ -65,12 +68,20 @@ public class UsuarioController {
     PagoRepository pagoRepository;
 
     @GetMapping("")
-    public String paginaPrincipal(Model model) {
-        List<Funcion> listaFunciones = funcionRepository.obtenerFuncionesDestacadasPaginaPrincipal();
-        model.addAttribute("listaFunciones", listaFunciones);
 
-        List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
-        model.addAttribute("funcionGenero", funcionGenero);
+    public String paginaPrincipal(Model model){
+        List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
+        model.addAttribute("listaObras",listaObras);
+
+        ArrayList<Foto> listaCaratulas = new ArrayList<>();
+        for (Obra o : listaObras) {
+            listaCaratulas.add(fotoRepository.caratulaDeObra(o.getId()));
+        }
+        model.addAttribute("listaCaratulas", listaCaratulas);
+
+        List<Obragenero> obraGenero = obraGeneroRepository.findAll();
+        model.addAttribute("obraGenero",obraGenero);
+
         return "vistaPrincipal";
     }
 
@@ -223,9 +234,11 @@ public class UsuarioController {
 
         Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
 
-        if (funcion.isPresent()) {
-            List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
-            model.addAttribute("funcionGenero", funcionGenero);
+
+        if(funcion.isPresent()){
+            List<Obragenero> funcionGenero = obraGeneroRepository.findAll();
+            model.addAttribute("funcionGenero",funcionGenero);
+
             return "usuario/obras/obraDetalles";
 
         } else {

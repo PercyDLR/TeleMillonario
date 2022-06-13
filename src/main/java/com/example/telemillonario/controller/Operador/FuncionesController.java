@@ -3,8 +3,6 @@ package com.example.telemillonario.controller.Operador;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
-import com.nimbusds.oauth2.sdk.id.Actor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,15 +14,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,20 +45,23 @@ public class FuncionesController {
 
     @Autowired
     FotoRepository fotoRepository;
-    float funcionesporpagina=6;
 
     @Autowired
     GeneroRepository generoRepository;
 
     @Autowired
-    FuncionGeneroRepository funcionGeneroRepository;
+    ObraGeneroRepository obraGeneroRepository;
+
+    @Autowired
+    ObraRepository obraRepository;
+
+    float funcionesporpagina=6;
 
     @GetMapping(value = {"", "/","/lista"})
     public String listadoFunciones(Model model,@RequestParam(value = "pag",required = false) String pag,HttpSession session){
-        int estado=1;
+
         int pagina;
-        //tamaña de cada 'row' en vista
-        int size=3;
+
         try{
             pagina = Integer.parseInt(pag);
         }catch(Exception e) {
@@ -72,10 +70,23 @@ public class FuncionesController {
 
         Persona persona=(Persona) session.getAttribute("usuario");
 
-        List<Foto> listfuncfoto= fotoRepository.buscarFotoFunciones(persona.getIdsede().getId(),(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+        List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSede(persona.getIdsede().getId(),(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+        List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(persona.getIdsede().getId());
+
+        HashMap<Funcion,Foto> funcionesConFoto = new HashMap<>();
+
+        for (Funcion funcion : listFunciones){
+            for (Foto foto : listFotosObra){
+                if (foto.getIdobra() == funcion.getIdobra()){
+                    funcionesConFoto.put(funcion,foto);
+                    break;
+                }
+            }
+        }
+
         int cantFunc= fotoRepository.contarFunciones(persona.getIdsede().getId());
 
-        model.addAttribute("listfunc",listfuncfoto);
+        model.addAttribute("funcionesConFoto",funcionesConFoto);
 
         model.addAttribute("pagActual",pagina);
         model.addAttribute("pagTotal",(int) Math.ceil(cantFunc/funcionesporpagina));
@@ -86,6 +97,7 @@ public class FuncionesController {
     public String programarFuncionesForm(@ModelAttribute("funcion")Funcion funcion, Model model, HttpSession session){
 
         // Listas para los selectores
+        model.addAttribute("listObras",obraRepository.findAll());
         model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
         model.addAttribute("listDirectores",personaRepository.listarDirectores());
         model.addAttribute("listGeneros",generoRepository.findAll());
@@ -106,21 +118,32 @@ public class FuncionesController {
     private void retornarValores(Model model, Funcion funcion, Persona persona) {
 
         // Variables para hacer más entendible el código
+        List<Obra> listObras = obraRepository.findAll();
         List<Persona> listActores = personaRepository.listarActores("",0,100000);
         List<Persona> listDirectores = personaRepository.listarDirectores();
-        List<Genero> listGeneros = generoRepository.findAll();
-        List<Foto> fotosEnDB = fotoRepository.buscarFotosFuncion(funcion.getId());
         List<Sala> listaSalasporSede = salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1);
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
         // Se regresan nuevamente los elementos de las listas
         model.addAttribute("funcion",funcion);
+        model.addAttribute("listObras",listObras);
         model.addAttribute("listActores",listActores);
         model.addAttribute("listDirectores",listDirectores);
-        model.addAttribute("listGeneros",listGeneros);
         model.addAttribute("fechaactual",now);
-        model.addAttribute("imagenes", fotosEnDB);
         model.addAttribute("listaSalasporSede",listaSalasporSede);
+    }
+
+    private void retornarValoresYSelect(Model model, Funcion funcion, Persona persona,
+                                        String[] idactor, String[] iddirector,
+                                        String duracion, String fechamasinicio) {
+
+        this.retornarValores(model,funcion,persona);
+
+        // Se regresan elementos ya seleccionados
+        model.addAttribute("actoresFuncion",idactor);
+        model.addAttribute("directoresFuncion",iddirector);
+        model.addAttribute("duracion",duracion);
+        model.addAttribute("fechamasinicio",fechamasinicio);
     }
 
     @GetMapping(value = {"/editar"})
@@ -147,6 +170,8 @@ public class FuncionesController {
 
             // Datos de la funcion
             funcion = funcionEnDB.get();
+            long duracion = funcion.getInicio().until(funcion.getFin(),ChronoUnit.MINUTES);
+            String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
 
             // Listas para los select
             retornarValores(model,funcion,persona);
@@ -154,13 +179,9 @@ public class FuncionesController {
             // Lista de los elementos YA seleccionados
             model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(idfuncion));
             model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(idfuncion));
-            model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(idfuncion));
 
             // Tiempo
-            long duracion = funcion.getInicio().until(funcion.getFin(),ChronoUnit.MINUTES);
             model.addAttribute("duracion",duracion);
-
-            String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
             model.addAttribute("fechamasinicio",fechamasinicio);
 
             return "Operador/crearFuncion";
@@ -170,18 +191,15 @@ public class FuncionesController {
         }
 
     }
-
-    /*
+  
     @PostMapping("/guardar")
     public String guardarFuncion(@ModelAttribute("funcion") @Valid Funcion funcion, BindingResult bindingResult,
                                  Model model, HttpSession session, RedirectAttributes attr,
+                                 @RequestParam(value="idobra") String idObraStr,
                                  @RequestParam(value="fechamasinicio") String fechamasinicio,
                                  @RequestParam(value="duracion") String duracion,
                                  @RequestParam(value="idactor") String[] idactor,
-                                 @RequestParam(value="iddirector") String[] iddirector,
-                                 @RequestParam(value="idgenero") String[] idgenero,
-                                 @RequestParam(value="eliminar", defaultValue="") String[] ids,
-                                 @RequestParam(value="imagenes") MultipartFile[] imagenes) throws IOException {
+                                 @RequestParam(value="iddirector") String[] iddirector) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
@@ -196,71 +214,36 @@ public class FuncionesController {
 
         if (bindingResult.hasErrors() || duracionInt <= 0) {
 
-            retornarValores(model,funcion,persona);
-
-            model.addAttribute("fechamasinicio",fechamasinicio);
-            model.addAttribute("duracion",duracion);
+            retornarValoresYSelect(model,funcion,persona,idactor,iddirector,duracion,fechamasinicio);
 
             if(duracionInt <= 0) {
                 model.addAttribute("msgduracion", "La duración no es válida");
             }
 
-            // También los elementos seleccionados
-            model.addAttribute("actoresFuncion",idactor);
-            model.addAttribute("directoresFuncion",iddirector);
-            model.addAttribute("generosFuncion",idgenero);
-
             return "Operador/crearFuncion";
         }
 
         //-----------------------------------------------
-        //      Validación de las Imágenes enviadas
+        //          Validación de la Obra
         //-----------------------------------------------
-        long tamanho = 0;
+        Obra obraFuncion;
+        try {
+            int idObra = Integer.parseInt(idObraStr);
+            Optional<Obra> obra = obraRepository.findById(idObra);
 
-        for (MultipartFile img : imagenes){
-
-            // Se verifica que los archivos enviados sean imágenes
-            switch(img.getContentType()){
-
-                case "application/octet-stream":
-                case "image/jpeg":
-                case "image/png":
-                    tamanho += img.getSize();
-
-                    // Se verifica que el tamaño no sea superior a 20 MB
-                    if (tamanho > 1048576*20){
-                        model.addAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
-
-                        // Listas para los select
-                        retornarValores(model,funcion,persona);
-
-                        // Se regresan elementos ya seleccionados
-                        model.addAttribute("actoresFuncion",idactor);
-                        model.addAttribute("directoresFuncion",iddirector);
-                        model.addAttribute("generosFuncion",idgenero);
-                        model.addAttribute("duracion",duracion);
-                        model.addAttribute("fechamasinicio",fechamasinicio);
-
-                        return "Operador/crearFuncion";
-                    }
-                    break;
-
-                default:
-                    model.addAttribute("err","Solo se deben de enviar imágenes");
-
-                    // Listas para los select
-                    retornarValores(model,funcion,persona);
-
-                    // Se regresan elementos ya seleccionados
-                    model.addAttribute("actoresFuncion",idactor);
-                    model.addAttribute("directoresFuncion",iddirector);
-                    model.addAttribute("generosFuncion",idgenero);
-                    model.addAttribute("duracion",duracion);
-                    model.addAttribute("fechamasinicio",fechamasinicio);
-
-                    return "Operador/crearFuncion";
+            if(!obra.isPresent()){
+                throw new NumberFormatException();
             }
+            obraFuncion = obra.get();
+
+        } catch (NumberFormatException e){
+
+            // Retorna los valores ingresados
+            retornarValoresYSelect(model,funcion,persona,idactor,iddirector,duracion,fechamasinicio);
+
+            model.addAttribute("msgObra", "La obra ingresada no es válida");
+
+            return "Operador/crearFuncion";
         }
 
         //-----------------------------------------------
@@ -276,15 +259,8 @@ public class FuncionesController {
             }
         } catch (Exception e){
 
-            // Listas para los select
-            retornarValores(model,funcion,persona);
-
-            // Se regresan elementos ya seleccionados
-            model.addAttribute("actoresFuncion",idactor);
-            model.addAttribute("directoresFuncion",iddirector);
-            model.addAttribute("generosFuncion",idgenero);
-            model.addAttribute("duracion",duracion);
-            model.addAttribute("fechamasinicio",fechamasinicio);
+            // Retorna los valores ingresados
+            retornarValoresYSelect(model,funcion,persona,idactor,iddirector,duracion,fechamasinicio);
 
             model.addAttribute("msgfecha", "La fecha no es válida");
 
@@ -305,6 +281,7 @@ public class FuncionesController {
         funcion.setFecha(dia);
         funcion.setInicio(hora);
         funcion.setFin(hora.plusMinutes(duracionInt));
+        funcion.setIdobra(obraFuncion);
 
         // Se guardan los cambios a la funcion
         funcion = funcionRepository.save(funcion);
@@ -317,34 +294,22 @@ public class FuncionesController {
         List<Funcionelenco> elencoEnDB = funcionElencoRepository.buscarFuncionElenco(funcion.getId());
         List<Integer> elencoSeleccionado = new ArrayList<>();
 
-        // Se obtienen los géneros de la Función
-        List<Obragenero> generosEnDB = funcionGeneroRepository.buscarFuncionGenero(funcion.getId());
-        List<Integer> generosSeleccionados = new ArrayList<>();
-
         // Se comparan los datos de elenco ingresados con los de la DB
-        int maxSeleccionados = Math.max(Math.max(idactor.length,iddirector.length),idgenero.length) ;
-        int maxEnDB = Math.max(elencoEnDB.size(), generosEnDB.size()) ;
+        int maxSeleccionados = Math.max(idactor.length,iddirector.length) ;
 
         for(int ii=0; ii < maxSeleccionados; ii++ ){
 
-            boolean generoCoincide = false;
             boolean actorCoincide = false;
             boolean directorCoincide = false;
 
-            for(int jj=0; jj < maxEnDB; jj++){
-
-                // Valida los generos seleccionados
-                if(ii<idgenero.length && jj<generosEnDB.size() && idgenero[ii].equals(generosEnDB.get(jj).toString())){
-                    generosSeleccionados.add(generosEnDB.get(jj).getIdgenero().getId());
-                    generoCoincide = true;
-                }
+            for(int jj=0; jj < elencoEnDB.size(); jj++){
 
                 // Valida los miembros del elenco seleccionados
-                if(ii < idactor.length && jj<elencoEnDB.size() && idactor[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
+                if(ii < idactor.length && idactor[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
                     elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
                     actorCoincide = true;
 
-                } else if(ii < iddirector.length && jj<elencoEnDB.size() && iddirector[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
+                } else if(ii < iddirector.length && iddirector[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
                     elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
                     directorCoincide = true;
                 }
@@ -367,16 +332,6 @@ public class FuncionesController {
                 funcelen.setEstado(1);
                 funcionElencoRepository.save(funcelen);
             }
-            // Si un género no está en DB, se agrega
-
-            if(ii<idgenero.length && !generoCoincide){
-                Obragenero funcgen = new Obragenero();
-                int idgen = Integer.parseInt(idgenero[ii]);
-                funcgen.setIdgenero(generoRepository.findById(idgen).get());
-                funcgen.setIdfuncion(funcion);
-                funcgen.setEstado(1);
-                funcionGeneroRepository.save(funcgen);
-            }
         }
 
         // Si un miembro del elenco ya no ha sido seleccionado, se elimina
@@ -386,127 +341,7 @@ public class FuncionesController {
                 funcionElencoRepository.deleteById(fe.getId());
             }
         }
-        // Si un miembro del elenco ya no ha sido seleccionado, se elimina
-        for(Funciongenero fg : generosEnDB) {
-            int id = fg.getIdgenero().getId();
-            if (!generosSeleccionados.contains(id)){
-                funcionGeneroRepository.deleteById(fg.getId());
-            }
-        }
 
-        //-----------------------------------------------
-        //    Validación de Fotos a Eliminar en la DB
-        //-----------------------------------------------
-
-        // Número de fotos Ya Guardadas en la DB
-        List<Foto> fotosParaEliminar = new ArrayList<>();
-
-        // Se obtienen las fotos guardadas en DB
-        List<Foto> fotosEnDB = fotoRepository.buscarFotosFuncion(funcion.getId());
-        int fotosGuardadas = fotosEnDB.size();
-
-        for(int i = 0; i < fotosEnDB.size(); i++){
-            boolean fotoBorrada = false;
-
-            Foto fotoEnDB = fotosEnDB.get(i);
-
-            for(int j = 0; j < ids.length; j++) {
-                try{
-                    int id = Integer.parseInt(ids[j]);
-
-                    // Se compara el ID de la foto en DB con el de la foto que se quiere remover
-                    if (fotoEnDB.getId() == id){
-
-                        fotosParaEliminar.add(fotoEnDB);
-
-                        fotosGuardadas--;
-                        fotoBorrada = true;
-                        break;
-                    }
-
-                } catch (Exception e){
-                    System.out.println(e.getMessage());
-                    break;
-                }
-            }
-            // Cuando se elimina una foto todos los números posteriores se corren por 1
-            int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
-
-            if(!fotoBorrada && fotosEliminadas > 0){
-                fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
-                fotoRepository.save(fotoEnDB);
-            }
-        }
-
-        // Verifica que la casilla de imágenes no se vaya a quedar vacía
-        if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")) {
-            model.addAttribute("err", "Se debe de tener al menos 1 imagen");
-
-            retornarValores(model,funcion,persona);
-
-            // Se regresan elementos ya seleccionados
-            model.addAttribute("actoresFuncion",idactor);
-            model.addAttribute("directoresFuncion",iddirector);
-            model.addAttribute("generosFuncion",idgenero);
-            model.addAttribute("duracion",duracion);
-            model.addAttribute("fechamasinicio",fechamasinicio);
-
-            return "Operador/crearFuncion";
-        }
-
-        // Elimina las fotos
-        for (Foto foto : fotosParaEliminar){
-            // Borrado de la DB
-            fotoRepository.delete(foto);
-
-            // Borrado del fileService
-            String ruta = foto.getRuta();
-            String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
-
-            fileService.eliminarArchivo(nombreFoto);
-        }
-
-        // Regresa si no se han agregado más fotos
-        if(imagenes[0].getContentType().equals("application/octet-stream")) {
-            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
-            return "redirect:/operador/funciones";
-        }
-
-        //-----------------------------------------------
-        //            Agregar Fotos a la DB
-        //-----------------------------------------------
-
-        // Se guarda imagen por imagen (en ese orden se les dará número)
-        for(int i = 0; i< imagenes.length; i++){
-            MultipartFile img = imagenes[i];
-            try {
-                // Se almacenan los datos en un objeto Foto
-                Foto foto = new Foto();
-                foto.setEstado(1);
-                foto.(funcion);
-                foto.setSede(funcion.getSala().getIdsede());
-                foto.setNumero(fotosGuardadas + i);
-
-                // Guardar en el Servidor
-                MultipartFile imgRenombrada = fileService.formatearArchivo(img, "funcion");
-                if(fileService.subirArchivo(imgRenombrada)){
-
-                    // Si se guarda exitosamente, se obtiene el url de la foto
-                    foto.setRuta(fileService.obtenerUrl(imgRenombrada.getOriginalFilename()));
-                } else {
-                    attr.addFlashAttribute("err","No se pudo conectar con el Contenedor De Archivos");
-                    return "redirect:/operador/funciones";
-                }
-
-                // Guardado en la DB
-                fotoRepository.save(foto);
-
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-                attr.addFlashAttribute("err", "Hubo un problema al guardar las Imagenes");
-                return "redirect:/operador/funciones";
-            }
-        }
         attr.addFlashAttribute("msg","Función Guardada Exitosamente");
         return "redirect:/operador/funciones";
     }*/
@@ -523,10 +358,8 @@ public class FuncionesController {
                 model.addAttribute("parametro", parametro);
                 parametro = parametro.toLowerCase();
 
-                int estado=1;
                 int pagina;
-                //tamaña de cada 'row' en vista
-                int size=3;
+
                 try{
                     pagina = Integer.parseInt(pag);
                 }catch(Exception e) {
@@ -553,55 +386,28 @@ public class FuncionesController {
     }
 
 
-
-    /*
     @GetMapping("/borrar")
-    public String borrarFuncion(Model model,
-                                @RequestParam("idfuncion") int idfuncion,
-                                 RedirectAttributes attr) {
-
-        //buscar las fotos a eliminar en el filemanager de Azure
+    public String borrarFuncion(@RequestParam("idfuncion") String idFuncionStr,
+                                Model model, RedirectAttributes attr) {
 
         try{
-            List<Foto> listfuncfoto=fotoRepository.buscarFotosFuncion(idfuncion);
+            int idFuncion = Integer.parseInt(idFuncionStr);
 
-            if(listfuncfoto.size()!=0){
-                //eliminamos las fotos una por una del filemanager de Azure y de la base de datos
-                for (Foto fot : listfuncfoto) {
-                    String [] urlfoto=fot.getRuta().split("/telemillonario/");
-                    String nombrefoto= urlfoto[1];
-                    fileService.eliminarArchivo(nombrefoto);
-                    fotoRepository.deleteById(fot.getId());
-                }
+            Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
 
-                //eliminamos en la tabla funcion elenco
-                List<Funcionelenco> listFunElenc =funcionElencoRepository.buscarFuncionElenco(idfuncion);
-                for (Funcionelenco funelen : listFunElenc){
-                    funcionElencoRepository.deleteById(funelen.getId());
-                }
-
-                //eliminamos en la tabla funcion genero
-                List<Funciongenero> listFuncGen =funcionGeneroRepository.buscarFuncionGenero(idfuncion);
-                for (Funciongenero fungen : listFuncGen){
-                    funcionGeneroRepository.deleteById(fungen.getId());
-                }
-
-                //eliminamos la funcion de la base de datos
-                funcionRepository.deleteById(idfuncion);
-
-                attr.addFlashAttribute("msg1", "Funcion borrada exitosamente");
-            }else{
-                attr.addFlashAttribute("msg", "No se puede borrar una funcion que no existe");
+            if(!funcion.isPresent()){
+                throw new NumberFormatException();
             }
-            return "redirect:/operador/funciones";
-        }catch (Exception e){
 
-            attr.addFlashAttribute("msg", "Hubo un error al borrar una funcion");
-            return "redirect:/operador/funciones";
+            Funcion funcionABorrar = funcion.get();
+            funcionABorrar.setEstado(0);
+            funcionRepository.save(funcionABorrar);
+
+            attr.addFlashAttribute("msg1", "Funcion borrada exitosamente");
+
+        }catch (NumberFormatException e){
+            attr.addFlashAttribute("msg", "El ID de la función es inválido");
         }
-
-
-
+        return "redirect:/operador/funciones";
     }
-    */
 }

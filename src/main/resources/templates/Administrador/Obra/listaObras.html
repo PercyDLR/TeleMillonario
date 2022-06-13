@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="fragments/header :: head('Obras',~{::style})">
+        <style>
+            input::placeholder {
+                color: #000000;
+            }
+            .price img{
+                object-fit: cover;
+                object-position: 50% 50%;
+                margin-top: 0;
+                height: 240px;
+            }
+        </style>
+    </head>
+
+    <body class="body">
+        <div th:replace="fragments/navbar :: admin('obras')"></div>
+
+        <div class="content" style="margin-top: 15px">
+            <div class="container" style="margin-bottom: 30px">
+
+                <div class="row">
+                    <div class="col-md-10 col-12" style="margin-top: 30px;">
+                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3rem">
+                            Obras para Funciones
+                        </h1>
+                    </div>
+
+                    <div class="col-md-2 col-12 d-flex justify-content-center">
+                        <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva obra">
+                            <a th:href="@{/admin/obras/crear}">
+                                <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
+                            </a>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong th:text="${msg}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong th:text="${err}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post" th:action="@{/admin/actores/buscar}">
+                    <div class="row justify-content-center" style="margin-top: 50px">
+                        <div class="col-md-8 col-12">
+
+                            <div class="input-group d-flex justify-content-center" style="margin-bottom: 5px">
+                                <input type="text" placeholder="Buscar Obra por Nombre" th:value="${busqueda != null ? busqueda : ''}" name="busqueda" class="src" style="width: inherit;color: #000000">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="filter__btn">
+                                    <a>Buscar</a>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+                <br>
+
+                <div class="row" >
+                    <div class="col-12 col-md-6 col-lg-4 my-4" th:each="foto : ${listObras}">
+
+                        <div class="price price--premium">
+                            <div class="price__item price__item--first">
+                                <span th:text="${foto.idobra.nombre}"></span>
+                            </div>
+
+                            <img class="card-img-top mt-3" th:src="${foto.ruta}" th:alt="${foto.idobra.nombre}">
+
+                            <div class="price__item"><span th:text="|Estado: ${foto.idobra.estado == 1 ? 'Disponible' : 'No Disponible'}|"></span></div>
+                            <div class="price__item"><span th:text="|Restriccion de Edad: ${foto.idobra.restriccionedad == 1 ? 'Sí' : 'No '}|"></span></div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <a th:href="@{'/admin/obras/editar?idobra=' + ${foto.idobra.id}}" class="price__btn">Editar</a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="cancel__btn" type="button" th:onclick="|advertencia(${foto.idobra.id})|">Eliminar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/obras/lista?')"></div>
+            </div>
+        </div>
+
+        <div id="popup" class="overlay">
+            <div class="row">
+                <div class="col-12">
+                    <div class="sign__content">
+                        <form action="#" class="sign__form">
+                            <a class="sign__logo">
+                                <img th:src="@{/img/tele.png}" alt="logo">
+                            </a>
+                            <div class="sign__group">
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                    ¿Estás seguro de querer borrar esta Obra?</h5>
+                            </div>
+                            <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
+                            <a id="borrar" class="sign__btn">Borrar Obra</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script th:inline="javascript">
+                function advertencia(idobra) {
+                    let popup = document.getElementById('popup');
+
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/obras/borrar?idobra='}]] + idobra;
+                    popup.style.display = 'block';
+                }
+
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
+    </body>
+</html>
