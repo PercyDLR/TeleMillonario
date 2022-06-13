@@ -157,6 +157,34 @@ input.sign__input:autofill {
   margin-top: 25px;
 }
 
+/* Pantalla de carga */
+
+.carga {
+  position: relative;
+  margin-inline: auto;
+  margin-block: 10px;
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #ff55a5 0%, #ff55a5 25%, #ff5860 75%, #ff5860 100%);
+  animation: spin 1s linear infinite;
+}
+
+.carga::before{
+  content: '';
+  background-color: #28282d;
+  height: 100px;
+  width: 105px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -2px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /*==============================
 	Common styles
 ==============================*/

@@ -30,7 +30,7 @@
 
                     <div class="col-md-2 col-12 d-flex justify-content-center">
                         <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva obra">
-                            <a th:href="@{/operador/funciones/crear}">
+                            <a th:href="@{/admin/obras/crear}">
                                 <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
                             </a>
                         </button>
@@ -57,7 +57,7 @@
                         <div class="col-md-8 col-12">
 
                             <div class="input-group d-flex justify-content-center" style="margin-bottom: 5px">
-                                <input type="text" placeholder="Buscar Función por Nombre" th:value="${busqueda != null ? busqueda : ''}" name="busqueda" class="src" style="width: inherit;color: #000000">
+                                <input type="text" placeholder="Buscar Obra por Nombre" th:value="${busqueda != null ? busqueda : ''}" name="busqueda" class="src" style="width: inherit;color: #000000">
                             </div>
                         </div>
                         <div class="col-md-4 col-12">
@@ -89,7 +89,7 @@
 
                             <div class="row">
                                 <div class="col-6">
-                                    <a th:href="@{'/operador/funciones/editar?idobra=' + ${foto.idobra.id}}" class="price__btn">Editar</a>
+                                    <a th:href="@{'/admin/obras/editar?idobra=' + ${foto.idobra.id}}" class="price__btn">Editar</a>
                                 </div>
                                 <div class="col-6">
                                     <a class="cancel__btn" type="button" th:onclick="|advertencia(${foto.idobra.id})|">Eliminar</a>
@@ -115,10 +115,10 @@
                             </a>
                             <div class="sign__group">
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
-                                    ¿Estás seguro de querer borrar esta Funcion?</h5>
+                                    ¿Estás seguro de querer borrar esta Obra?</h5>
                             </div>
                             <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
-                            <a id="borrar" class="sign__btn">Borrar Funcion</a>
+                            <a id="borrar" class="sign__btn">Borrar Obra</a>
                         </form>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                 function advertencia(idobra) {
                     let popup = document.getElementById('popup');
 
-                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/obras/borrar?idfuncion='}]] + idobra;
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/obras/borrar?idobra='}]] + idobra;
                     popup.style.display = 'block';
                 }
 
