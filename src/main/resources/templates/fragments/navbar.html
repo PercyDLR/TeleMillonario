@@ -238,6 +238,10 @@
                                     </li>
 
                                     <li class="header__nav-item">
+                                        <a th:href="@{/admin/obras}" class="header__nav-link"
+                                           th:classappend="${seccion=='obras' ? 'header__nav-link--active' : ''}" >Obras</a>
+                                    </li>
+                                    <li class="header__nav-item">
                                         <a th:href="@{/admin/actores}" class="header__nav-link"
                                            th:classappend="${seccion=='actores' ? 'header__nav-link--active' : ''}" >Actores</a>
                                     </li>

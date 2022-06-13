@@ -57,7 +57,7 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
     List<Foto> buscarFuncionesParaContarPorNombre(int idsede,String parametro);
 
 
-    @Query(nativeQuery = true, value = "select any_value(fo.id),fo.estado,any_value(fo.ruta),any_value(fo.numero),any_value(fo.idpersona),any_value(fo.idsede),any_value(fo.idobra)" +
+    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra" +
             " from fotos fo where idobra IS NULL and idsede is not null and fo.estado=?1 " +
             "group by idsede "+
             "limit ?2,?3")
@@ -68,14 +68,14 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "limit ?2,?3")
     List<Foto> listadoSedesUsuar(int estado,int pag, int salasporpag);
 
-    @Query(nativeQuery = true, value = "select fo.* from fotos fo inner join sede s on (fo.idsede=s.id)\n" +
+    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra from fotos fo inner join sede s on (fo.idsede=s.id)\n" +
             "inner join distrito d on (s.iddistrito=d.id) \n" +
             "where idobra IS NULL and idsede is not null and lower(s.nombre) like %?1% and fo.estado=?2\n" +
             "group by idsede " +
             "limit ?3,?4")
     List<Foto> buscarSedePorNombre(String nombre,int estado,int pag, int salasporpag);
 
-    @Query(nativeQuery = true, value = "select fo.* from fotos fo inner join sede s on (fo.idsede=s.id)\n" +
+    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra from fotos fo inner join sede s on (fo.idsede=s.id)\n" +
             "inner join distrito d on (s.iddistrito=d.id) \n" +
             "where idobra IS NULL and idsede is not null and lower(d.nombre) like %?1% and fo.estado=?2\n" +
             "group by idsede " +
@@ -95,5 +95,14 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos where idobra IS NULL and estado=1 and idsede IS NOT NULL group by idsede")
     List<Foto> listSedesHabilitadas();
+
+    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra from fotos fo where " +
+            "fo.estado=?1 and fo.idobra IS NOT NULL group by fo.idobra " +
+            "limit ?2,?3")
+    List<Foto> listadoObrasFotoAdmin(int estado, int pag, int salasporpag);
+
+    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra from fotos fo inner join obra o on (fo.idfuncion=o.id) where " +
+            " fo.estado=?1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra limit ?3,?4")
+    List<Foto> buscarObrasFotoPorNombreAdmin(int estado,String nombre,int pag, int salasporpag);
 
 }
