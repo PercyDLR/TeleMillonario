@@ -5,7 +5,11 @@ import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.DatosTarjeta;
 import com.example.telemillonario.service.FileService;
+import com.example.telemillonario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,13 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
+import java.io.UnsupportedEncodingException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -33,7 +39,13 @@ public class UsuarioController {
     PersonaRepository personaRepository;
 
     @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
     FileService fileService;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Autowired
     FotoRepository fotoRepository;
@@ -52,6 +64,9 @@ public class UsuarioController {
 
     @Autowired
     ObraRepository obraRepository;
+
+    @Autowired
+    PagoRepository pagoRepository;
 
     @GetMapping("")
     public String paginaPrincipal(Model model){
@@ -580,12 +595,11 @@ public class UsuarioController {
             boolean todoOK = true;
             /*
 
-                Validacion de la tarjeta
+                Validacion de la tarjeta @Agustin
 
             */
 
             if(todoOK){
-                //Si t0d0 esta en orden se procede con la compra
                 int cantidadAsistentes = compraEnProceso.getFuncion().getCantidadasistentes();
                 int stockFuncion = compraEnProceso.getFuncion().getStockentradas();
                 int stockRestanteFuncion = stockFuncion - compraEnProceso.getCantidad();
@@ -604,6 +618,24 @@ public class UsuarioController {
                 }
 
                 compraRepository.save(compraEnProceso);
+
+                /*
+
+                QR  @Agustin
+
+                 */
+
+                //Se llena la tabla de pago
+                Pago pago = new Pago();
+                pago.setEstado("1"); //Que estado se le va a poner?
+                //Aca va el set del idtarjeta   @Agustin
+                //Aca va el set del numerotarjeta   @Agustin
+                //Aca va el set de la fechade pago  @Agustin
+                pago.setIdCompra(compraEnProceso);
+                //Aca va el set del codigo QR   @Agustin
+                //Aca va el set del codigo de operacion @Agustin
+                pagoRepository.save(pago);
+
                 compraEnProceso = null;
                 session.setAttribute("compraEnProceso",compraEnProceso);
 
@@ -614,7 +646,7 @@ public class UsuarioController {
 
             }else{
                 /*
-                Se le envian los errores
+                Se le envian los errores de los campos de la tarjeta    @Agustin
                  */
                 return "/usuario/pago";
             }
@@ -631,38 +663,74 @@ public class UsuarioController {
             return "usuario/carritoCompras";
         }
         else{
-            LinkedHashMap<String,Compra> reservasBorrarCarrito = new LinkedHashMap<>();
-
-            //Tengo que validar que sus reservas no hayan superado los 15 min, o menos?
+            ArrayList<Compra> reservasBorrarCarrito = new ArrayList<>();
+            //Tengo que validar que sus reservas no hayan superado los 5 min
+            //Por mientras se realiza la validacion aca .Luego ya se ve como lo quieren.
             Set<String> llaveDeHoras = carrito.keySet();
             for(String fechaReserva : llaveDeHoras){
                 boolean estaATiempo = true;
-                /*
-                   Hago la validacion de si ya paso los 15min despues de su reserva
-                   Dicha validacion lo guardo en una variable
-                */
-                if(estaATiempo == false){
-                    /*
-                       Si ya paso el tiempo entonces se obtiene del carrito la compra y se le borra de  su carrito y le añado a la lista donde estan
-                       las compras que se han borrado
-                       -busco por la fecha la compra en carrito
-                       -lo borro y lo pongo en la nueva lista
-                     */
+                /*Hago la validacion de si ya paso los 15min despues de su reserva.Dicha validacion lo guardo en una variable*/
+               //https://www.delftstack.com/es/howto/java/java-string-to-timestamp/#:~:text=Timestamp%20.-,Usa%20TimeStamp.,en%20una%20marca%20de%20tiempo.
+                DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                LocalDateTime fechaHoraReserva = LocalDateTime.from(formato.parse(fechaReserva));
+                LocalDateTime fechaHoraActual = LocalDateTime.now();
 
+                Duration duration = Duration.between(fechaHoraReserva,fechaHoraActual);
+                long minutes = duration.toMinutes();
+
+                if(minutes > 5){
+                    estaATiempo = false;
+                }
+
+                if(estaATiempo == false){
+                    /*busco por la fecha la compra en carrito,lo borro y lo pongo en la nueva lista*/
+                    Compra compra = carrito.get(fechaReserva);
+                    reservasBorrarCarrito.add(compra);
+                    carrito.remove(fechaReserva);
                 }
             }
-
+            session.setAttribute("carritoDeComprasDeUsuario",carrito);
             if(reservasBorrarCarrito.size() == 0){
                 return "usuario/carritoCompras";
             }else{
-                //Mensajes de las reservas que se han borrado de su carrito , se enviara por correo o en la misma vista de carrito?
+                //Mensajes de las reservas que se han borrado de su carrito , se le envia por correo.
+                String content = "<p>Cordiales Saludos: </p>"
+                        + "<p>Debido al tiempo prudente dado para que terminara su reserva , se procedio a eliminar de su carrito las siguientes reservas:</p>";
+
+                for(Compra compra : reservasBorrarCarrito){
+                    String lineaHTML =  "<p>- Funcion de la obra:"+compra.getFuncion().getIdobra().getNombre()+" "+",con hora de inicio:"+compra.getFuncion().getInicio()+" "+" y con una cantidad de boletos de:"+compra.getCantidad()+"</p>";
+                    content = content + lineaHTML;
+                }
+
+                Persona persona = (Persona) session.getAttribute("usuario");
+                String correo = persona.getCorreo();
+
+                try {
+                    sendReservasBorradas(correo,content);
+                } catch (MessagingException | UnsupportedEncodingException e) {
+                    return "redirect:/anErrorHasOcurred";
+                }
+
                 return "usuario/carritoCompras";
             }
         }
 
     }
 
+    private void sendReservasBorradas(String correo,String content) throws MessagingException,UnsupportedEncodingException{
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
 
+        helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
+        helper.setTo(correo);
+
+        String subject = "¡Aviso Parroquial!";
+
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+        mailSender.send(message);
+    }
 
 
 

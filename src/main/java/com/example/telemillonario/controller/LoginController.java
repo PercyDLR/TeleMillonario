@@ -177,9 +177,9 @@ public class LoginController {
             }
         }
 
-         /*Aca va lo de la API DNI con tod0 y vlaidation */
-        DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
 
+        DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
+        /*
         //Verificamos si existe el dni
         if(datosPersona.getSuccess().equalsIgnoreCase("true")){
             //pasamos a mayuscula los nombres apellidos de la persona que se registro
@@ -195,6 +195,9 @@ public class LoginController {
             }
         }
         else{
+            model.addAttribute("errDni", 1);
+        }*/
+        if(!datosPersona.getSuccess().equalsIgnoreCase("true")){
             model.addAttribute("errDni", 1);
         }
 
