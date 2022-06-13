@@ -122,7 +122,7 @@
                                 <!-- card -->
                                 <div class="card card--big" style="cursor: pointer">
                                     <div class="card__cover">
-                                        <img th:unless="${foto.getNumero() == 0}" th:src="@{foto.ruta}">
+                                        <img th:unless="${foto.getNumero() == 0}" th:src="${foto.ruta}">
                                     </div>
                                 </div>
                                 <!-- end card -->
