@@ -15,6 +15,11 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
 
     Funcion findTopByOrderByIdDesc();
 
+    @Query(nativeQuery = true, value = "select f.* from funcion f " +
+            "inner join sala s on (s.id = f.idsala) " +
+            "where f.estado=1 and s.idsede=?1 " +
+            "limit ?2,?3")
+    List<Funcion> buscarFuncionesPorSede( int idsede, int pag, int salasporpag);
 
     @Query(nativeQuery = true, value = "select * from telemillonario.funcion where " +
             "estado=?1 " +
