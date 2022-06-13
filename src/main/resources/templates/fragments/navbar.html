@@ -186,17 +186,6 @@
                                     <li class="header__nav-item" style="width: 0">
                                 </ul>
 
-                                <!-- header auth -->
-                                <div class="header__auth" style="margin-left: 0">
-
-                                    <a href="#" onclick="document.getElementById('form-logout').submit()"
-                                       class="header__sign-in" style="margin-left: auto">
-                                        <i class="icon ion-ios-log-out"></i>
-                                        <span>Cerrar Sesión</span>
-                                    </a>
-                                </div>
-                                <!-- end header auth -->
-
                                 <!-- header menu btn -->
                                 <button class="header__btn" type="button">
                                     <span></span>
@@ -262,31 +251,38 @@
                                 <!-- Cuenta -->
                                 <ul class="header__nav cuenta" style="height: auto;">
                                     <li class="header__nav-item" style="margin: 5px;">
-                                        <img style="height: 50px;margin-top: 0" th:src="@{/img/user.png}">
+                                        <a role="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <img style="height: 50px;margin-top: 0" th:src="@{/img/user.png}">
+                                        </a>
+
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown">
+                                            <li><a th:href="@{/operador/perfil}">Perfil</a></li>
+                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
+                                                Cerrar Sesión</a></li>
+                                        </ul>
                                     </li>
 
                                     <li class="header__nav-item" style="margin-bottom: 0">
-                                        <div class="cuenta" style="size: 10px;color: white">
-                                            <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
-                                        </div>
+                                        <a role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div class="cuenta" style="size: 10px;color: white">
+                                                <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
+                                            </div>
 
-                                        <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
-                                            <span>Administrador</span>
-                                        </div>
+                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
+                                                <span>Administrador</span>
+                                            </div>
+                                        </a>
+
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
+                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
+                                                Cerrar Sesión</a>
+                                            </li>
+                                        </ul>
                                     </li>
+
+
                                     <li class="header__nav-item" style="width: 0">
                                 </ul>
-
-                                <!-- header auth -->
-                                <div class="header__auth" style="margin-left: 3px">
-
-                                    <a href="#" onclick="document.getElementById('form-logout').submit()"
-                                       class="header__sign-in" style="margin-left: auto">
-                                        <i class="icon ion-ios-log-out"></i>
-                                        <span>Cerrar Sesión</span>
-                                    </a>
-                                </div>
-                                <!-- end header auth -->
 
                                 <!-- header menu btn -->
                                 <button class="header__btn" type="button">
