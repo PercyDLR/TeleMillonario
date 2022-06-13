@@ -767,7 +767,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/compraReservasCarrito") //@Agustin
-    private String comprarReservasDelCarrito(Compra reserva,DatosTarjeta,RedirectAttributes redirectAttributes, HttpSession session){
+    private String comprarReservasDelCarrito(Compra reserva,DatosTarjeta datosTarjeta,RedirectAttributes redirectAttributes, HttpSession session){
         //Los cambios que realize en la cantidad de boletos , se tiene que mapear en el html,aca simplemente cuando le da a comprar
         //Por mientras se establece que una reserva a la vez se compra , de ahi se le implementa las reservas que quiera.
         /*-----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -856,7 +856,7 @@ public class UsuarioController {
        /* }*/
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------*/
-        return "redirect:/carrito";
+
     }
 
 
