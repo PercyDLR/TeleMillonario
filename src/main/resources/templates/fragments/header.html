@@ -4,8 +4,6 @@
     <head th:fragment="head(titulo,extra)">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Font -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
 
         <!--Bootstrap 5-->
@@ -38,7 +36,7 @@
         <!-- Estilos Propios-->
         <style th:inline="text">
             body{
-                background: url([[@{/img/home/fondo.jpg}]]) center center / cover no-repeat fixed;
+                background: #2b2b31 url([[@{/img/home/fondo.jpg}]]) center center / cover no-repeat fixed;
             }
 
             @media(min-width: 1200px){
@@ -59,7 +57,6 @@
             }
             #popup {
                 position: fixed;
-                visibility: hidden;
                 top: 0;
                 bottom: 0;
                 left: 0;

@@ -56,15 +56,16 @@ public class UsuarioController {
     SedeRepository sedeRepository;
 
     @Autowired
-    CompraRepository compraRepository;
+    ObraRepository obraRepository;
 
     @Autowired
-    ObraRepository obraRepository;
+    CompraRepository compraRepository;
 
     @Autowired
     PagoRepository pagoRepository;
 
     @GetMapping("")
+
     public String paginaPrincipal(Model model){
         List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
         model.addAttribute("listaObras",listaObras);
@@ -77,8 +78,18 @@ public class UsuarioController {
 
         List<Obragenero> obraGenero = obraGeneroRepository.findAll();
         model.addAttribute("obraGenero",obraGenero);
+
         return "vistaPrincipal";
     }
+
+    @GetMapping("/historial")
+    public String historialCompraPersona(Model model, HttpSession session) {
+        Persona personita = (Persona) session.getAttribute("usuario");
+        List<Compra> historialCompras = compraRepository.historialCompras(personita.getId());
+        model.addAttribute("historialCompras", historialCompras);
+        return "/usuario/historial";
+    }
+
 
     @GetMapping("/perfil")
     public String verPerfilUsuario(@ModelAttribute("usuario") Persona usuario, Model model, HttpSession session) {
@@ -221,12 +232,14 @@ public class UsuarioController {
 
         Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
 
+
         if(funcion.isPresent()){
             List<Obragenero> funcionGenero = obraGeneroRepository.findAll();
             model.addAttribute("funcionGenero",funcionGenero);
+
             return "usuario/obras/obraDetalles";
 
-        }else{
+        } else {
             return "anErrorHasOcurred";
         }
 
