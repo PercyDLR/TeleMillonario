@@ -38,4 +38,10 @@ public interface SalaRepository extends JpaRepository<Sala,Integer> {
 
     @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.sala where idsede=?1 ")
     Integer valCantSal(int idsede);
+
+    @Query(nativeQuery = true, value = "select sa.* from sede s\n" +
+            "inner join sala sa on (sa.idsede = s.id)\n" +
+            "inner join funcion f on (f.idsala = sa.id)\n" +
+            "where (s.estado = 1) and (sa.estado = 1) and (f.estado = 1) and (f.idobra = ?1) and (sa.idsede = ?2);")
+    List<Sala> listaSalasConObra(int idobra, int idsede);
 }

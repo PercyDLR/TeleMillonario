@@ -31,4 +31,10 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     @Query(nativeQuery = true,value = "SELECT funcion.id FROM funcion INNER JOIN sala ON ( funcion.idsala = sala.id) INNER JOIN sede ON ( sala.idsede = sede.id) WHERE funcion.id = ?1 AND sede.id = ?2 AND funcion.fecha = ?3 AND funcion.inicio = ?4")
     Funcion encontrarFuncionHoraSede(int idFuncion, int idSede, LocalDate fecha, LocalTime hora);
 
+    @Query(nativeQuery = true, value = "select f.* from sede s\n" +
+            "inner join sala sa on (sa.idsede = s.id)\n" +
+            "inner join funcion f on (f.idsala = sa.id)\n" +
+            "where (s.estado = 1) and (sa.estado = 1) and (f.estado = 1) and (f.idobra = ?1) and (sa.idsede = ?2) and (f.idsala = ?3);")
+    List<Funcion> listaFuncionesConObra(int idobra, int idsede, int idsala);
+
  }

@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface FotoRepository extends JpaRepository<Foto,Integer> {
 
-    List<Foto> findByIdpersonaOrderByNumero(int id);
+    List<Foto> findByIdpersonaOrderByNumero(Integer id);
 
 //    List<Foto> findByIdsedeOrderByNumero(int id);
 

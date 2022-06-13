@@ -31,4 +31,10 @@ public interface SedeRepository extends JpaRepository<Sede,Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sede where estado=?1")
     List<Sede> listaSedesHabilitadas(int estado);
 
+    @Query(nativeQuery = true, value = "select s.* from sede s\n" +
+            "inner join sala sa on (sa.idsede = s.id)\n" +
+            "inner join funcion f on (f.idsala = sa.id)\n" +
+            "where (s.estado = 1) and (sa.estado = 1) and (f.estado = 1) and (f.idobra = ?1);")
+    List<Sede> listaSedesConObra(int idobra);
+
 }
