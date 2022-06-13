@@ -153,21 +153,21 @@
                             <tbody>
                                 <tr th:each="foto,index: ${listaSedes}">
                                     <th ><center><img style="height: 80px;width: 90px;margin-top: 14px" th:src="${foto.ruta}"></center></th>
-                                    <td th:text="${foto.getSede().getNombre()}">Gran Teatro Nacional</td>
-                                    <td th:text="${foto.getSede().getIddistrito().getNombre()}">San Miguel</td>
-                                    <td th:text="${foto.getSede().getDireccion()}">Av. Grau</td>
+                                    <td th:text="${foto.getIdsede().getNombre()}">Gran Teatro Nacional</td>
+                                    <td th:text="${foto.getIdsede().getIddistrito().getNombre()}">San Miguel</td>
+                                    <td th:text="${foto.getIdsede().getDireccion()}">Av. Grau</td>
                                     <td>
-                                        <div th:data-latlong="${foto.getSede().getCoordenadas()}" th:id="|map${index.index}|"></div></td>
+                                        <div th:data-latlong="${foto.getIdsede().getCoordenadas()}" th:id="|map${index.index}|"></div></td>
                                     <td>
                                         <button style="cursor: pointer">
-                                            <a class="circulo_botones" th:href="@{'/admin/salas'+'?idsede='+ ${foto.getSede().getId()}}">
+                                            <a class="circulo_botones" th:href="@{'/admin/salas'+'?idsede='+ ${foto.getIdsede().getId()}}">
                                                 <img style="height: 34px;margin-left: 8px;margin-top:8px;" th:src="@{/img/iconInfo3.png}">
                                             </a>
                                         </button>
                                     </td>
                                     <td>
                                         <button>
-                                            <a class="circulo_botones" th:href="@{'/admin/sedes/editar'+'?idsede='+ ${foto.getSede().getId()}}">
+                                            <a class="circulo_botones" th:href="@{'/admin/sedes/editar'+'?idsede='+ ${foto.getIdsede().getId()}}">
                                                 <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}">
                                             </a>
                                         </button>
@@ -175,7 +175,7 @@
                                     <td>
                                         <button>
                                             <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getSede().getId()})|" th:src="@{/img/iconTrash2.png}">
+                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getIdsede().getId()})|" th:src="@{/img/iconTrash2.png}">
                                             </a>
                                         </button>
                                     </td>
@@ -275,7 +275,7 @@
                     }
 
                     if (document.getElementById("map6")) {
-                        const map5 = new google.maps.Map(document.getElementById("map6"), {
+                        const map6 = new google.maps.Map(document.getElementById("map6"), {
                             zoom: 8,
                             center: {lat: -12.043644056140575, lng: -77.04265001225203},
                         });

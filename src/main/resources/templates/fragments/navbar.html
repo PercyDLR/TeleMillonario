@@ -121,7 +121,7 @@
                         <div class="col-12">
                             <div class="header__content">
                                 <!-- header logo -->
-                                <a th:href="@{/}" class="header__logo" style="width: 12rem">
+                                <a th:href="@{/operador/funciones}" class="header__logo" style="width: 12rem">
                                     <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
                                 </a>
                                 <!-- end header logo -->
@@ -237,6 +237,10 @@
                                            th:classappend="${seccion=='operadores' ? 'header__nav-link--active' : ''}" >Operadores</a>
                                     </li>
 
+                                    <li class="header__nav-item">
+                                        <a th:href="@{/admin/obras}" class="header__nav-link"
+                                           th:classappend="${seccion=='obras' ? 'header__nav-link--active' : ''}" >Obras</a>
+                                    </li>
                                     <li class="header__nav-item">
                                         <a th:href="@{/admin/actores}" class="header__nav-link"
                                            th:classappend="${seccion=='actores' ? 'header__nav-link--active' : ''}" >Actores</a>

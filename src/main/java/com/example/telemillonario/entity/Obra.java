@@ -1,8 +1,6 @@
 package com.example.telemillonario.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,6 +8,9 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "obra")
 public class Obra {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -29,7 +30,7 @@ public class Obra {
     @Column(name = "nombre", length = 100)
     private String nombre;
 
-    @Size(max=40,message = "La descripcion no puede ser mayor a 5000 caracteres")
+    @Size(max=40,message = "La descripcion no puede ser mayor a 500 caracteres")
     @NotBlank(message = "La descripcion no puede estar vacia")
     @Column(name = "descripcion", length = 500)
     private String descripcion;

@@ -1,6 +1,5 @@
 package com.example.telemillonario.controller.Usuario;
 
-import com.azure.core.annotation.Get;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
@@ -10,8 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Controller
@@ -25,16 +22,25 @@ public class ObraController {
     FileService fileService;
 
     @Autowired
-    FuncionGeneroRepository funcionGeneroRepository;
+    ObraGeneroRepository obraGeneroRepository;
+
+    @Autowired
+    ObraRepository obraRepository;
 
     @Autowired
     GeneroRepository generoRepository;
+
+    @Autowired
+    SalaRepository salaRepository;
 
     @Autowired
     FuncionRepository funcionRepository;
 
     @Autowired
     FuncionElencoRepository funcionElencoRepository;
+
+    @Autowired
+    SedeRepository sedeRepository;
 
     //Variables Importantes
     int funcionesxpagina = 12;
@@ -58,7 +64,7 @@ public class ObraController {
             pagina = 0;
         }
 
-        List<Obragenero> listaFuncionGenero = funcionGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
+        List<Obragenero> listaFuncionGenero = obraGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
 
         //System.out.println("Lista funcionesGenero que retorna el query");
         //for (Funciongenero f : listaFuncionGenero) {
@@ -140,23 +146,23 @@ public class ObraController {
         //Una vez obtengo la lista de obras no repetidas, requiero indicar aquellas que se enviaran
         int tamanhoLista = funcionGenero.size();
         System.out.println("Tamanio de la lista: " + tamanhoLista);
-        LinkedHashMap<Obra, ArrayList<Genero>> listaFuncionesGeneroAEnviar = new LinkedHashMap<>();
+        LinkedHashMap<Obra, ArrayList<Genero>> listaObraGeneroAEnviar = new LinkedHashMap<>();
         int i = 0;
         for (Map.Entry<Obra, ArrayList<Genero>> h : funcionGenero.entrySet()) {
             if (i >= pagina * funcionesxpagina && i < pagina * funcionesxpagina + funcionesxpagina && i < tamanhoLista) {
-                listaFuncionesGeneroAEnviar.put(h.getKey(), h.getValue());
+                listaObraGeneroAEnviar.put(h.getKey(), h.getValue());
             }
             i = i + 1;
         }
 
         ArrayList<Foto> listaCaratulas = new ArrayList<>();
-        for (Map.Entry<Obra, ArrayList<Genero>> h : listaFuncionesGeneroAEnviar.entrySet()) {
+        for (Map.Entry<Obra, ArrayList<Genero>> h : listaObraGeneroAEnviar.entrySet()) {
             listaCaratulas.add(fotoRepository.caratulaDeObra(h.getKey().getId()));
         }
 
         //System.out.println("Lista Funcion Genero actualizada");
         System.out.println("Pagina " + pagina);
-        System.out.println("Tamanio lista: " + listaFuncionesGeneroAEnviar.size());
+        System.out.println("Tamanio lista: " + listaObraGeneroAEnviar.size());
         //for (Map.Entry<Funcion, ArrayList<Genero>> h : listaFuncionesGeneroAEnviar.entrySet()) {
 
         //    System.out.println(h.getKey().getId());
@@ -181,7 +187,7 @@ public class ObraController {
 
         model.addAttribute("pagActual", pagina);
         model.addAttribute("pagTotal", (int) Math.ceil(listaFuncionGenero.size() / funcionesxpagina));
-        model.addAttribute("listaFuncionesGenero", listaFuncionesGeneroAEnviar);
+        model.addAttribute("listaObraGenero", listaObraGeneroAEnviar);
         model.addAttribute("listaCaratulas", listaCaratulas);
         model.addAttribute("generos", generoRepository.findAll());
         return "usuario/obras/carteleraObras";
@@ -202,28 +208,38 @@ public class ObraController {
         return "redirect:/cartelera?restriccionEdad=" + restriccionEdad + "&genero=" + genero + "&busqueda=" + busqueda + "&pag=" + pag;
     }
 
+    @GetMapping("/carritoPrueba")
+    String detallesObra() {
+        return "usuario/carrito/carritoComprasUsuario";
+    }
+
     @GetMapping("/DetallesObra")
     String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a) {
 
-        Optional<Funcion> opt = funcionRepository.findById(id);
+        Optional<Obra> opt = obraRepository.findById(id);
         if (opt.isPresent()) {
-            Funcion funcion = opt.get();
-            List<Foto> listaFotos = fotoRepository.fotosFuncion(id);
+            Obra obra = opt.get();
+            List<Foto> listaFotos = fotoRepository.fotosObra(id);
+            System.out.println("Numero de fotos: " + listaFotos.size());
+
+            for (Foto f : listaFotos) {
+                System.out.println("Ruta foto: " + f.getRuta());
+            }
 
             //Mandar los generos de la obra de la funcion
             ArrayList<Genero> listaGeneros = new ArrayList<>();
-            List<Obragenero> listaFuncionesGenero = funcionGeneroRepository.buscarFuncionGenero(id);
-            for (Obragenero f : listaFuncionesGenero) {
+            List<Obragenero> listaObraGenero = obraGeneroRepository.buscarFuncionGenero(id);
+            for (Obragenero f : listaObraGenero) {
                 listaGeneros.add(f.getIdgenero());
             }
 
             //Mandar director y actores
-            LinkedHashMap<Persona, ArrayList<Persona>> listaDirectorYActores = new LinkedHashMap<>();
+            LinkedHashMap<ArrayList<Persona>, ArrayList<Persona>> listaDirectoresYActores = new LinkedHashMap<>();
             List<Funcionelenco> listaFuncionelenco = funcionElencoRepository.buscarFuncionElenco(id);
-            Persona director = new Persona();
+            ArrayList<Persona> listaDirectores = new ArrayList<>();
             for (Funcionelenco f : listaFuncionelenco) {
                 if (f.getIdpersona().getIdrol().getId() == 4) {
-                    director = f.getIdpersona();
+                    listaDirectores.add(f.getIdpersona());
                 }
             }
             ArrayList<Persona> listaActores = new ArrayList<>();
@@ -232,35 +248,71 @@ public class ObraController {
                     listaActores.add(f.getIdpersona());
                 }
             }
-            listaDirectorYActores.put(director ,listaActores);
+            listaDirectoresYActores.put(listaDirectores ,listaActores);
 
-            //Mandar la duracion de la funcion
-            Long duracionMinutos = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
-            Long horas = duracionMinutos/(long) 60;
-            Long minutos = duracionMinutos%(long) 60;
+//            //Mandar la duracion de la funcion
+//            Long duracionMinutos = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
+//            Long horas = duracionMinutos/(long) 60;
+//            Long minutos = duracionMinutos%(long) 60;
+//
+//            String horastr;
+//            String minutostr;
+//            if (horas < 10) {
+//                horastr = "0" + String.valueOf(horas);
+//            } else {
+//                horastr = String.valueOf(horas);
+//            }
+//            if (minutos < 10) {
+//                minutostr = "0" + String.valueOf(minutos);
+//            } else {
+//                minutostr = String.valueOf(minutos);
+//            }
+//
+//            String duracion = horastr + ":" + minutostr;
+//            int boletosrestantes = funcion.getStockentradas() - funcion.getCantidadasistentes();
 
-            String horastr;
-            String minutostr;
-            if (horas < 10) {
-                horastr = "0" + String.valueOf(horas);
-            } else {
-                horastr = String.valueOf(horas);
+            //Necesito enviar:
+            //- Lista de sedes donde se presenta la funcion de la obra (LISTO)
+            //- Lista de sala, fecha y hora de inicio de la funcion (LISTO)
+
+            List<Sede> listaSedesConObra = sedeRepository.listaSedesConObra(id);
+            LinkedHashMap<Sede, LinkedHashMap<Funcion, String>> funcionesDeLaSede = new LinkedHashMap<>();
+            for (Sede s : listaSedesConObra) {
+                funcionesDeLaSede.put(s, new LinkedHashMap<>());
+                List<Sala> listaSalasDeSede = salaRepository.listaSalasConObra(id, s.getId());
+
+                for (Sala sa : listaSalasDeSede) {
+                    LinkedHashMap<Funcion, String> idFuncionYStringDeOpcion = new LinkedHashMap<>();
+                    List<Funcion> listaFunciones = funcionRepository.listaFuncionesConObra(id, s.getId(), sa.getId());
+                    for (Funcion f : listaFunciones) {
+                        idFuncionYStringDeOpcion.put(f, "Sala " + sa.getNumero() + " > " + f.getFecha() + " " + f.getInicio());
+                        funcionesDeLaSede.put(s, idFuncionYStringDeOpcion);
+                    }
+
+                }
+
             }
-            if (minutos < 10) {
-                minutostr = "0" + String.valueOf(minutos);
-            } else {
-                minutostr = String.valueOf(minutos);
-            }
 
-            String duracion = horastr + ":" + minutostr;
-            int boletosrestantes = funcion.getStockentradas() - funcion.getCantidadasistentes();
+            List<Sede> lista = sedeRepository.findAll();
 
-            model.addAttribute("funcion", funcion);
+//            for (Map.Entry<Sede, LinkedHashMap<Funcion, String>> h : funcionesDeLaSede.entrySet()) {
+//
+//                System.out.println("Sede: " + h.getKey().getNombre());
+//                System.out.println("Longitud value: " + h.getValue().size());
+//                for (Map.Entry<Funcion, String> j : h.getValue().entrySet()) {
+//                    System.out.println("Id de la funcion: " + j.getKey().getId());
+//                    System.out.println("Opcion: " + j.getValue());
+//                    System.out.println("**************************");
+//                }
+//                System.out.println("============================================");
+//            }
+
+            model.addAttribute("obra", obra);
             model.addAttribute("listaFotos", listaFotos);
             model.addAttribute("listaGeneros", listaGeneros);
-            model.addAttribute("listaDirectorYActores", listaDirectorYActores);
-            model.addAttribute("duracion", duracion);
-            model.addAttribute("boletosrestantes", boletosrestantes);
+            model.addAttribute("listaDirectoresYActores", listaDirectoresYActores);
+            model.addAttribute("listaSedesConObra", listaSedesConObra);
+            model.addAttribute("funcionesDeLaSede", funcionesDeLaSede);
             return "usuario/obras/carteleraObraDetalles";
         } else {
             a.addFlashAttribute("msg", -1);

@@ -50,7 +50,7 @@ public class UsuarioController {
     FuncionRepository funcionRepository;
 
     @Autowired
-    FuncionGeneroRepository funcionGeneroRepository;
+    ObraGeneroRepository obraGeneroRepository;
 
     @Autowired
     SedeRepository sedeRepository;
@@ -65,23 +65,20 @@ public class UsuarioController {
     PagoRepository pagoRepository;
 
     @GetMapping("")
-    public String paginaPrincipal(Model model) {
-        List<Funcion> listaFunciones = funcionRepository.obtenerFuncionesDestacadasPaginaPrincipal();
-        model.addAttribute("listaFunciones", listaFunciones);
+    public String paginaPrincipal(Model model){
+        List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
+        model.addAttribute("listaObras",listaObras);
 
-        List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
-        model.addAttribute("funcionGenero", funcionGenero);
+        ArrayList<Foto> listaCaratulas = new ArrayList<>();
+        for (Obra o : listaObras) {
+            listaCaratulas.add(fotoRepository.caratulaDeObra(o.getId()));
+        }
+        model.addAttribute("listaCaratulas", listaCaratulas);
+
+        List<Obragenero> obraGenero = obraGeneroRepository.findAll();
+        model.addAttribute("obraGenero",obraGenero);
         return "vistaPrincipal";
     }
-
-    @GetMapping("/historial")
-    public String historialCompraPersona(Model model, HttpSession session) {
-        Persona personita = (Persona) session.getAttribute("usuario");
-        List<Compra> historialCompras = compraRepository.historialCompras(personita.getId());
-        model.addAttribute("historialCompras", historialCompras);
-        return "/usuario/historial";
-    }
-
 
     @GetMapping("/perfil")
     public String verPerfilUsuario(@ModelAttribute("usuario") Persona usuario, Model model, HttpSession session) {
@@ -102,6 +99,7 @@ public class UsuarioController {
                                        @RequestParam("imagen") MultipartFile img,
                                        BindingResult bindingResult, Model model,
                                        RedirectAttributes a, HttpSession session) {
+        //@Validated(Perfil.class)
 
         Persona usuarioSesion = (Persona) session.getAttribute("usuario");
         if (bindingResult.hasErrors()) {
@@ -223,12 +221,12 @@ public class UsuarioController {
 
         Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
 
-        if (funcion.isPresent()) {
-            List<Obragenero> funcionGenero = funcionGeneroRepository.findAll();
-            model.addAttribute("funcionGenero", funcionGenero);
+        if(funcion.isPresent()){
+            List<Obragenero> funcionGenero = obraGeneroRepository.findAll();
+            model.addAttribute("funcionGenero",funcionGenero);
             return "usuario/obras/obraDetalles";
 
-        } else {
+        }else{
             return "anErrorHasOcurred";
         }
 
