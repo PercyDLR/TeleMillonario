@@ -27,4 +27,6 @@ public interface ObraRepository extends JpaRepository<Obra, Integer> {
             "fo.estado=?1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra")
     Integer cantObrasTotalFiltrAdmin(int estado,String nombre);
 
+
+
 }

@@ -64,7 +64,7 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "limit ?2,?3")
     List<Foto> listadoSedesAdmin(int estado,int pag, int salasporpag);
 
-    @Query(nativeQuery = true, value = "select fo.* from fotos fo inner join sede s on (fo.idsede=s.id) where s.estado=1 and idobra IS NULL and idsede is not null and fo.estado=?1 " +
+    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra from fotos fo inner join sede s on (fo.idsede=s.id) where s.estado=1 and idobra IS NULL and idsede is not null and fo.estado=?1 " +
             "group by idsede "+
             "limit ?2,?3")
     List<Foto> listadoSedesUsuar(int estado,int pag, int salasporpag);

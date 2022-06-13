@@ -19,12 +19,12 @@ public interface SedeRepository extends JpaRepository<Sede,Integer> {
     Integer cantSedesTotalAdmin();
 
     @Query(nativeQuery = true, value = "Select count(*) from " +
-            "(select fo.* from fotos fo inner join sede s on (fo.idsede=s.id) where s.estado=1 and  fo.idfuncion IS NULL and fo.idsede is not null and fo.estado=1 group by idsede ) as Result;")
+            "(select any_value(fo.id) from fotos fo inner join sede s on (fo.idsede=s.id) where s.estado=1 and  fo.idobra IS NULL and fo.idsede is not null and fo.estado=1 group by idsede ) as Result;")
     Integer cantSedesTotalUsuar();
 
     @Query(nativeQuery = true, value = "Select count(*) from " +
             "(select fo.* from fotos fo inner join sede s on (fo.idsede=s.id) inner join distrito d on (s.iddistrito=d.id) " +
-            "where idfuncion IS NULL and idsede is not null and lower(s.nombre) like %?1% and fo.estado=?2 group by idsede ) as Result;")
+            "where idobra IS NULL and idsede is not null and lower(s.nombre) like %?1% and fo.estado=?2 group by idsede ) as Result;")
     Integer cantSedesFiltr(String nombre,int estado);
 
 

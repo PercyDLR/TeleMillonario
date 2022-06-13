@@ -5,6 +5,7 @@ import com.example.telemillonario.entity.Obra;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Sede;
 import com.example.telemillonario.repository.FotoRepository;
+import com.example.telemillonario.repository.FuncionRepository;
 import com.example.telemillonario.repository.ObraRepository;
 import com.example.telemillonario.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class ObraAdminController {
     @Autowired
     FileService fileService;
 
+    @Autowired
+    FuncionRepository funcionRepository;
     float obrasporpagina=6;
 
     @GetMapping(value = {"", "/","/lista"})
@@ -254,10 +257,52 @@ public class ObraAdminController {
 
                 obraRepository.save(obra);
                 attr.addFlashAttribute("msg", "Se ha editado exitosamente la obra");
-                return "redirect:/admin/sedes/lista";
+                return "redirect:/admin/obras/lista";
             }
         }
     }
 
+
+    @GetMapping("/borrar")
+    public String borrarObra(Model model,
+                             @RequestParam("idobra") int idobra,
+                             RedirectAttributes attr) {
+
+        //buscar las fotos a eliminar en el filemanager de Azure
+
+        try{
+            int a=funcionRepository.valCantFuncionConObra(idobra);
+            if( a!=0 ){
+                attr.addFlashAttribute("msg", "No puede eliminar una obra que este asociada a una funcion ");
+                return "redirect:/admin/obras/lista";
+            }
+            List<Foto> fotos = fotoRepository.buscarFotosObra(idobra);;
+
+            if(fotos.size()!=0){
+                //eliminamos las fotos una por una del filemanager de Azure y de la base de datos
+                for (Foto fot : fotos) {
+                    String [] urlfoto=fot.getRuta().split("/telemillonario/");
+                    String nombrefoto= urlfoto[1];
+                    fileService.eliminarArchivo(nombrefoto);
+                    fotoRepository.deleteById(fot.getId());
+                }
+
+                //eliminamos la obra de la base de datos
+                obraRepository.deleteById(idobra);
+
+                attr.addFlashAttribute("msg", "Se ha eliminado correctamente la obra");
+            }else{
+                attr.addFlashAttribute("msg", "No se puede borrar una obra que no existe");
+            }
+            return "redirect:/admin/obras/lista";
+        }catch (Exception e){
+
+            attr.addFlashAttribute("msg", "Hubo un error al borrar la obra");
+            return "redirect:/admin/obras/lista";
+        }
+
+
+
+    }
 
 }

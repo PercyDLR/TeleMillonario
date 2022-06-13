@@ -37,4 +37,7 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
             "where (s.estado = 1) and (sa.estado = 1) and (f.estado = 1) and (f.idobra = ?1) and (sa.idsede = ?2) and (f.idsala = ?3);")
     List<Funcion> listaFuncionesConObra(int idobra, int idsede, int idsala);
 
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.funcion where idobra=?1 ")
+    Integer valCantFuncionConObra(int idobra);
+
  }
