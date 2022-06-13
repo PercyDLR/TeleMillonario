@@ -137,62 +137,62 @@
 
                     <!--col 7 y 5-->
                     <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
-                        <div class="col-lg-7 col-md-5 col-6 sign__group">
-                            <div class="row">
-                                <select class="sign__input" id="sedes" onchange="seleccionSede(this)">
-                                    <option value="" selected>Seleccione una sede</option>
-                                    <option th:each="sede, i : ${listaSedesConObra}"
-                                            th:text="${sede.nombre}" th:value="'sede'+${sede.id}"></option>
-                                </select>
-                            </div>
-                            <div class="row" id="selectDefecto">
-                                <select class="sign__input" name="funcion">
-                                    <option value="" selected>Seleccione una función de la sede</option>
-                                </select>
-                            </div>
-                            <div class="row" id="mostrarSelect" style="display: none">
-                                <select class="sign__input" name="funcion" th:each="a, i : ${funcionesDeLaSede}"
-                                        th:id="'sede'+${a.key.id}" style="display: none"
-                                        onchange="seleccionFuncion(this)">
-                                    <option value="" selected>Seleccione una función de la sede</option>
-                                    <option th:each="l, i : ${a.value}" th:value="${l.key.id}"
-                                            th:text="${l.value}"
-                                            th:id="'funcion'+${i.index + 1}"></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-5 col-12 sign__group">
-
-                            <div th:each="a : ${funcionesDeLaSede}" id="funcionesDeLaSede" style="display: none">
-                                <div th:each="l, i : ${a.value}" th:id="${l.key.id}" style="display: none">
-                                    <input type="number" th:value="${l.key.cantidadasistentes}"
-                                           th:id="'cantidadasistentes'+${l.key.id}" hidden>
-                                    <input type="number" th:value="${l.key.stockentradas}"
-                                           th:id="'stockentradas'+${l.key.id}" hidden>
-                                    <h1 class="home__title" style="text-transform: none; font-size: 30px"
-                                        th:id="'boletosRestantes'+${l.key.id}"></h1>
-
-                                    <td class="ps-0 pt-0">
-                                        <div class="d-flex">
-                                            <div>
-                                                <div class="value-button" id="decrease" onclick="decreaseValue()"
-                                                     value="Decrease Value"><i class="bi bi-dash"></i></div>
-                                                <input type="number" name="cantidadBoletos" id="number" value="1"
-                                                       min="1"/>
-                                                <input type="number" name="funcion" id="funcion" th:value="${l.key.id}" disabled/>
-                                                <div class="value-button" id="increase" onclick="increaseValue()"
-                                                     value="Increase Value"><i class="bi bi-plus-lg"></i></div>
-                                            </div>
-                                        </div>
-                                    </td>
+                        <form method="post"> <!--Estoy enviando la id de la funcion y la cantidad de boletos a comprar-->
+                            <div class="col-lg-7 col-md-5 col-6 sign__group">
+                                <div class="row">
+                                    <select class="sign__input" id="sedes" onchange="seleccionSede(this)">
+                                        <option value="" selected>Seleccione una sede</option>
+                                        <option th:each="sede, i : ${listaSedesConObra}"
+                                                th:text="${sede.nombre}" th:value="'sede'+${sede.id}"></option>
+                                    </select>
+                                </div>
+                                <div class="row" id="selectDefecto">
+                                    <select class="sign__input">
+                                        <option value="" selected>Seleccione una función de la sede</option>
+                                    </select>
+                                </div>
+                                <div class="row" id="mostrarSelect" style="display: none">
+                                    <select class="sign__input" name="funcion" th:each="a, i : ${funcionesDeLaSede}"
+                                            th:id="'sede'+${a.key.id}" style="display: none"
+                                            onchange="seleccionFuncion(this)"> <!--Aqui se elige la funcion a asistir-->
+                                        <option value="" selected>Seleccione una función de la sede</option>
+                                        <option th:each="l, i : ${a.value}" th:value="${l.key.id}"
+                                                th:text="${l.value}"
+                                                th:id="'funcion'+${i.index + 1}"></option>
+                                    </select>
                                 </div>
                             </div>
+                            <div class="col-lg-5 col-12 sign__group">
 
-                        </div>
+                                <div th:each="a : ${funcionesDeLaSede}" id="funcionesDeLaSede" style="display: none">
+                                    <div th:each="l, i : ${a.value}" th:id="${l.key.id}" style="display: none">
+                                        <input type="number" th:value="${l.key.cantidadasistentes}"
+                                               th:id="'cantidadasistentes'+${l.key.id}" hidden>
+                                        <input type="number" th:value="${l.key.stockentradas}"
+                                               th:id="'stockentradas'+${l.key.id}" hidden>
+                                        <h1 class="home__title" style="text-transform: none; font-size: 30px"
+                                            th:id="'boletosRestantes'+${l.key.id}"></h1>
 
+                                        <td class="ps-0 pt-0">
+                                            <div class="d-flex">
+                                                <div>
+                                                    <div class="value-button" th:id="'decrease'+${l.key.id}" th:onclick="|decreaseValue(${l.key.id})|"
+                                                         value="Decrease Value"><i class="bi bi-dash"></i></div>
+                                                    <input type="number" name="cantidadBoletos" th:id="'number'+${l.key.id}" value="1"
+                                                           min="1" disabled/> <!--Aqui se elige la cantidad de boletos a comprar, con minimo 1 boleto y maximo el stock disponible-->
+                                                    <div class="value-button" th:id="'increase'+${l.key.id}" th:onclick="|increaseValue(${l.key.id})|"
+                                                         value="Increase Value"><i class="bi bi-plus-lg"></i></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
                     </div>
 
-                    <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
+                    <div class="row justify-content-center mt-3">
                         <a sec:authorize="isAnonymous()" th:href="@{/cartelera/carritoPrueba}"
                            class="header__sign-in"> <!--th:href="@{/login}"-->
                             <i class="icon ion-ios-log-in"></i>
@@ -211,18 +211,27 @@
             </script>
 
             <script>
-                function increaseValue() {
-                    var value = parseInt(document.getElementById('number').value, 10);
+                function increaseValue(id) {
+                    var id = id.value;
+                    var value = parseInt(document.getElementById('number'+id).value, 10);
                     value = isNaN(value) ? 0 : value;
-                    value++;
+
+                    var maximo = document.getElementById("number"+id).max;
+                    if (value < maximo) {
+                        value++;
+                    }
                     document.getElementById('number').value = value;
                 }
 
-                function decreaseValue() {
-                    var value = parseInt(document.getElementById('number').value, 10);
+                function decreaseValue(id) {
+                    var id = id.value;
+                    var value = parseInt(document.getElementById('number'+id).value, 10);
                     value = isNaN(value) ? 0 : value;
                     value < 1 ? value = 1 : '';
-                    value--;
+                    var maximo = document.getElementById("number"+id).min;
+                    if (value > maximo) {
+                        value--;
+                    }
                     document.getElementById('number').value = value;
                 }
 
@@ -241,27 +250,26 @@
                 }
 
                 function seleccionFuncion(ifFuncion) {
-                    var value1 = ifFuncion.value;
+                    var id = ifFuncion.value;
 
-                    if (value1 == "") {
+                    if (id == "") {
                         document.getElementById("funcionesDeLaSede").style.display = 'none';
                     } else {
                         document.getElementById("funcionesDeLaSede").style.display = 'block';
-                        document.getElementById(value1).style.display = 'block';
+                        document.getElementById(id).style.display = 'block';
 
-                        var cantidadasistentes = document.getElementById("cantidadasistentes" + value1).value;
-                        var stockentradas = document.getElementById("stockentradas" + value1).value;
+                        var cantidadasistentes = document.getElementById("cantidadasistentes" + id).value;
+                        var stockentradas = document.getElementById("stockentradas" + id).value;
                         var boletosrestantes = stockentradas - cantidadasistentes;
-                        document.getElementById("boletosRestantes" + value1).innerHTML = "<h1 class=\"home__title\" style=\"text-transform: none; font-size: 30px\">Boletos restantes: " + boletosrestantes + " </h1>";
+                        document.getElementById("number"+id).max = boletosrestantes;
+                        document.getElementById("number"+id).removeAttribute('disabled');
+                        document.getElementById("boletosRestantes" + value1).innerHTML = "<h1 class=\"home__title\" style=\"text-transform: none; font-size: 20px\">Boletos restantes: " + boletosrestantes + " </h1>";
 
                         // <h1 className="home__title" style="text-transform: none; font-size: 30px">Boletos restantes: </h1>
 
                     }
 
                 }
-
-                // <input type="number" name="cantidadBoletos" id="number" value="1" min="1"/>
-                // <input type="number" name="funcion" id="funcion" th:value="${l.key.id}" disabled/>
 
             </script>
 
