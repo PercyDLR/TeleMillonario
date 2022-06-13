@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Controller
@@ -32,10 +31,16 @@ public class ObraController {
     GeneroRepository generoRepository;
 
     @Autowired
+    SalaRepository salaRepository;
+
+    @Autowired
     FuncionRepository funcionRepository;
 
     @Autowired
     FuncionElencoRepository funcionElencoRepository;
+
+    @Autowired
+    SedeRepository sedeRepository;
 
     //Variables Importantes
     int funcionesxpagina = 12;
@@ -203,6 +208,11 @@ public class ObraController {
         return "redirect:/cartelera?restriccionEdad=" + restriccionEdad + "&genero=" + genero + "&busqueda=" + busqueda + "&pag=" + pag;
     }
 
+    @GetMapping("/carritoPrueba")
+    String detallesObra() {
+        return "usuario/carrito/carritoComprasUsuario";
+    }
+
     @GetMapping("/DetallesObra")
     String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a) {
 
@@ -210,6 +220,11 @@ public class ObraController {
         if (opt.isPresent()) {
             Obra obra = opt.get();
             List<Foto> listaFotos = fotoRepository.fotosObra(id);
+            System.out.println("Numero de fotos: " + listaFotos.size());
+
+            for (Foto f : listaFotos) {
+                System.out.println("Ruta foto: " + f.getRuta());
+            }
 
             //Mandar los generos de la obra de la funcion
             ArrayList<Genero> listaGeneros = new ArrayList<>();
@@ -256,12 +271,46 @@ public class ObraController {
 //            String duracion = horastr + ":" + minutostr;
 //            int boletosrestantes = funcion.getStockentradas() - funcion.getCantidadasistentes();
 
+            //Necesito enviar:
+            //- Lista de sedes donde se presenta la funcion de la obra (LISTO)
+            //- Lista de sala, fecha y hora de inicio de la funcion (LISTO)
+
+            List<Sede> listaSedesConObra = sedeRepository.listaSedesConObra(id);
+            LinkedHashMap<Sede, LinkedHashMap<Funcion, String>> funcionesDeLaSede = new LinkedHashMap<>();
+            for (Sede s : listaSedesConObra) {
+                funcionesDeLaSede.put(s, new LinkedHashMap<>());
+                List<Sala> listaSalasDeSede = salaRepository.listaSalasConObra(id, s.getId());
+
+                for (Sala sa : listaSalasDeSede) {
+                    LinkedHashMap<Funcion, String> idFuncionYStringDeOpcion = new LinkedHashMap<>();
+                    List<Funcion> listaFunciones = funcionRepository.listaFuncionesConObra(id, s.getId(), sa.getId());
+                    for (Funcion f : listaFunciones) {
+                        idFuncionYStringDeOpcion.put(f, "Sala " + sa.getNumero() + " - " + f.getFecha() + " " + f.getInicio());
+                        funcionesDeLaSede.put(s, idFuncionYStringDeOpcion);
+                    }
+
+                }
+
+            }
+
+            for (Map.Entry<Sede, LinkedHashMap<Funcion, String>> h : funcionesDeLaSede.entrySet()) {
+
+                System.out.println("Sede: " + h.getKey().getNombre());
+                System.out.println("Longitud value: " + h.getValue().size());
+                for (Map.Entry<Funcion, String> j : h.getValue().entrySet()) {
+                    System.out.println("Id de la funcion: " + j.getKey().getId());
+                    System.out.println("Opcion: " + j.getValue());
+                    System.out.println("**************************");
+                }
+                System.out.println("============================================");
+            }
+
             model.addAttribute("obra", obra);
             model.addAttribute("listaFotos", listaFotos);
             model.addAttribute("listaGeneros", listaGeneros);
             model.addAttribute("listaDirectoresYActores", listaDirectoresYActores);
-//            model.addAttribute("duracion", duracion);
-//            model.addAttribute("boletosrestantes", boletosrestantes);
+//            model.addAttribute("listaSedesConObra", listaSedesConObra);
+//            model.addAttribute("funcionesDeLaSede", funcionesDeLaSede);
             return "usuario/obras/carteleraObraDetalles";
         } else {
             a.addFlashAttribute("msg", -1);

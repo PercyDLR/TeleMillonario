@@ -65,7 +65,7 @@
                                 <div class=" col-4">
                                     <form method="post" action="#">
                                         <div class="header__auth" style="margin-left: 0">
-                                            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="header__sign-in">
+                                            <a sec:authorize="isAnonymous()" th:href="@{/cartelera/carritoPrueba}" class="header__sign-in"> <!--th:href="@{/login}"-->
                                                 <i class="icon ion-ios-log-in"></i>
                                                 <span style="font-size: 8px; text-align: center;">Inicie sesión para comprar sus boletos</span>
                                             </a>
@@ -142,12 +142,50 @@
                                 <!-- card -->
                                 <div class="card card--big" style="cursor: pointer">
                                     <div class="card__cover">
-                                        <img th:if="${foto.getNumero() != 0}" th:src="@{foto.ruta}">
+                                        <img th:unless="${foto.getNumero() == 0}" th:src="@{foto.ruta}">
                                     </div>
                                 </div>
                                 <!-- end card -->
                             </div>
                         </div>
+                    </div>
+
+                    <!--Apartado de compra de boletos-->
+                    <div class="col-12 mt-4">
+                        <h1 class="home__title" style="text-transform: uppercase; font-size: 30px">Comprar boletos</h1>
+                    </div>
+
+                    <!--col 7 y 5-->
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7 col-md-5 col-6 sign__group">
+                            <select class="sign__input" name="genero">
+                                <option th:selected="${genero == ''}" value="">Todos los géneros</option>
+                                <option th:each="g : ${generos}" th:value="${g.getId()}"
+                                        th:text="${g.getNombre()}"
+                                        th:selected="${g.getId() == genero}"></option>
+                            </select>
+                        </div>
+                        <div class="col-lg-5 col-12 sign__group">
+
+                            <input type="text" class="sign__input"
+                                   placeholder="Busque una Obra" name="busqueda"
+                                   th:value="${busqueda}" maxlength="100">
+                        </div>
+
+<!--                        <div class="col-lg-3 col-md-5 col-6 sign__group">-->
+
+<!--                            <select class="sign__input" name="restriccionEdad">-->
+<!--                                <option value="" th:selected="${restriccionEdad == ''}">Para toda la familia</option>-->
+<!--                                <option value="1" th:selected="${restriccionEdad == '1'}">Con contenido sensible</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+
+<!--                        <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">-->
+<!--                            <button type="submit" class="form__btn" style="width: 50%; margin: 0;">-->
+<!--                                <i class="bi bi-search"></i>-->
+<!--                            </button>-->
+<!--                        </div>-->
+
                     </div>
 
                 </div>

@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,6 @@ public class FuncionesController {
 
     @Autowired
     FotoRepository fotoRepository;
-    float funcionesporpagina=6;
 
     @Autowired
     GeneroRepository generoRepository;
@@ -55,12 +55,13 @@ public class FuncionesController {
     @Autowired
     ObraRepository obraRepository;
 
+    float funcionesporpagina=6;
+
     @GetMapping(value = {"", "/","/lista"})
     public String listadoFunciones(Model model,@RequestParam(value = "pag",required = false) String pag,HttpSession session){
-        int estado=1;
+
         int pagina;
-        //tamaña de cada 'row' en vista
-        int size=3;
+
         try{
             pagina = Integer.parseInt(pag);
         }catch(Exception e) {
@@ -69,10 +70,23 @@ public class FuncionesController {
 
         Persona persona=(Persona) session.getAttribute("usuario");
 
-        List<Foto> listfuncfoto= fotoRepository.buscarFotoFunciones(persona.getIdsede().getId(),(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+        List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSede(persona.getIdsede().getId(),(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+        List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(persona.getIdsede().getId());
+
+        HashMap<Funcion,Foto> funcionesConFoto = new HashMap<>();
+
+        for (Funcion funcion : listFunciones){
+            for (Foto foto : listFotosObra){
+                if (foto.getIdobra() == funcion.getIdobra()){
+                    funcionesConFoto.put(funcion,foto);
+                    break;
+                }
+            }
+        }
+
         int cantFunc= fotoRepository.contarFunciones(persona.getIdsede().getId());
 
-        model.addAttribute("listfunc",listfuncfoto);
+        model.addAttribute("funcionesConFoto",funcionesConFoto);
 
         model.addAttribute("pagActual",pagina);
         model.addAttribute("pagTotal",(int) Math.ceil(cantFunc/funcionesporpagina));
@@ -107,8 +121,6 @@ public class FuncionesController {
         List<Obra> listObras = obraRepository.findAll();
         List<Persona> listActores = personaRepository.listarActores("",0,100000);
         List<Persona> listDirectores = personaRepository.listarDirectores();
-        List<Genero> listGeneros = generoRepository.findAll();
-        List<Foto> fotosEnDB = fotoRepository.buscarFotosFuncion(funcion.getId());
         List<Sala> listaSalasporSede = salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1);
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
@@ -117,9 +129,7 @@ public class FuncionesController {
         model.addAttribute("listObras",listObras);
         model.addAttribute("listActores",listActores);
         model.addAttribute("listDirectores",listDirectores);
-        model.addAttribute("listGeneros",listGeneros);
         model.addAttribute("fechaactual",now);
-        model.addAttribute("imagenes", fotosEnDB);
         model.addAttribute("listaSalasporSede",listaSalasporSede);
     }
 
@@ -169,7 +179,6 @@ public class FuncionesController {
             // Lista de los elementos YA seleccionados
             model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(idfuncion));
             model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(idfuncion));
-            model.addAttribute("generosFuncion",generoRepository.generosPorFuncion(idfuncion));
 
             // Tiempo
             model.addAttribute("duracion",duracion);
