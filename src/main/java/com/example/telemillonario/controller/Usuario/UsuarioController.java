@@ -1049,6 +1049,27 @@ public class UsuarioController {
         mailSender.send(message);
     }
 
+    @GetMapping("/pagoPrueba")
+    String pagoPrueba() { return "usuario/pagoUsuario";}
+
+    @GetMapping("/carritoPrueba")
+    String carritoPrueba() {
+        return "usuario/carrito/carritoComprasUsuario";
+    }
+
+    @GetMapping("/historialPrueba")
+    String historialPrueba() {
+        return "usuario/carrito/historialComprasUsuario";
+    }
+
+    //FUNCION D EPRUEBA PARA RECEPCION DE VALORES DEL FORM DE COMPRA EN OBRADETALLES
+//    @PostMapping("/compra")
+//    String compra(@RequestParam("funcion") Integer funcion, @RequestParam("cantidadTotalBoletos") Integer cantidadTotalBoletos) {
+//        System.out.println("Id Funcion recibida: " + funcion);
+//        System.out.println("Cantidad boletos:" + cantidadTotalBoletos);
+//        return "usuario/obras/carteleraObras";
+//    }
+
 
 
 }
