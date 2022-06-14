@@ -86,15 +86,16 @@
 
                 <div class="sign__form" style="flex-direction: unset">
                     <div class="row" style="width: 100%">
-                        <h3 class="home__title mb-3">Funciones</h3>
+                        <h3 class="home__title mb-3">Reservas</h3>
                         <div class="col-md-8 col-12" style="overflow-y: auto; max-height: 70vh">
                             <div class="container">
-
-                                <div class="row mt-3">
+                                <div class="row mt-3" th:each="reservas : ${session.carritoDeComprasDeUsuario}">
                                     <div class="col-sm-4 col-12 ">
                                         <div class="card__cover">
-                                            <img src="/img/covers/HistoriasDeArena.png" alt="portada">
-                                            <a href="#" class="card__play">
+                                            <img th:each="selfie : ${foto}"
+                                                 th:if="${selfie.idobra == reservas.getValue().getFuncion().getIdobra()}"
+                                                 th:src="${selfie.getRuta()}" alt="portada">
+                                            <a th:href="@{'/cartelera/DetallesObra?id=' + ${reservas.getValue().getFuncion().getIdobra()}}"class="card__play">
                                                 <i class="icon ion-ios-play"></i>
                                             </a>
                                         </div>
@@ -103,104 +104,33 @@
                                     <div class="col-lg-4 col-sm-8 col-12 ">
                                         <div class="card__content" style="padding: 1px">
                                             <h3 class="card__title">
-                                                <a>Nombre</a>
+                                                <a th:text="${reservas.getValue().getFuncion().getIdobra().getNombre()}"></a>
                                             </h3>
-                                            <span class="card__category">
-                                            <a href="#">Genero</a>
-                                        </span>
+                                            <span class="card__category" th:each="generos : ${listaGeneros}">
+                                                <a th:if="${generos.idObra == reservas.getValue().getFuncion().getIdobra()}"
+                                                   th:text="${generos.idgenero.nombre}"></a>
+                                            </span>
                                             <div class="card__wrap">
-                                                <span class="card__rate"><i
+                                                <span class="card__rate" th:text="${reservas.getValue().getFuncion().getIdobra().getCalificacion()}"><i
                                                         class="icon ion-ios-star"></i>8.4</span>
 
-                                                <ul class="card__list">
+                                                <ul class="card__list" th:if="${reservas.getValue().getFuncion().getIdobra().getRestriccionedad() == 1}">
                                                     <li>Restriccion edad</li>
                                                 </ul>
+                                                <ul class="card__list" th:if="${reservas.getValue().getFuncion().getIdobra().getRestriccionedad() == 0}">
+                                                    <li>Todo público</li>
+                                                </ul>
                                             </div>
-
                                             <div class="card__description">
-                                                <p>Aqui debe ir la info de la funcion</p>
+                                                <p th:text="${reservas.getValue().getFuncion().getFecha()}"></p>
+                                                <p th:text="${reservas.getValue().getFuncion().getInicio()}"></p>
+                                                <p th:text="${reservas.getValue().getFuncion().getFin()}"></p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-12" style="color: white">
-                                        <p>Aqui debe ir la cantidad de boletos a comprar y el precio a pagar en total</p>
-                                        <input type="number" class="sign__input" name="">
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="col-sm-4 col-12 ">
-                                        <div class="card__cover">
-                                            <img src="/img/covers/HistoriasDeArena.png" alt="portada">
-                                            <a href="#" class="card__play">
-                                                <i class="icon ion-ios-play"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-sm-8 col-12 ">
-                                        <div class="card__content" style="padding: 1px">
-                                            <h3 class="card__title">
-                                                <a>Nombre</a>
-                                            </h3>
-                                            <span class="card__category">
-                                            <a href="#">Genero</a>
-                                        </span>
-                                            <div class="card__wrap">
-                                                <span class="card__rate"><i
-                                                        class="icon ion-ios-star"></i>8.4</span>
-
-                                                <ul class="card__list">
-                                                    <li>Restriccion edad</li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="card__description">
-                                                <p>Aqui debe ir la info de la funcion</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12" style="color: white">
-                                        <p>Aqui debe ir la cantidad de boletos a comprar y el precio a pagar en total</p>
-                                        <input type="number" class="sign__input" name="">
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="col-sm-4 col-12 ">
-                                        <div class="card__cover">
-                                            <img src="/img/covers/HistoriasDeArena.png" alt="portada">
-                                            <a href="#" class="card__play">
-                                                <i class="icon ion-ios-play"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-sm-8 col-12 ">
-                                        <div class="card__content" style="padding: 1px">
-                                            <h3 class="card__title">
-                                                <a>Nombre</a>
-                                            </h3>
-                                            <span class="card__category">
-                                            <a href="#">Genero</a>
-                                        </span>
-                                            <div class="card__wrap">
-                                                <span class="card__rate"><i
-                                                        class="icon ion-ios-star"></i>8.4</span>
-
-                                                <ul class="card__list">
-                                                    <li>Restriccion edad</li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="card__description">
-                                                <p>Aqui debe ir la info de la funcion</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12" style="color: white">
-                                        <p>Aqui debe ir la cantidad de boletos a comprar y el precio a pagar en total</p>
-                                        <input type="number" class="sign__input" name="">
+                                        <p>Total stock a comprar:</p>
+                                        <input type="number" class="sign__input" name="" th:value="${reservas.getValue().getCantidad()}">
                                     </div>
                                 </div>
                                 <div class="mt-5"></div>

@@ -95,10 +95,13 @@ public class UsuarioController {
         compraEnProceso = null;
         session.setAttribute("compraEnProceso", compraEnProceso);
 
+        List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
+        model.addAttribute("listaGeneros",listaGeneros);
+
         Persona personita = (Persona) session.getAttribute("usuario");
         List<Compra> historialCompras = compraRepository.historialCompras(personita.getId());
         model.addAttribute("historialCompras", historialCompras);
-        return "/usuario/historial";
+        return "/usuario/carrito/historialComprasUsuario";
     }
 
     @GetMapping("/borrarCompra")
@@ -868,9 +871,15 @@ public class UsuarioController {
     //-----------------------------------------------------------------------------------
 
     @GetMapping("/carrito")
-    public String carritoUsuario(HttpSession session) {
+    public String carritoUsuario(HttpSession session,Model model) {
         LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+        List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
+
+        List<Foto> listaFotos = fotoRepository.unaFotoPorObra();
+
         if (carrito.size() == 0) {
+            model.addAttribute("listaGeneros",listaGeneros);
+            model.addAttribute("foto",listaFotos);
             return "usuario/carritoCompras";
         } else {
             ArrayList<Compra> reservasBorrarCarrito = new ArrayList<>();
@@ -899,7 +908,9 @@ public class UsuarioController {
             }
             session.setAttribute("carritoDeComprasDeUsuario", carrito);
             if (reservasBorrarCarrito.size() == 0) {
-                return "usuario/carritoCompras";
+                model.addAttribute("listaGeneros",listaGeneros);
+                model.addAttribute("foto",listaFotos);
+                return "usuario/carrito/historialComprasUsuario";
             } else {
                 //Mensajes de las reservas que se han borrado de su carrito , se le envia por correo.
                 String content = "<p>Cordiales Saludos: </p>"
@@ -918,8 +929,9 @@ public class UsuarioController {
                 } catch (MessagingException | UnsupportedEncodingException e) {
                     return "redirect:/anErrorHasOcurred";
                 }
-
-                return "usuario/carritoCompras";
+                model.addAttribute("listaGeneros",listaGeneros);
+                model.addAttribute("foto",listaFotos);
+                return "usuario/carrito/historialComprasUsuario";
             }
         }
 
