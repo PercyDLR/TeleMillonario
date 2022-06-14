@@ -208,9 +208,17 @@ public class ObraController {
         return "redirect:/cartelera?restriccionEdad=" + restriccionEdad + "&genero=" + genero + "&busqueda=" + busqueda + "&pag=" + pag;
     }
 
+    @GetMapping("/pagoPrueba")
+    String pagoPrueba() { return "usuario/pagoUsuario";}
+
     @GetMapping("/carritoPrueba")
-    String detallesObra() {
+    String carritoPrueba() {
         return "usuario/carrito/carritoComprasUsuario";
+    }
+
+    @GetMapping("/historialPrueba")
+    String historialPrueba() {
+        return "usuario/carrito/historialComprasUsuario";
     }
 
     //FUNCION D EPRUEBA PARA RECEPCION DE VALORES DEL FORM DE COMPRA EN OBRADETALLES
