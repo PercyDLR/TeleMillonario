@@ -16,7 +16,7 @@ public class Compra {
     private Integer id;
 
     @Column(name = "estado")
-    private Integer estado;
+    private String estado;
 
     @Column(name = "cantidad")
     private Integer cantidad;

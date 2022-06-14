@@ -345,10 +345,110 @@ public class UsuarioController {
 
     }
 
+    @PostMapping("/reserva")
+    public String reservaBoletos(@RequestParam(value = "idFuncion") String idFuncionStr,
+                                 @RequestParam(value = "cantBoletos") String cantBoletosStr,RedirectAttributes redirectAttributes, HttpSession session) {
+        Persona persona = (Persona) session.getAttribute("usuario");
+        int idFuncion = 0;
+        int cantBoletos = 0;
+        Funcion funcion = null;
 
-    /*Reserva de tickets*/
-    //Se le pasa a carrito donde aca se le agrega la tarjeta y se compra
-    //Se establecera un limite de tiempo para la reserva?
+        try {
+            idFuncion = Integer.parseInt(idFuncionStr);
+            if (idFuncion <= 0) {
+                return "anErrorHasOcurred";
+            } else {
+                Optional<Funcion> funcion1 = funcionRepository.findById(idFuncion);
+                if (funcion1.isPresent()) {
+                    funcion = funcion1.get();
+                    if (funcion.getEstado() == 0) {
+                        return "anErrorHasOcurred";
+                    }
+                } else {
+                    return "anErrorHasOcurred";
+                }
+            }
+        } catch (NumberFormatException j) {
+            return "anErrorHasOcurred";
+        }
+
+        try {
+            cantBoletos = Integer.parseInt(cantBoletosStr);
+            if (cantBoletos <= 0) {
+                redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos", "El numero de boletos es incorrecto");
+                return "redirect:/detallesObra?Obra=" + funcion.getIdobra();
+            }
+        } catch (NumberFormatException m) {
+            redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos", "El numero de boletos es incorrecto");
+            return "redirect:/detallesObra?Obra=" + funcion.getIdobra();
+        }
+
+        Obra obra = funcion.getIdobra();
+
+        int stockFuncion = funcion.getStockentradas();
+        if (stockFuncion > 0 && cantBoletos <= stockFuncion) {
+            LocalDate fechaActual = LocalDate.now();
+            LocalDate fechaNacimientoUsuario = persona.getNacimiento();
+            Period period = Period.between(fechaNacimientoUsuario, fechaActual);
+            int edad = period.getYears();
+
+            if ((obra.getRestriccionedad() == 1 && edad >= 18) || obra.getRestriccionedad() == 0) {
+                LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+                boolean existeCruce = false;
+                if (carrito.size() != 0) {
+                    Collection<Compra> reservas = carrito.values();
+                    ArrayList<String> crucesHorarios = new ArrayList<>();
+                    for (Compra reserva : reservas) {
+                        LocalTime inicioReserva = reserva.getFuncion().getInicio();
+                        LocalTime finReserva = reserva.getFuncion().getFin();
+                        LocalDate fechaReserva = reserva.getFuncion().getFecha();
+
+                        if (fechaReserva == funcion.getFecha()) {
+                            if ((inicioReserva.isAfter(funcion.getInicio()) && inicioReserva.isBefore(funcion.getFin())) || (finReserva.isAfter(funcion.getInicio()) && finReserva.isBefore(funcion.getFin()))) {
+                                existeCruce = true;
+                                String mensaje = "Existe un cruce de horario de funcion con la obra " + funcion.getIdobra().getNombre() + " " + ",con hora de inicio:" + funcion.getInicio() + ",con hora fin :" + funcion.getFin();
+                                crucesHorarios.add(mensaje);
+                            }
+                        }
+                    }
+                    if (existeCruce) {
+                        redirectAttributes.addFlashAttribute("cruceHorarioFuncion", crucesHorarios);
+                        return "redirect:/detallesObra?Obra=" + obra.getId();
+                    }
+                }
+
+                double precioEntradaFuncion = funcion.getPrecioentrada();
+                double montoTotal = precioEntradaFuncion * cantBoletos;
+
+                Compra reserva = new Compra();
+                reserva.setEstado(1);
+                reserva.setCantidad(cantBoletos);
+                reserva.setMontoTotal(montoTotal);
+                reserva.setFuncion(funcion);
+                reserva.setPersona(persona);
+
+                DateTimeFormatter fch = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
+                String fechaDeReservaCompra = fch.format(LocalDateTime.now());
+                LinkedHashMap<String, Compra> carritoDeComprasDeUsuario = new LinkedHashMap<>();
+                carritoDeComprasDeUsuario.put(fechaDeReservaCompra, reserva);
+                session.setAttribute("carritoDeComprasDeUsuario", carritoDeComprasDeUsuario);
+                redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente.Puede encontrarla " +
+                        "dirigiendose a su carrito de compras.");
+                return "redirect:/detallesObra?Obra=" + obra.getId();
+
+            } else {
+                redirectAttributes.addFlashAttribute("mensajeFaltaEdad", "La funcion tiene restriccion de edad");
+                return "redirect:/detallesObra?Obra=" + obra.getId();
+
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("mensajeNoHayStock", "Ya no hay stock disponible");
+            return "redirect:/detallesObra?Obra=" + obra.getId();
+        }
+    }
+
+
+    /*
     @PostMapping("/reserva")
     public String reservaBoletos(@RequestParam(value = "Obra") String idObraStr,
                                  @RequestParam(value = "idSede") String idSedeStr,
@@ -458,8 +558,8 @@ public class UsuarioController {
             return "anErrorHasOcurred";
         }
 
-        /*Si no ha ocurrido ningun error ya tengo la funcion - sede - boletos - fecha y hora*/
-        //Toca validar de que exista una funcion a dicha hora en esa sede en especifico
+
+
         Funcion funcion = funcionRepository.encontrarFuncionHoraSede(obra.getId(), sede.getId(), fechaFuncion, horaFuncion);
 
         if (funcion == null) {
@@ -499,7 +599,7 @@ public class UsuarioController {
                             return "redirect:/detallesObra?Obra=" + obra.getId();
                         }
                     }
-                    /*Calculo del monto total*/
+
                     double precioEntradaFuncion = funcion.getPrecioentrada();
                     double montoTotal = precioEntradaFuncion * cantBoletos;
 
@@ -520,44 +620,7 @@ public class UsuarioController {
                     return "redirect:/detallesObra?Obra=" + obra.getId();
 
 
-                        /*--------------------------------------------------------------------------------------------------------
-                        int cantidadAsistentes = funcion.getCantidadasistentes();
 
-                        //Guardado de la compra
-                        Compra reserva = new Compra();
-                        reserva.setEstado(1); //Se reserva , cuando ya se compra en el carrito esto se pone en 0
-                        reserva.setCantidad(cantBoletos);
-                        reserva.setMontoTotal(montoTotal);
-                        reserva.setFuncion(funcion);
-                        reserva.setPersona(persona);
-
-                        //https://www.baeldung.com/java-linked-hashmap
-                        //Se le mapea la fecha de reserva ya que va a tener un tiempo limitado para poder efectuar su compra sino
-                        //se le borra de carrito y el stock de la funcion vuelve a como estaba
-                        DateTimeFormatter fch = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
-                        String fechaDeReservaCompra = fch.format(LocalDateTime.now());
-                        LinkedHashMap<String,Compra> carritoDeComprasDeUsuario = new LinkedHashMap<>();
-                        carritoDeComprasDeUsuario.put(fechaDeReservaCompra,reserva);
-                        session.setAttribute("carritoDeComprasDeUsuario",carritoDeComprasDeUsuario);
-
-                        int stockRestanteFuncion = stockFuncion - cantBoletos;
-                        cantidadAsistentes = cantidadAsistentes + cantBoletos;//Cantidad de asistentes lo mapeo como si fuera la cant. de boletos vendidos
-                        if(stockRestanteFuncion == 0){
-                            funcion.setStockentradas(0);
-                            funcion.setEstado(0);
-                            funcion.setCantidadasistentes(cantidadAsistentes);
-                            funcionRepository.save(funcion);
-
-                        }else{
-                            funcion.setStockentradas(stockRestanteFuncion);
-                            funcion.setCantidadasistentes(cantidadAsistentes);
-                            funcionRepository.save(funcion);
-                        }
-
-                        redirectAttributes.addFlashAttribute("reservaExitosa","Se ha realizado su reserva correctamente.Puede encontrarla " +
-                                "dirigiendose a su carrito de compras ");
-                        return "redirect:/detallesObra?Obra="+obra.getId();
-                       --------------------------------------------------------------------------------------------------------*/
                 } else {
                     redirectAttributes.addFlashAttribute("mensajeFaltaEdad", "La funcion tiene restriccion de edad");
                     return "redirect:/detallesObra?Obra=" + obra.getId();
@@ -569,7 +632,7 @@ public class UsuarioController {
             }
         }
 
-    }
+    }*/
 
     //-----------------------------------------------------------------------------------
     @PostMapping("/compra")
