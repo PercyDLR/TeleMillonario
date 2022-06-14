@@ -1199,10 +1199,10 @@ public class UsuarioController {
     }
 
     @GetMapping("/actualizarEstadoCompra")
-    String actualizarCompraHistorial(@RequestParam("idCompra") Integer idCompra) {
+    String actualizarCompraHistorial(@RequestParam("id") Integer idCompra) {
         Optional<Compra> optionalCompra = compraRepository.findById(idCompra);
         if (optionalCompra.isPresent()) {
-            compraRepository.actualizacionEstadoCompra("Asistido",86, idCompra);
+            compraRepository.actualizacionEstadoCompra("Cancelado",86, idCompra);
         }
          return "redirect:/historialPrueba";
     }
