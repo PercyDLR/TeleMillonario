@@ -1133,8 +1133,78 @@ public class UsuarioController {
     }
 
     @GetMapping("/historialPrueba")
-    String historialPrueba() {
+    String historialPrueba(Model model) {
+
+        List<Compra> listaCompras = compraRepository.historialCompras(86);
+        List<Compra> listaComprasRevisadas = new ArrayList<>();
+        for (Compra c : listaCompras) {
+            LocalDate fechaActual = LocalDate.now();
+            if (fechaActual.compareTo(c.getFuncion().getFecha()) > 0) { //Fecha ya paso, debo cambiarle a estado cancelado
+                compraRepository.actualizacionEstadoCompra("Asistido",86, c.getId());
+            } else if (fechaActual.compareTo(c.getFuncion().getFecha()) == 0) { //Fecha es hoy
+                LocalTime tiempoActual = LocalTime.now();
+                if (tiempoActual.compareTo(c.getFuncion().getFin()) > 0) { //Ya acabo la funcion
+                    compraRepository.actualizacionEstadoCompra("Asistido",86, c.getId());
+                }
+            }
+            listaComprasRevisadas.add(c);
+        }
+//        System.out.println("Cantidad de compra: " + listaCompras.size());
+
+        //Mandar los generos de la obra de la funcion
+        LinkedHashMap<Compra, ArrayList<Genero>> compraGenero = new LinkedHashMap<>();
+        List<Obragenero> listaFuncionGenero = obraGeneroRepository.findAll();
+        for (Compra c : listaCompras) {
+            ArrayList<Genero> listaGeneros = new ArrayList<>();
+            for (Obragenero o : listaFuncionGenero) {
+                if (o.getIdobra() == c.getFuncion().getIdobra()) {
+                    listaGeneros.add(o.getIdgenero());
+                }
+            }
+            compraGenero.put(c, listaGeneros);
+        }
+
+//        for (Map.Entry<Compra, ArrayList<Genero>> h : compraGenero.entrySet()) {
+//            System.out.println(h.getKey().getId());
+//            for (Genero g : h.getValue()) {
+//                System.out.println(g.getNombre());
+//            }
+//            System.out.println("=====================");
+//        }
+
+        //Duraciones de las funciones
+        LinkedHashMap<Compra, String> duracionFuncioncompra = new LinkedHashMap<>();
+        for (Compra c : listaCompras) {
+            LocalTime inicio = c.getFuncion().getInicio();
+            LocalTime fin = c.getFuncion().getFin();
+            Duration duracion = Duration.between(inicio, fin);
+            Long duracionHora = duracion.getSeconds()/(60*60);
+            String duracionHoraStr = duracionHora.toString();
+            if (duracionHora < 10) {
+                duracionHoraStr = "0" + duracionHora.toString();
+            }
+            Long duracionMinutos = duracion.getSeconds()%60;
+            String duracionMinutosStr = duracionMinutos.toString();
+            if (duracionMinutos < 10) {
+                duracionMinutosStr = "0" + duracionMinutos.toString();
+            }
+            System.out.println(duracionHoraStr + ":" + duracionMinutosStr + "h");
+            duracionFuncioncompra.put(c, duracionHoraStr + ":" + duracionMinutosStr + "h");
+        }
+
+        model.addAttribute("listaCompras", listaComprasRevisadas);
+        model.addAttribute("generosDeObras", compraGenero);
+        model.addAttribute("duracionFuncioncompra", duracionFuncioncompra);
         return "usuario/carrito/historialComprasUsuario";
+    }
+
+    @GetMapping("/actualizarEstadoCompra")
+    String actualizarCompraHistorial(@RequestParam("idCompra") Integer idCompra) {
+        Optional<Compra> optionalCompra = compraRepository.findById(idCompra);
+        if (optionalCompra.isPresent()) {
+            compraRepository.actualizacionEstadoCompra("Asistido",86, idCompra);
+        }
+         return "redirect:/historialPrueba";
     }
 
     //FUNCION D EPRUEBA PARA RECEPCION DE VALORES DEL FORM DE COMPRA EN OBRADETALLES
