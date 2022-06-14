@@ -827,7 +827,8 @@ public class UsuarioController {
                 pago.setFechaPago(LocalDate.now());
                 pago.setIdCompra(compraEnProceso);
                 //Aca va el set del codigo QR   @Agustin
-                pago.setQr(coderService.decodificar(response_for_qr.getBody().getUrl()));
+                String decoded_qr_url = coderService.decodificar(response_for_qr.getBody().getUrl());//https: <- a utilizar
+                pago.setQr(decoded_qr_url);
                 //Aca va el set del codigo de operacion @Agustin
                 pago.setCodigo(numero_operacion);
                 pagoRepository.save(pago);
