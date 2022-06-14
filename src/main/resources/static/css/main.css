@@ -1876,10 +1876,9 @@ ul {
   z-index: 3;
 }
 .details__title {
-  font-family: 'Open Sans';
   color: #fff;
-  font-weight: 900;
-  font-size: 100%;
+  font-weight: 300;
+  font-size: 28px;
   margin-bottom: 20px;
 }
 .details__title b {
@@ -1975,7 +1974,7 @@ ul {
 }
 @media (min-width: 576px) {
   .details__title {
-    font-size: 70px;
+    font-size: 30px;
   }
 }
 @media (min-width: 768px) {
@@ -2007,7 +2006,7 @@ ul {
     padding: 70px 0;
   }
   .details__title {
-    font-size: 80px;
+    font-size: 36px;
   }
 }
 

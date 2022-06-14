@@ -146,6 +146,16 @@
                                             </div>
 
                                             <div class="sign__group">
+                                                <label for="genero">Generos</label>
+                                                <select class="select2"  id="genero" name="idgenero" style="width: 100%" required multiple>
+                                                    <option th:each="generos,indice : ${listGeneros}"
+                                                            th:text="|${generos.nombre}|"
+                                                            th:value="${generos.id}"
+                                                            th:selected="${#arrays.contains(generosObra,generos.id.toString())}"></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="sign__group">
                                                 <label >Descripcion</label>
                                                 <textarea id="descripcion" class="form-control" rows="4" maxlength="500" th:field="*{descripcion}"
                                                           style="width: 100%;height: 80%;text-align: center;border-color: #FFFFFF;color: #9d9d9d;border-radius: 7px">
