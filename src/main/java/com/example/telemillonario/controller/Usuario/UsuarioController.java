@@ -155,7 +155,7 @@ public class UsuarioController {
                 pagoRepository.save(pago);
 
 
-                compra.setEstado(0);
+                compra.setEstado("Cancelado");
                 compraRepository.save(compra);
 
                 /*
@@ -421,7 +421,7 @@ public class UsuarioController {
                 double montoTotal = precioEntradaFuncion * cantBoletos;
 
                 Compra reserva = new Compra();
-                reserva.setEstado(1);
+                reserva.setEstado("Reservado");
                 reserva.setCantidad(cantBoletos);
                 reserva.setMontoTotal(montoTotal);
                 reserva.setFuncion(funcion);
@@ -779,7 +779,7 @@ public class UsuarioController {
                     double montoTotal = precioEntradaFuncion * cantBoletos;
 
                     Compra compraEnProceso = new Compra();
-                    compraEnProceso.setEstado(1);//No es necesario
+                    compraEnProceso.setEstado("Vigente");//No es necesario
                     compraEnProceso.setCantidad(cantBoletos);
                     compraEnProceso.setMontoTotal(montoTotal);
                     compraEnProceso.setFuncion(funcion);
