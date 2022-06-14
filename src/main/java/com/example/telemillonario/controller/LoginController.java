@@ -71,6 +71,7 @@ public class LoginController {
         personita.setApellidos(lastname);
         personita.setCorreo(email);
         String password = new BCryptPasswordEncoder().encode("123456789abcdefg");
+        String pasw = null; //Contrase;a sacada de la base de datos
         System.out.println(password);
         Persona persona = personaRepository.findByCorreo(email);
         if (persona == null){
