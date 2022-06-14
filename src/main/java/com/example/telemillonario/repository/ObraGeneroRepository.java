@@ -22,7 +22,9 @@ public interface ObraGeneroRepository extends JpaRepository<Obragenero,Integer> 
     List<Obragenero> buscarFuncionGeneroPorFiltros(String restriccionEdad, String genero, String nombreObra);
 
 
-
+    @Query(nativeQuery = true, value = "select * from telemillonario.obragenero where " +
+            "idobra=?1")
+    List<Obragenero> buscarObraGenero(int idobra);
 
 
 
