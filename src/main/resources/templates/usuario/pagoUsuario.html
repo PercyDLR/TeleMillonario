@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: head('Historial de Compras',_)"></head>
+
+    <body class="body">
+        <!-- header -->
+<!--        <div th:replace="fragments/navbar :: usuario('')"></div>-->
+
+        <div class="content" style="padding: 0">
+            <div class="sign">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="sign__content">
+
+                                <form class="sign__form" action="#" method="POST">
+                                    <div class="sign__group">
+                                        <input type="text" class="sign__input" name="numTarjeta" placeholder="Número de tarjeta">
+                                    </div>
+                                    <div class="sign__group">
+                                        <input type="text" name="nomTitular" class="sign__input" placeholder="Nombre del titular">
+                                    </div>
+                                    <div class="sign__group">
+                                        <input type="text" name="fechaVencimiento" class="sign__input" placeholder="Fecha de vencimiento">
+                                    </div>
+                                    <div class="sign__group" style="margin-bottom: 0">
+                                        <input type="text" name="codSeguridad" class="sign__input" placeholder="Codigo de seguridad">
+                                    </div>
+                                    <a class="sign__btn" href="#">Cancelar</a>
+                                    <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/actores?busqueda='+${busqueda}+'&')"></div>-->
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
+    </body>
+</html>
