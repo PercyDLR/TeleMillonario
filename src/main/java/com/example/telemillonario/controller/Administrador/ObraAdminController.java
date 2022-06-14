@@ -131,9 +131,6 @@ public class ObraAdminController {
                 }
             }
 
-
-
-
             long tamanho = 0;
             for (MultipartFile img : imagenes){
 
@@ -177,7 +174,6 @@ public class ObraAdminController {
                 }
             }
 
-
             if (obra.getId() == null) {
                 attr.addFlashAttribute("msg", "Se ha creado correctamente la obra");
 
@@ -188,7 +184,7 @@ public class ObraAdminController {
                 Obra obraCreada=obraRepository.findTopByOrderByIdDesc();
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);
                 if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =1;
+                    int i =0;
                     for(MultipartFile img : imagenes){
                         System.out.println("Nombre: " + img.getOriginalFilename());
                         System.out.println("Tipo: " + img.getContentType());
@@ -234,7 +230,7 @@ public class ObraAdminController {
                 Obra obraCreada=obraRepository.findById(obra.getId()).get();
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);
                 if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =1;
+                    int i =0;
                     for(MultipartFile img : imagenes){
                         System.out.println("Nombre: " + img.getOriginalFilename());
                         System.out.println("Tipo: " + img.getContentType());

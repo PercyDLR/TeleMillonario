@@ -6,17 +6,34 @@
                 overflow-x: hidden;
             }
 
-            .item img {
+            .card__cover img, .item img {
+                display: block;
+                width: 100%;
                 object-fit: cover;
                 object-position: 50% 50%;
                 margin-top: 0;
-                height: 20em;
+                aspect-ratio: 9 / 13;
             }
 
-            @media (max-width: 720px) {
-                .card__cover img {
-                    height: 35vh;
-                }
+            #accordion{
+                height: 200px;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+
+            .funciones-header{
+                padding-inline: 10px;
+            }
+
+            .funciones-selector{
+                border: 1px solid rgba(255,255,255,0.26);
+                padding: 5px 5px 4px;
+                line-height: 100%;
+                border-radius: 4px;
+                margin-right: 10px;
+                font-size: 12px;
+                font-weight: 700;
+                color: rgba(255,255,255,0.65);
             }
         </style>
 
@@ -24,440 +41,269 @@
     <body class="body">
         <div th:replace="fragments/navbar :: usuario('cartelera')"></div>
 
-        <section class="home" style="padding-block: 1px">
+        <div class="content" style="padding-bottom: 0">
             <div class="container my-5">
                 <div class="row">
 
                     <div class="col-12">
-                        <h1 class="home__title" style="text-transform: uppercase"><b
-                                th:text="${obra.getNombre()}"></b></h1>
+                        <h1 class="details__title" th:text="${obra.nombre}"></h1>
                     </div>
 
-                    <div class="row mt-4">
-                        <div class="col-3">
-                            <div class="card__cover">
-                                <img th:src="${listaFotos.get(0).getRuta()}" style="width: 400px; height: 450px;">
-                            </div>
-                        </div>
-                        <div class="col-9">
+                    <div class="col-12 col-xl-6">
+                        <div class="card card--details">
                             <div class="row">
-                                <div class="col-8" style="padding-left: 15px;">
-                                    <span class="card__category">
-                                                    <a href="#" th:each="g : ${listaGeneros}"
-                                                       th:text="${g.nombre}" style="font-size: 16px;"></a>
-                                                </span>
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-5">
+                                    <div class="card__cover">
+                                        <img th:src="${listaFotos.get(0).ruta}" alt="foto">
+                                    </div>
+                                </div>
 
-                                    <!--                                    <span class="card__category">-->
-                                    <!--                                                    <a href="#"-->
-                                    <!--                                                       style="background-color: #FFFFFF; background-image: none; font-size: 16px;"-->
-                                    <!--                                                       th:text="${funcion.sala.idsede.nombre}"></a>-->
-                                    <!--                                                </span>-->
+                                <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-7">
+                                    <div class="card__content">
+                                        <div class="card__wrap">
+                                            <span class="card__rate">
+                                                <i class="icon ion-ios-star"></i>8.4
+                                            </span>
 
-                                    <div class="card__wrap">
-                                <span class="card__rate" style="font-size: 16px;"><i
-                                        class="icon ion-ios-star"></i>8.4</span>
+                                            <ul class="card__list">
+                                                <li th:text="${obra.getRestriccionedad() eq 1 ? '16+': 'Todo Público'}"></li>
+                                            </ul>
+                                        </div>
 
-                                        <ul class="card__list">
-                                            <li th:text="${obra.getRestriccionedad() eq 1 ? '16+': 'Todo Público'}"
-                                                style="border: 3px solid rgba(255,255,255,0.1); padding: 5px 5px 4px; line-height: 100%; -webkit-border-radius: 4px; border-radius: 4px; margin-right: 10px; font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.65);"></li>
+                                        <ul class="card__meta">
+                                            <li><span>Géneros:</span>
+                                                <a href="#" th:each="g : ${listaGeneros}"
+                                                   th:text="${g.nombre}"></a>
+                                            </li>
                                         </ul>
-                                    </div>
-                                </div>
-                                <div class=" col-4">
-                                    <form method="post" action="#">
-                                        <div class="header__auth" style="margin-left: 0">
 
-
-                                            <!--Boton de numero de boletos (DEBE CAMBIARSE AHORA QUE SE ESTA MOSTRANDO LOS DETALLES DE LAS OBRAS)-->
-                                            <!--                                            <div sec:authorize="isAuthenticated()">-->
-                                            <!--                                                <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>-->
-                                            <!--                                                <input type="number" name="cantidadBoletos" id="number" value="0" min="0" max="${boletosrestantes}"/>-->
-                                            <!--                                                <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>-->
-                                            <!--                                            </div>-->
-
-                                            <!--                                            <input sec:authorize="isAuthenticated()" th:value="${funcion.precioentrada}" name="precio a pagar">-->
-                                            <!--                                            <button sec:authorize="isAuthenticated()" href="#" class="header__sign-in" type="submit">-->
-                                            <!--                                                <span style="font-size: 11px">Comprar boletos</span>-->
-                                            <!--                                            </button>-->
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-
-                            <div class="card__description">
-                                <p th:text="${obra.descripcion}" style="font-size: 16px;"></p>
-                            </div>
-                            <div class="card__description mt-4"
-                                 th:each="directoresActores : ${listaDirectoresYActores}">
-
-                                <p style="font-size: 16px;">Director:
-                                    <span class="card__category">
-                                        <a href="#"
-                                           style="background-color: #FFFFFF; background-image: none; font-size: 16px;"
-                                           th:each="director : ${directoresActores.key}"
-                                           th:text="${director.nombres} + ' ' + ${director.apellidos}"></a>
-                                </span>
-                                </p>
-                                <p style="font-size: 16px;">Actores:
-                                    <span class="card__category">
-                                        <a href="#"
-                                           style="background-color: #FFFFFF; background-image: none; font-size: 16px;"
-                                           th:each="actor : ${directoresActores.value}"
-                                           th:text="${actor.nombres} + ' ' + ${actor.apellidos}"></a>
-                                </span>
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!-- accordion -->
-                        <div class="col-12 col-xl-6">
-                            <div class="accordion" id="accordion">
-                                <div class="accordion__card">
-                                    <div class="card-header" id="headingOne">
-                                        <button type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            <span>Season: 1</span>
-                                            <span>22 Episodes from Nov, 2004 until May, 2005</span>
-                                        </button>
-                                    </div>
-
-                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <table class="accordion__list">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Title</th>
-                                                        <th>Air Date</th>
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                    <tr>
-                                                        <th>1</th>
-                                                        <td>Pilot</td>
-                                                        <td>Tuesday, November 16th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>2</th>
-                                                        <td>Paternity</td>
-                                                        <td>Tuesday, November 23rd, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>3</th>
-                                                        <td>Occam's Razor</td>
-                                                        <td>Tuesday, November 30th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>4</th>
-                                                        <td>Maternity</td>
-                                                        <td>Tuesday, December 7th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>5</th>
-                                                        <td>Damned If You Do</td>
-                                                        <td>Tuesday, December 14th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>6</th>
-                                                        <td>The Socratic Method</td>
-                                                        <td>Tuesday, December 21st, 2004</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="accordion__card">
-                                    <div class="card-header" id="headingTwo">
-                                        <button class="collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                            <span>Season: 2</span>
-                                            <span>24 Episodes from Sep, 2005 until May, 2006</span>
-                                        </button>
-                                    </div>
-
-                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <table class="accordion__list">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Title</th>
-                                                        <th>Air Date</th>
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                    <tr>
-                                                        <th>1</th>
-                                                        <td>Pilot</td>
-                                                        <td>Tuesday, November 16th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>2</th>
-                                                        <td>Paternity</td>
-                                                        <td>Tuesday, November 23rd, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>3</th>
-                                                        <td>Occam's Razor</td>
-                                                        <td>Tuesday, November 30th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>4</th>
-                                                        <td>Maternity</td>
-                                                        <td>Tuesday, December 7th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>5</th>
-                                                        <td>Damned If You Do</td>
-                                                        <td>Tuesday, December 14th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>6</th>
-                                                        <td>The Socratic Method</td>
-                                                        <td>Tuesday, December 21st, 2004</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="accordion__card">
-                                    <div class="card-header" id="headingThree">
-                                        <button class="collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                            <span>Season: 3</span>
-                                            <span>24 Episodes from Sep, 2006 until May, 2007</span>
-                                        </button>
-                                    </div>
-
-                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <table class="accordion__list">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Title</th>
-                                                        <th>Air Date</th>
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                    <tr>
-                                                        <th>1</th>
-                                                        <td>Pilot</td>
-                                                        <td>Tuesday, November 16th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>2</th>
-                                                        <td>Paternity</td>
-                                                        <td>Tuesday, November 23rd, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>3</th>
-                                                        <td>Occam's Razor</td>
-                                                        <td>Tuesday, November 30th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>4</th>
-                                                        <td>Maternity</td>
-                                                        <td>Tuesday, December 7th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>5</th>
-                                                        <td>Damned If You Do</td>
-                                                        <td>Tuesday, December 14th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>6</th>
-                                                        <td>The Socratic Method</td>
-                                                        <td>Tuesday, December 21st, 2004</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="accordion__card">
-                                    <div class="card-header" id="headingFour">
-                                        <button class="collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                            <span>Season: 4</span>
-                                            <span>16 Episodes from Sep, 2007 until May, 2008</span>
-                                        </button>
-                                    </div>
-
-                                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <table class="accordion__list">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Title</th>
-                                                        <th>Air Date</th>
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                    <tr>
-                                                        <th>1</th>
-                                                        <td>Pilot</td>
-                                                        <td>Tuesday, November 16th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>2</th>
-                                                        <td>Paternity</td>
-                                                        <td>Tuesday, November 23rd, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>3</th>
-                                                        <td>Occam's Razor</td>
-                                                        <td>Tuesday, November 30th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>4</th>
-                                                        <td>Maternity</td>
-                                                        <td>Tuesday, December 7th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>5</th>
-                                                        <td>Damned If You Do</td>
-                                                        <td>Tuesday, December 14th, 2004</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>6</th>
-                                                        <td>The Socratic Method</td>
-                                                        <td>Tuesday, December 21st, 2004</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                        <div class="card__description card__description--details"
+                                            th:text="${obra.descripcion}">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- end accordion -->
                     </div>
 
-                    <div class="col-12 mt-4">
-                        <h1 class="home__title" style="text-transform: uppercase; font-size: 30px">Fotos</h1>
-                    </div>
+                    <div class="col-12 col-xl-6" style="padding: 10px; background-color: #28282d">
 
-                    <div class="col-12">
-                        <div class="owl-carousel home__carousel">
-                            <div class="item" th:each="foto : ${listaFotos}" th:unless="${foto.numero == 0}">
-                                <img th:src="${foto.ruta}">
-                            </div>
-                        </div>
-                    </div>
+                        <form method="post" onsubmit="return validacionsubmit" th:action="@{/cartelera/compra}">
 
-                    <!--Apartado de compra de boletos-->
-                    <div class="col-12 mt-4">
-                        <h1 class="home__title" style="text-transform: uppercase; font-size: 30px">Comprar boletos</h1>
-                    </div>
-
-                    <!--col 7 y 5-->
-                    <form method="post" onsubmit="return validacionsubmit" th:action="@{/cartelera/compra}"> <!--Estoy enviando la id de la funcion y la cantidad de boletos a comprar-->
-                        <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
-                            <div class="col-lg-7 col-md-5 col-6 sign__group">
+                            <div class="funciones-header">
                                 <div class="row">
-                                    <select class="sign__input" id="sedes" onchange="seleccionSede(this)">
-                                        <option value="" selected>Seleccione una sede</option>
-                                        <option th:each="sede, i : ${listaSedesConObra}"
-                                                th:text="${sede.nombre}" th:value="'sede'+${sede.id}"></option>
-                                    </select>
-                                </div>
-                                <div class="row" id="selectDefecto">
-                                    <select class="sign__input">
-                                        <option value="" selected>Seleccione una función de la sede</option>
-                                    </select>
-                                </div>
-                                <div class="row" id="mostrarSelect" style="display: none">
-                                    <select class="sign__input" name="funcion" th:each="a, i : ${funcionesDeLaSede}"
-                                            th:id="'sede'+${a.key.id}" style="display: none"
-                                            onchange="seleccionFuncion(this)"> <!--Aqui se elige la funcion a asistir-->
-                                        <option value="" selected>Seleccione una función de la sede</option>
-                                        <option th:each="l, i : ${a.value}" th:value="${l.key.id}"
-                                                th:text="${l.value}"
-                                                th:id="'funcion'+${i.index + 1}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-5 col-12 sign__group">
-
-                                <div th:each="a : ${funcionesDeLaSede}" id="funcionesDeLaSede" style="display: none">
-                                    <div th:each="l, i : ${a.value}" th:id="${l.key.id}" style="display: none">
-                                        <input type="number" th:value="${l.key.cantidadasistentes}"
-                                               th:id="'cantidadasistentes'+${l.key.id}" hidden>
-                                        <input type="number" th:value="${l.key.stockentradas}"
-                                               th:id="'stockentradas'+${l.key.id}" hidden>
-                                        <h1 class="home__title" style="text-transform: none; font-size: 30px"
-                                            th:id="'boletosRestantes'+${l.key.id}"></h1>
-
-                                        <td class="ps-0 pt-0">
-                                            <div class="d-flex">
-                                                <div>
-                                                    <!--Boton resta-->
-                                                    <div class="value-button" th:id="'decrease'+${l.key.id}"
-                                                         th:onclick="|decreaseValue(funcion${i.index + 1})|"
-                                                         value="Decrease Value"><i class="bi bi-dash"></i></div>
-                                                    <!--Boton resta-->
-
-                                                    <!--Precio unitario-->
-                                                    <input type="number"
-                                                           th:id="'costoinput'+${l.key.id}" th:value="${l.key.precioentrada}" hidden/>
-                                                    <!--Se mostrara el precio a pagar de las entradas-->
-                                                    <h1 class="home__title" style="text-transform: none; font-size: 30px"
-                                                        th:id="'costo'+${l.key.id}" th:text="|S/ ${l.key.precioentrada}|"></h1>
-                                                    <!--Se obtendra el numero de boletos que se han seleccionado-->
-                                                    <input type="number"
-                                                           th:id="'number'+${l.key.id}" value="1"
-                                                           min="1" hidden/>
-                                                    <!--Se mostrara el precio a pagar de las entradas-->
-                                                    <h1 class="home__title" style="text-transform: none; font-size: 30px"
-                                                        th:id="'numero'+${l.key.id}" th:text="1"></h1>
-
-                                                    <!--Boton suma-->
-                                                    <div class="value-button" th:id="'increase'+${l.key.id}"
-                                                         th:onclick="|increaseValue(funcion${i.index + 1})|"
-                                                         value="Increase Value"><i class="bi bi-plus-lg"></i></div>
-                                                    <!--Boton suma-->
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <button class="header__sign-in" onclick="validarForm()"> <!--th:href="@{/login}"-->
-                                            <!--Cambiarse por la ruta de carrito. Con esta ruta se mostrara la vista de carrito-->
-                                            <i class="icon ion-ios-log-in"></i>
-                                            <span>Agregar a carrito</span>
-                                        </button>
-
+                                    <div class="col-md-6 col-12">
+                                        <h1 class="content__title" style="color: rgba(255,255,255,0.7)">Comprar Boletos</h1>
+                                    </div>
+                                    <div class="col-md-6 col-12" style="padding-block: 15px;">
+                                        <input class="sign__input" type="number" placeholder="# Entradas"
+                                               style="width: 100%">
                                     </div>
                                 </div>
-
-                                <!--Cantidad de boletos que comprara el usuario (ESTE DEBO ENVIAR)-->
-                                <input type="number" name="cantidadTotalBoletos"
-                                       id="cantidadBoletos" value="0" hidden/>
-
                             </div>
-                        </div>
-                    </form>
 
-                    <div class="row justify-content-center mt-3">
-                        <a sec:authorize="isAnonymous()" th:href="@{/cartelera/carritoPrueba}"
-                           class="header__sign-in"> <!--th:href="@{/login}"-->
-                            <i class="icon ion-ios-log-in"></i>
-                            <span style="font-size: 8px; text-align: center;">Inicie sesión para comprar sus boletos</span>
-                        </a>
+                            <div class="accordion" id="accordion">
+                                <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
+                                    <div class="card-header" id="headingOne">
+                                        <button type="button" data-toggle="collapse" th:data-target="|#funciones-${sede.key.id}|"
+                                                aria-expanded="true" aria-controls="collapseOne" onclick="seleccionSede(this)">
+                                            <span th:text="${sede.key.nombre}"></span>
+                                            <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
+                                        </button>
+                                    </div>
+
+                                    <div th:id="|funciones-${sede.key.id}|" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-danger" th:each="funcion, j : ${sede.value}"
+                                            th:text="|${funcion.key.fecha} ${funcion.key.inicio}|">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-
                 </div>
             </div>
-        </section>
+
+            <div class="row">
+                <!--Apartado de compra de boletos-->
+                <div class="col-12 mt-4">
+                    <h1 class="home__title" style="text-transform: uppercase; font-size: 30px">Comprar boletos</h1>
+                </div>
+
+                <!--col 7 y 5-->
+                <form method="post" onsubmit="return validacionsubmit" th:action="@{/cartelera/compra}"> <!--Estoy enviando la id de la funcion y la cantidad de boletos a comprar-->
+                    <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
+                        <div class="col-lg-7 col-md-5 col-6 sign__group">
+                            <div class="row">
+                                <select class="sign__input" id="sedes" onchange="seleccionSede(this)">
+                                    <option value="" selected>Seleccione una sede</option>
+                                    <option th:each="sede, i : ${listaSedesConObra}"
+                                            th:text="${sede.nombre}" th:value="'sede'+${sede.id}"></option>
+                                </select>
+                            </div>
+                            <div class="row" id="selectDefecto">
+                                <select class="sign__input">
+                                    <option value="" selected>Seleccione una función de la sede</option>
+                                </select>
+                            </div>
+                            <div class="row" id="mostrarSelect" style="display: none">
+                                <select class="sign__input" name="funcion" th:each="a, i : ${funcionesDeLaSede}"
+                                        th:id="'sede'+${a.key.id}" style="display: none"
+                                        onchange="seleccionFuncion(this)"> <!--Aqui se elige la funcion a asistir-->
+                                    <option value="" selected>Seleccione una función de la sede</option>
+                                    <option th:each="l, i : ${a.value}" th:value="${l.key.id}"
+                                            th:text="${l.value}"
+                                            th:id="'funcion'+${i.index + 1}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-12 sign__group">
+
+                            <div th:each="a : ${funcionesDeLaSede}" id="funcionesDeLaSede" style="display: none">
+                                <div th:each="l, i : ${a.value}" th:id="${l.key.id}" style="display: none">
+                                    <input type="number" th:value="${l.key.cantidadasistentes}"
+                                           th:id="'cantidadasistentes'+${l.key.id}" hidden>
+                                    <input type="number" th:value="${l.key.stockentradas}"
+                                           th:id="'stockentradas'+${l.key.id}" hidden>
+                                    <h1 class="home__title" style="text-transform: none; font-size: 30px"
+                                        th:id="'boletosRestantes'+${l.key.id}"></h1>
+
+                                    <td class="ps-0 pt-0">
+                                        <div class="d-flex">
+                                            <div>
+                                                <!--Boton resta-->
+                                                <div class="value-button" th:id="'decrease'+${l.key.id}"
+                                                     th:onclick="|decreaseValue(funcion${i.index + 1})|"
+                                                     value="Decrease Value"><i class="bi bi-dash"></i></div>
+                                                <!--Boton resta-->
+
+                                                <!--Precio unitario-->
+                                                <input type="number"
+                                                       th:id="'costoinput'+${l.key.id}" th:value="${l.key.precioentrada}" hidden/>
+                                                <!--Se mostrara el precio a pagar de las entradas-->
+                                                <h1 class="home__title" style="text-transform: none; font-size: 30px"
+                                                    th:id="'costo'+${l.key.id}" th:text="|S/ ${l.key.precioentrada}|"></h1>
+                                                <!--Se obtendra el numero de boletos que se han seleccionado-->
+                                                <input type="number"
+                                                       th:id="'number'+${l.key.id}" value="1"
+                                                       min="1" hidden/>
+                                                <!--Se mostrara el precio a pagar de las entradas-->
+                                                <h1 class="home__title" style="text-transform: none; font-size: 30px"
+                                                    th:id="'numero'+${l.key.id}" th:text="1"></h1>
+
+                                                <!--Boton suma-->
+                                                <div class="value-button" th:id="'increase'+${l.key.id}"
+                                                     th:onclick="|increaseValue(funcion${i.index + 1})|"
+                                                     value="Increase Value"><i class="bi bi-plus-lg"></i></div>
+                                                <!--Boton suma-->
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <button class="header__sign-in" onclick="validarForm()"> <!--th:href="@{/login}"-->
+                                        <!--Cambiarse por la ruta de carrito. Con esta ruta se mostrara la vista de carrito-->
+                                        <i class="icon ion-ios-log-in"></i>
+                                        <span>Agregar a carrito</span>
+                                    </button>
+
+                                </div>
+                            </div>
+
+                            <!--Cantidad de boletos que comprara el usuario (ESTE DEBO ENVIAR)-->
+                            <input type="number" name="cantidadTotalBoletos"
+                                   id="cantidadBoletos" value="0" hidden/>
+
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row justify-content-center mt-3">
+                    <a sec:authorize="isAnonymous()" th:href="@{/cartelera/carritoPrueba}"
+                       class="header__sign-in"> <!--th:href="@{/login}"-->
+                        <i class="icon ion-ios-log-in"></i>
+                        <span style="font-size: 8px; text-align: center;">Inicie sesión para comprar sus boletos</span>
+                    </a>
+                </div>
+            </div>
+
+
+                    <!--Boton de numero de boletos (DEBE CAMBIARSE AHORA QUE SE ESTA MOSTRANDO LOS DETALLES DE LAS OBRAS)
+                    <div class="row">
+                        <div class=" col-4">
+                            <form method="post" action="#">
+                                <div class="header__auth" style="margin-left: 0">
+
+                                    <div sec:authorize="isAuthenticated()">
+                                        <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+                                        <input type="number" name="cantidadBoletos" id="number" value="0" min="0" max="${boletosrestantes}"/>
+                                        <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                                    </div>
+
+                                    <input sec:authorize="isAuthenticated()" th:value="${funcion.precioentrada}" name="precio a pagar">
+                                    <button sec:authorize="isAuthenticated()" href="#" class="header__sign-in" type="submit">
+                                        <span style="font-size: 11px">Comprar boletos</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    -->
+
+                    <!-- Los actores y directores pertenecen a una función, no a una obra
+
+                    <div class="card__description mt-4"
+                         th:each="directoresActores : ${listaDirectoresYActores}">
+
+                        <p style="font-size: 16px;">Director:
+                            <span class="card__category">
+                                <a href="#"
+                                   style="background-color: #FFFFFF; background-image: none; font-size: 16px;"
+                                   th:each="director : ${directoresActores.key}"
+                                   th:text="${director.nombres} + ' ' + ${director.apellidos}"></a>
+                        </span>
+                        </p>
+                        <p style="font-size: 16px;">Actores:
+                            <span class="card__category">
+                                <a href="#"
+                                   style="background-color: #FFFFFF; background-image: none; font-size: 16px;"
+                                   th:each="actor : ${directoresActores.value}"
+                                   th:text="${actor.nombres} + ' ' + ${actor.apellidos}"></a>
+                        </span>
+                        </p>
+
+                    </div>
+                    -->
+
+            <!-- FOTOS -->
+            <section class="mt-5 pb-5" style="background-color: #2b2b31">
+                <div class="content__head" style="margin-bottom: 0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12  pt-2 pb-3">
+                                <!-- content title -->
+                                <h2 class="content__title">Fotos</h2>
+                                <!-- end content title -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="owl-carousel home__carousel">
+                                <div class="item" th:each="foto : ${listaFotos}" th:unless="${foto.numero == 0}">
+                                    <img th:src="${foto.ruta}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
