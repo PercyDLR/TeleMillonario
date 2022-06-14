@@ -12,4 +12,10 @@ public interface CompraRepository extends JpaRepository<Compra,Integer> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM compra WHERE idpersona = ?1")
     List<Compra> historialCompras( int idPersona);
+
+    @Query(nativeQuery = true, value = "update telemillonario.compra\n" +
+            "set estado = ?1\n" +
+            "where idpersona = ?2 and id = ?3")
+    void actualizacionEstadoCompra(String estado, Integer idpersona, Integer idcompra);
+
 }
