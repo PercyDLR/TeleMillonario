@@ -2,7 +2,9 @@ package com.example.telemillonario.controller.Usuario;
 
 
 import com.example.telemillonario.entity.Foto;
+import com.example.telemillonario.entity.Funcion;
 import com.example.telemillonario.entity.Obragenero;
+import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class SedesController {
     @Autowired
     ObraGeneroRepository obraGeneroRepository;
 
-    float sedesxpagina=2;
+    float sedesxpagina=6;
     @GetMapping("/sedes")
     public String listaSedesUsuario(Model model, @RequestParam(value = "busqueda",defaultValue = "") String busqueda,
                                     @RequestParam(value = "pag",defaultValue = "0") String pag){
@@ -83,7 +86,6 @@ public class SedesController {
     @GetMapping("/sedes/sede")
     public String infoSedeDetalles(Model model,@RequestParam(value = "idsede") String idsedeStr,
                                    @RequestParam(value = "busqueda",defaultValue = "") String busqueda,
-                                   @RequestParam(value="genero",required = false,defaultValue = "") String genero,
                                    @RequestParam(value="publico",required = false,defaultValue = "") String publico,
                                    @RequestParam(value = "pag",defaultValue = "0") String pag,RedirectAttributes attr){
 
@@ -93,7 +95,7 @@ public class SedesController {
         }catch(Exception e) {
             pagina=0;
         }
-        int gen = !genero.isBlank() ? Integer.parseInt(genero) : 0;
+//        int gen = !genero.isBlank() ? Integer.parseInt(genero) : 0;
         int restriccion = publico.equals("todos") ? 0 : publico.equals("mayores") ? 1 : 2;
         String busq=busqueda.toLowerCase();
 
@@ -111,30 +113,44 @@ public class SedesController {
 
 
 
-        LinkedHashMap<Foto, List<Obragenero>> fotoObraGenero = new LinkedHashMap<>();
+//        LinkedHashMap<Foto, List<Obragenero>> fotoObraGenero = new LinkedHashMap<>();
+        HashMap<Funcion,Foto> funcionesSedeConFoto = new HashMap<>();
         if(restriccion==2){
-            List<Foto> listFuncSede=fotoRepository.buscarFotoFuncionesPorPag(idsede,busqueda,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+            List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSedeUsuar(idsede,busq,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+            List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(idsede);
 
-            for (Foto func : listFuncSede) {
-
-                fotoObraGenero.put(func, obraGeneroRepository.buscarFuncionGenero(func.getIdobra().getId()));
-
+            for (Funcion funcion : listFunciones){
+                for (Foto foto : listFotosObra){
+                    if (foto.getIdobra() == funcion.getIdobra()){
+                        funcionesSedeConFoto.put(funcion,foto);
+                        break;
+                    }
+                }
             }
-            int cantfunc= fotoRepository.fotFuncTotal(idsede,busqueda).size();
+
+            int cantfunc= funcionRepository.FuncTotalSedeUsuar(idsede,busqueda).size();
             model.addAttribute("pagTotal",(int) Math.ceil(cantfunc/funcionesporpagina));
         }else{
-            List<Foto> listFuncSedeFiltrv1=fotoRepository.buscarFotoFuncionesFiltrPorPag(idsede,restriccion,busqueda,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
-            for (Foto func : listFuncSedeFiltrv1) {
+            List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSedeUsuarFiltr(idsede,busq,restriccion,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+            List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(idsede);
 
-                fotoObraGenero.put(func, obraGeneroRepository.buscarFuncionGenero(func.getIdobra().getId()));
-
+            for (Funcion funcion : listFunciones){
+                for (Foto foto : listFotosObra){
+                    if (foto.getIdobra() == funcion.getIdobra()){
+                        funcionesSedeConFoto.put(funcion,foto);
+                        break;
+                    }
+                }
             }
 
-            int cantfunc= fotoRepository.fotFuncFiltrTotal(idsede,restriccion,busqueda).size();
+            int cantfunc= funcionRepository.FuncTotalSedeUsuarFiltr(idsede,busqueda,restriccion).size();
             model.addAttribute("pagTotal",(int) Math.ceil(cantfunc/funcionesporpagina));
         }
 
 
+
+
+        model.addAttribute("funcionessede",funcionesSedeConFoto);
 
 
 
@@ -148,11 +164,11 @@ public class SedesController {
         model.addAttribute("busqueda", busqueda);
         model.addAttribute("pagActual",pagina);
 
-        model.addAttribute("funcionessede",fotoObraGenero);
+//        model.addAttribute("funcionessede",fotoObraGenero);
         model.addAttribute("sede",sedeRepository.findById(idsede).get());
         model.addAttribute("idsede",idsede);
-        model.addAttribute("listGeneros",generoRepository.findAll());
-        model.addAttribute("genero", genero);
+//        model.addAttribute("listGeneros",generoRepository.findAll());
+//        model.addAttribute("genero", genero);
         model.addAttribute("publico", publico);
         return "usuario/sedes/sedeDetalles";
     }

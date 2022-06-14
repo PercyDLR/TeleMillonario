@@ -147,7 +147,7 @@
 
                                             <div class="sign__group">
                                                 <label for="genero">Generos</label>
-                                                <select class="select2"  id="genero" name="idgenero" style="width: 100%" required multiple>
+                                                <select class="select2 genero"  id="genero" name="idgenero" style="width: 100%" required multiple>
                                                     <option th:each="generos,indice : ${listGeneros}"
                                                             th:text="|${generos.nombre}|"
                                                             th:value="${generos.id}"
@@ -274,14 +274,6 @@
                 $(document).ready(function() {
                     $('.select2.genero').select2({
                         placeholder: 'Géneros',
-                        closeOnSelect: false
-                    });
-                    $('.select2.actor').select2({
-                        placeholder: 'Actores',
-                        closeOnSelect: false
-                    });
-                    $('.select2.director').select2({
-                        placeholder: 'Directores',
                         closeOnSelect: false
                     });
                     getAforoMax()
