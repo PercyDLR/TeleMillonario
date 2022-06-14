@@ -1,12 +1,7 @@
 package com.example.telemillonario.controller.Administrador;
 
-import com.example.telemillonario.entity.Foto;
-import com.example.telemillonario.entity.Obra;
-import com.example.telemillonario.entity.Persona;
-import com.example.telemillonario.entity.Sede;
-import com.example.telemillonario.repository.FotoRepository;
-import com.example.telemillonario.repository.FuncionRepository;
-import com.example.telemillonario.repository.ObraRepository;
+import com.example.telemillonario.entity.*;
+import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +32,13 @@ public class ObraAdminController {
     FileService fileService;
 
     @Autowired
+    GeneroRepository generoRepository;
+
+    @Autowired
     FuncionRepository funcionRepository;
+
+    @Autowired
+    ObraGeneroRepository obraGeneroRepository;
     float obrasporpagina=6;
 
     @GetMapping(value = {"", "/","/lista"})
@@ -72,8 +74,12 @@ public class ObraAdminController {
 
     @GetMapping(value = {"/crear"})
     public String crearSedeForm(@ModelAttribute("obra") Obra obra, Model model){
+        // Listas para los selectores
+        model.addAttribute("listGeneros",generoRepository.findAll());
 
-
+        // Listas vacias para evitar errores
+        ArrayList<Integer> listaVacia = new ArrayList<>();
+        model.addAttribute("generosObra",listaVacia);
         return "Administrador/Obra/editarObra";
     }
 
@@ -91,6 +97,9 @@ public class ObraAdminController {
             List<Foto> fotos = fotoRepository.buscarFotosObra(idobra);
 
             model.addAttribute("imagenes", fotos);
+            model.addAttribute("listGeneros",generoRepository.findAll());
+
+            model.addAttribute("generosObra",generoRepository.generosPorObra(idobra));
             return "Administrador/Obra/editarObra";
         } else {
             return "redirect:/admin/obras/lista";
@@ -100,6 +109,7 @@ public class ObraAdminController {
     @PostMapping("/guardar")
     public String guardarObra(@ModelAttribute("obra") @Valid Obra obra, BindingResult bindingResult,
                               HttpSession session, @RequestParam(value = "eliminar", defaultValue = "a") String[] ids,
+                              @RequestParam(value="idgenero") String[] idgenero,
                               @RequestParam(value="imagenes") MultipartFile[] imagenes,
                               RedirectAttributes attr, Model model) throws IOException {
 
@@ -111,6 +121,8 @@ public class ObraAdminController {
             //Se verifica que se haya subido al menos una foto al crear un formulario
             if(obra.getId()==null && imagenes[0].getContentType().equals("application/octet-stream")){
 
+                model.addAttribute("generosObra",idgenero);
+                model.addAttribute("listGeneros",generoRepository.findAll());
                 model.addAttribute("err","Se debe de tener al menos 1 imagen");
                 return "Administrador/Obra/editarObra";
 
@@ -127,7 +139,9 @@ public class ObraAdminController {
                     List<Foto> fotos = fotoRepository.buscarFotosObra(obra.getId());
 
                     model.addAttribute("imagenes", fotos);
-                    return "Administrador/Sede/editarSedes";
+                    model.addAttribute("generosObra",idgenero);
+                    model.addAttribute("listGeneros",generoRepository.findAll());
+                    return "Administrador/Obra/editarObra";
                 }
             }
 
@@ -154,7 +168,8 @@ public class ObraAdminController {
                                 model.addAttribute("obra", obraencon);
 
                                 List<Foto> fotos = fotoRepository.buscarFotosObra(obra.getId());
-
+                                model.addAttribute("generosObra",idgenero);
+                                model.addAttribute("listGeneros",generoRepository.findAll());
                                 model.addAttribute("imagenes", fotos);
                             }
                             return "Administrador/Sede/editarSedes";
@@ -169,7 +184,8 @@ public class ObraAdminController {
                             model.addAttribute("obra", obraencon);
 
                             List<Foto> fotos = fotoRepository.buscarFotosObra(obra.getId());
-
+                            model.addAttribute("generosObra",idgenero);
+                            model.addAttribute("listGeneros",generoRepository.findAll());
                             model.addAttribute("imagenes", fotos);
                         }
                         return "Administrador/Sede/editarSedes";
@@ -186,6 +202,18 @@ public class ObraAdminController {
                 obraRepository.save(obra);
                 //se busca el id del objeto obra creado
                 Obra obraCreada=obraRepository.findTopByOrderByIdDesc();
+
+                //guardar genero
+                for (int i=0;i<idgenero.length;i++){
+                    Obragenero obragen = new Obragenero();
+                    int idgenint=Integer.parseInt(idgenero[i]);
+                    obragen.setIdgenero(generoRepository.findById(idgenint).get());
+                    obragen.setIdobra(obraCreada);
+                    //estado habilitado
+                    obragen.setEstado(1);
+                    obraGeneroRepository.save(obragen);
+                }
+
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);
                 if(!imagenes[0].getOriginalFilename().equals("")){
                     int i =1;
@@ -256,6 +284,30 @@ public class ObraAdminController {
                 }
 
                 obraRepository.save(obra);
+
+                Obra obraGuard=obraRepository.findById(obra.getId()).get();
+
+                List<Obragenero> listobragen =obraGeneroRepository.buscarObraGenero(obra.getId());
+                List <Integer> listidgene= new ArrayList<>();
+                for (Obragenero generos : listobragen){
+                    listidgene.add(generos.getId());
+                }
+
+                obraGeneroRepository.deleteAllById(listidgene);
+
+
+                //guardar genero
+                for (int i=0;i<idgenero.length;i++){
+                    Obragenero obragen = new Obragenero();
+                    int idgenint=Integer.parseInt(idgenero[i]);
+                    obragen.setIdgenero(generoRepository.findById(idgenint).get());
+                    obragen.setIdobra(obraCreada);
+                    //estado habilitado
+                    obragen.setEstado(1);
+                    obraGeneroRepository.save(obragen);
+                }
+
+
                 attr.addFlashAttribute("msg", "Se ha editado exitosamente la obra");
                 return "redirect:/admin/obras/lista";
             }
@@ -286,6 +338,13 @@ public class ObraAdminController {
                     fileService.eliminarArchivo(nombrefoto);
                     fotoRepository.deleteById(fot.getId());
                 }
+
+                //eliminamos en la tabla obra genero
+                List<Obragenero> listObraGen =obraGeneroRepository.buscarObraGenero(idobra);
+                for (Obragenero obragen : listObraGen){
+                    obraGeneroRepository.deleteById(obragen.getId());
+                }
+
 
                 //eliminamos la obra de la base de datos
                 obraRepository.deleteById(idobra);
