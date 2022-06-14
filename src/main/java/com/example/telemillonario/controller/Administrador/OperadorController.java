@@ -205,6 +205,7 @@ public class OperadorController {
                         rol.setNombre("Operador");//Opcional
                         //asignación de rol
                         operador.setIdrol(rol);
+                        operador.setContrasenia("$2a$10$hE1dT9Lj6ppwAT0mg9mb8.xEsZPstCA5nNK2xqTHLNyvmVZU7zRYW");
                         personaRepository.save(operador);
                         attr.addFlashAttribute("msg2", "Se creo de el operador de manera exitosa");
                         return "redirect:/admin/operadores";
