@@ -1,11 +1,15 @@
 package com.example.telemillonario.controller.Usuario;
 
+import com.example.telemillonario.dto.QrDto;
+import com.example.telemillonario.dto.ValidacionTarjetaDto;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
+import com.example.telemillonario.service.CoderService;
 import com.example.telemillonario.service.DatosTarjeta;
 import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -64,8 +69,10 @@ public class UsuarioController {
     @Autowired
     PagoRepository pagoRepository;
 
-    @GetMapping("")
+    @Autowired
+    CoderService coderService;
 
+    @GetMapping("")
     public String paginaPrincipal(Model model){
         List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
         model.addAttribute("listaObras",listaObras);
@@ -746,13 +753,21 @@ public class UsuarioController {
         if (bindingResult.hasErrors()) {
             return "/usuario/pago";
         } else {
-            boolean todoOK = true;
-            /*
-
-                Validacion de la tarjeta @Agustin
-
-            */
-
+            RestTemplate restTemplate = new RestTemplate();
+            String numero = coderService.codificar(datosTarjeta.getNumeroTarjeta());
+            String nombre = coderService.codificar(datosTarjeta.getNombresTitular());
+            String expiracion = coderService.codificar(datosTarjeta.getFechaVencimiento());
+            String cvv = coderService.codificar(datosTarjeta.getCodigoSeguridad());
+            String correo = coderService.codificar(datosTarjeta.getCorreo());
+            String url = "http://20.90.180.72/validacion/verificar?numero="+numero+"&nombre="+nombre+
+                    "&expiracion="+expiracion+"&cvv="+cvv+"&correo="+correo;
+            ResponseEntity<ValidacionTarjetaDto> response = restTemplate.getForEntity(url,ValidacionTarjetaDto.class);
+            boolean todoOK;
+            if(response.getBody().getMsg().equalsIgnoreCase("Se ha verificado y agregado la tarjeta de manera correcta")||response.getBody().getMsg().equalsIgnoreCase("Se ha verificado la tarjeta de manera correcta")){
+                todoOK=true;
+            }else{
+                todoOK=false;
+            }
             if (todoOK) {
                 Optional<Funcion> funcion1 = funcionRepository.findById(compraEnProceso.getFuncion().getId());
                 Funcion funcion = funcion1.get();
@@ -773,25 +788,49 @@ public class UsuarioController {
                 }
 
                 compraRepository.save(compraEnProceso);
-
+                //Codigo unico de operacion
+                //https://www.baeldung.com/java-uuid
+                UUID uuid = UUID.randomUUID();
+                String numero_operacion = uuid.toString();
                 /*
-
-                QR  @Agustin
-
+                Generación de la URL a setear en el codigo para que redirija al metodo ->Alonso
+                   p.e:
+                   url: http://localhost:8080/{nombre de controlador}/numero_operacion={numero de operacion}
+                    tener en cuenta que el preludio de la url tiene que ser dinamico y que se tiene que mostrar
+                    el resumen de compras
                  */
-
+                String url_for_qr = "url a definir"+"/numero_operacion="+numero_operacion;//@Alonso
+                String url_encoded = coderService.codificar(url_for_qr);
+                RestTemplate restTemplate_for_qr = new RestTemplate();
+                String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
+                ResponseEntity<QrDto> response_for_qr = restTemplate_for_qr.getForEntity(qr_service, QrDto.class);
+                String qr_link = response_for_qr.getBody().getUrl();//->Se envia a la vista
                 //Se llena la tabla de pago
                 Pago pago = new Pago();
-                pago.setEstado("1"); //Que estado se le va a poner?
+                pago.setEstado("1"); //estado->1
                 //Aca va el set del idtarjeta   @Agustin
+                if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Visa")){
+                    //visa
+                    pago.setIdTarjeta(1);
+                }else if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Mastercard")){
+                    //mastercard
+                    pago.setIdTarjeta(2);
+                }else if(datosTarjeta.getNumeroTarjeta().equalsIgnoreCase("Diners Club")){
+                    //diners club
+                    pago.setIdTarjeta(3);
+                }else{
+                    System.out.println("Ha sucedido algo malo");
+                }
                 //Aca va el set del numerotarjeta   @Agustin
+                pago.setNumeroTarjeta(datosTarjeta.getNumeroTarjeta());
                 //Aca va el set de la fechade pago  @Agustin
+                pago.setFechaPago(LocalDate.now());
                 pago.setIdCompra(compraEnProceso);
                 //Aca va el set del codigo QR   @Agustin
+                pago.setQr(qr_link);
                 //Aca va el set del codigo de operacion @Agustin
+                pago.setCodigo(numero_operacion);
                 pagoRepository.save(pago);
-
-
                 String content = "<p>Cordiales Saludos: </p>"
                         + "<p>Se ha efectuado correctamente la siguiente compra:</p>"
                         + "<p>- Funcion de la obra:" + compraEnProceso.getFuncion().getIdobra().getNombre() + " " + "<p>"
@@ -803,9 +842,7 @@ public class UsuarioController {
                         + "<p>- Cantidad de boletos: "+ compraEnProceso.getCantidad() + " " + "<p>";
 
                         /*
-
-                        Falta poner el detalle del pago con el QR     @Agustin
-
+                        Falta poner el detalle del pago con el QR -> Eso es mapeado con la ruta al servicio que quiera acceder @Alonso
                          */
 
                 try {
@@ -821,9 +858,7 @@ public class UsuarioController {
                 return "redirect:/historial";
 
             } else {
-                /*
-                Se le envian los errores de los campos de la tarjeta    @Agustin
-                 */
+                redirectAttributes.addFlashAttribute("msg",response.getBody().getMsg());
                 return "/usuario/pago";
             }
         }

@@ -18,20 +18,23 @@ import java.time.LocalDate;
 @Setter
 public class DatosTarjeta {
 
-    @Size(max = 16, message = "La tarjeta no puede exceder los 16 caracteres")
+    @Size(max = 19, message = "La tarjeta no puede exceder los 16 caracteres")//considerar los guiones intermedios
     @NotEmpty(message = "El numero de tarjeta no puede estar vacio")
-    private String numeroTarjeta;
+    private String numeroTarjeta;//formato 4557-2341-5567-8890
 
 
     @NotEmpty(message = "Los nombres no pueden estar vacíos")
-    private String nombresTitular;
+    private String nombresTitular;//nombre Mastercard,Visa,Diners Club
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @NotEmpty(message = "La fecha no puede estar vacio")
-    private LocalDate fechaVencimiento;
+    private String fechaVencimiento;//Formato p.e 06/25
 
     @Size(max = 3, message = "El codigo de seguridad no puede exceder los 3 caracteres")
     @NotEmpty(message = "El codigo de seguridad no puede estar vacio")
-    private String codigoSeguridad;
+    private String codigoSeguridad;//CVV p.e 986
 
+    @Email(message = "Debe tener formato de correo electronico")
+    @NotEmpty(message = "El correo de usuario no puede estar vacio")
+    private String correo;//Correo Avl28@outlook.com.pe
 }

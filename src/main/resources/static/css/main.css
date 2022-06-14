@@ -157,6 +157,16 @@ input.sign__input:autofill {
   margin-top: 25px;
 }
 
+/* Quita las flechas de input numerico */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* Pantalla de carga */
 
 .carga {
@@ -3252,17 +3262,11 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
-  /*position: relative;*/
-  border-top: solid 3px #ff55a5;
-  /*
-  border-bottom: solid 3px #ff55a5;
-  border-right: solid 3px #ff55a5;
-  border-left: solid 3px #ff55a5;
-   */
+  position: relative;
 }
 .sign__form:before {
   content: '';
- /*position: absolute;*/
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
