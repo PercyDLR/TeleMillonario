@@ -179,11 +179,11 @@ public class LoginController {
 
 
         DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
-        /*
+        boolean errDNI = true;
         //Verificamos si existe el dni
         if(datosPersona.getSuccess().equalsIgnoreCase("true")){
             //pasamos a mayuscula los nombres apellidos de la persona que se registro
-            String nombresUpperCase = usuario.getNombres().toUpperCase();
+            /*String nombresUpperCase = usuario.getNombres().toUpperCase();
             String apellidosUpperCase = usuario.getApellidos().toUpperCase();
             String nombresApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
 
@@ -192,16 +192,17 @@ public class LoginController {
 
             if(!nombresApellidosUpperCase.equals(nombresApellidosAPI)){
                 model.addAttribute("errDniNoCorrespondePersona", 1);
-            }
+            }*/
+            errDNI = false;
         }
         else{
-            model.addAttribute("errDni", 1);
-        }*/
-        if(!datosPersona.getSuccess().equalsIgnoreCase("true")){
-            model.addAttribute("errDni", 1);
+            model.addAttribute("errDni", errDNI);
         }
+        /*if(!datosPersona.getSuccess().equalsIgnoreCase("true")){
+            model.addAttribute("errDni", errDNI);
+        }*/
 
-        if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento){
+        if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
             }
