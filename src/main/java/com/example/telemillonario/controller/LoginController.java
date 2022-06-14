@@ -11,6 +11,7 @@ import com.example.telemillonario.service.DniAPI;
 import com.example.telemillonario.service.UsuarioService;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
@@ -22,10 +23,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -61,7 +66,7 @@ public class LoginController {
     FotoRepository fotoRepository;
 
     @GetMapping("/list")
-    public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session){
+    public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session, RedirectAttributes redirectAttributes,HttpServletRequest request){
         OAuth2AuthorizedClient client = auth2AuthorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(),authentication.getName());
         String name = (String)  authentication.getPrincipal().getAttributes().get("given_name");
         String lastname = (String)  authentication.getPrincipal().getAttributes().get("family_name");
@@ -90,8 +95,10 @@ public class LoginController {
             return "redirect:/login";
         }else if (persona.getCorreo().equals(personita.getCorreo())){
             /*Aca se ingresa al sistema*/
-            session.setAttribute("usuario",persona);
-            return "redirect:/redirectByRole";
+            //redirectAttributes.addAttribute("username",email);
+            //redirectAttributes.addAttribute("password","123456789abcdefg");
+            return "redirect:/processLogin?username=" + email + "&password=123456789abcdefg";
+
         }else {
             return "redirect:/login";
         }
@@ -409,7 +416,7 @@ public class LoginController {
         helper.setSubject(subject);
         helper.setText(content,true);
 
-        mailSender.send(message);
+        //mailSender.send(message);
 
     }
 
