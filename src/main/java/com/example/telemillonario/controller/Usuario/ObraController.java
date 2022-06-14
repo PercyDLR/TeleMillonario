@@ -271,21 +271,14 @@ public class ObraController {
             //- Lista de sala, fecha y hora de inicio de la funcion (LISTO)
 
             List<Sede> listaSedesConObra = sedeRepository.listaSedesConObra(id);
-            LinkedHashMap<Sede, LinkedHashMap<Funcion, String>> funcionesDeLaSede = new LinkedHashMap<>();
+            HashMap<Sede,List<Funcion>> funcionesDeLaSede = new HashMap<>();
             for (Sede s : listaSedesConObra) {
-                funcionesDeLaSede.put(s, new LinkedHashMap<>());
                 List<Sala> listaSalasDeSede = salaRepository.listaSalasConObra(id, s.getId());
 
                 for (Sala sa : listaSalasDeSede) {
-                    LinkedHashMap<Funcion, String> idFuncionYStringDeOpcion = new LinkedHashMap<>();
                     List<Funcion> listaFunciones = funcionRepository.listaFuncionesConObra(id, s.getId(), sa.getId());
-                    for (Funcion f : listaFunciones) {
-                        idFuncionYStringDeOpcion.put(f, "Sala " + sa.getNumero() + " > " + f.getFecha() + " " + f.getInicio());
-                        funcionesDeLaSede.put(s, idFuncionYStringDeOpcion);
-                    }
-
+                    funcionesDeLaSede.put(s, listaFunciones);
                 }
-
             }
 
             List<Sede> lista = sedeRepository.findAll();
