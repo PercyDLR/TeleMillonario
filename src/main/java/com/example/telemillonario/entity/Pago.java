@@ -9,12 +9,13 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
-public class Pago {
+public class Pago  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

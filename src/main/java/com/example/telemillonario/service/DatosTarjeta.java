@@ -12,11 +12,12 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
 @Setter
-public class DatosTarjeta {
+public class DatosTarjeta implements Serializable {
 
     @Size(max = 19, message = "La tarjeta no puede exceder los 16 caracteres")//considerar los guiones intermedios
     @NotEmpty(message = "El numero de tarjeta no puede estar vacio")
