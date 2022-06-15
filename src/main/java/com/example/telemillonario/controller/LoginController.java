@@ -125,8 +125,6 @@ public class LoginController {
         }
 
         switch(persona.getIdrol().getNombre()){
-            //Compra compra = null;
-            //session.setAttribute("carritoDeComprasDeUsuario",compra);
 
             case "Administrador":
                 return "redirect:/admin/sedes";

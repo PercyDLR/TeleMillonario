@@ -380,10 +380,28 @@ public class UsuarioController {
             if ((obra.getRestriccionedad() == 1 && edad >= 18) || obra.getRestriccionedad() == 0) {
                 LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
                 if(carrito == null){
+                    double precioEntradaFuncion = funcion.getPrecioentrada();
+                    double montoTotal = precioEntradaFuncion * cantBoletos;
+
+                    Compra reserva = new Compra();
+                    reserva.setEstado("Reservado");
+                    reserva.setCantidad(cantBoletos);
+                    reserva.setMontoTotal(montoTotal);
+                    reserva.setFuncion(funcion);
+                    reserva.setPersona(persona);
+
+                    DateTimeFormatter fch = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
+                    String fechaDeReservaCompra = fch.format(LocalDateTime.now());
+                    LinkedHashMap<String, Compra> carritoDeComprasDeUsuario = new LinkedHashMap<>();
+                    carritoDeComprasDeUsuario.put(fechaDeReservaCompra, reserva);
+                    session.setAttribute("carritoDeComprasDeUsuario", carritoDeComprasDeUsuario);
+                    redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente.Puede encontrarla " +
+                            "dirigiendose a su carrito de compras.");
+                    return "redirect:/detallesObra?Obra=" + obra.getId();
 
                 }
                 boolean existeCruce = false;
-                if (carrito.size() != 0) {
+                //if (carrito.size() != 0) {
                     Collection<Compra> reservas = carrito.values();
                     ArrayList<String> crucesHorarios = new ArrayList<>();
                     for (Compra reserva : reservas) {
@@ -403,27 +421,8 @@ public class UsuarioController {
                         redirectAttributes.addFlashAttribute("cruceHorarioFuncion", crucesHorarios);
                         return "redirect:/detallesObra?Obra=" + obra.getId();
                     }
-                }
-
-                double precioEntradaFuncion = funcion.getPrecioentrada();
-                double montoTotal = precioEntradaFuncion * cantBoletos;
-
-                Compra reserva = new Compra();
-                reserva.setEstado("Reservado");
-                reserva.setCantidad(cantBoletos);
-                reserva.setMontoTotal(montoTotal);
-                reserva.setFuncion(funcion);
-                reserva.setPersona(persona);
-
-                DateTimeFormatter fch = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
-                String fechaDeReservaCompra = fch.format(LocalDateTime.now());
-                LinkedHashMap<String, Compra> carritoDeComprasDeUsuario = new LinkedHashMap<>();
-                carritoDeComprasDeUsuario.put(fechaDeReservaCompra, reserva);
-                session.setAttribute("carritoDeComprasDeUsuario", carritoDeComprasDeUsuario);
-                redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente.Puede encontrarla " +
-                        "dirigiendose a su carrito de compras.");
+                //}
                 return "redirect:/detallesObra?Obra=" + obra.getId();
-
             } else {
                 redirectAttributes.addFlashAttribute("mensajeFaltaEdad", "La funcion tiene restriccion de edad");
                 return "redirect:/detallesObra?Obra=" + obra.getId();
