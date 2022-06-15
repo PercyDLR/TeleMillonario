@@ -101,45 +101,42 @@
 
                     <div class="col-12 col-xl-6" style="padding: 10px; background-color: #28282d; box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%)">
 
-                        <form method="post" onsubmit="return validacionsubmit()" th:action="@{/cartelera/compra}">
-
-                            <div class="funciones-header">
-                                <div class="row">
-                                    <h1 class="content__title" style="color: rgba(255,255,255,0.7); margin-block: 5px;">
-                                        Comprar Boletos
-                                    </h1>
-                                </div>
+                        <div class="funciones-header">
+                            <div class="row">
+                                <h1 class="content__title" style="color: rgba(255,255,255,0.7); margin-block: 5px;">
+                                    Comprar Boletos
+                                </h1>
                             </div>
+                        </div>
 
-                            <div class="accordion" id="accordion">
-                                <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
-                                    <div class="card-header" id="headingOne">
-                                        <button type="button" th:data-target="|#funciones-${sede.key.id}|"
-                                                data-toggle="collapse" aria-expanded="false" th:aria-controls="|funciones-${sede.key.id}|">
-                                            <span th:text="${sede.key.nombre}"></span>
-                                            <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
+                        <div class="accordion" id="accordion">
+                            <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
+                                <div class="card-header" id="headingOne">
+                                    <button type="button" th:data-target="|#funciones-${sede.key.id}|"
+                                            data-toggle="collapse" aria-expanded="false" th:aria-controls="|funciones-${sede.key.id}|">
+                                        <span th:text="${sede.key.nombre}"></span>
+                                        <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
+                                    </button>
+                                </div>
+
+                                <div th:id="|funciones-${sede.key.id}|" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <button type="button" class="form__btn" th:each="funcion : ${sede.value}" style="margin: 5px"
+                                        th:text="|${funcion.fecha} ${funcion.inicio}|" th:onclick="|seleccionFuncion(${funcion.id})|">
                                         </button>
                                     </div>
-
-                                    <div th:id="|funciones-${sede.key.id}|" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <button type="button" class="form__btn" th:each="funcion : ${sede.value}" style="margin: 5px"
-                                            th:text="|${funcion.fecha} ${funcion.inicio}|" th:onclick="|seleccionFuncion(${funcion.id})|">
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
                 <div class="row">
 
-                    <form method="post" onsubmit="return validacionsubmit" th:action="@{/cartelera/compra}"> <!--Estoy enviando la id de la funcion y la cantidad de boletos a comprar-->
+                    <form id="form-compra" method="post" th:action="@{/reserva}">
 
                         <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
-                            <select id="funcion-seleccionada" style="width: 0" hidden>
+                            <select id="funcion-seleccionada" name="idFuncion" style="width: 0" hidden>
                                 <th:block th:each="sede : ${funcionesDeLaSede}">
                                     <option th:each="funcion : ${sede.value}"
                                             th:text="${funcion.idobra.nombre}"
@@ -163,7 +160,7 @@
                                     <div class="col-md-4 col-6">
                                         <div class="sign__group">
                                             <label for="entradas">Entradas</label>
-                                            <input id="entradas" class="sign__input" type="number" style="width: 100%;text-align: center"
+                                            <input id="entradas" name="cantBoletos" class="sign__input" type="number" style="width: 100%;text-align: center"
                                                    placeholder="# Entradas" onchange="hallarCosto()" min="1" value="1">
                                         </div>
                                     </div>
@@ -173,23 +170,23 @@
                                             <span>Agregar a carrito</span>
                                         </button>
                                     </div>
-
+                                    <!--
                                     <div class="col-md-2 col-6">
-                                        <button type="submit" class="form__btn">
+                                        <button type="button" class="form__btn" onclick="comprar()">
                                             <span>Comprar Ahora</span>
                                         </button>
                                     </div>
+                                    -->
 
                                 </div>
                             </div>
                         </div>
                     </form>
 
-                    <div sec:authorize="isAnonymous()" class="row justify-content-center mt-3">
-                        <a th:href="@{/cartelera/carritoPrueba}"
-                           class="header__sign-in"> <!--th:href="@{/login}"-->
-                            <i class="icon ion-ios-log-in"></i>
-                            <span style="font-size: 8px; text-align: center;">Inicie sesión para comprar sus boletos</span>
+                    <div sec:authorize="isAnonymous()" class="row justify-content-center my-5">
+                        <span style="font-size: 20px; text-align: center; color: white">No está logueado</span>
+                        <a th:href="@{/login}" class="filter__btn">
+                            Iniciar Sesión
                         </a>
                     </div>
                 </div>
@@ -253,7 +250,8 @@
                     $("#costo").html("Precio Por Entrada: S/" + optElegida.dataset.precio);
                     $("#boletosRestantes").html("Boletos restantes: " + optElegida.dataset.stock);
 
-                    hallarCosto( inputTotal );
+                    inputTotal.max = optElegida.dataset.stock;
+                    hallarCosto();
                 }
 
                 function hallarCosto(){
@@ -266,14 +264,24 @@
                     $("#total").html("Total: S/" + costo*numEntradas);
                 }
 
-                function validacionsubmit() {
-                    var selectSede = document.getElementById("sedes").value; //Validar que sea diferente de ""
-                    var cantidadBoletos = document.getElementById("cantidadBoletos").value; //Validar que sea diferente de 0
-
-                    if (selectSede == "" || cantidadBoletos == 0) {
-                        return false;
-                    }
+                function reservar(){
+                    let form = document.getElementById("form-compra")
+                    form.action = "/reserva"
+                    form.submit()
                 }
+
+                function comprar(){
+                    let form = document.getElementById("form-compra")
+                    form.action = "/compra"
+                    form.submit()
+                }
+
+
+                document.addEventListener("submit", function (){
+                    if(inputTotal.value == "" || inputTotal.value < 1){
+                        return
+                    }
+                })
 
             </script>
 
