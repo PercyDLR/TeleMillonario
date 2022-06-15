@@ -361,12 +361,12 @@ public class UsuarioController {
             cantBoletos = Integer.parseInt(cantBoletosStr);
             if (cantBoletos <= 0) {
                 redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos", "El numero de boletos es incorrecto");
-                return "redirect:/DetallesObra?id=" + funcion.getIdobra().getId();
+                return "redirect:cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                 //return "redirect:/detallesObra?Obra=" + funcion.getIdobra();
             }
         } catch (NumberFormatException m) {
             redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos", "El numero de boletos es incorrecto");
-            return "redirect:/DetallesObra?id=" + funcion.getIdobra().getId();
+            return "redirect:cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
             //return "redirect:/detallesObra?Obra=" + funcion.getIdobra();
         }
 
@@ -399,7 +399,7 @@ public class UsuarioController {
                     session.setAttribute("carritoDeComprasDeUsuario", carritoDeComprasDeUsuario);
                     redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente.Puede encontrarla " +
                             "dirigiendose a su carrito de compras.");
-                    return "redirect:/DetallesObra?id=" + funcion.getIdobra().getId();
+                    return "redirect:cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                     //return "redirect:/detallesObra?Obra=" + obra.getId();
 
                 }
@@ -422,21 +422,21 @@ public class UsuarioController {
                     }
                     if (existeCruce) {
                         redirectAttributes.addFlashAttribute("cruceHorarioFuncion", crucesHorarios);
-                        return "redirect:/DetallesObra?id=" + funcion.getIdobra().getId();
+                        return "redirect:cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                         //return "redirect:/detallesObra?Obra=" + obra.getId();
                     }
                 //}
-                return "redirect:/DetallesObra?id=" + funcion.getIdobra().getId();
+                return "redirect:cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                 //return "redirect:/detallesObra?Obra=" + obra.getId();
             } else {
                 redirectAttributes.addFlashAttribute("mensajeFaltaEdad", "La funcion tiene restriccion de edad");
-                return "redirect:/DetallesObra?id=" + funcion.getIdobra().getId();
+                return "redirect:cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                 //return "redirect:/detallesObra?Obra=" + obra.getId();
 
             }
         } else {
             redirectAttributes.addFlashAttribute("mensajeNoHayStock", "Ya no hay stock disponible");
-            return "redirect:/DetallesObra?id=" + funcion.getIdobra().getId();
+            return "redirect:cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
             //return "redirect:/detallesObra?Obra=" + obra.getId();
         }
     }
