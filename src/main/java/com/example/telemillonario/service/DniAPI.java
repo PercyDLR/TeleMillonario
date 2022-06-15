@@ -28,10 +28,11 @@ public class DniAPI {
     public static DatosAPI consulta(String DNI) throws IOException{
         URL url = new URL("https://api.ateneaperu.com/api/Reniec/DniToken");
         URLConnection con = url.openConnection();
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         HttpURLConnection http = (HttpURLConnection)con;
         http.setRequestMethod("POST");
         http.setDoOutput(true);
-
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         byte[] out = ("{\"token\":\"sn2eTvYqJOzRpqSCBzponSxv6Gj3x15L9M4u/09SLIE=\",\"sNroDocumento\":"+DNI+"}").getBytes(StandardCharsets.UTF_8);
         int length = out.length;
 
@@ -41,7 +42,7 @@ public class DniAPI {
         try(OutputStream os = http.getOutputStream()) {
             os.write(out);
         }
-
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(http.getInputStream(),"utf-8"));
         JSONTokener tokener = new JSONTokener(bufferedReader);
         JSONObject json = new JSONObject(tokener);

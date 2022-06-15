@@ -214,7 +214,7 @@ public class LoginController {
                 model.addAttribute("google", 1);
             }
 
-            return "/login/signup";
+            return "login/signup";
         } else {
 
             //generamos su bcript de contraseña

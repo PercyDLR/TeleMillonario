@@ -159,7 +159,7 @@ public class UsuarioController {
                 funcionRepository.save(funcion);
 
                 model.addAttribute("compraBorradaExitosamente","Se ha eliminado la compra exitosamente.La devolucion de su dinero se realizara en los proximos minutos");
-                return "redirec:/historialPrueba";
+                return "redirect:/historialPrueba";
                 //return "usuario/carrito/historialComprasUsuario";
 
             }else{
@@ -933,7 +933,7 @@ public class UsuarioController {
         List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
 
         List<Foto> listaFotos = fotoRepository.unaFotoPorObra();
-
+        System.out.println(listaFotos.size());
         if (carrito.size() == 0) {
             model.addAttribute("listaGeneros",listaGeneros);
             model.addAttribute("foto",listaFotos);
