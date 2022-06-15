@@ -8,17 +8,16 @@ import com.example.telemillonario.service.CoderService;
 import com.example.telemillonario.service.DatosTarjeta;
 import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.service.UsuarioService;
+import org.apache.qpid.proton.codec.security.SaslOutcomeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -89,21 +88,6 @@ public class UsuarioController {
         return "vistaPrincipal";
     }
 
-    @GetMapping("/historial")
-    public String historialCompraPersona(Model model, HttpSession session) {
-        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
-        compraEnProceso = null;
-        session.setAttribute("compraEnProceso", compraEnProceso);
-
-        List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
-        model.addAttribute("listaGeneros",listaGeneros);
-
-        Persona personita = (Persona) session.getAttribute("usuario");
-        List<Compra> historialCompras = compraRepository.historialCompras(personita.getId());
-        model.addAttribute("historialCompras", historialCompras);
-        return "/usuario/carrito/historialComprasUsuario";
-    }
-
     @GetMapping("/borrarCompra")
     public String borrarCompraDeHistorialPersona(Model model,@RequestParam(value = "idCompra")String idCompra,HttpSession session){
         Persona usuario = (Persona) session.getAttribute("usuario");
@@ -129,9 +113,9 @@ public class UsuarioController {
 
         }
 
-        if(compra.getPersona().getId() != usuario.getId()){
+        /*if(compra.getPersona().getId() != usuario.getId()){
             errorIDCompra = true;
-        }
+        }*/
 
         boolean estaATiempo = true;
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -140,21 +124,21 @@ public class UsuarioController {
 
         Duration duration = Duration.between(fechaHoraFuncion, fechaHoraActual);
         long minutes = duration.toMinutes();
-
-        if (minutes > 15) {
+        System.out.println(minutes);
+        if (minutes < 15) {
             estaATiempo = false;
         }
 
-
         if(errorIDCompra == false){
-
+            System.out.println("entr eprimer if");
             if(estaATiempo == true){
+                System.out.println("entr segundoi if");
 
-                Pago pago = pagoRepository.encontrarPagoPorIdCompra(compra.getId());
+                /*Pago pago = pagoRepository.encontrarPagoPorIdCompra(compra.getId());
                 pago.setEstado("0");
-                pagoRepository.save(pago);
+                pagoRepository.save(pago);*/
 
-
+                System.out.println("seteo cancelado");
                 compra.setEstado("Cancelado");
                 compraRepository.save(compra);
 
@@ -175,16 +159,17 @@ public class UsuarioController {
                 funcionRepository.save(funcion);
 
                 model.addAttribute("compraBorradaExitosamente","Se ha eliminado la compra exitosamente.La devolucion de su dinero se realizara en los proximos minutos");
-                return "/usuario/historial";
+                return "redirec:/historialPrueba";
+                //return "usuario/carrito/historialComprasUsuario";
 
             }else{
                 model.addAttribute("errorBorrarCompra","Ya no se puede borrar su compra porque supero nuestro timepo limite de tolerancia.");
-                return "/usuario/historial";
+                return "usuario/carrito/historialComprasUsuario";
             }
 
         }else{
             model.addAttribute("errorBorrarCompra","Error al quere borrar la compra");
-            return "/usuario/historial";
+            return "usuario/carrito/historialComprasUsuario";
         }
 
     }
@@ -394,6 +379,9 @@ public class UsuarioController {
 
             if ((obra.getRestriccionedad() == 1 && edad >= 18) || obra.getRestriccionedad() == 0) {
                 LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+                if(carrito == null){
+
+                }
                 boolean existeCruce = false;
                 if (carrito.size() != 0) {
                     Collection<Compra> reservas = carrito.values();
@@ -1133,26 +1121,29 @@ public class UsuarioController {
     }
 
     @GetMapping("/historialPrueba")
-    String historialPrueba(Model model) {
+    String historialPrueba(Model model,HttpSession session) {
+        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        compraEnProceso = null;
+        session.setAttribute("compraEnProceso",compraEnProceso);
 
-        List<Compra> listaCompras = compraRepository.historialCompras(86);
+        Persona persona = (Persona) session.getAttribute("usuario");
+
+        List<Compra> listaCompras = compraRepository.historialCompras(persona.getId());
         List<Compra> listaComprasRevisadas = new ArrayList<>();
         for (Compra c : listaCompras) {
             LocalDate fechaActual = LocalDate.now();
             if (fechaActual.compareTo(c.getFuncion().getFecha()) > 0) { //Fecha ya paso, debo cambiarle a estado cancelado
-                compraRepository.actualizacionEstadoCompra("Asistido",86, c.getId());
+                compraRepository.actualizacionEstadoCompra("Asistido",persona.getId(), c.getId());
             } else if (fechaActual.compareTo(c.getFuncion().getFecha()) == 0) { //Fecha es hoy
                 LocalTime tiempoActual = LocalTime.now();
                 if (tiempoActual.compareTo(c.getFuncion().getFin()) > 0) { //Ya acabo la funcion
-                    compraRepository.actualizacionEstadoCompra("Asistido",86, c.getId());
+                    compraRepository.actualizacionEstadoCompra("Asistido",persona.getId(), c.getId());
                 }
             }
             listaComprasRevisadas.add(c);
         }
-//        System.out.println("Cantidad de compra: " + listaCompras.size());
 
-        //Mandar los generos de la obra de la funcion
-        LinkedHashMap<Compra, ArrayList<Genero>> compraGenero = new LinkedHashMap<>();
+        /*LinkedHashMap<Compra, ArrayList<Genero>> compraGenero = new LinkedHashMap<>();
         List<Obragenero> listaFuncionGenero = obraGeneroRepository.findAll();
         for (Compra c : listaCompras) {
             ArrayList<Genero> listaGeneros = new ArrayList<>();
@@ -1162,17 +1153,10 @@ public class UsuarioController {
                 }
             }
             compraGenero.put(c, listaGeneros);
-        }
+        }*/
+        List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
+        model.addAttribute("listaGeneros",listaGeneros);
 
-//        for (Map.Entry<Compra, ArrayList<Genero>> h : compraGenero.entrySet()) {
-//            System.out.println(h.getKey().getId());
-//            for (Genero g : h.getValue()) {
-//                System.out.println(g.getNombre());
-//            }
-//            System.out.println("=====================");
-//        }
-
-        //Duraciones de las funciones
         LinkedHashMap<Compra, String> duracionFuncioncompra = new LinkedHashMap<>();
         for (Compra c : listaCompras) {
             LocalTime inicio = c.getFuncion().getInicio();
@@ -1188,23 +1172,28 @@ public class UsuarioController {
             if (duracionMinutos < 10) {
                 duracionMinutosStr = "0" + duracionMinutos.toString();
             }
-            System.out.println(duracionHoraStr + ":" + duracionMinutosStr + "h");
             duracionFuncioncompra.put(c, duracionHoraStr + ":" + duracionMinutosStr + "h");
         }
 
-        model.addAttribute("listaCompras", listaComprasRevisadas);
-        model.addAttribute("generosDeObras", compraGenero);
+        model.addAttribute("historialCompras", listaComprasRevisadas);
+        //model.addAttribute("listaGeneros", compraGenero);
         model.addAttribute("duracionFuncioncompra", duracionFuncioncompra);
         return "usuario/carrito/historialComprasUsuario";
     }
 
     @GetMapping("/actualizarEstadoCompra")
-    String actualizarCompraHistorial(@RequestParam("id") Integer idCompra) {
+    public String actualizarCompraHistorial(@RequestParam("id") Integer idCompra) {
         Optional<Compra> optionalCompra = compraRepository.findById(idCompra);
         if (optionalCompra.isPresent()) {
             compraRepository.actualizacionEstadoCompra("Cancelado",86, idCompra);
         }
          return "redirect:/historialPrueba";
+    }
+
+    @ResponseBody
+    @GetMapping("/calificarObra")
+    public String calificarObra(@RequestParam("idObra")String idObraStr){
+        return "falta esto jeje";
     }
 
     //FUNCION D EPRUEBA PARA RECEPCION DE VALORES DEL FORM DE COMPRA EN OBRADETALLES

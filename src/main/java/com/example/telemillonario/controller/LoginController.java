@@ -1,8 +1,10 @@
 package com.example.telemillonario.controller;
 
 
+import com.example.telemillonario.entity.Compra;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Rol;
+import com.example.telemillonario.repository.CompraRepository;
 import com.example.telemillonario.repository.FotoRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.repository.RolRepository;
@@ -59,6 +61,9 @@ public class LoginController {
 
     @Autowired
     FotoRepository fotoRepository;
+
+    @Autowired
+    CompraRepository compraRepository;
 
     @GetMapping("/list")
     public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session){
@@ -120,6 +125,9 @@ public class LoginController {
         }
 
         switch(persona.getIdrol().getNombre()){
+            //Compra compra = null;
+            //session.setAttribute("carritoDeComprasDeUsuario",compra);
+
             case "Administrador":
                 return "redirect:/admin/sedes";
             case "Operador":
