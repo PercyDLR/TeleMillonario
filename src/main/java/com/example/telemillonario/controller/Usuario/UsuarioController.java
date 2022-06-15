@@ -1188,17 +1188,18 @@ public class UsuarioController {
     }
 
     @GetMapping("/actualizarEstadoCompra")
-    public String actualizarCompraHistorial(@RequestParam("id") Integer idCompra) {
+    public String actualizarCompraHistorial(@RequestParam("id") Integer idCompra, HttpSession httpSession) {
+        Persona persona = (Persona) httpSession.getAttribute("usuario");
         Optional<Compra> optionalCompra = compraRepository.findById(idCompra);
         if (optionalCompra.isPresent()) {
-            compraRepository.actualizacionEstadoCompra("Cancelado",86, idCompra);
+            compraRepository.actualizacionEstadoCompra("Cancelado",persona.getId(), idCompra);
         }
          return "redirect:/historialPrueba";
     }
 
     @ResponseBody
     @GetMapping("/calificarObra")
-    public String calificarObra(@RequestParam("idObra")String idObraStr){
+    public String calificarObra(@RequestParam("id") Integer idFuncion){
         return "falta esto jeje";
     }
 
