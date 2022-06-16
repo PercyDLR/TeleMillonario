@@ -301,7 +301,7 @@
                 }
 
                 document.addEventListener("submit", function(event){
-                    if(inputTotal.value == "" || inputTotal.value < 1){
+                    if(inputTotal.value === "" || parseInt(inputTotal.value) < 1){
                         event.preventDefault()
                     }
                 })
