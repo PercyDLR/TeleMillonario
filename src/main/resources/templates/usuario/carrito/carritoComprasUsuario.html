@@ -113,7 +113,7 @@
                                             <img th:each="selfie : ${foto}"
                                                  th:if="${selfie.idobra.id == reservas.getValue().getFuncion().getIdobra().getId()}"
                                                  th:src="${selfie.getRuta()}" alt="portada">
-                                            <a th:href="@{'/cartelera/DetallesObra?id=' + ${reservas.getValue().getFuncion().getIdobra()}}" class="card__play">
+                                            <a th:href="@{'/cartelera/DetallesObra?id=' + ${reservas.getValue().getFuncion().getIdobra().getId()}}" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
                                             </a>
                                         </div>
@@ -125,7 +125,7 @@
                                                 <a th:text="${reservas.getValue().getFuncion().getIdobra().getNombre()}"></a>
                                             </h3>
                                             <span class="card__category" th:each="generos : ${listaGeneros}">
-                                                <a th:if="${generos.idObra == reservas.getValue().getFuncion().getIdobra()}"
+                                                <a th:if="${generos.idobra.id == reservas.getValue().getFuncion().getIdobra().id}"
                                                    th:text="${generos.idgenero.nombre}"></a>
                                             </span>
                                             <div class="card__wrap">
@@ -174,7 +174,7 @@
                         <div class="col-lg-3 col-12" style="text-align: center;">
                             <div class="total">
                                 <h1 id="indicadorTotal" data-total="" class="home__title" style="margin-block: auto" >Total: ...</h1>
-                                <a th:href="@{/pagoPrueba}" class="section__btn" style="margin-block: auto">Comprar</a>
+                                <a th:href="@{/compraReservasCarrito}" class="section__btn" style="margin-block: auto">Comprar</a>
                             </div>
                         </div>
                     </div>

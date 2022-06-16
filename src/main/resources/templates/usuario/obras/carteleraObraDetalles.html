@@ -52,6 +52,10 @@
         <div class="content" style="padding-bottom: 0">
             <div class="container my-5">
                 <div class="row">
+                    <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
+                    <div th:if="${reservaExitosa != null}" th:text="${reservaExitosa}" class="alert alert-success" role="alert"></div>
+
+                    <div th:if="${cruceHorarioFuncion != null}" th:each="mensaje : ${cruceHorarioFuncion}" th:text="${mensaje}" class="alert alert-danger" role="alert"></div>
 
                     <div class="col-12">
                         <h1 class="details__title" th:text="${obra.nombre}"></h1>

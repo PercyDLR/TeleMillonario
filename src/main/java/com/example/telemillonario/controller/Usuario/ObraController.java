@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
@@ -209,8 +210,13 @@ public class ObraController {
     }
 
     @GetMapping("/DetallesObra")
-    String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a) {
-
+    String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a, HttpSession session) {
+        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        if (compraEnProceso != null) {
+            compraEnProceso = null;
+            session.setAttribute("compraEnProceso",compraEnProceso);
+            return "redirect:/cartelera";
+        }
         Optional<Obra> opt = obraRepository.findById(id);
         if (opt.isPresent()) {
             Obra obra = opt.get();
@@ -221,14 +227,12 @@ public class ObraController {
                 System.out.println("Ruta foto: " + f.getRuta());
             }
 
-            //Mandar los generos de la obra de la funcion
             ArrayList<Genero> listaGeneros = new ArrayList<>();
             List<Obragenero> listaObraGenero = obraGeneroRepository.buscarFuncionGenero(id);
             for (Obragenero f : listaObraGenero) {
                 listaGeneros.add(f.getIdgenero());
             }
 
-            //Mandar director y actores
             LinkedHashMap<ArrayList<Persona>, ArrayList<Persona>> listaDirectoresYActores = new LinkedHashMap<>();
             List<Funcionelenco> listaFuncionelenco = funcionElencoRepository.buscarFuncionElenco(id);
             ArrayList<Persona> listaDirectores = new ArrayList<>();
@@ -245,30 +249,6 @@ public class ObraController {
             }
             listaDirectoresYActores.put(listaDirectores ,listaActores);
 
-//            //Mandar la duracion de la funcion
-//            Long duracionMinutos = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
-//            Long horas = duracionMinutos/(long) 60;
-//            Long minutos = duracionMinutos%(long) 60;
-//
-//            String horastr;
-//            String minutostr;
-//            if (horas < 10) {
-//                horastr = "0" + String.valueOf(horas);
-//            } else {
-//                horastr = String.valueOf(horas);
-//            }
-//            if (minutos < 10) {
-//                minutostr = "0" + String.valueOf(minutos);
-//            } else {
-//                minutostr = String.valueOf(minutos);
-//            }
-//
-//            String duracion = horastr + ":" + minutostr;
-//            int boletosrestantes = funcion.getStockentradas() - funcion.getCantidadasistentes();
-
-            //Necesito enviar:
-            //- Lista de sedes donde se presenta la funcion de la obra (LISTO)
-            //- Lista de sala, fecha y hora de inicio de la funcion (LISTO)
 
             List<Sede> listaSedesConObra = sedeRepository.listaSedesConObra(id);
             HashMap<Sede,List<Funcion>> funcionesDeLaSede = new HashMap<>();
@@ -282,18 +262,6 @@ public class ObraController {
             }
 
             List<Sede> lista = sedeRepository.findAll();
-
-//            for (Map.Entry<Sede, LinkedHashMap<Funcion, String>> h : funcionesDeLaSede.entrySet()) {
-//
-//                System.out.println("Sede: " + h.getKey().getNombre());
-//                System.out.println("Longitud value: " + h.getValue().size());
-//                for (Map.Entry<Funcion, String> j : h.getValue().entrySet()) {
-//                    System.out.println("Id de la funcion: " + j.getKey().getId());
-//                    System.out.println("Opcion: " + j.getValue());
-//                    System.out.println("**************************");
-//                }
-//                System.out.println("============================================");
-//            }
 
             model.addAttribute("obra", obra);
             model.addAttribute("listaFotos", listaFotos);

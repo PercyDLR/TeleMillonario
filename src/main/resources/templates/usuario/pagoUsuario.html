@@ -25,7 +25,7 @@
                                     <div class="sign__group" style="margin-bottom: 0">
                                         <input type="text" name="codigoSeguridad" class="sign__input" placeholder="Codigo de seguridad">
                                     </div>
-                                    <a class="sign__btn" th:href="@{'/cartelera/DetallesObra?id=' + ${session.compraEnProceso.getFuncion().getIdobra()}}">Cancelar</a>
+                                    <a class="sign__btn" th:href="@{'/cartelera/DetallesObra?id=' + ${session.compraEnProceso.getFuncion().getIdobra().getId()}}">Cancelar</a>
                                     <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
                                 </form>
                             </div>
