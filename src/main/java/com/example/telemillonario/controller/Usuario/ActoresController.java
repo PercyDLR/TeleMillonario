@@ -34,7 +34,7 @@ public class ActoresController {
 
     //Variables Importantes
     int actoresxpagina = 12;
-    int funcionesxpagina = 12;
+    int obrasxpagina = 12;
 
     @GetMapping(value = "")
     public String listaActores(Model model,
@@ -144,7 +144,7 @@ public class ActoresController {
             LinkedHashMap<Obra, ArrayList<Genero>> listaObraGeneroAEnviar = new LinkedHashMap<>();
             int i = 0;
             for (Map.Entry<Obra, ArrayList<Genero>> h : funcionGenero.entrySet()) {
-                if (i >= pagina * actoresxpagina && i < pagina * actoresxpagina + actoresxpagina && i < tamanhoLista) {
+                if (i >= pagina * obrasxpagina && i < pagina * obrasxpagina + obrasxpagina && i < tamanhoLista) {
                     listaObraGeneroAEnviar.put(h.getKey(), h.getValue());
                 }
                 i = i + 1;
@@ -172,9 +172,9 @@ public class ActoresController {
             model.addAttribute("pagActual", pagina);
             model.addAttribute("id", id);
 
-            System.out.println("Paginas totales: " + (int) Math.ceil(tamanhoLista / (float) funcionesxpagina));
+            System.out.println("Paginas totales: " + (int) Math.ceil(tamanhoLista / (float) obrasxpagina));
 
-            model.addAttribute("pagTotal", (int) Math.ceil(tamanhoLista / (float) funcionesxpagina));
+            model.addAttribute("pagTotal", (int) Math.ceil(tamanhoLista / (float) obrasxpagina));
             model.addAttribute("listaCaratulas", listaCaratulas);
             model.addAttribute("generos", generoRepository.findAll());
 

@@ -84,7 +84,7 @@
                                                 <img th:each="foto : ${listaFotos}"
                                                      th:if="${foto != null && foto.idsede.id == sede.id}"
                                                      th:src="${foto.ruta}" alt="portada">
-                                                <a th:href="@{'/sedes/sede?idsede=' + ${sede.id}}" class="card__play">
+                                                <a th:href="@{'/sedes/DetallesSede?id=' + ${sede.id}}" class="card__play">
                                                     <i class="icon ion-ios-play"></i>
                                                 </a>
                                             </div>
@@ -94,7 +94,7 @@
                                             <div class="card__content" style="padding: 1px; height: 100%; text-align: center">
                                                 <h3 class="card__title" style="font-size: 18px">
                                                     <b>
-                                                        <a th:href="@{'/sedes/sede?idsede=' + ${sede.id}}"
+                                                        <a th:href="@{'/sedes/DetallesSede?id=' + ${sede.id}}"
                                                            th:text="${sede.nombre}"></a>
                                                     </b>
                                                 </h3>
