@@ -128,7 +128,7 @@
 
                 <div class="row">
 
-                    <form id="form-compra" method="post" th:action="@{/reserva}">
+                    <form id="form-compra" method="post" th:action="@{/compra}">
 
                         <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
                             <select id="funcion-seleccionada" name="idFuncion" style="width: 0" hidden>
@@ -170,17 +170,17 @@
                                     </div>
 
                                     <div class="col-md-2 col-6">
-                                        <button type="submit" class="form__btn">
+                                        <button type="button" class="form__btn" onclick="reservar()">
                                             <span>Agregar a carrito</span>
                                         </button>
                                     </div>
-                                    <!--
+
                                     <div class="col-md-2 col-6">
-                                        <button type="button" class="form__btn" onclick="comprar()">
+                                        <button type="submit" class="form__btn">
                                             <span>Comprar Ahora</span>
                                         </button>
                                     </div>
-                                    -->
+
 
                                 </div>
                             </div>
@@ -290,24 +290,10 @@
 
                 function reservar(){
                     let form = document.getElementById("form-compra")
-                    form.action = "/reserva"
+                    form.action = '/reserva'
                     form.submit()
                 }
-
-                function comprar(){
-                    let form = document.getElementById("form-compra")
-                    form.action = "/compra"
-                    form.submit()
-                }
-
-                document.addEventListener("submit", function(event){
-                    if(inputTotal.value === "" || parseInt(inputTotal.value) < 1){
-                        event.preventDefault()
-                    }
-                })
-
             </script>
-
         </div>
     </body>
 </html>
