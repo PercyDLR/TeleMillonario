@@ -125,10 +125,14 @@ public class LoginController {
     public String redirectByRole(Authentication auth, HttpSession session){
 
         Persona persona = null;
+        String urlAnterior = "/";
 
         // Obtiene la URL anterior y la quita de Sesión
-        String urlAnterior = (String) session.getAttribute("urlAnterior");
-        session.removeAttribute("urlAnterior");
+        if(session.getAttribute("urlAnterior") != null){
+            urlAnterior = (String) session.getAttribute("urlAnterior");
+            session.removeAttribute("urlAnterior");
+        }
+
 
         if (session.getAttribute("usuario") == null){
             persona = personaRepository.findByCorreo(auth.getName());

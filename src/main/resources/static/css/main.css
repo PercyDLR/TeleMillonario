@@ -207,7 +207,7 @@ input[type=number] {
   margin-top: -20px;
   top: 50%;
   line-height: 40px;
-  transition: 0.5s ease-in-out;
+  transition: 0.25s ease-in-out;
 }
 .boton-suma{right: 10px}
 .boton-resta{left: 10px}
