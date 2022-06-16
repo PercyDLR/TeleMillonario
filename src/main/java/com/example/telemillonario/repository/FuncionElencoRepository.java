@@ -16,4 +16,8 @@ public interface FuncionElencoRepository extends JpaRepository<Funcionelenco, In
             "idfuncion=?1")
     List<Funcionelenco> buscarFuncionElenco(int idfuncion);
 
+    @Query(nativeQuery = true, value = "select * from telemillonario.funcionelenco where " +
+            "idpersona=?1")
+    List<Funcionelenco> buscarFuncionElencoPorActorDirector(int idPersona);
+
 }
