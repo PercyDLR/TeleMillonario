@@ -37,4 +37,17 @@ public interface SedeRepository extends JpaRepository<Sede,Integer> {
             "where (s.estado = 1) and (sa.estado = 1) and (f.estado = 1) and (f.idobra = ?1);")
     List<Sede> listaSedesConObra(int idobra);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sede\n" +
+            "where (lower(nombre) like %?1%) and (estado = 1)\n" +
+            "limit ?2 , ?3")
+    List<Sede> listaSedesBusqueda(String busqueda, int paginaxsedes, int sedes);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.sede\n" +
+            "where (lower(nombre) like %?1% ) and (iddistrito = ?2 ) and (estado = 1)\n" +
+            "limit ?3 , ?4")
+    List<Sede> listaSedesFiltro(String busqueda, int iddistrito, int paginaxsedes, int sedes);
+
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.sede " +
+            "where (estado=1) and (lower(nombre) like %?1%) ")
+    Integer cantSede(String busqueda);
 }

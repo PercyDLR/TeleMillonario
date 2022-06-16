@@ -51,9 +51,10 @@ public class ActoresController {
         int cantActores = personaRepository.cantActores(busqueda.toLowerCase());
 
         List<Persona> listaActores = personaRepository.buscarActoresFiltros(busqueda.toLowerCase(), fil, actoresxpagina*pagina, actoresxpagina);
+
         List<Foto> listaFotosActores = new ArrayList<>();
         for (Persona p : listaActores) {
-            listaFotosActores.add(personaRepository.fotoActor(p.getId()));
+            listaFotosActores.add(fotoRepository.fotoActor(p.getId()));
         }
 
         model.addAttribute("busqueda", busqueda);

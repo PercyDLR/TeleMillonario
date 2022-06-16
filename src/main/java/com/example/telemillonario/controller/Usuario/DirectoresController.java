@@ -51,8 +51,9 @@ public class DirectoresController {
         List<Persona> listaDirectores = personaRepository.buscarDirectoresFiltros(busqueda.toLowerCase(), fil, directoresxpagina*pagina, directoresxpagina);
         List<Foto> listaFotosDirectores = new ArrayList<>();
         for (Persona p : listaDirectores) {
-            listaFotosDirectores.add(personaRepository.fotoDirector(p.getId()));
+            listaFotosDirectores.add(fotoRepository.fotoDirector(p.getId()));
         }
+        System.out.println("Tamanio lista fotos: " + listaFotosDirectores.size());
 
         model.addAttribute("busqueda", busqueda);
         model.addAttribute("filtro", filtro);
