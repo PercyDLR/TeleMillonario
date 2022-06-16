@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -103,7 +104,14 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginForm(){
+    public String loginForm(HttpServletRequest request){
+
+        //Permite regresar a la página anterior
+        String urlAnterior = request.getHeader("Referer");
+        if(urlAnterior!=null){
+            request.getSession().setAttribute("urlAnterior", urlAnterior);
+        }
+
         return "login/signin";
     }
 
@@ -117,6 +125,11 @@ public class LoginController {
     public String redirectByRole(Authentication auth, HttpSession session){
 
         Persona persona = null;
+
+        // Obtiene la URL anterior y la quita de Sesión
+        String urlAnterior = (String) session.getAttribute("urlAnterior");
+        session.removeAttribute("urlAnterior");
+
         if (session.getAttribute("usuario") == null){
             persona = personaRepository.findByCorreo(auth.getName());
             session.setAttribute("usuario",persona);
@@ -139,7 +152,9 @@ public class LoginController {
                 }
 
                 session.setAttribute("fotoPerfil",fotoPerfil);
-                return "redirect:/";
+
+                //Se regresa a la anterior url sólo si es usuario
+                return "redirect:" + urlAnterior;
         }
     }
 

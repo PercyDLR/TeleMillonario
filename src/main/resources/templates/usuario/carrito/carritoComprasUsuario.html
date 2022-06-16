@@ -10,7 +10,7 @@
                 overflow-x: hidden;
             }
 
-            .roe.mt-3 div{
+            .row.mt-3 div{
                 padding-left: 0;
             }
 
@@ -23,14 +23,9 @@
                 aspect-ratio: 9 / 13;
             }
 
-            .sign__group {
-                padding-inline: 5px;
-            }
-
-            .sign__input {
-                border: solid 1px #61616c;
-                width: 100%;
-                border-radius: 5px;
+            #scroller{
+                overflow-y: scroll;
+                max-height: 70vh;
             }
             .total{
                 position: absolute;
@@ -41,7 +36,11 @@
             }
             .total h1{padding-bottom: 15px}
 
-            @media (max-width: 768px){
+            @media (max-width: 992px){
+                #scroller{
+                    overflow-y: auto;
+                }
+
                 .total{
                     position: fixed;
                     width: 100%;
@@ -72,7 +71,6 @@
                     height: 2px;
                     display: block;
                     background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-                    -webkit-box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
                     box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
                 }
             }
@@ -86,22 +84,22 @@
 
                 <div class="sign__form" style="flex-direction: unset">
                     <div class="row" style="width: 100%">
-                        <h3 class="home__title mb-3">Reservas</h3>
-                        <div class="col-md-8 col-12" style="overflow-y: auto; max-height: 70vh">
+                        <div id="scroller" class="col-lg-9 col-12">
+                            <h3 class="home__title mb-3">Reservas</h3>
                             <div class="container">
                                 <div class="row mt-3" th:each="reservas : ${session.carritoDeComprasDeUsuario}">
-                                    <div class="col-sm-4 col-12 ">
+                                    <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__cover">
                                             <img th:each="selfie : ${foto}"
                                                  th:if="${selfie.idobra.id == reservas.getValue().getFuncion().getIdobra().getId()}"
                                                  th:src="${selfie.getRuta()}" alt="portada">
-                                            <a th:href="@{'/cartelera/DetallesObra?id=' + ${reservas.getValue().getFuncion().getIdobra()}}"class="card__play">
+                                            <a th:href="@{'/cartelera/DetallesObra?id=' + ${reservas.getValue().getFuncion().getIdobra()}}" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
                                             </a>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-4 col-sm-8 col-12 ">
+                                    <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__content" style="padding: 1px">
                                             <h3 class="card__title">
                                                 <a th:text="${reservas.getValue().getFuncion().getIdobra().getNombre()}"></a>
@@ -128,17 +126,35 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-12" style="color: white">
-                                        <p>Total stock a comprar:</p>
-                                        <input type="number" class="sign__input" name="" th:value="${reservas.getValue().getCantidad()}">
+                                    <div class="col-md-4 col-12" style="color: white; margin-block: auto">
+
+                                        <h1 class="home__title mb-3" style="font-size: 13px; text-transform: none"
+                                        th:text="|Precio por Boleto: S/${reservas.value.funcion.precioentrada}|"></h1>
+
+                                        <label for="cantidad"># Entradas</label>
+                                        <div class="boletos-container">
+                                            <input type="number" class="sign__input" style="width: 100%; text-align: center"
+                                                   id="cantidad" name="cantidad" th:value="${reservas.value.cantidad}"
+                                                   min="1" th:data-precio="${reservas.value.funcion.precioentrada}" readonly>
+
+                                            <button type="button" class="boton-resta">
+                                                <i class="bi bi-dash-lg"></i>
+                                            </button>
+                                            <button type="button" class="boton-suma">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                        </div>
+                                        <h1 class="home__title mt-2" style="font-size: 16px; text-transform: none"
+                                            th:text="|Total Función: S/${reservas.value.cantidad*reservas.value.funcion.precioentrada}|"></h1>
                                     </div>
                                 </div>
                                 <div class="mt-5"></div>
                             </div>
+                            <div style="height: 0.1%"></div>
                         </div>
-                        <div class="col-md-4 col-12" style="text-align: center">
+                        <div class="col-lg-3 col-12" style="text-align: center">
                             <div class="total">
-                                <h1 class="home__title" style="margin-block: auto" >Total: S/59.99</h1>
+                                <h1 id="indicadorTotal" data-total="" class="home__title" style="margin-block: auto" >Total: ...</h1>
                                 <a th:href="@{/pagoPrueba}" class="section__btn" style="margin-block: auto">Comprar</a>
                             </div>
                         </div>
@@ -149,6 +165,56 @@
         </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">
+            <script>
+                // Cálculo de los costos
+                const listaInputs = document.getElementsByClassName("sign__input")
+                const indicadorTotal = document.getElementById("indicadorTotal")
+
+                // Setea los costos iniciales
+                let total = 0
+                for(let ii=0; ii<listaInputs.length; ii++){
+                    let input = listaInputs[ii]
+                    let numBoletos = parseInt(input.value)
+                    let precioEntrada = parseFloat(input.dataset.precio)
+
+                    // Suma el precio de la función al total
+                    total += numBoletos*precioEntrada
+                }
+                // Actualiza los valores del coto total
+                indicadorTotal.dataset.total = total.toString()
+                indicadorTotal.innerText = "Total: S/" + total
+
+                // Inicializa los botones de sumar y restar
+                $(".boton-resta").click(function (){
+                    hallarCostosIndividual(this.parentElement, -1)
+                })
+                $(".boton-suma").click(function (){
+                    hallarCostosIndividual(this.parentElement, 1)
+                })
+
+                // Actualiza los costos al cambiar la cantidad
+                function hallarCostosIndividual(btnContainer, valor){
+                    let input = btnContainer.children[0]
+
+                    // Verifica que el cambio de cantidad sea válido
+                    if(valor != -1 || parseInt(input.value) > 1){
+                        let precio = parseFloat(input.dataset.precio)
+                        let total = parseFloat(indicadorTotal.dataset.total)
+
+                        // Se actualiza el total de la función y el input
+                        input.value = parseInt(input.value) + valor
+                        let totalFuncion = btnContainer.parentElement.getElementsByTagName("h1")[1]
+                        totalFuncion.innerText = "Total Función: S/" + (input.value*precio)
+
+                        // Se actualiza el total general
+                        total += precio*valor
+                        indicadorTotal.dataset.total = total.toString()
+                        indicadorTotal.innerText = "Total: S/" + total
+                    }
+                }
+
+            </script>
+
             <script>
                 function showventanita() {
                     document.getElementById('popup').style.display = 'block';

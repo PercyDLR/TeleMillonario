@@ -16,14 +16,10 @@
             }
 
             #accordion{
-                height: 200px;
-                max-height: 200px;
+                height: 220px;
+                max-height: 220px;
                 overflow-y: auto;
                 border: solid 2px rgba(0,0,0,0.05);
-            }
-            #accordion:hover{
-                border: solid rgba(255,85,170,0.5) 1px;
-                box-shadow: 0 0 10px 0 rgba(255,88,96,0.5);
             }
 
             .funciones-header{
@@ -47,7 +43,6 @@
                 background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
                 box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
             }
-
         </style>
 
     </head>
@@ -149,8 +144,8 @@
 
                             <div class="col-12" id="divCompra" style="display: none">
                                 <div class="row">
-                                    <div class="col-md-4 col-6">
-                                        <ul style="color: white">
+                                    <div class="col-md-4 col-6" style="color: white; text-align: center">
+                                        <ul>
                                             <li id="boletosRestantes"></li>
                                             <li id="costo"></li>
                                             <li id="total"></li>
@@ -158,10 +153,19 @@
                                     </div>
 
                                     <div class="col-md-4 col-6">
-                                        <div class="sign__group">
+                                        <div class="sign__group" style="position: relative">
                                             <label for="entradas">Entradas</label>
-                                            <input id="entradas" name="cantBoletos" class="sign__input" type="number" style="width: 100%;text-align: center"
-                                                   placeholder="# Entradas" onchange="hallarCosto()" min="1" value="1">
+                                            <div class="boletos-container">
+                                                <input id="entradas" name="cantBoletos" class="sign__input" type="number" style="width: 100%;text-align: center"
+                                                       placeholder="# Entradas" min="1" value="1" readonly required>
+
+                                                <button type="button" class="boton-resta">
+                                                    <i class="bi bi-dash-lg"></i>
+                                                </button>
+                                                <button type="button" class="boton-suma">
+                                                    <i class="bi bi-plus-lg"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -228,7 +232,13 @@
             </script>
 
             <script>
+
+                // Elementos del input (# Boletos)
                 let inputTotal = document.getElementById("entradas")
+                let btnSuma = document.getElementsByClassName("boton-suma")[0]
+                let btnResta = document.getElementsByClassName("boton-resta")[0]
+
+                // Elementos del Select (Funciones)
                 let select = document.getElementById("funcion-seleccionada")
                 let optElegida;
 
@@ -254,10 +264,24 @@
                     hallarCosto();
                 }
 
+                // Disminuye la cantidad
+                btnResta.addEventListener("click", function(){
+                    if(inputTotal.value != 1){
+                        inputTotal.value -= 1;
+                    }
+                    hallarCosto();
+                })
+
+                // Aumenta la cantidad
+                btnSuma.addEventListener("click", function(){
+                    inputTotal.value = parseInt(inputTotal.value)+1;
+                    hallarCosto();
+                })
+
                 function hallarCosto(){
                     console.log(optElegida)
                     let numEntradas = inputTotal.value;
-                    let costo = parseInt(optElegida.dataset.precio);
+                    let costo = parseFloat(optElegida.dataset.precio);
 
                     console.log(numEntradas,costo)
 
@@ -276,10 +300,9 @@
                     form.submit()
                 }
 
-
-                document.addEventListener("submit", function (){
-                    if(inputTotal.value == "" || inputTotal.value < 1){
-                        return
+                document.addEventListener("submit", function(event){
+                    if(inputTotal.value === "" || parseInt(inputTotal.value) < 1){
+                        event.preventDefault()
                     }
                 })
 
