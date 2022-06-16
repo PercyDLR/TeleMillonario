@@ -65,12 +65,15 @@ public class SedesController {
 
         System.out.println(fil);
 
-        int cantSedes = sedeRepository.cantSede(busqueda);
+        int cantSedes;
+
         List<Sede> listaSedes = new ArrayList<>();
         if (fil == 0) {
             listaSedes = sedeRepository.listaSedesBusqueda(busqueda.toLowerCase(), sedesxpagina*pagina, sedesxpagina);
+            cantSedes = sedeRepository.cantSede(busqueda.toLowerCase());
         } else {
             listaSedes = sedeRepository.listaSedesFiltro(busqueda.toLowerCase(), fil, sedesxpagina*pagina, sedesxpagina);
+            cantSedes = sedeRepository.cantSedefiltro(busqueda.toLowerCase(), fil);
         }
 
         List<Foto> listaFotosSedes = new ArrayList<>();
@@ -85,33 +88,10 @@ public class SedesController {
         model.addAttribute("listaDistritos", distritoRepository.findAll());
 
         model.addAttribute("pagActual", pagina);
-        model.addAttribute("pagTotal", (int) Math.ceil(cantSedes / sedesxpagina));
+
+        model.addAttribute("pagTotal", (int) Math.ceil((float) cantSedes / (float) sedesxpagina));
         return "usuario/sedes/listaSedes";
-
-//        if (busqueda.equals("")) { // verifica que no esté vacío
-//
-//            List<Foto> listSedesConFoto= fotoRepository.listadoSedesUsuar(estado,(int)sedesxpagina*pagina, (int)sedesxpagina);
-//            int cantSedes = sedeRepository.cantSedesTotalUsuar();
-//            model.addAttribute("pagTotal",(int) Math.ceil(cantSedes/sedesxpagina));
-//            model.addAttribute("listSedes",listSedesConFoto);
-//        }else{
-//            List<Foto> listSedesConFoto= fotoRepository.buscarSedePorNombre(busqueda, estado, (int)sedesxpagina*pagina, (int)sedesxpagina);
-//            int cantSedes = sedeRepository.cantSedesFiltr(busqueda,estado);
-//            model.addAttribute("pagTotal",(int) Math.ceil(cantSedes/sedesxpagina));
-//            model.addAttribute("listSedes",listSedesConFoto);
-//        }
-//
-//        model.addAttribute("pagActual",pagina);
-//
-//
-//        model.addAttribute("busqueda", busqueda);
     }
-
-//    @PostMapping("/buscar")
-//    String busquedaSedesUsuario(@RequestParam(value="busqueda", defaultValue = "") String busqueda){
-//
-//        return "redirect:/sedes?busqueda="+busqueda;
-//    }
 
     @PostMapping("/BusquedaYFiltros")
     String busqueda(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,

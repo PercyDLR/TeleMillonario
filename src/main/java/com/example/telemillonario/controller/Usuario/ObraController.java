@@ -144,7 +144,7 @@ public class ObraController {
         //}
 
         //Una vez obtengo la lista de obras no repetidas, requiero indicar aquellas que se enviaran
-        int tamanhoLista = funcionGenero.size();
+        float tamanhoLista = funcionGenero.size();
         System.out.println("Tamanio de la lista: " + tamanhoLista);
         LinkedHashMap<Obra, ArrayList<Genero>> listaObraGeneroAEnviar = new LinkedHashMap<>();
         int i = 0;
@@ -186,7 +186,7 @@ public class ObraController {
         model.addAttribute("restriccionEdad", restriccionEdad);
 
         model.addAttribute("pagActual", pagina);
-        model.addAttribute("pagTotal", (int) Math.ceil(listaFuncionGenero.size() / funcionesxpagina));
+        model.addAttribute("pagTotal", (int) Math.ceil(tamanhoLista / (float) funcionesxpagina));
         model.addAttribute("listaObraGenero", listaObraGeneroAEnviar);
         model.addAttribute("listaCaratulas", listaCaratulas);
         model.addAttribute("generos", generoRepository.findAll());

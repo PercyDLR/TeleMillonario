@@ -24,8 +24,22 @@
             }
 
             #scroller{
-                overflow-y: scroll;
-                max-height: 70vh;
+                overflow-x: hidden;
+                overflow-y: auto;
+                position: relative;
+                max-height: 65vh;
+            }
+            #funciones:before {
+                content: '';
+                position: absolute;
+                top: 5%;
+                right: 0;
+                height: 90%;
+                width: 2px;
+                border-radius: 1px;
+                display: block;
+                background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+                box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
             }
             .total{
                 position: absolute;
@@ -37,10 +51,13 @@
             .total h1{padding-bottom: 15px}
 
             @media (max-width: 992px){
-                #scroller{
-                    overflow-y: auto;
-                }
 
+                #funciones, #scroller{
+                    padding-right: 0;
+                }
+                #funciones:before {
+                    width: 0;
+                }
                 .total{
                     position: fixed;
                     width: 100%;
@@ -49,6 +66,7 @@
                     background-color: #28282d;
                     justify-content: center;
                     padding-inline: 15px;
+                    padding-block: unset;
                     transform: none;
                     left: 0;
                     top: unset;
@@ -69,10 +87,12 @@
                     left: 0;
                     right: 0;
                     height: 2px;
+                    border-radius: 1px;
                     display: block;
                     background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
                     box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
                 }
+
             }
         </style>
     </head>
@@ -84,9 +104,9 @@
 
                 <div class="sign__form" style="flex-direction: unset">
                     <div class="row" style="width: 100%">
-                        <div id="scroller" class="col-lg-9 col-12">
+                        <div id="funciones" class="col-lg-9 col-12">
                             <h3 class="home__title mb-3">Reservas</h3>
-                            <div class="container">
+                            <div id="scroller" class="container">
                                 <div class="row mt-3" th:each="reservas : ${session.carritoDeComprasDeUsuario}">
                                     <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__cover">
@@ -150,9 +170,8 @@
                                 </div>
                                 <div class="mt-5"></div>
                             </div>
-                            <div style="height: 0.1%"></div>
                         </div>
-                        <div class="col-lg-3 col-12" style="text-align: center">
+                        <div class="col-lg-3 col-12" style="text-align: center;">
                             <div class="total">
                                 <h1 id="indicadorTotal" data-total="" class="home__title" style="margin-block: auto" >Total: ...</h1>
                                 <a th:href="@{/pagoPrueba}" class="section__btn" style="margin-block: auto">Comprar</a>
