@@ -47,14 +47,15 @@
             .grid {
                 display: grid;
                 grid-gap: 10px;
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                padding: 10px;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             }
 
             .form__btn.funcion{
                 position: relative;
                 display: block;
                 margin: 0;
+                width: 100%;
+                min-width: 150px;
             }
 
             .form__btn.funcion::before{
@@ -65,8 +66,8 @@
                 bottom: 0;
                 left: 2px;
                 z-index: -1;
-                height: 46px;
-                width: 156px;
+                height: calc(100% - 4px);
+                width: calc(100% - 4px);
                 border-radius: inherit;
                 background-color: #313138;
                 transition: opacity .2s ease-in-out;
@@ -151,13 +152,14 @@
                                 </div>
 
                                 <div th:id="|funciones-${sede.key.id}|" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                    <div class="grid">
-                                        <button type="button" class="form__btn funcion" th:each="funcion : ${sede.value}"
-                                                th:onclick="|seleccionFuncion(this, ${funcion.id})|">
-                                            <span th:text="|${funcion.fecha} ${funcion.inicio}|"></span>
-                                        </button>
+                                    <div class="card-body">
+                                        <div class="grid">
+                                            <button type="button" class="form__btn funcion" th:each="funcion : ${sede.value}"
+                                                    th:onclick="|seleccionFuncion(this, ${funcion.id})|">
+                                                <span th:text="|${funcion.fecha} ${funcion.inicio}|"></span>
+                                            </button>
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -181,7 +183,7 @@
                             </select>
 
                             <div class="col-12" id="divCompra" style="display: none">
-                                <div class="row">
+                                <div class="row" style="align-items: center">
                                     <div class="col-md-4 col-6" style="color: white; text-align: center">
                                         <ul>
                                             <li id="boletosRestantes"></li>
@@ -206,19 +208,21 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="row">
+                                            <div class="col-md-12 col-6" style="justify-content: center;display: flex">
+                                                <button type="button" class="form__btn" onclick="reservar()">
+                                                    <span>Agregar a carrito</span>
+                                                </button>
+                                            </div>
 
-                                    <div class="col-md-2 col-6">
-                                        <button type="button" class="form__btn" onclick="reservar()">
-                                            <span>Agregar a carrito</span>
-                                        </button>
+                                            <div class="col-md-12 col-6" style="justify-content: center;display: flex">
+                                                <button type="submit" class="form__btn">
+                                                    <span>Comprar Ahora</span>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="col-md-2 col-6">
-                                        <button type="submit" class="form__btn">
-                                            <span>Comprar Ahora</span>
-                                        </button>
-                                    </div>
-
 
                                 </div>
                             </div>
