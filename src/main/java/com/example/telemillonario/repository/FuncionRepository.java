@@ -40,4 +40,31 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.funcion where idobra=?1 ")
     Integer valCantFuncionConObra(int idobra);
 
+
+    @Query(nativeQuery = true, value = "select f.* from funcion f " +
+            "inner join sala s on (s.id = f.idsala) inner join obra o on (o.id=f.idobra) " +
+            "where f.estado=1 and s.idsede=?1 and lower(o.nombre) like %?2% " +
+            "limit ?3,?4")
+    List<Funcion> buscarFuncionesPorSedeUsuar( int idsede,String nombre, int pag, int salasporpag);
+
+
+    @Query(nativeQuery = true, value = "select f.* from funcion f " +
+            "inner join sala s on (s.id = f.idsala) inner join obra o on (o.id=f.idobra) " +
+            "where f.estado=1 and s.idsede=?1 and lower(o.nombre) like %?2% ")
+    List<Funcion> FuncTotalSedeUsuar( int idsede,String nombre);
+
+
+    @Query(nativeQuery = true, value = "select f.* from funcion f " +
+            "inner join sala s on (s.id = f.idsala) inner join obra o on (o.id=f.idobra) " +
+            "where f.estado=1 and s.idsede=?1 and lower(o.nombre) like %?2% and (o.restriccionedad=?3 or ?3>=2) " +
+            "limit ?4,?5")
+    List<Funcion> buscarFuncionesPorSedeUsuarFiltr( int idsede,String nombre,int restriccion, int pag, int salasporpag);
+
+
+    @Query(nativeQuery = true, value = "select f.* from funcion f " +
+            "inner join sala s on (s.id = f.idsala) inner join obra o on (o.id=f.idobra) " +
+            "where f.estado=1 and s.idsede=?1 and lower(o.nombre) like %?2% and (o.restriccionedad=?3 or ?3>=2) ")
+    List<Funcion> FuncTotalSedeUsuarFiltr( int idsede,String nombre,int restriccion);
+
+
  }

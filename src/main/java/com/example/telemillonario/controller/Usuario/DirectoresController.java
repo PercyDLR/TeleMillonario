@@ -1,6 +1,5 @@
 package com.example.telemillonario.controller.Usuario;
 
-
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.*;
 
 @Controller
-@RequestMapping("/sedes")
-public class SedesController {
+@RequestMapping("/directores")
+public class DirectoresController {
 
     @Autowired
     PersonaRepository personaRepository;
@@ -25,36 +24,29 @@ public class SedesController {
     FotoRepository fotoRepository;
 
     @Autowired
-    FuncionRepository funcionRepository;
-
-    @Autowired
-    GeneroRepository generoRepository;
-
-    @Autowired
-    SedeRepository sedeRepository;
+    FuncionElencoRepository funcionElencoRepository;
 
     @Autowired
     ObraGeneroRepository obraGeneroRepository;
 
     @Autowired
-    DistritoRepository distritoRepository;
+    GeneroRepository generoRepository;
 
-    int sedesxpagina=9;
-    int obraxpagina = 12;
+    //Variables Importantes
+    int directoresxpagina = 12;
+    int obrasxpagina = 12;
 
-    @GetMapping("")
-    public String listaSedesUsuario(Model model,
-                                    @RequestParam(value = "busqueda",defaultValue = "") String busqueda,
-                                    @RequestParam(value = "pag",defaultValue = "0") String pag,
-                                    @RequestParam(value = "filtro", required = false, defaultValue = "0") String filtro){
-        //lista de sedes habilitadas
+    @GetMapping(value = "")
+    public String listaDirectores(Model model,
+                               @RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+                               @RequestParam(value = "busqueda", required = false, defaultValue = "") String busqueda,
+                               @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
+
         int pagina;
-        int estado=1;
-
-        try{
+        try {
             pagina = Integer.parseInt(pag);
-        }catch(Exception e) {
-            pagina=0;
+        } catch (Exception e) {
+            pagina = 0;
         }
         int fil;
         try {
@@ -63,34 +55,23 @@ public class SedesController {
             fil = 0;
         }
 
-        System.out.println(fil);
-
-        int cantSedes;
-
-        List<Sede> listaSedes = new ArrayList<>();
-        if (fil == 0) {
-            listaSedes = sedeRepository.listaSedesBusqueda(busqueda.toLowerCase(), sedesxpagina*pagina, sedesxpagina);
-            cantSedes = sedeRepository.cantSede(busqueda.toLowerCase());
-        } else {
-            listaSedes = sedeRepository.listaSedesFiltro(busqueda.toLowerCase(), fil, sedesxpagina*pagina, sedesxpagina);
-            cantSedes = sedeRepository.cantSedefiltro(busqueda.toLowerCase(), fil);
+        List<Persona> cantDirectores = personaRepository.cantidadDirectoresFiltro(busqueda.toLowerCase(), fil);
+        List<Persona> listaDirectores = personaRepository.buscarDirectoresFiltros(busqueda.toLowerCase(), fil, directoresxpagina*pagina, directoresxpagina);
+        List<Foto> listaFotosDirectores = new ArrayList<>();
+        for (Persona p : listaDirectores) {
+            listaFotosDirectores.add(fotoRepository.fotoDirector(p.getId()));
         }
-
-        List<Foto> listaFotosSedes = new ArrayList<>();
-        for (Sede s : listaSedes) {
-            listaFotosSedes.add(fotoRepository.fotoSede(s.getId()));
-        }
+        System.out.println("Tamanio lista fotos: " + listaFotosDirectores.size());
 
         model.addAttribute("busqueda", busqueda);
-        model.addAttribute("filtro", fil);
-        model.addAttribute("listaSedes", listaSedes);
-        model.addAttribute("listaFotos", listaFotosSedes);
-        model.addAttribute("listaDistritos", distritoRepository.findAll());
+        model.addAttribute("filtro", filtro);
+        model.addAttribute("listaDirectores", listaDirectores);
+        model.addAttribute("listaFotos", listaFotosDirectores);
 
         model.addAttribute("pagActual", pagina);
+        model.addAttribute("pagTotal", (int) Math.ceil(cantDirectores.size() / directoresxpagina));
+        return "usuario/directores/listaDirectores";
 
-        model.addAttribute("pagTotal", (int) Math.ceil((float) cantSedes / (float) sedesxpagina));
-        return "usuario/sedes/listaSedes";
     }
 
     @PostMapping("/BusquedaYFiltros")
@@ -98,10 +79,10 @@ public class SedesController {
                     @RequestParam(value = "busqueda", required = false, defaultValue = "") String busqueda,
                     @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
 
-        return "redirect:/sedes?busqueda=" + busqueda + "&filtro=" + filtro + "&pag=" + pag;
+        return "redirect:/directores?busqueda=" + busqueda + "&filtro=" + filtro + "&pag=" + pag;
     }
 
-    @GetMapping("/DetallesSede")
+    @GetMapping("/DetallesDirector")
     String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a,
                         @RequestParam(value = "restriccionEdad", required = false, defaultValue = "") String restriccionEdad,
                         @RequestParam(value = "genero", required = false, defaultValue = "") String genero,
@@ -115,16 +96,28 @@ public class SedesController {
             pagina = 0;
         }
 
-        Optional<Sede> opt = sedeRepository.findById(id);
+        Optional<Persona> opt = personaRepository.findById(id);
         if (opt.isPresent()) {
 
-            model.addAttribute("sede", opt.get());
+            model.addAttribute("director", opt.get());
+            List<Funcionelenco> listaFuncionelenco = funcionElencoRepository.buscarFuncionElencoPorActorDirector(id);
 
             //Sacado de ObraController
-            List<Obragenero> listaFuncionGenero = obraGeneroRepository.buscarFuncionGeneroPorFiltrosSede(id, restriccionEdad, genero, busqueda);
+            List<Obragenero> listaFuncionGenero = obraGeneroRepository.buscarFuncionGeneroPorFiltros(restriccionEdad, genero, busqueda);
+
+            //Mandar obras en las que participe el director
+            List<Obragenero> listaFuncionGeneroPersona = new ArrayList<>();
+            for (Funcionelenco l : listaFuncionelenco) {
+                for (Obragenero o : listaFuncionGenero) {
+                    if (l.getIdfuncion().getIdobra().getId() == o.getIdobra().getId()) {
+                        listaFuncionGeneroPersona.add(o);
+                    }
+                }
+            }
+            //Mandar obras en las que participe el director
 
             LinkedHashMap<Obra, ArrayList<Genero>> funcionGenero = new LinkedHashMap<>();
-            for (Obragenero f : listaFuncionGenero) {
+            for (Obragenero f : listaFuncionGeneroPersona) {
                 //System.out.println("Turno de: " + f.getIdfuncion().getNombre());
                 //System.out.println("Guardo: " + !funcionGenero.containsKey(f.getIdfuncion()));
                 if (!funcionGenero.containsKey(f.getIdobra())) {
@@ -150,7 +143,7 @@ public class SedesController {
             LinkedHashMap<Obra, ArrayList<Genero>> listaObraGeneroAEnviar = new LinkedHashMap<>();
             int i = 0;
             for (Map.Entry<Obra, ArrayList<Genero>> h : funcionGenero.entrySet()) {
-                if (i >= pagina * obraxpagina && i < pagina * obraxpagina + obraxpagina && i < tamanhoLista) {
+                if (i >= pagina * obrasxpagina && i < pagina * obrasxpagina + obrasxpagina && i < tamanhoLista) {
                     listaObraGeneroAEnviar.put(h.getKey(), h.getValue());
                 }
                 i = i + 1;
@@ -178,18 +171,18 @@ public class SedesController {
             model.addAttribute("pagActual", pagina);
             model.addAttribute("id", id);
 
-            System.out.println("Paginas totales: " + (int) Math.ceil(tamanhoLista / (float) obraxpagina));
+            System.out.println("Paginas totales: " + (int) Math.ceil(tamanhoLista / (float) obrasxpagina));
 
-            model.addAttribute("pagTotal", (int) Math.ceil(tamanhoLista / (float) obraxpagina));
+            model.addAttribute("pagTotal", (int) Math.ceil(tamanhoLista / (float) obrasxpagina));
             model.addAttribute("listaCaratulas", listaCaratulas);
             model.addAttribute("generos", generoRepository.findAll());
 
-            model.addAttribute("listaFotos", fotoRepository.fotosSede(id));
-            return "usuario/sedes/sedeDetalles";
+            model.addAttribute("listaFotos", fotoRepository.fotosDirector(id));
+            return "usuario/directores/detallesDirector";
 
         } else {
             a.addFlashAttribute("msg", -1);
-            return "redirect:/sedes";
+            return "redirect:/directores";
         }
 
     }
@@ -201,8 +194,7 @@ public class SedesController {
                     @RequestParam(value = "busqueda", defaultValue = "") String busqueda,
                     @RequestParam(value = "pag", defaultValue = "0") String pag) {
 
-        return "redirect:/sedes/DetallesSede?id=" + id + "&restriccionEdad=" + restriccionEdad + "&genero=" + genero + "&busqueda=" + busqueda + "&pag=" + pag;
+        return "redirect:/directores/DetallesDirector?id=" + id + "&restriccionEdad=" + restriccionEdad + "&genero=" + genero + "&busqueda=" + busqueda + "&pag=" + pag;
     }
-
 
 }

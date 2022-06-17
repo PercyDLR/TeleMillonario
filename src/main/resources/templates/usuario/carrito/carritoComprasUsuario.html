@@ -10,7 +10,7 @@
                 overflow-x: hidden;
             }
 
-            .roe.mt-3 div{
+            .row.mt-3 div{
                 padding-left: 0;
             }
 
@@ -23,14 +23,23 @@
                 aspect-ratio: 9 / 13;
             }
 
-            .sign__group {
-                padding-inline: 5px;
+            #scroller{
+                overflow-x: hidden;
+                overflow-y: auto;
+                position: relative;
+                max-height: 65vh;
             }
-
-            .sign__input {
-                border: solid 1px #61616c;
-                width: 100%;
-                border-radius: 5px;
+            #funciones:before {
+                content: '';
+                position: absolute;
+                top: 5%;
+                right: 0;
+                height: 90%;
+                width: 2px;
+                border-radius: 1px;
+                display: block;
+                background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+                box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
             }
             .total{
                 position: absolute;
@@ -41,7 +50,14 @@
             }
             .total h1{padding-bottom: 15px}
 
-            @media (max-width: 768px){
+            @media (max-width: 992px){
+
+                #funciones, #scroller{
+                    padding-right: 0;
+                }
+                #funciones:before {
+                    width: 0;
+                }
                 .total{
                     position: fixed;
                     width: 100%;
@@ -50,6 +66,7 @@
                     background-color: #28282d;
                     justify-content: center;
                     padding-inline: 15px;
+                    padding-block: unset;
                     transform: none;
                     left: 0;
                     top: unset;
@@ -70,11 +87,12 @@
                     left: 0;
                     right: 0;
                     height: 2px;
+                    border-radius: 1px;
                     display: block;
                     background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-                    -webkit-box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
                     box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
                 }
+
             }
         </style>
     </head>
@@ -86,130 +104,77 @@
 
                 <div class="sign__form" style="flex-direction: unset">
                     <div class="row" style="width: 100%">
-                        <h3 class="home__title mb-3">Funciones</h3>
-                        <div class="col-md-8 col-12" style="overflow-y: auto; max-height: 70vh">
-                            <div class="container">
-
-                                <div class="row mt-3">
-                                    <div class="col-sm-4 col-12 ">
+                        <div id="funciones" class="col-lg-9 col-12">
+                            <h3 class="home__title mb-3">Reservas</h3>
+                            <div id="scroller" class="container">
+                                <div class="row mt-3" th:each="reservas : ${session.carritoDeComprasDeUsuario}">
+                                    <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__cover">
-                                            <img src="/img/covers/HistoriasDeArena.png" alt="portada">
-                                            <a href="#" class="card__play">
+                                            <img th:each="selfie : ${foto}"
+                                                 th:if="${selfie.idobra.id == reservas.getValue().getFuncion().getIdobra().getId()}"
+                                                 th:src="${selfie.getRuta()}" alt="portada">
+                                            <a th:href="@{'/cartelera/DetallesObra?id=' + ${reservas.getValue().getFuncion().getIdobra().getId()}}" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
                                             </a>
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-4 col-sm-8 col-12 ">
+                                    <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__content" style="padding: 1px">
                                             <h3 class="card__title">
-                                                <a>Nombre</a>
+                                                <a th:text="${reservas.getValue().getFuncion().getIdobra().getNombre()}"></a>
                                             </h3>
-                                            <span class="card__category">
-                                            <a href="#">Genero</a>
-                                        </span>
+                                            <span class="card__category" th:each="generos : ${listaGeneros}">
+                                                <a th:if="${generos.idobra.id == reservas.getValue().getFuncion().getIdobra().id}"
+                                                   th:text="${generos.idgenero.nombre}"></a>
+                                            </span>
                                             <div class="card__wrap">
-                                                <span class="card__rate"><i
+                                                <span class="card__rate" th:text="${reservas.getValue().getFuncion().getIdobra().getCalificacion()}"><i
                                                         class="icon ion-ios-star"></i>8.4</span>
 
-                                                <ul class="card__list">
+                                                <ul class="card__list" th:if="${reservas.getValue().getFuncion().getIdobra().getRestriccionedad() == 1}">
                                                     <li>Restriccion edad</li>
                                                 </ul>
-                                            </div>
-
-                                            <div class="card__description">
-                                                <p>Aqui debe ir la info de la funcion</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12" style="color: white">
-                                        <p>Aqui debe ir la cantidad de boletos a comprar y el precio a pagar en total</p>
-                                        <input type="number" class="sign__input" name="">
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="col-sm-4 col-12 ">
-                                        <div class="card__cover">
-                                            <img src="/img/covers/HistoriasDeArena.png" alt="portada">
-                                            <a href="#" class="card__play">
-                                                <i class="icon ion-ios-play"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-sm-8 col-12 ">
-                                        <div class="card__content" style="padding: 1px">
-                                            <h3 class="card__title">
-                                                <a>Nombre</a>
-                                            </h3>
-                                            <span class="card__category">
-                                            <a href="#">Genero</a>
-                                        </span>
-                                            <div class="card__wrap">
-                                                <span class="card__rate"><i
-                                                        class="icon ion-ios-star"></i>8.4</span>
-
-                                                <ul class="card__list">
-                                                    <li>Restriccion edad</li>
+                                                <ul class="card__list" th:if="${reservas.getValue().getFuncion().getIdobra().getRestriccionedad() == 0}">
+                                                    <li>Todo público</li>
                                                 </ul>
                                             </div>
-
                                             <div class="card__description">
-                                                <p>Aqui debe ir la info de la funcion</p>
+                                                <p th:text="${reservas.getValue().getFuncion().getFecha()}"></p>
+                                                <p th:text="${reservas.getValue().getFuncion().getInicio()}"></p>
+                                                <p th:text="${reservas.getValue().getFuncion().getFin()}"></p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-12" style="color: white">
-                                        <p>Aqui debe ir la cantidad de boletos a comprar y el precio a pagar en total</p>
-                                        <input type="number" class="sign__input" name="">
-                                    </div>
-                                </div>
+                                    <div class="col-md-4 col-12" style="color: white; margin-block: auto">
 
-                                <div class="row mt-3">
-                                    <div class="col-sm-4 col-12 ">
-                                        <div class="card__cover">
-                                            <img src="/img/covers/HistoriasDeArena.png" alt="portada">
-                                            <a href="#" class="card__play">
-                                                <i class="icon ion-ios-play"></i>
-                                            </a>
+                                        <h1 class="home__title mb-3" style="font-size: 13px; text-transform: none"
+                                        th:text="|Precio por Boleto: S/${reservas.value.funcion.precioentrada}|"></h1>
+
+                                        <label for="cantidad"># Entradas</label>
+                                        <div class="boletos-container">
+                                            <input type="number" class="sign__input" style="width: 100%; text-align: center"
+                                                   id="cantidad" name="cantidad" th:value="${reservas.value.cantidad}"
+                                                   min="1" th:data-precio="${reservas.value.funcion.precioentrada}" readonly>
+
+                                            <button type="button" class="boton-resta">
+                                                <i class="bi bi-dash-lg"></i>
+                                            </button>
+                                            <button type="button" class="boton-suma">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-sm-8 col-12 ">
-                                        <div class="card__content" style="padding: 1px">
-                                            <h3 class="card__title">
-                                                <a>Nombre</a>
-                                            </h3>
-                                            <span class="card__category">
-                                            <a href="#">Genero</a>
-                                        </span>
-                                            <div class="card__wrap">
-                                                <span class="card__rate"><i
-                                                        class="icon ion-ios-star"></i>8.4</span>
-
-                                                <ul class="card__list">
-                                                    <li>Restriccion edad</li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="card__description">
-                                                <p>Aqui debe ir la info de la funcion</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12" style="color: white">
-                                        <p>Aqui debe ir la cantidad de boletos a comprar y el precio a pagar en total</p>
-                                        <input type="number" class="sign__input" name="">
+                                        <h1 class="home__title mt-2" style="font-size: 16px; text-transform: none"
+                                            th:text="|Total Función: S/${reservas.value.cantidad*reservas.value.funcion.precioentrada}|"></h1>
                                     </div>
                                 </div>
                                 <div class="mt-5"></div>
                             </div>
                         </div>
-                        <div class="col-md-4 col-12" style="text-align: center">
+                        <div class="col-lg-3 col-12" style="text-align: center;">
                             <div class="total">
-                                <h1 class="home__title" style="margin-block: auto" >Total: S/59.99</h1>
-                                <a href="#" class="section__btn" style="margin-block: auto">Comprar</a>
+                                <h1 id="indicadorTotal" data-total="" class="home__title" style="margin-block: auto" >Total: ...</h1>
+                                <a th:href="@{/compraReservasCarrito}" class="section__btn" style="margin-block: auto">Comprar</a>
                             </div>
                         </div>
                     </div>
@@ -219,6 +184,56 @@
         </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">
+            <script>
+                // Cálculo de los costos
+                const listaInputs = document.getElementsByClassName("sign__input")
+                const indicadorTotal = document.getElementById("indicadorTotal")
+
+                // Setea los costos iniciales
+                let total = 0
+                for(let ii=0; ii<listaInputs.length; ii++){
+                    let input = listaInputs[ii]
+                    let numBoletos = parseInt(input.value)
+                    let precioEntrada = parseFloat(input.dataset.precio)
+
+                    // Suma el precio de la función al total
+                    total += numBoletos*precioEntrada
+                }
+                // Actualiza los valores del coto total
+                indicadorTotal.dataset.total = total.toString()
+                indicadorTotal.innerText = "Total: S/" + total
+
+                // Inicializa los botones de sumar y restar
+                $(".boton-resta").click(function (){
+                    hallarCostosIndividual(this.parentElement, -1)
+                })
+                $(".boton-suma").click(function (){
+                    hallarCostosIndividual(this.parentElement, 1)
+                })
+
+                // Actualiza los costos al cambiar la cantidad
+                function hallarCostosIndividual(btnContainer, valor){
+                    let input = btnContainer.children[0]
+
+                    // Verifica que el cambio de cantidad sea válido
+                    if(valor != -1 || parseInt(input.value) > 1){
+                        let precio = parseFloat(input.dataset.precio)
+                        let total = parseFloat(indicadorTotal.dataset.total)
+
+                        // Se actualiza el total de la función y el input
+                        input.value = parseInt(input.value) + valor
+                        let totalFuncion = btnContainer.parentElement.getElementsByTagName("h1")[1]
+                        totalFuncion.innerText = "Total Función: S/" + (input.value*precio)
+
+                        // Se actualiza el total general
+                        total += precio*valor
+                        indicadorTotal.dataset.total = total.toString()
+                        indicadorTotal.innerText = "Total: S/" + total
+                    }
+                }
+
+            </script>
+
             <script>
                 function showventanita() {
                     document.getElementById('popup').style.display = 'block';

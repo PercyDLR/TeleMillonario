@@ -3,12 +3,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "compra")
 @Getter
 @Setter
-public class Compra {
+
+public class Compra implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +18,7 @@ public class Compra {
     private Integer id;
 
     @Column(name = "estado")
-    private Integer estado;
+    private String estado;
 
     @Column(name = "cantidad")
     private Integer cantidad;

@@ -110,4 +110,33 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "idobra=?1 and estado=1")
     List<Foto> buscarFotosObra(int idobra);
 
+
+    //Una foto cualquiera de la obra
+    @Query(nativeQuery = true,value = "SELECT * FROM fotos group by idobra HAVING estado = 1")
+    List<Foto> unaFotoPorObra();
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) and (numero = 0);")
+    Foto fotoActor(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) order by numero;")
+    List<Foto> fotosActor(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) and (numero = 0);")
+    Foto fotoDirector(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) order by numero;")
+    List<Foto> fotosDirector(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idsede = ?1) and (numero = 0);")
+    Foto fotoSede(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idsede = ?1) order by numero;")
+    List<Foto> fotosSede(Integer idsede);
+
 }
