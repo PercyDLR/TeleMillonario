@@ -43,6 +43,38 @@
                 background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
                 box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
             }
+
+            .grid {
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                padding: 10px;
+            }
+
+            .form__btn.funcion{
+                position: relative;
+                display: block;
+                margin: 0;
+            }
+
+            .form__btn.funcion::before{
+                content: '';
+                position: absolute;
+                top: 2px;
+                right: 0;
+                bottom: 0;
+                left: 2px;
+                z-index: -1;
+                height: 46px;
+                width: 156px;
+                border-radius: inherit;
+                background-color: #313138;
+                transition: opacity .2s ease-in-out;
+            }
+            .form__btn.funcion:hover::before, .form__btn.selected::before{
+                opacity: 0;
+            }
+
         </style>
 
     </head>
@@ -112,18 +144,20 @@
                             <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
                                 <div class="card-header" id="headingOne">
                                     <button type="button" th:data-target="|#funciones-${sede.key.id}|"
-                                            data-toggle="collapse" aria-expanded="false" th:aria-controls="|funciones-${sede.key.id}|">
+                                            data-toggle="collapse" aria-expanded="true" th:aria-controls="|funciones-${sede.key.id}|">
                                         <span th:text="${sede.key.nombre}"></span>
                                         <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
                                     </button>
                                 </div>
 
-                                <div th:id="|funciones-${sede.key.id}|" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <button type="button" class="form__btn" th:each="funcion : ${sede.value}" style="margin: 5px"
-                                        th:text="|${funcion.fecha} ${funcion.inicio}|" th:onclick="|seleccionFuncion(${funcion.id})|">
+                                <div th:id="|funciones-${sede.key.id}|" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="grid">
+                                        <button type="button" class="form__btn funcion" th:each="funcion : ${sede.value}"
+                                                th:onclick="|seleccionFuncion(this, ${funcion.id})|">
+                                            <span th:text="|${funcion.fecha} ${funcion.inicio}|"></span>
                                         </button>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -246,12 +280,12 @@
                 let select = document.getElementById("funcion-seleccionada")
                 let optElegida;
 
-                function seleccionFuncion(id) {
+                function seleccionFuncion(boton,id) {
 
+                    // Marca en el select la opción elegida
                     let opciones = select.children;
 
                     for (let ii = 0; ii<opciones.length; ii++) {
-                        console.log(opciones[ii].value, id)
                         if(opciones[ii].value == id){
                             optElegida = opciones[ii];
                             opciones[ii].selected = "selected";
@@ -259,7 +293,14 @@
                         }
                     }
 
-                    $("#divCompra").show()
+                    // Cambia el estado de botón
+                    let btnSelected = document.getElementsByClassName("selected")
+                    if (btnSelected.length > 0){
+                        btnSelected[0].classList.toggle("selected")
+                    }
+                    boton.classList.toggle("selected")
+
+                    $("#divCompra").show(500)
 
                     $("#costo").html("Precio Por Entrada: S/" + optElegida.dataset.precio);
                     $("#boletosRestantes").html("Boletos restantes: " + optElegida.dataset.stock);
@@ -283,11 +324,8 @@
                 })
 
                 function hallarCosto(){
-                    console.log(optElegida)
                     let numEntradas = inputTotal.value;
                     let costo = parseFloat(optElegida.dataset.precio);
-
-                    console.log(numEntradas,costo)
 
                     $("#total").html("Total: S/" + costo*numEntradas);
                 }
