@@ -211,12 +211,12 @@ public class ObraController {
 
     @GetMapping("/DetallesObra")
     String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a, HttpSession session) {
-        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        /*Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
         if (compraEnProceso != null) {
             compraEnProceso = null;
             session.setAttribute("compraEnProceso",compraEnProceso);
             return "redirect:/cartelera";
-        }
+        }*/
         Optional<Obra> opt = obraRepository.findById(id);
         if (opt.isPresent()) {
             Obra obra = opt.get();
