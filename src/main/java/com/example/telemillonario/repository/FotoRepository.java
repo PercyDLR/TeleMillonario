@@ -112,7 +112,7 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
 
 
     //Una foto cualquiera de la obra
-    @Query(nativeQuery = true,value = "SELECT * FROM fotos group by idobra HAVING estado = 1")
+    @Query(nativeQuery = true,value = "SELECT * FROM fotos where idobra is not null and estado = 1 and numero=0")
     List<Foto> unaFotoPorObra();
 
     @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
