@@ -41,6 +41,9 @@ import javax.validation.Valid;
 public class UsuarioController {
 
     @Autowired
+    FuncionElencoRepository funcionElencoRepository;
+
+    @Autowired
     PersonaRepository personaRepository;
 
     @Autowired
@@ -1100,12 +1103,49 @@ public class UsuarioController {
          return "redirect:/historialPrueba";
     }
 
-    @ResponseBody
     @GetMapping("/calificarObra")
-    public String calificarObra(@RequestParam("id") Integer idFuncion){
-        return "falta esto jeje";
+    public String calificarObra(@RequestParam("id") Integer idFuncion, Model model){
+
+        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idFuncion);
+        ArrayList<Persona> listaActores = new ArrayList<>();
+        ArrayList<Persona> listaDirectores = new ArrayList<>();
+
+        for (Funcionelenco f : listaFuncionElenco) {
+            if (f.getIdpersona().getIdrol().getId() == 5) {
+                listaActores.add(f.getIdpersona());
+            }
+            if (f.getIdpersona().getIdrol().getId() == 4) {
+                listaDirectores.add(f.getIdpersona());
+            }
+        }
+
+        List<Obragenero> listaObraGenero = obraGeneroRepository.findAll();
+
+        model.addAttribute("listaObraGenero", listaObraGenero);
+        model.addAttribute("listaActores", listaActores);
+        model.addAttribute("listaDirectores", listaDirectores);
+        model.addAttribute("obra", funcionRepository.getById(idFuncion).getIdobra());
+        model.addAttribute("caratula", fotoRepository.caratulaDeObra(funcionRepository.getById(idFuncion).getIdobra().getId()));
+        model.addAttribute("fotosPersonas", fotoRepository.findAll());
+
+        return "usuario/calificacion";
     }
 
+    @PostMapping("/guardarCalificacion")
+    public String guardarCalificacion(@RequestParam("obra") ArrayList<Integer> calificacionObra,
+                                      @RequestParam("actores") ArrayList<Integer> calificacionActores,
+                                      @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
+                                      @RequestParam("id") Integer idCompra,
+                                      HttpSession httpSession,
+                                      RedirectAttributes redirectAttributes){
+
+//        Persona persona = (Persona) httpSession.getAttribute("usuario");
+//        Optional<Compra> optionalCompra = compraRepository.findById(idCompra);
+//        if (optionalCompra.isPresent()) {
+//            compraRepository.actualizacionEstadoCompra("Cancelado",persona.getId(), idCompra);
+//        }
+        return "redirect:/historialPrueba";
+    }
 
 
 
