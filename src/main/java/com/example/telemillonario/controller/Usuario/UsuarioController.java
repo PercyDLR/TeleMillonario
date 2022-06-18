@@ -822,12 +822,6 @@ public class UsuarioController {
 
     @GetMapping("/carritoPrueba")
     public String carritoUsuario(HttpSession session,Model model) {
-        /*Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
-        if (compraEnProceso != null) {
-            compraEnProceso = null;
-            session.setAttribute("compraEnProceso",compraEnProceso);
-            return "redirect:/cartelera";
-        }*/
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
         //LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
         List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
@@ -879,9 +873,11 @@ public class UsuarioController {
                     Map<Integer,String> llav = new HashMap<>();
                     llav.put(id,fechaReserva);
                     Compra compra = carrito.get(llav);
-                    reservasBorrarCarrito.add(compra);
-                    Compra compraBorrada = carrito.remove(llav);
 
+                    if(compra.getEstado().equals("Reservado")){
+                        compra.setEstado("Borrado");
+                        carrito.put(llav,compra);
+                    }
                 }
             }
             session.setAttribute("carritoDeComprasDeUsuario", carrito);
@@ -913,6 +909,54 @@ public class UsuarioController {
         }
 
     }
+
+    @GetMapping("/borrarReserva")
+    private String borrarReservaDeCarrito(@RequestParam("idReserva") String idReservaStr,RedirectAttributes redirectAttributes,HttpSession session){
+
+        LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+
+        if (carrito == null) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar reservas");
+            return "redirect:/carritoPrueba";
+        }
+
+
+        int idReserva = 0;
+
+        try {
+            idReserva = Integer.parseInt(idReservaStr);
+            if (idReserva <= 0 || (idReserva > carrito.size())) {
+                redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
+                return "redirect:/carritoPrueba";
+            }
+        } catch (NumberFormatException m) {
+            redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
+            return "redirect:/carritoPrueba";
+        }
+
+
+        Set<Map<Integer,String>> llavesGeneral = carrito.keySet();
+        for(Map<Integer,String> llaves : llavesGeneral){
+            if(llaves.get(idReserva) != null){
+                String fechaHoraBorrada = llaves.get(idReserva);
+                Map<Integer,String> llaveBorrar = new HashMap<>();
+                llaveBorrar.put(idReserva,fechaHoraBorrada);
+
+                Compra compra = carrito.get(llaveBorrar);
+                if(compra.getEstado().equals("Reservado")){
+                    compra.setEstado("Borrado");
+                    carrito.put(llaveBorrar,compra);
+                    session.setAttribute("carritoDeComprasDeUsuario", carrito);
+                    redirectAttributes.addFlashAttribute("reservaEliminada", "Su reserva se ha eliminado satisfactoriamente");
+                }else{
+                    redirectAttributes.addFlashAttribute("mensajeError", "La reserva ya ha sido cancelada");
+                }
+                break;
+            }
+        }
+        return "redirect:/carritoPrueba";
+    }
+
 
     @PostMapping("/compraReservasCarrito")
     private String comprarReservasDelCarrito(Compra reserva,DatosTarjeta datosTarjeta,RedirectAttributes redirectAttributes, HttpSession session){
