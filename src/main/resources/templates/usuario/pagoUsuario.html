@@ -14,6 +14,12 @@
                             <div class="sign__content">
                                 <form class="sign__form" th:action="@{/pago}" method="POST">
                                     <div class="sign__group">
+                                        <input type="text" class="sign__input" name="idFuncion" th:value="${compraEnProceso.getFuncion().getId()}" hidden>
+                                    </div>
+                                    <div class="sign__group">
+                                        <input type="text" class="sign__input" name="cantBoletos" th:value="${compraEnProceso.getCantidad()}" hidden>
+                                    </div>
+                                    <div class="sign__group">
                                         <input type="text" class="sign__input" name="numeroTarjeta" placeholder="Número de tarjeta">
                                     </div>
                                     <div class="sign__group">
@@ -25,7 +31,7 @@
                                     <div class="sign__group" style="margin-bottom: 0">
                                         <input type="text" name="codigoSeguridad" class="sign__input" placeholder="Codigo de seguridad">
                                     </div>
-                                    <a class="sign__btn" th:href="@{'/cartelera/DetallesObra?id=' + ${session.compraEnProceso.getFuncion().getIdobra().getId()}}">Cancelar</a>
+                                    <a class="sign__btn" th:href="@{'/cartelera/DetallesObra?id=' + ${compraEnProceso.getFuncion().getIdobra().getId()}}">Cancelar</a>
                                     <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
                                 </form>
                             </div>

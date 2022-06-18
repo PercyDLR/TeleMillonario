@@ -168,8 +168,7 @@
 
                 <div class="row">
 
-                    <form id="form-compra" method="post" th:action="@{/compra}">
-
+                    <form id="form-compra" method="get" th:action="@{/compra}">
                         <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
                             <select id="funcion-seleccionada" name="idFuncion" style="width: 0" hidden>
                                 <th:block th:each="sede : ${funcionesDeLaSede}">
