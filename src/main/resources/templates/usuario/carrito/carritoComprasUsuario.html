@@ -59,7 +59,10 @@
                 padding-left: 50px;
                 transform: translate(-50%,-50%);
             }
-            .total h1{padding: 15px}
+            .total h1{
+                padding: 15px 0;
+                width: max-content;
+            }
 
             @media (max-width: 992px){
 
@@ -75,7 +78,8 @@
                     height: 75px;
                     display: flex;
                     background-color: #28282d;
-                    justify-content: space-between;
+                    justify-content: space-around;
+                    padding: 0;
                     transform: none;
                     left: 0;
                     top: unset;
@@ -116,10 +120,12 @@
                             <option th:each="helper : ${llavesInvertidas}" th:if="${reservas.getKey().containsValue(helper.getKey()) && reservas.getValue().getEstado().equals('Reservado')}" th:value="${helper.getValue()}"></option>
                         </div>
                     </select-->
+
                     <select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
-                        <option th:each="reservas , j: ${session.carritoDeComprasDeUsuario}"
-                                th:if="${reservas.getValue().getEstado().equals('Reservado')}" th:value="${j.index+1}"></option>
+                        <option th:each="reservas , j: ${session.carritoDeComprasDeUsuario}" th:if="${reservas.getValue().getEstado().equals('Reservado')}"
+                                 th:data-id="${reservas.value.funcion.id}" th:value="${j.index+1}" selected></option>
                     </select>
+
                     <div class="row" style="width: 100%">
                         <div id="funciones" class="col-lg-9 col-12">
                             <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
@@ -150,7 +156,8 @@
                                             </span>
                                             <div class="card__wrap">
                                                 <span class="card__rate"><i class="icon ion-ios-star"></i>
-                                                    <span th:text="${reservas.value.funcion.idobra.calificacion}">8.4</span>
+                                                    <span th:text="${reservas.value.funcion.idobra.calificacion != null ?
+                                                    reservas.value.funcion.idobra.calificacion : '--'}">8.4</span>
                                                 </span>
                                                 <ul class="card__list">
                                                     <li th:text="${reservas.value.funcion.idobra.restriccionedad == 1 ? '+16' : 'Todo Público'}"></li>
@@ -237,7 +244,7 @@
 
                         // Permite elegir que sedes mandar
                         for (let ii=0; ii<listaReservas.options.length; ii++){
-                            if(listaReservas.options[ii].value == this.dataset.id){
+                            if(listaReservas.options[ii].dataset.id == this.dataset.id){
 
                                 listaReservas.options[ii].toggleAttribute("selected")
 
