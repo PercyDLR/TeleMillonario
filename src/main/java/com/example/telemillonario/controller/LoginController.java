@@ -102,7 +102,8 @@ public class LoginController {
             /*Aca se ingresa al sistema*/
             //redirectAttributes.addAttribute("username",email);
             //redirectAttributes.addAttribute("password","123456789abcdefg");
-            return "redirect:/processLogin?username=" + email + "&password=123456789abcdefg";
+            session.setAttribute("usuario",persona);
+            return "redirect:/redirectByRole";
 
         }else {
             return "redirect:/login";
