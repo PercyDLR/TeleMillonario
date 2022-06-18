@@ -1,211 +1,461 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="fragments/header :: head('Sede Detalles',~{::style})">
+    <head th:replace="fragments/header :: head('Detalles Sede',~{::style})">
         <style>
-            input::placeholder {
-                color: #000000;
-            }
-            #map0 {
-                height: 450px;
-            }
-            /* ------------------------- */
-            /* Estilos de Materialize */
-            /* ------------------------- */
-            .carousel {
-                min-height: 500px;
+
+            .card__cover {
+                overflow-x: hidden;
             }
 
-            .carousel .carousel-item {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                user-select: none;
-                width: 500px;
-                height: 500px;
-            }
-
-            .carousel .carousel-item img {
+            .card__cover img, .item img {
+                display: block;
                 width: 100%;
-                height: 100%;
                 object-fit: cover;
+                object-position: 50% 50%;
+                margin-top: 0;
+                aspect-ratio: 9 / 13;
+            }
+
+            .sign__group{
+                padding-inline: 5px;
+            }
+            .sign__input{
+                border: solid 1px #61616c;
+                width: 100%;
+                border-radius: 5px;
+            }
+
+            #accordion{
+                height: 220px;
+                max-height: 220px;
+                overflow-y: auto;
+                border: solid 2px rgba(0,0,0,0.05);
+            }
+
+            .funciones-header{
+                padding-inline: 10px;
+            }
+
+            #divCompra{
+                padding: 4rem 1rem;
+                background-color: #28282d;
+                box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%);
+                position: relative;
+            }
+            #divCompra::before {
+                content: '';
                 position: absolute;
                 top: 0;
                 left: 0;
-                z-index: -1;
-                border-radius: 15px;
+                right: 0;
+                height: 2px;
+                display: block;
+                background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+                box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
             }
 
-            .carousel .indicators .indicator-item {
-                border-radius: 0;
-                transform: rotate(45deg);
-                margin: 0 15px;
-                background: #36221c;
-            }
+            /*input::placeholder {*/
+            /*    color: #000000;*/
+            /*}*/
+            /*#map0 {*/
+            /*    height: 450px;*/
+            /*}*/
+            /*!* ------------------------- *!*/
+            /*!* Estilos de Materialize *!*/
+            /*!* ------------------------- *!*/
+            /*.carousel {*/
+            /*    min-height: 500px;*/
+            /*}*/
+
+            /*.carousel .carousel-item {*/
+            /*    display: flex;*/
+            /*    flex-direction: column;*/
+            /*    justify-content: center;*/
+            /*    align-items: center;*/
+            /*    user-select: none;*/
+            /*    width: 500px;*/
+            /*    height: 500px;*/
+            /*}*/
+
+            /*.carousel .carousel-item img {*/
+            /*    width: 100%;*/
+            /*    height: 100%;*/
+            /*    object-fit: cover;*/
+            /*    position: absolute;*/
+            /*    top: 0;*/
+            /*    left: 0;*/
+            /*    z-index: -1;*/
+            /*    border-radius: 15px;*/
+            /*}*/
+
+            /*.carousel .indicators .indicator-item {*/
+            /*    border-radius: 0;*/
+            /*    transform: rotate(45deg);*/
+            /*    margin: 0 15px;*/
+            /*    background: #36221c;*/
+            /*}*/
 
 
         </style>
     </head>
     <body class="body">
-        <div th:replace="fragments/navbar :: usuario('sede')"></div>
+        <div th:replace="fragments/navbar :: usuario('sedes')"></div>
 
+        <div class="content" style="padding-bottom: 0">
+            <div class="container my-5">
+                <div class="row text-center">
+                    <div class="col-12">
+                        <h1 class="details__title" style="margin-bottom: 10px;"><b th:text="${sede.nombre}"></b></h1>
+                        <h1 class="details__title" style="font-size: 30px" th:text="${sede.iddistrito.nombre}"></h1>
+                    </div>
 
-        <div class="container mt-5" style="margin-top: 100px">
-            <div class="container pt-2 me-auto" style="margin-bottom: 45px;margin-top: 100px" >
-
-                <div class="row">
-                    <div class="col-sm-10">
-                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9; font-size: 70px"><b>Gran Teatro Nacional</b></h1>
+                    <div class="col-12 col-xl-12">
+                        <div class="card card--details">
+                            <div class="row">
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4">
+                                </div>
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4" style="padding-left: 55px;padding-right: 20px;">
+                                    <div class="card__cover">
+                                        <img th:src="${listaFotos.get(0).ruta}" alt="foto">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-sm-10">
-                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Fotos</b></h1>
+
+            </div>
+
+            <!--MAPA-->
+            <section class="mt-5 pb-5" style="background-color: #2b2b31">
+                <div class="content__head" style="margin-bottom: 0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12  pt-2 pb-3">
+                                <!-- content title -->
+                                <h2 class="content__title">Ubicación</h2>
+                                <!-- end content title -->
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-<!--                    <div id="carouselExampleIndicators2" class="carousel slide mt-4" data-bs-ride="carousel">-->
-<!--                        <div class="carousel-indicators">-->
-<!--                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>-->
-<!--                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="1" aria-label="Slide 2"></button>-->
-<!--&lt;!&ndash;                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="2" aria-label="Slide 3"></button>&ndash;&gt;-->
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-12">
+<!--                            <div th:data-latlong="${sede.getCoordenadas()}" id="map0"></div>-->
+                            <div style="width: 100%"><iframe width="1300" height="450"
+                                                             th:src="|https://maps.google.com/maps?width=100%25&amp;height=400&amp;hl=en&amp;q=${sede.direccion}+(ubicacion)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed|">
+                                <a href="https://www.gps.ie/wearable-gps/">gps smartwatches</a></iframe></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOTOS -->
+            <section class="mt-5 pb-5" style="background-color: #2b2b31">
+                <div class="content__head" style="margin-bottom: 0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12  pt-2 pb-3">
+                                <!-- content title -->
+                                <h2 class="content__title">Fotos</h2>
+                                <!-- end content title -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="owl-carousel home__carousel">
+                                <div class="item" th:each="foto : ${listaFotos}">
+                                    <img th:src="${foto.ruta}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mt-5 pb-5">
+                <div class="content__head" style="margin-bottom: 0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12  pt-2 pb-3">
+                                <!-- content title -->
+                                <h2 class="content__title">Obras en la sede</h2>
+                                <!-- end content title -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="home" style="padding-block: 1px; margin-top: 0px">
+                    <div class="container">
+                        <div class="row">
+
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                 th:if="${(msg != null) && (msg eq -1)}">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <strong>Ocurrio un error al momento de querer ver los detalles de la obra</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <!--<div class="col-12">-->
+                            <div class="col-12 my-5">
+                                <form method="post" th:action="@{'/sedes/BusquedaYFiltrosDetalles?id='+${id}}">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-4 col-12 sign__group">
+
+                                            <input type="text" class="sign__input"
+                                                   placeholder="Busque una Obra" name="busqueda"
+                                                   th:value="${busqueda}" maxlength="100">
+                                        </div>
+                                        <div class="col-lg-3 col-md-5 col-6 sign__group">
+                                            <select class="sign__input" name="genero">
+                                                <option th:selected="${genero == ''}" value="">Todos los géneros</option>
+                                                <option th:each="g : ${generos}" th:value="${g.getId()}"
+                                                        th:text="${g.getNombre()}"
+                                                        th:selected="${g.getId() == genero}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 col-md-5 col-6 sign__group">
+
+                                            <select class="sign__input" name="restriccionEdad">
+                                                <option value="" th:selected="${restriccionEdad == ''}">Para toda la familia</option>
+                                                <option value="1" th:selected="${restriccionEdad == '1'}">Con contenido sensible</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                                            <button type="submit" class="form__btn" style="width: 50%; margin: 0;">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="catalog">
+                            <div class="container">
+                                <div class="row">
+                                    <!-- card -->
+                                    <div class="col-6 col-sm-12 col-lg-6" style="padding-inline: 5px" th:each=" obragenero : ${listaObraGenero}">
+                                        <div class="card card--list">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="card__cover">
+                                                        <img th:each="caratula : ${listaCaratulas}"
+                                                             th:if="${caratula !=null && caratula.getIdobra().id == obragenero.getKey().getId()}"
+                                                             th:src="${caratula.getRuta()}" alt="portada">
+                                                        <a th:href="@{'/cartelera/DetallesObra?id=' + ${obragenero.getKey().getId()}}" class="card__play">
+                                                            <i class="icon ion-ios-play"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12 col-sm-8">
+                                                    <div class="card__content" style="padding: 1px">
+                                                        <h3 class="card__title">
+                                                            <a th:href="@{'/cartelera/DetallesObra?id=' + ${obragenero.getKey().getId()}}"
+                                                               th:text="${obragenero.getKey().getNombre()}"></a>
+                                                        </h3>
+                                                        <span class="card__category">
+                                                    <a href="#" th:each="generos : ${obragenero.getValue()}"
+                                                       th:text="${generos.getNombre()}"></a>
+                                                </span>
+
+                                                        <div class="card__wrap">
+                                                            <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
+
+                                                            <ul class="card__list">
+                                                                <li th:text="${obragenero.key.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="card__description">
+                                                            <p th:text="${obragenero.key.descripcion}"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end card -->
+                                </div>
+                            </div>
+                        </div>
+                        <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/sedes/DetallesSede?id='+${id}+'&restriccionEdad='+${restriccionEdad}+'&genero='+${genero}+'&busqueda='+${busqueda}+'&')"></div>
+                    </div>
+                </section>
+            </section>
+        </div>
+
+
+<!--        <div class="container mt-5" style="margin-top: 100px">-->
+<!--            <div class="container pt-2 me-auto" style="margin-bottom: 45px;margin-top: 100px" >-->
+
+<!--                <div class="row">-->
+<!--                    <div class="col-sm-10">-->
+<!--                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9; font-size: 70px"><b>Gran Teatro Nacional</b></h1>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="row mt-3">-->
+<!--                    <div class="col-sm-10">-->
+<!--                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Fotos</b></h1>-->
+<!--                    </div>-->
+
+<!--&lt;!&ndash;                    <div id="carouselExampleIndicators2" class="carousel slide mt-4" data-bs-ride="carousel">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="carousel-indicators">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="1" aria-label="Slide 2"></button>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                            <button type="button" data-bs-target="#carouselExampleIndicators2" data-bs-slide-to="2" aria-label="Slide 3"></button>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="carousel-inner" style="padding-right: 50px; padding-left: 50px; height: 220px; margin-bottom: 45px">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="carousel-item active">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="row" th:each="foto : ${imagenes}">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="col-sm-4" >&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <img th:src="${foto.ruta}" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="carousel-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="row">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="col-sm-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="col-sm-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="col-sm-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="carousel-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="row">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="col-sm-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="col-sm-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="col-sm-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                    <div class="row">-->
+<!--                        <div class="col s12">-->
+<!--                            <div class="carousel center-align">-->
+<!--                                <div class="carousel-item" th:each="foto : ${imagenes}" >-->
+<!--                                    <img th:src="${foto.ruta}" alt="">-->
+<!--                                </div>-->
+
+<!--                            </div>-->
 <!--                        </div>-->
-<!--                        <div class="carousel-inner" style="padding-right: 50px; padding-left: 50px; height: 220px; margin-bottom: 45px">-->
-<!--                            <div class="carousel-item active">-->
-<!--                                <div class="row" th:each="foto : ${imagenes}">-->
-<!--                                    <div class="col-sm-4" >-->
-<!--                                        <a href="#">-->
-<!--                                            <img th:src="${foto.ruta}" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
-<!--                                </div>-->
+<!--                <div class="row mt-5">-->
+<!--                    <div class="col-sm-10">-->
+<!--                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Ubicación</b></h1>-->
+<!--                    </div>-->
+<!--                    <div th:data-latlong="${sede.getCoordenadas()}" id="map0"></div>-->
+<!--                </div>-->
 
+<!--                <div class="row mt-5">-->
+<!--                    <div class="col-sm-10">-->
+<!--                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Cartelera de la sede</b></h1>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <form method="post" th:action="@{'/sedes/sede/filtrar?idsede='+ ${idsede}}">-->
+<!--                    <div class="row mt-3">-->
+<!--                        <div class="col-sm-6">-->
+<!--                            <div class="input-group">-->
+<!--                                <input name="busqueda" class="form-control text-light" type="text" style="background-color: transparent; border-radius: 5px; border-color: #7c7676"-->
+<!--                                       th:value="${busqueda == null ? 'Busca por # sala' : busqueda}" placeholder="Buscar por nombre de la obra"/>-->
 <!--                            </div>-->
-<!--                            <div class="carousel-item">-->
-<!--                                <div class="row">-->
-<!--                                    <div class="col-sm-4">-->
-<!--                                        <a href="#">-->
-<!--                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-sm-4">-->
-<!--                                        <a href="#">-->
-<!--                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-sm-4">-->
-<!--                                        <a href="#">-->
-<!--                                            <img src="/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="carousel-item">-->
-<!--                                <div class="row">-->
-<!--                                    <div class="col-sm-4">-->
-<!--                                        <a href="#">-->
-<!--                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 4% 0;">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-sm-4">-->
-<!--                                        <a href="#">-->
-<!--                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen1.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-sm-4">-->
-<!--                                        <a href="#">-->
-<!--                                            <img src="/static/img/sedes/fotosGranTeatroNacional/imagen2.png" style="width: 380px; height: 320px; object-fit: scale-down; object-position: 0% 0;">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
+
+
 <!--                        </div>-->
 
+<!--                        <div class="col-sm-3">-->
+<!--                            <select class="form-select" name="publico" aria-label="Default select example" style="color: #fff; background-color: #e64166; border-color: #e64166;">-->
+<!--                                <option value="">Restricción de Edad:</option>-->
+<!--                                <option th:selected="${publico eq 'todos'}" value="todos">Para todos los públicos</option>-->
+<!--                                <option th:selected="${publico eq 'mayores'}" value="mayores">Para mayores de 16 años edad</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4 col-12 d-flex justify-content-center">-->
+<!--                            <button type="submit" class="filter__btn" style="margin-top:6px;">-->
+<!--                                <a>Buscar</a>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+
+<!--            <div class="container" style="height: 455px; margin-bottom: 45px">-->
+<!--                <div class="row mt-5">-->
+<!--                    <div class="col-sm-3" th:each="funcion: ${funcionessede}">-->
+<!--                        <a th:href="@{'/cartelera/DetallesObra'+'?id='+ ${funcion.getKey().getIdobra().id}}">-->
+<!--                            <img th:src="${funcion.value.getRuta()}" style="width: 207px; height: 320px; object-fit: cover;">-->
+<!--                        </a>-->
+<!--                        <div class="container" style="text-align: center; margin-top: 10px">-->
+<!--                            <h6><b th:text="${funcion.getKey().getIdobra().nombre}" style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>-->
+<!--                        </div>-->
+<!--&lt;!&ndash;                        <div class="container" style="text-align: left; margin-top: 10px">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <h6><b th:each="generos : ${foto.getValue()}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                   th:text="|${generos.getIdgenero().getNombre()} |" style="font-family: 'Open Sans', sans-serif; color: #e64166"></b></h6>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        <div class="container" style="text-align: left; margin-top: 10px">-->
+<!--                            <h6><b th:text="${funcion.getKey().getIdobra().restriccionedad== 1 ? '+16' : 'Apta para todos'} " style="font-family: 'Open Sans', sans-serif; color: #e64166"></b></h6>-->
+<!--                        </div>-->
+<!--                        <div class="container" style="text-align: left; margin-top: 4px">-->
+<!--                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>-->
+<!--                        </div>-->
 
 <!--                    </div>-->
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="carousel center-align">
-                                <div class="carousel-item" th:each="foto : ${imagenes}" >
-                                    <img th:src="${foto.ruta}" alt="">
-                                </div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-5">
-                    <div class="col-sm-10">
-                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Ubicación</b></h1>
-                    </div>
-                    <div th:data-latlong="${sede.getCoordenadas()}" id="map0"></div>
-                </div>
-
-                <div class="row mt-5">
-                    <div class="col-sm-10">
-                        <h1 style="font-family: 'Open Sans', sans-serif; color: #D9D9D9;"><b>Cartelera de la sede</b></h1>
-                    </div>
-                </div>
-                <form method="post" th:action="@{'/sedes/sede/filtrar?idsede='+ ${idsede}}">
-                    <div class="row mt-3">
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <input name="busqueda" class="form-control text-light" type="text" style="background-color: transparent; border-radius: 5px; border-color: #7c7676"
-                                       th:value="${busqueda == null ? 'Busca por # sala' : busqueda}" placeholder="Buscar por nombre de la obra"/>
-                            </div>
-
-
-                        </div>
-
-                        <div class="col-sm-3">
-                            <select class="form-select" name="publico" aria-label="Default select example" style="color: #fff; background-color: #e64166; border-color: #e64166;">
-                                <option value="">Restricción de Edad:</option>
-                                <option th:selected="${publico eq 'todos'}" value="todos">Para todos los públicos</option>
-                                <option th:selected="${publico eq 'mayores'}" value="mayores">Para mayores de 16 años edad</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 col-12 d-flex justify-content-center">
-                            <button type="submit" class="filter__btn" style="margin-top:6px;">
-                                <a>Buscar</a>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="container" style="height: 455px; margin-bottom: 45px">
-                <div class="row mt-5">
-                    <div class="col-sm-3" th:each="funcion: ${funcionessede}">
-                        <a th:href="@{'/cartelera/DetallesObra'+'?id='+ ${funcion.getKey().getIdobra().id}}">
-                            <img th:src="${funcion.value.getRuta()}" style="width: 207px; height: 320px; object-fit: cover;">
-                        </a>
-                        <div class="container" style="text-align: center; margin-top: 10px">
-                            <h6><b th:text="${funcion.getKey().getIdobra().nombre}" style="font-family: 'Open Sans', sans-serif; color: #FFFFFF">Historias de Arena</b></h6>
-                        </div>
-<!--                        <div class="container" style="text-align: left; margin-top: 10px">-->
-<!--                            <h6><b th:each="generos : ${foto.getValue()}"-->
-<!--                                   th:text="|${generos.getIdgenero().getNombre()} |" style="font-family: 'Open Sans', sans-serif; color: #e64166"></b></h6>-->
-<!--                        </div>-->
-                        <div class="container" style="text-align: left; margin-top: 10px">
-                            <h6><b th:text="${funcion.getKey().getIdobra().restriccionedad== 1 ? '+16' : 'Apta para todos'} " style="font-family: 'Open Sans', sans-serif; color: #e64166"></b></h6>
-                        </div>
-                        <div class="container" style="text-align: left; margin-top: 4px">
-                            <h6><b style="font-family: 'Open Sans', sans-serif; color: #e64166"><i class="bi bi-star"></i> 5</b></h6>
-                        </div>
-
-                    </div>
-
-                </div>
+<!--                </div>-->
 
 
 
-                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/sedes/sede?busqueda='+${busqueda}+'&idsede='+${idsede}+'&')"></div>
+<!--                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/sedes/sede?busqueda='+${busqueda}+'&idsede='+${idsede}+'&')"></div>-->
 
-            </div>
+<!--            </div>-->
 
-        </div>
+<!--        </div>-->
 
         <div th:replace="fragments/footer :: js(~{::script})">
             <script th:inline="javascript">

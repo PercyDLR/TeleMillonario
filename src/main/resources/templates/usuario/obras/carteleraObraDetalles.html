@@ -16,25 +16,66 @@
             }
 
             #accordion{
-                height: 200px;
-                max-height: 200px;
+                height: 220px;
+                max-height: 220px;
                 overflow-y: auto;
+                border: solid 2px rgba(0,0,0,0.05);
             }
 
             .funciones-header{
                 padding-inline: 10px;
             }
 
-            .funciones-selector{
-                border: 1px solid rgba(255,255,255,0.26);
-                padding: 5px 5px 4px;
-                line-height: 100%;
-                border-radius: 4px;
-                margin-right: 10px;
-                font-size: 12px;
-                font-weight: 700;
-                color: rgba(255,255,255,0.65);
+            #divCompra{
+                padding: 4rem 1rem;
+                background-color: #28282d;
+                box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%);
+                position: relative;
             }
+            #divCompra::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                display: block;
+                background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+                box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
+            }
+
+            .grid {
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .form__btn.funcion{
+                position: relative;
+                display: block;
+                margin: 0;
+                width: 100%;
+                min-width: 150px;
+            }
+
+            .form__btn.funcion::before{
+                content: '';
+                position: absolute;
+                top: 2px;
+                right: 0;
+                bottom: 0;
+                left: 2px;
+                z-index: -1;
+                height: calc(100% - 4px);
+                width: calc(100% - 4px);
+                border-radius: inherit;
+                background-color: #313138;
+                transition: opacity .2s ease-in-out;
+            }
+            .form__btn.funcion:hover::before, .form__btn.selected::before{
+                opacity: 0;
+            }
+
         </style>
 
     </head>
@@ -44,6 +85,10 @@
         <div class="content" style="padding-bottom: 0">
             <div class="container my-5">
                 <div class="row">
+                    <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
+                    <div th:if="${reservaExitosa != null}" th:text="${reservaExitosa}" class="alert alert-success" role="alert"></div>
+
+                    <div th:if="${cruceHorarioFuncion != null}" th:each="mensaje : ${cruceHorarioFuncion}" th:text="${mensaje}" class="alert alert-danger" role="alert"></div>
 
                     <div class="col-12">
                         <h1 class="details__title" th:text="${obra.nombre}"></h1>
@@ -86,195 +131,111 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-xl-6" style="padding: 10px; background-color: #28282d">
+                    <div class="col-12 col-xl-6" style="padding: 10px; background-color: #28282d; box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%)">
 
-                        <form method="post" onsubmit="return validacionsubmit" th:action="@{/cartelera/compra}">
-
-                            <div class="funciones-header">
-                                <div class="row">
-                                    <div class="col-md-6 col-12">
-                                        <h1 class="content__title" style="color: rgba(255,255,255,0.7)">Comprar Boletos</h1>
-                                    </div>
-                                    <div class="col-md-6 col-12" style="padding-block: 15px;">
-                                        <input class="sign__input" type="number" placeholder="# Entradas"
-                                               style="width: 100%">
-                                    </div>
-                                </div>
+                        <div class="funciones-header">
+                            <div class="row">
+                                <h1 class="content__title" style="color: rgba(255,255,255,0.7); margin-block: 5px;">
+                                    Comprar Boletos
+                                </h1>
                             </div>
+                        </div>
 
-                            <div class="accordion" id="accordion">
-                                <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
-                                    <div class="card-header" id="headingOne">
-                                        <button type="button" data-toggle="collapse" th:data-target="|#funciones-${sede.key.id}|"
-                                                aria-expanded="true" aria-controls="collapseOne" onclick="seleccionSede(this)">
-                                            <span th:text="${sede.key.nombre}"></span>
-                                            <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
-                                        </button>
-                                    </div>
+                        <div class="accordion" id="accordion">
+                            <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
+                                <div class="card-header" id="headingOne">
+                                    <button type="button" th:data-target="|#funciones-${sede.key.id}|"
+                                            data-toggle="collapse" aria-expanded="true" th:aria-controls="|funciones-${sede.key.id}|">
+                                        <span th:text="${sede.key.nombre}"></span>
+                                        <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
+                                    </button>
+                                </div>
 
-                                    <div th:id="|funciones-${sede.key.id}|" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <button type="button" class="btn btn-danger" th:each="funcion, j : ${sede.value}"
-                                            th:text="|${funcion.key.fecha} ${funcion.key.inicio}|">
+                                <div th:id="|funciones-${sede.key.id}|" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="grid">
+                                            <button type="button" class="form__btn funcion" th:each="funcion : ${sede.value}"
+                                                    th:onclick="|seleccionFuncion(this, ${funcion.id})|">
+                                                <span th:text="|${funcion.fecha} ${funcion.inicio}|"></span>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <!--Apartado de compra de boletos-->
-                <div class="col-12 mt-4">
-                    <h1 class="home__title" style="text-transform: uppercase; font-size: 30px">Comprar boletos</h1>
-                </div>
-
-                <!--col 7 y 5-->
-                <form method="post" onsubmit="return validacionsubmit" th:action="@{/cartelera/compra}"> <!--Estoy enviando la id de la funcion y la cantidad de boletos a comprar-->
-                    <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
-                        <div class="col-lg-7 col-md-5 col-6 sign__group">
-                            <div class="row">
-                                <select class="sign__input" id="sedes" onchange="seleccionSede(this)">
-                                    <option value="" selected>Seleccione una sede</option>
-                                    <option th:each="sede, i : ${listaSedesConObra}"
-                                            th:text="${sede.nombre}" th:value="'sede'+${sede.id}"></option>
-                                </select>
-                            </div>
-                            <div class="row" id="selectDefecto">
-                                <select class="sign__input">
-                                    <option value="" selected>Seleccione una función de la sede</option>
-                                </select>
-                            </div>
-                            <div class="row" id="mostrarSelect" style="display: none">
-                                <select class="sign__input" name="funcion" th:each="a, i : ${funcionesDeLaSede}"
-                                        th:id="'sede'+${a.key.id}" style="display: none"
-                                        onchange="seleccionFuncion(this)"> <!--Aqui se elige la funcion a asistir-->
-                                    <option value="" selected>Seleccione una función de la sede</option>
-                                    <option th:each="l, i : ${a.value}" th:value="${l.key.id}"
-                                            th:text="${l.value}"
-                                            th:id="'funcion'+${i.index + 1}"></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-5 col-12 sign__group">
-
-                            <div th:each="a : ${funcionesDeLaSede}" id="funcionesDeLaSede" style="display: none">
-                                <div th:each="l, i : ${a.value}" th:id="${l.key.id}" style="display: none">
-                                    <input type="number" th:value="${l.key.cantidadasistentes}"
-                                           th:id="'cantidadasistentes'+${l.key.id}" hidden>
-                                    <input type="number" th:value="${l.key.stockentradas}"
-                                           th:id="'stockentradas'+${l.key.id}" hidden>
-                                    <h1 class="home__title" style="text-transform: none; font-size: 30px"
-                                        th:id="'boletosRestantes'+${l.key.id}"></h1>
-
-                                    <td class="ps-0 pt-0">
-                                        <div class="d-flex">
-                                            <div>
-                                                <!--Boton resta-->
-                                                <div class="value-button" th:id="'decrease'+${l.key.id}"
-                                                     th:onclick="|decreaseValue(funcion${i.index + 1})|"
-                                                     value="Decrease Value"><i class="bi bi-dash"></i></div>
-                                                <!--Boton resta-->
-
-                                                <!--Precio unitario-->
-                                                <input type="number"
-                                                       th:id="'costoinput'+${l.key.id}" th:value="${l.key.precioentrada}" hidden/>
-                                                <!--Se mostrara el precio a pagar de las entradas-->
-                                                <h1 class="home__title" style="text-transform: none; font-size: 30px"
-                                                    th:id="'costo'+${l.key.id}" th:text="|S/ ${l.key.precioentrada}|"></h1>
-                                                <!--Se obtendra el numero de boletos que se han seleccionado-->
-                                                <input type="number"
-                                                       th:id="'number'+${l.key.id}" value="1"
-                                                       min="1" hidden/>
-                                                <!--Se mostrara el precio a pagar de las entradas-->
-                                                <h1 class="home__title" style="text-transform: none; font-size: 30px"
-                                                    th:id="'numero'+${l.key.id}" th:text="1"></h1>
-
-                                                <!--Boton suma-->
-                                                <div class="value-button" th:id="'increase'+${l.key.id}"
-                                                     th:onclick="|increaseValue(funcion${i.index + 1})|"
-                                                     value="Increase Value"><i class="bi bi-plus-lg"></i></div>
-                                                <!--Boton suma-->
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <button class="header__sign-in" onclick="validarForm()"> <!--th:href="@{/login}"-->
-                                        <!--Cambiarse por la ruta de carrito. Con esta ruta se mostrara la vista de carrito-->
-                                        <i class="icon ion-ios-log-in"></i>
-                                        <span>Agregar a carrito</span>
-                                    </button>
-
-                                </div>
-                            </div>
-
-                            <!--Cantidad de boletos que comprara el usuario (ESTE DEBO ENVIAR)-->
-                            <input type="number" name="cantidadTotalBoletos"
-                                   id="cantidadBoletos" value="0" hidden/>
-
                         </div>
                     </div>
-                </form>
-
-                <div class="row justify-content-center mt-3">
-                    <a sec:authorize="isAnonymous()" th:href="@{/cartelera/carritoPrueba}"
-                       class="header__sign-in"> <!--th:href="@{/login}"-->
-                        <i class="icon ion-ios-log-in"></i>
-                        <span style="font-size: 8px; text-align: center;">Inicie sesión para comprar sus boletos</span>
-                    </a>
                 </div>
-            </div>
 
+                <div class="row">
 
-                    <!--Boton de numero de boletos (DEBE CAMBIARSE AHORA QUE SE ESTA MOSTRANDO LOS DETALLES DE LAS OBRAS)
-                    <div class="row">
-                        <div class=" col-4">
-                            <form method="post" action="#">
-                                <div class="header__auth" style="margin-left: 0">
+                    <form id="form-compra" method="get" th:action="@{/compra}">
+                        <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
+                            <select id="funcion-seleccionada" name="idFuncion" style="width: 0" hidden>
+                                <th:block th:each="sede : ${funcionesDeLaSede}">
+                                    <option th:each="funcion : ${sede.value}"
+                                            th:text="${funcion.idobra.nombre}"
+                                            th:data-precio="${funcion.precioentrada}"
+                                            th:data-stock="${funcion.stockentradas}"
+                                            th:value="${funcion.id}">
+                                    </option>
+                                </th:block>
+                            </select>
 
-                                    <div sec:authorize="isAuthenticated()">
-                                        <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
-                                        <input type="number" name="cantidadBoletos" id="number" value="0" min="0" max="${boletosrestantes}"/>
-                                        <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                            <div class="col-12" id="divCompra" style="display: none">
+                                <div class="row" style="align-items: center">
+                                    <div class="col-md-4 col-6" style="color: white; text-align: center">
+                                        <ul>
+                                            <li id="boletosRestantes"></li>
+                                            <li id="costo"></li>
+                                            <li id="total"></li>
+                                        </ul>
                                     </div>
 
-                                    <input sec:authorize="isAuthenticated()" th:value="${funcion.precioentrada}" name="precio a pagar">
-                                    <button sec:authorize="isAuthenticated()" href="#" class="header__sign-in" type="submit">
-                                        <span style="font-size: 11px">Comprar boletos</span>
-                                    </button>
+                                    <div class="col-md-4 col-6">
+                                        <div class="sign__group" style="position: relative">
+                                            <label for="entradas">Entradas</label>
+                                            <div class="boletos-container">
+                                                <input id="entradas" name="cantBoletos" class="sign__input" type="number" style="width: 100%;text-align: center"
+                                                       placeholder="# Entradas" min="1" value="1" readonly required>
+
+                                                <button type="button" class="boton-resta">
+                                                    <i class="bi bi-dash-lg"></i>
+                                                </button>
+                                                <button type="button" class="boton-suma">
+                                                    <i class="bi bi-plus-lg"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <div class="row">
+                                            <div class="col-md-12 col-6" style="justify-content: center;display: flex">
+                                                <button type="button" class="form__btn" onclick="reservar()">
+                                                    <span>Agregar a carrito</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="col-md-12 col-6" style="justify-content: center;display: flex">
+                                                <button type="submit" class="form__btn">
+                                                    <span>Comprar Ahora</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </form>
+                            </div>
                         </div>
+                    </form>
+
+                    <div sec:authorize="isAnonymous()" class="row justify-content-center my-5">
+                        <span style="font-size: 20px; text-align: center; color: white">No está logueado</span>
+                        <a th:href="@{/login}" class="filter__btn">
+                            Iniciar Sesión
+                        </a>
                     </div>
-                    -->
-
-                    <!-- Los actores y directores pertenecen a una función, no a una obra
-
-                    <div class="card__description mt-4"
-                         th:each="directoresActores : ${listaDirectoresYActores}">
-
-                        <p style="font-size: 16px;">Director:
-                            <span class="card__category">
-                                <a href="#"
-                                   style="background-color: #FFFFFF; background-image: none; font-size: 16px;"
-                                   th:each="director : ${directoresActores.key}"
-                                   th:text="${director.nombres} + ' ' + ${director.apellidos}"></a>
-                        </span>
-                        </p>
-                        <p style="font-size: 16px;">Actores:
-                            <span class="card__category">
-                                <a href="#"
-                                   style="background-color: #FFFFFF; background-image: none; font-size: 16px;"
-                                   th:each="actor : ${directoresActores.value}"
-                                   th:text="${actor.nombres} + ' ' + ${actor.apellidos}"></a>
-                        </span>
-                        </p>
-
-                    </div>
-                    -->
+                </div>
+            </div>
 
             <!-- FOTOS -->
             <section class="mt-5 pb-5" style="background-color: #2b2b31">
@@ -313,93 +274,71 @@
 
             <script>
 
-                function aumentodisminucionPrecio(valor, id) {
-                    var costoBoleto = parseInt(document.getElementById('costoinput'+id).value, 10);
-                    var costoTotal = costoBoleto*valor;
-                    document.getElementById('costo'+id).textContent = 'S/ ' + costoTotal.toFixed(2);
-                }
+                // Elementos del input (# Boletos)
+                let inputTotal = document.getElementById("entradas")
+                let btnSuma = document.getElementsByClassName("boton-suma")[0]
+                let btnResta = document.getElementsByClassName("boton-resta")[0]
 
-                function increaseValue(id) {
-                    var ida = id.value;
-                    console.log(ida)
-                    var value = parseInt(document.getElementById('number'+ida).value, 10);
-                    value = isNaN(value) ? 0 : value;
+                // Elementos del Select (Funciones)
+                let select = document.getElementById("funcion-seleccionada")
+                let optElegida;
 
-                    var maximo = document.getElementById('number'+ida).max;
-                    if (value < maximo) {
-                        value++;
-                    }
-                    document.getElementById('number'+ida).value = value;
-                    document.getElementById('cantidadBoletos').value = value;
-                    document.getElementById('numero'+ida).textContent = value;
-                    aumentodisminucionPrecio(value, ida);
-                }
+                function seleccionFuncion(boton,id) {
 
-                function decreaseValue(id) {
-                    var ida = id.value;
-                    console.log(ida)
-                    var value = parseInt(document.getElementById('number'+ida).value, 10);
-                    value = isNaN(value) ? 0 : value;
-                    value < 1 ? value = 1 : '';
-                    var maximo = document.getElementById('number'+ida).min;
-                    if (value > maximo) {
-                        value--;
-                    }
-                    document.getElementById('number'+ida).value = value;
-                    document.getElementById('cantidadBoletos').value = value;
-                    document.getElementById('numero'+ida).textContent = value;
-                    aumentodisminucionPrecio(value, ida);
-                }
+                    // Marca en el select la opción elegida
+                    let opciones = select.children;
 
-                function seleccionSede(selectObject) {
-                    var value = selectObject.value;
-
-                    if (value == "") {
-                        document.getElementById("mostrarSelect").style.display = 'none';
-                        document.getElementById("selectDefecto").style.display = 'block';
-                        document.getElementById("funcionesDeLaSede").style.display = 'none';
-                        document.getElementById("cantidadBoletos").value = 0;
-                    } else {
-                        document.getElementById("mostrarSelect").style.display = 'block';
-                        // document.getElementById("funcionesDeLaSede").style.display = 'block';
-                        document.getElementById(value).style.display = 'block';
-                        document.getElementById("selectDefecto").style.display = 'none';
+                    for (let ii = 0; ii<opciones.length; ii++) {
+                        if(opciones[ii].value == id){
+                            optElegida = opciones[ii];
+                            opciones[ii].selected = "selected";
+                            break;
+                        }
                     }
 
-                }
-
-                function seleccionFuncion(idFuncion) {
-                    var id = idFuncion.value;
-                    if (id == "") {
-                        document.getElementById("funcionesDeLaSede").style.display = 'none';
-                        document.getElementById("cantidadBoletos").value = 0;
-                    } else {
-                        document.getElementById("funcionesDeLaSede").style.display = 'block';
-                        document.getElementById(id).style.display = 'block';
-
-                        var cantidadasistentes = document.getElementById("cantidadasistentes" + id).value;
-                        var stockentradas = document.getElementById("stockentradas" + id).value;
-                        var boletosrestantes = stockentradas - cantidadasistentes;
-                        document.getElementById("number"+id).max = boletosrestantes;
-                        // document.getElementById("number"+id).removeAttribute('disabled');
-                        // document.getElementById("cantidadasistentes"+id).removeAttribute('disabled');
-                        // document.getElementById("stockentradas"+id).removeAttribute('disabled');
-                        document.getElementById("cantidadBoletos").value = 1;
-                        document.getElementById("boletosRestantes" + id).innerHTML = "<h1 class=\"home__title\" style=\"text-transform: none; font-size: 20px\">Boletos restantes: " + boletosrestantes + " </h1>";
+                    // Cambia el estado de botón
+                    let btnSelected = document.getElementsByClassName("selected")
+                    if (btnSelected.length > 0){
+                        btnSelected[0].classList.toggle("selected")
                     }
+                    boton.classList.toggle("selected")
+
+                    $("#divCompra").show(500)
+
+                    $("#costo").html("Precio Por Entrada: S/" + optElegida.dataset.precio);
+                    $("#boletosRestantes").html("Boletos restantes: " + optElegida.dataset.stock);
+
+                    inputTotal.max = optElegida.dataset.stock;
+                    hallarCosto();
                 }
 
-                function validacionsubmit() {
-                    var selectSede = document.getElementById("sedes").value; //Validar que sea diferente de ""
-                    var cantidadBoletos = document.getElementById("cantidadBoletos").value; //Validar que sea diferente de 0
-
-                    if (selectSede == "" || cantidadBoletos == 0) {
-                        return false;
+                // Disminuye la cantidad
+                btnResta.addEventListener("click", function(){
+                    if(inputTotal.value != 1){
+                        inputTotal.value -= 1;
                     }
+                    hallarCosto();
+                })
+
+                // Aumenta la cantidad
+                btnSuma.addEventListener("click", function(){
+                    inputTotal.value = parseInt(inputTotal.value)+1;
+                    hallarCosto();
+                })
+
+                function hallarCosto(){
+                    let numEntradas = inputTotal.value;
+                    let costo = parseFloat(optElegida.dataset.precio);
+
+                    $("#total").html("Total: S/" + costo*numEntradas);
                 }
 
+                function reservar(){
+                    let form = document.getElementById("form-compra")
+                    form.action = '/reserva'
+                    form.submit()
+                }
             </script>
-
         </div>
     </body>
 </html>

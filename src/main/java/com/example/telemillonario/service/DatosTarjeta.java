@@ -12,11 +12,12 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
 @Setter
-public class DatosTarjeta {
+public class DatosTarjeta implements Serializable {
 
     @Size(max = 19, message = "La tarjeta no puede exceder los 16 caracteres")//considerar los guiones intermedios
     @NotEmpty(message = "El numero de tarjeta no puede estar vacio")
@@ -26,7 +27,6 @@ public class DatosTarjeta {
     @NotEmpty(message = "Los nombres no pueden estar vacíos")
     private String nombresTitular;//nombre Mastercard,Visa,Diners Club
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
     @NotEmpty(message = "La fecha no puede estar vacio")
     private String fechaVencimiento;//Formato p.e 06/25
 
@@ -34,7 +34,4 @@ public class DatosTarjeta {
     @NotEmpty(message = "El codigo de seguridad no puede estar vacio")
     private String codigoSeguridad;//CVV p.e 986
 
-    @Email(message = "Debe tener formato de correo electronico")
-    @NotEmpty(message = "El correo de usuario no puede estar vacio")
-    private String correo;//Correo Avl28@outlook.com.pe
 }

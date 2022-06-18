@@ -31,7 +31,6 @@ public class DniAPI {
         HttpURLConnection http = (HttpURLConnection)con;
         http.setRequestMethod("POST");
         http.setDoOutput(true);
-
         byte[] out = ("{\"token\":\"sn2eTvYqJOzRpqSCBzponSxv6Gj3x15L9M4u/09SLIE=\",\"sNroDocumento\":"+DNI+"}").getBytes(StandardCharsets.UTF_8);
         int length = out.length;
 
@@ -41,7 +40,6 @@ public class DniAPI {
         try(OutputStream os = http.getOutputStream()) {
             os.write(out);
         }
-
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(http.getInputStream(),"utf-8"));
         JSONTokener tokener = new JSONTokener(bufferedReader);
         JSONObject json = new JSONObject(tokener);

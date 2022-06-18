@@ -58,7 +58,7 @@
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
                                             <li><a th:href="@{/perfil}">Perfil</a></li>
-                                                <li><a th:href="@{/historial}">Historial</a></li>
+                                                <li><a th:href="@{/historialPrueba}">Historial</a></li>
                                             <li><a href="#" onclick="document.getElementById('form-logout').submit()">
                                                 Cerrar Sesión</a></li>
                                         </ul>
@@ -139,7 +139,7 @@
                                     </li>
 
                                     <li class="header__nav-item">
-                                        <a th:href="@{/operador/reportes}" class="header__nav-link"
+                                        <a th:href="@{/operador/funciones/reportes}" class="header__nav-link"
                                            th:classappend="${seccion=='reportes' ? 'header__nav-link--active' : ''}">Reportes</a>
                                     </li>
 

@@ -258,7 +258,12 @@ public class ObraAdminController {
                 Obra obraCreada=obraRepository.findById(obra.getId()).get();
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);
                 if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =0;
+                    Integer i=fotoRepository.NummaxFotoObra(obra.getId());
+                    if(i==null){
+                        i=0;
+                    }else{
+                        i=i+1;
+                    }
                     for(MultipartFile img : imagenes){
                         System.out.println("Nombre: " + img.getOriginalFilename());
                         System.out.println("Tipo: " + img.getContentType());

@@ -1,45 +1,102 @@
 package com.example.telemillonario.entity;
 
-import com.example.telemillonario.validation.Elenco;
-import com.example.telemillonario.validation.Operador;
-import com.example.telemillonario.validation.Usuario;
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 
-@Getter
-@Setter
 @Entity
-public class Pago {
-
+@Table(name = "pago")
+public class Pago implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
     @Column(name = "estado")
-    private String estado;
+    private Integer estado;
 
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "idtarjeta")
-    private int idTarjeta;//Aca va la entidad tarjeta
+    private Integer idtarjeta;
 
-    @Column(name = "numerotarjeta")
-    private String numeroTarjeta;
+    @Column(name = "numerotarjeta", length = 100)
+    private String numerotarjeta;
 
     @Column(name = "fechapago")
-    private LocalDate fechaPago;
+    private Instant fechapago;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idcompra")
-    private Compra idCompra;
+    private Compra idcompra;
 
-    @Column(name = "qrlink")
-    private String qr; //se pondra como arreglo de bytes?
+    @Column(name = "qrlink", length = 400)
+    private String qrlink;
 
-    @Column(name = "codigo")
+    @Column(name = "codigo", length = 400)
     private String codigo;
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getQrlink() {
+        return qrlink;
+    }
+
+    public void setQrlink(String qrlink) {
+        this.qrlink = qrlink;
+    }
+
+    public Compra getIdcompra() {
+        return idcompra;
+    }
+
+    public void setIdcompra(Compra idcompra) {
+        this.idcompra = idcompra;
+    }
+
+    public Instant getFechapago() {
+        return fechapago;
+    }
+
+    public void setFechapago(Instant fechapago) {
+        this.fechapago = fechapago;
+    }
+
+    public String getNumerotarjeta() {
+        return numerotarjeta;
+    }
+
+    public void setNumerotarjeta(String numerotarjeta) {
+        this.numerotarjeta = numerotarjeta;
+    }
+
+    public Integer getIdtarjeta() {
+        return idtarjeta;
+    }
+
+    public void setIdtarjeta(Integer idtarjeta) {
+        this.idtarjeta = idtarjeta;
+    }
+
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

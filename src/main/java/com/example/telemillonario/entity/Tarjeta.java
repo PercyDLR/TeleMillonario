@@ -1,11 +1,14 @@
 package com.example.telemillonario.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "genero")
-public class Genero implements Serializable {
+@Table(name = "tarjeta")
+public class Tarjeta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

@@ -1,8 +1,10 @@
 package com.example.telemillonario.controller;
 
 
+import com.example.telemillonario.entity.Compra;
 import com.example.telemillonario.entity.Persona;
 import com.example.telemillonario.entity.Rol;
+import com.example.telemillonario.repository.CompraRepository;
 import com.example.telemillonario.repository.FotoRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.repository.RolRepository;
@@ -65,6 +67,9 @@ public class LoginController {
     @Autowired
     FotoRepository fotoRepository;
 
+    @Autowired
+    CompraRepository compraRepository;
+
     @GetMapping("/list")
     public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session, RedirectAttributes redirectAttributes,HttpServletRequest request){
         OAuth2AuthorizedClient client = auth2AuthorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(),authentication.getName());
@@ -105,7 +110,14 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginForm(){
+    public String loginForm(HttpServletRequest request){
+
+        //Permite regresar a la página anterior
+        String urlAnterior = request.getHeader("Referer");
+        if(urlAnterior!=null){
+            request.getSession().setAttribute("urlAnterior", urlAnterior);
+        }
+
         return "login/signin";
     }
 
@@ -119,6 +131,15 @@ public class LoginController {
     public String redirectByRole(Authentication auth, HttpSession session){
 
         Persona persona = null;
+        String urlAnterior = "/";
+
+        // Obtiene la URL anterior y la quita de Sesión
+        if(session.getAttribute("urlAnterior") != null){
+            urlAnterior = (String) session.getAttribute("urlAnterior");
+            session.removeAttribute("urlAnterior");
+        }
+
+
         if (session.getAttribute("usuario") == null){
             persona = personaRepository.findByCorreo(auth.getName());
             session.setAttribute("usuario",persona);
@@ -127,6 +148,7 @@ public class LoginController {
         }
 
         switch(persona.getIdrol().getNombre()){
+
             case "Administrador":
                 return "redirect:/admin/sedes";
             case "Operador":
@@ -140,7 +162,9 @@ public class LoginController {
                 }
 
                 session.setAttribute("fotoPerfil",fotoPerfil);
-                return "redirect:/";
+
+                //Se regresa a la anterior url sólo si es usuario
+                return "redirect:" + urlAnterior;
         }
     }
 
@@ -187,11 +211,11 @@ public class LoginController {
 
 
         DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
-        /*
+        boolean errDNI = true;
         //Verificamos si existe el dni
         if(datosPersona.getSuccess().equalsIgnoreCase("true")){
             //pasamos a mayuscula los nombres apellidos de la persona que se registro
-            String nombresUpperCase = usuario.getNombres().toUpperCase();
+            /*String nombresUpperCase = usuario.getNombres().toUpperCase();
             String apellidosUpperCase = usuario.getApellidos().toUpperCase();
             String nombresApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
 
@@ -200,21 +224,22 @@ public class LoginController {
 
             if(!nombresApellidosUpperCase.equals(nombresApellidosAPI)){
                 model.addAttribute("errDniNoCorrespondePersona", 1);
-            }
+            }*/
+            errDNI = false;
         }
         else{
-            model.addAttribute("errDni", 1);
-        }*/
-        if(!datosPersona.getSuccess().equalsIgnoreCase("true")){
-            model.addAttribute("errDni", 1);
+            model.addAttribute("errDni", errDNI);
         }
+        /*if(!datosPersona.getSuccess().equalsIgnoreCase("true")){
+            model.addAttribute("errDni", errDNI);
+        }*/
 
-        if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento){
+        if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
             }
 
-            return "/login/signup";
+            return "login/signup";
         } else {
 
             //generamos su bcript de contraseña

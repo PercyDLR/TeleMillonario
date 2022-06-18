@@ -25,8 +25,9 @@
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
-                                    <th>Sede y sala</th>
-                                    <th>Fecha y hora de inicio</th>
+                                    <th>Sede</th>
+                                    <th>Sala</th>
+                                    <th>Fecha de la funcion</th>
                                     <th>Obra</th>
                                     <th>Estado</th>
                                     <th></th>
@@ -35,56 +36,83 @@
                                 </tr>
                             </thead>
                             <!--Aqui hacer el th:each. Agregar tmb en el i para el i.index-->
-                            <tbody>
+                            <tbody th:each="compras : ${historialCompras}">
                                 <!--cambiar el id por heading${i.index+1}}-->
-                                <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle" th:each="compras : ${historialCompras}">
-                                    <td class="align-middle" style="padding-bottom: 9px;" th:text="${compras.getFuncion().getIdsala().getIdsede().getNombre() + ' Sala '+ compras.getFuncion().getIdsala().getNumero()}"></td>
-                                    <td class="align-middle" style="padding-bottom: 9px;" th:text="${compras.getFuncion().getFecha() + ' '+ compras.getFuncion().getInicio()}"></td>
-                                    <td class="align-middle" style="padding-bottom: 9px;" th:text="${compras.getFuncion().getIdobra().getNombre()}"></td>
-                                    <td class="align-middle" style="padding-bottom: 9px;"><span class="badge text-bg-success" th:if="${compras.getEstado() == 1}">Vigente</span></td>
-                                    <td class="align-middle" style="padding-bottom: 9px;"><span class="badge text-bg-success" th:if="${compras.getEstado() == 0}">Asistido</span></td>
+                                <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle">
+                                    <td class="align-middle" style="padding-bottom: 9px;"
+                                        th:text="${compras.getFuncion().getIdsala().getIdsede().getNombre()}"></td>
+                                    <td class="align-middle" style="padding-bottom: 9px;"
+                                        th:text="|Sala ${compras.getFuncion().getIdsala().getNumero()}|"></td>
+                                    <td class="align-middle" style="padding-bottom: 9px;"
+                                        th:text="${compras.getFuncion().getFecha()}"></td>
                                     <td class="align-middle" style="padding-bottom: 9px;">
-                                        <button type="button" class="btn btn-danger" th:href="@{/borrarCompra +'?idCompra=' +compras.getid()}">Cancelar Compra</button>
+                                        <a th:href="@{'/cartelera/DetallesObra?id=' + ${compras.funcion.idobra.id}}" th:text="${compras.getFuncion().getIdobra().getNombre()}" style="color: #FFFFFF"></a>
+                                    </td>
+
+                                    <td class="align-middle" style="padding-bottom: 9px;">
+                                        <span class="badge bg-warning text-dark"
+                                              th:if="${compras.estado eq 'Asistido'}"
+                                              th:text="${compras.estado}">Asistido</span>
+                                        <span class="badge bg-danger" th:if="${compras.estado eq 'Cancelado'}"
+                                              th:text="${compras.estado}">Cancelado</span>
+                                        <span class="badge bg-success" th:if="${compras.estado eq 'Vigente'}"
+                                              th:text="${compras.estado}">Vigente</span>
+                                    </td>
+
+                                    <td class="align-middle" style="padding-bottom: 9px;">
+                                        <button type="button" class="btn btn-danger" style="text-align: center"
+                                                th:disabled="${(compras.estado eq 'Cancelado') || (compras.estado eq 'Asistido')}">
+                                            <a th:href="@{'/actualizarEstadoCompra?id='+${compras.id}}" style="color: #FFFFFF">
+                                                Cancelar
+                                            </a>
+                                        </button>
                                     </td>
                                     <td class="align-middle" style="padding-bottom: 9px;">
-                                        <button type="button" class="btn btn-info" disabled>Calificar Obra</button>
+                                        <button type="submit" class="btn btn-info"
+                                                th:disabled="${(compras.estado eq 'Cancelado') || (compras.estado eq 'Vigente')}">
+                                            <a th:href="@{'/calificarObra?id='+${compras.funcion.id}}" style="color: #FFFFFF">
+                                                Calificar
+                                            </a>
+                                        </button>
                                     </td>
                                     <td class="align-middle" style="padding-bottom: 9px;">
                                         <a class="btn btn-link" style="color: #FFFFFF">
-                                            <!--cambiar el collapse por collapse${i.index+1}}-->
                                             <i style="font-size: 20px;" class="bi bi-three-dots"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="12" class="hiddenRow" style="padding-left: 0px;padding-right: 0px;padding-top: 0px; padding-bottom: 0px;">
+                                    <td colspan="12" class="hiddenRow"
+                                        style="padding-left: 0px;padding-right: 0px;padding-top: 0px; padding-bottom: 0px;">
                                         <div class="accordian-body collapse" id="demo1">
                                             <table class="table table-striped table-dark">
                                                 <thead>
                                                     <tr>
-                                                        <th style="padding-bottom: 9px;">Duración</th>
-                                                        <th style="padding-bottom: 9px;">Restricción de Edad</th>
-                                                        <th style="padding-bottom: 9px;">Géneros</th>
-                                                        <th style="padding-bottom: 9px;">Calificación</th>
+                                                        <th style="padding-bottom: 9px;">Boletos comprados</th>
+                                                        <th style="padding-bottom: 9px;">Costo total</th>
+                                                        <th style="padding-bottom: 9px;">Hora de inicio</th>
+                                                        <th style="padding-bottom: 9px;">Hora de fin</th>
+                                                        <th style="padding-bottom: 9px;">Duracion</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr th:each="compe : ${historialCompras}">
-                                                        <td class="align-middle" style="padding-bottom: 9px;" th:text="${compe.getFuncion().getFin() - compe.getFuncion().getInicio}"></td>
-                                                        <td class="align-middle" style="padding-bottom: 9px;">
-                                                            <ul class="card__list">
-                                                                <li th:if="${compe.getFuncion().getIdobra().getRestriccionedad() == 0}">Todo Público</li>
-                                                                <li th:if="${compe.getFuncion().getIdobra().getRestriccionedad() == 1}">16+</li>
-                                                            </ul>
-                                                        </td>
-                                                        <td class="align-middle" style="padding-bottom: 9px;" th:each="generos : ${listaGeneros}" th:if="${generos.getIdobra() == compe.getFuncion().getIdobra()}" th:text="${generos.getIdgenero().getNombre()}"></td>
-                                                        <td class="align-middle" style="padding-bottom: 9px;"><span class="card__rate" th:text="${compe.getFuncion().getIdobra().getCalificacion()}"><i class="icon ion-ios-star"></i></span></td>
+                                                    <tr>
+                                                        <td class="align-middle" style="padding-bottom: 9px;"
+                                                            th:text="${compras.cantidad}"></td>
+                                                        <td class="align-middle" style="padding-bottom: 9px;"
+                                                            th:text="|S/${compras.montoTotal}|"></td>
+                                                        <td class="align-middle" style="padding-bottom: 9px;"
+                                                            th:text="${compras.funcion.inicio}"></td>
+                                                        <td class="align-middle" style="padding-bottom: 9px;"
+                                                            th:text="${compras.funcion.fin}"></td>
+                                                        <td class="align-middle" style="padding-bottom: 9px;"
+                                                            th:text="${duracionFuncioncompra.get(compras)}"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </td>
-                                    </tr>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

@@ -2,12 +2,13 @@ package com.example.telemillonario.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 @Table(name = "funcion")
-public class Funcion {
+public class Funcion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

@@ -115,5 +115,34 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
     @Query(nativeQuery = true,value = "SELECT * FROM fotos group by idobra HAVING estado = 1")
     List<Foto> unaFotoPorObra();
 
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) and (numero = 0);")
+    Foto fotoActor(Integer idpersona);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) order by numero;")
+    List<Foto> fotosActor(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) and (numero = 0);")
+    Foto fotoDirector(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idpersona = ?1) order by numero;")
+    List<Foto> fotosDirector(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idsede = ?1) and (numero = 0);")
+    Foto fotoSede(Integer idpersona);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.fotos\n" +
+            "where (estado = 1) and (idsede = ?1) order by numero;")
+    List<Foto> fotosSede(Integer idsede);
+
+    @Query(nativeQuery = true, value = "SELECT Max(numero) FROM telemillonario.fotos where idsede=?1 and estado=1 and idobra is null")
+    Integer NummaxFotoSede(Integer idsede);
+
+
+    @Query(nativeQuery = true, value = "SELECT Max(numero) FROM telemillonario.fotos where idobra=?1 and estado=1 and idsede is null and idpersona is null")
+    Integer NummaxFotoObra(Integer idobra);
 }
