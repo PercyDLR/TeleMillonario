@@ -508,7 +508,8 @@ public class FuncionesController {
                         break;
                     default:
                         System.out.println("Ha ocurrido un problema");
-                        break;
+                        attr.addFlashAttribute("msg","Se envió un mes inválido");
+                        return "redirect:/operador/funciones/reportes";
                 }
                 if(funcionMasVistaxMes.isPresent()&&funcionMenosVistaxMes.isPresent()&& funcionMejorCalificadaxMes.isPresent() && funcionesVistasxMes.isPresent()){
                     //si se encontró todo lo solicitado segun mes
@@ -548,8 +549,14 @@ public class FuncionesController {
                     attr.addFlashAttribute("msg","Se envió un año con formato incorrecto");
                     return "redirect:/operador/funciones/reportes";
                 }
+            }else{
+                //Se envio una periodicidad inválida
+                attr.addFlashAttribute("msg","Se envió una periodicad inválida");
+                return "redirect:/operador/funciones/reportes";
             }
         }
         return "/Operador/reportes";
     }
 }
+
+

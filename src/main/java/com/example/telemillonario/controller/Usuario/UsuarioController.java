@@ -960,7 +960,8 @@ public class UsuarioController {
 
 
     @PostMapping("/compraReservasCarrito")
-    private String comprarReservasDelCarrito(Compra reserva,DatosTarjeta datosTarjeta,RedirectAttributes redirectAttributes, HttpSession session){
+    private String comprarReservasDelCarrito(Compra reserva,DatosTarjeta datosTarjeta,
+                                             RedirectAttributes redirectAttributes, HttpSession session){
         Persona persona = (Persona) session.getAttribute("usuario");
         LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
 
