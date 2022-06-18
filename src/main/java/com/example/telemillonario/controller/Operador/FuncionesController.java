@@ -1,5 +1,6 @@
 package com.example.telemillonario.controller.Operador;
 
+import com.example.telemillonario.dto.EstadisticaFuncionDto;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -412,7 +414,7 @@ public class FuncionesController {
     }
 
     @GetMapping(value = "/reportes")
-    public String obtenerEstadisticas(@RequestParam("periodicidad") Optional<String> opt_periodicidad,@RequestParam("periodo") Optional<String> opt_periodo, HttpSession session,Model model){
+    public String obtenerEstadisticas(@RequestParam("periodicidad") Optional<String> opt_periodicidad,@RequestParam("periodo") Optional<String> opt_periodo, HttpSession session,Model model,RedirectAttributes attr){
         Persona persona = (Persona) session.getAttribute("usuario");
         //Se obtiene la sede desde donde se realizarán todas las consultas para el reporte
         int sede = persona.getIdsede().getId();
@@ -425,8 +427,129 @@ public class FuncionesController {
             model.addAttribute("funcionesPorcentajeAsistencia",funcionRepository.obtenerFuncionesxAsistenciaxSede(sede));
             model.addAttribute("actoresMejorCalificados",funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
             model.addAttribute("directoresMejorCalificados",funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
+        }else{
+            if(opt_periodicidad.get().equalsIgnoreCase("Mensual")){
+                Optional<EstadisticaFuncionDto> funcionMasVistaxMes = null;
+                Optional<EstadisticaFuncionDto> funcionMenosVistaxMes = null;
+                Optional<EstadisticaFuncionDto> funcionMejorCalificadaxMes = null;
+                Optional<List<EstadisticaFuncionDto>> funcionesVistasxMes = null;
+                switch (opt_periodo.get()){
+                    case "Enero":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,1);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,1);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,1);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,1);
+                        break;
+                    case "Febrero":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,2);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,2);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,2);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,2);
+                        break;
+                    case "Marzo":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,3);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,3);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,3);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,3);
+                        break;
+                    case "Abril":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,4);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,4);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,4);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,4);
+                        break;
+                    case "Mayo":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,5);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,5);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,5);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,5);
+                        break;
+                    case "Junio":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,6);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,6);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,6);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,6);
+                        break;
+                    case "Julio":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,7);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,7);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,7);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,7);
+                        break;
+                    case "Agosto":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,8);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,8);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,8);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,8);
+                        break;
+                    case "Setiembre":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,9);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,9);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,9);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,9);
+                        break;
+                    case "Octubre":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,10);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,10);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,10);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,10);
+                        break;
+                    case "Noviembre":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,11);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,11);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,11);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,11);
+                        break;
+                    case "Diciembre":
+                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,12);
+                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,12);
+                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,12);
+                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,12);
+                        break;
+                    default:
+                        System.out.println("Ha ocurrido un problema");
+                        break;
+                }
+                if(funcionMasVistaxMes.isPresent()&&funcionMenosVistaxMes.isPresent()&& funcionMejorCalificadaxMes.isPresent() && funcionesVistasxMes.isPresent()){
+                    //si se encontró todo lo solicitado segun mes
+                    model.addAttribute("funcionMasVista",funcionMasVistaxMes.get());
+                    model.addAttribute("funcionMenosVista",funcionMenosVistaxMes.get());
+                    model.addAttribute("funcionMejorCalificada",funcionMejorCalificadaxMes.get());
+                    model.addAttribute("funcionesPorcentajeAsistencia",funcionesVistasxMes.get());
+                    model.addAttribute("actoresMejorCalificados",funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
+                    model.addAttribute("directoresMejorCalificados",funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
+                }else{
+                    //En caso no haya encontrado nada
+                    attr.addFlashAttribute("msg","No se encontraron estadisticas de las funciones para el mes solicitado");
+                    return "redirect:/operador/funciones/reportes";
+                }
+            }else if(opt_periodicidad.get().equalsIgnoreCase("Anual")){
+                try{
+                    int anio = Integer.parseInt(opt_periodo.get());
+                    Optional<EstadisticaFuncionDto> funcionMasVistaxAnio = funcionRepository.obtenerFuncionMasVistaxAnioxSede(sede,anio);
+                    Optional<EstadisticaFuncionDto> funcionMenosVistaxAnio = funcionRepository.obtenerFuncionMenosVistaxAñoxSede(sede,anio);
+                    Optional<EstadisticaFuncionDto> funcionMejorCalificadaxAnio = funcionRepository.obtenerFuncionMejorCalificadaxAnioxSede(sede,anio);
+                    Optional<List<EstadisticaFuncionDto>> funcionesVistasxAnio = funcionRepository.obtenerFuncionesMejorCalificadasxAnioxSede(sede,anio);
+                    if(funcionesVistasxAnio.isPresent()&&funcionMasVistaxAnio.isPresent()&&funcionMejorCalificadaxAnio.isPresent()&& funcionMenosVistaxAnio.isPresent()){
+                        //si se encontró todo lo solicitado segun año
+                        model.addAttribute("funcionMasVista",funcionMasVistaxAnio.get());
+                        model.addAttribute("funcionMenosVista",funcionMenosVistaxAnio.get());
+                        model.addAttribute("funcionMejorCalificada",funcionMejorCalificadaxAnio.get());
+                        model.addAttribute("funcionesPorcentajeAsistencia",funcionesVistasxAnio.get());
+                        model.addAttribute("actoresMejorCalificados",funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
+                        model.addAttribute("directoresMejorCalificados",funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
+                    }else{
+                        //en caso no se encontro nada
+                        attr.addFlashAttribute("msg","No se encontraron estadisticas de las funciones para el año solicitado");
+                        return "redirect:/operador/funciones/reportes";
+                    }
+                }catch(Exception e){
+                    //en caso haya un error en parseo
+                    attr.addFlashAttribute("msg","Se envió un año con formato incorrecto");
+                    return "redirect:/operador/funciones/reportes";
+                }
+            }
         }
-
         return "/Operador/reportes";
     }
 }
