@@ -608,9 +608,9 @@ public class UsuarioController {
     }*/
 
     @PostMapping("/pago")
-    public String pagoDeCompra(@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
-                               @RequestParam(value = "idFuncion") String idFuncionStr,
-                               @RequestParam(value = "cantBoletos") String cantBoletosStr,RedirectAttributes redirectAttributes) {
+    public String pagoDeCompra(@RequestParam(value = "idFuncion") String idFuncionStr,
+                               @RequestParam(value = "cantBoletos") String cantBoletosStr,@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
+                               RedirectAttributes redirectAttributes) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
         int idFuncion = 0;
@@ -706,7 +706,7 @@ public class UsuarioController {
                         String nombre = coderService.codificar(datosTarjeta.getNombresTitular());
                         String expiracion = coderService.codificar(datosTarjeta.getFechaVencimiento());
                         String cvv = coderService.codificar(datosTarjeta.getCodigoSeguridad());
-                        String correo = coderService.codificar(datosTarjeta.getCorreo());
+                        String correo = coderService.codificar(persona.getCorreo());
                         String url = "http://20.90.180.72/validacion/verificar?numero="+numero+"&nombre="+nombre+
                                 "&expiracion="+expiracion+"&cvv="+cvv+"&correo="+correo;
                         ResponseEntity<ValidacionTarjetaDto> response = restTemplate.getForEntity(url,ValidacionTarjetaDto.class);
@@ -717,6 +717,7 @@ public class UsuarioController {
                             todoOK=false;
                         }
                         if (todoOK) {
+                            System.out.println("--------------------------------------------");
                             double precioEntradaFuncion = funcion.getPrecioentrada();
                             double montoTotal = precioEntradaFuncion * cantBoletos;
                             int cantidadAsistentes = funcion.getCantidadasistentes();
@@ -761,21 +762,21 @@ public class UsuarioController {
                             String qr_link = response_for_qr.getBody().getUrl();//->Se envia a la vista
                             //Se llena la tabla de pago
                             Pago pago = new Pago();
-                            pago.setEstado("1"); //estado->1
+                            pago.setEstado(1); //estado->1
                             if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Visa")){
-                                pago.setIdTarjeta(1);
+                                pago.setIdtarjeta(1);
                             }else if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Mastercard")){
-                                pago.setIdTarjeta(2);
-                            }else if(datosTarjeta.getNumeroTarjeta().equalsIgnoreCase("Diners Club")){
-                                pago.setIdTarjeta(3);
+                                pago.setIdtarjeta(2);
+                            }else if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Diners Club")){
+                                pago.setIdtarjeta(3);
                             }else{
                                 System.out.println("Ha sucedido algo malo");
                             }
 
-                            pago.setNumeroTarjeta(datosTarjeta.getNumeroTarjeta());
-                            pago.setFechaPago(LocalDate.now());
-                            pago.setIdCompra(compra);
-                            pago.setQr(coderService.decodificar(response_for_qr.getBody().getUrl()));
+                            pago.setNumerotarjeta(datosTarjeta.getNumeroTarjeta());
+                            pago.setFechapago(Instant.now());
+                            pago.setIdcompra(compra);
+                            pago.setQrlink(coderService.decodificar(response_for_qr.getBody().getUrl()));
                             pago.setCodigo(numero_operacion);
                             pagoRepository.save(pago);
 
@@ -788,11 +789,8 @@ public class UsuarioController {
                                     + "<p>- Fecha:" + compra.getFuncion().getFecha() + " " + "<p>"
                                     + "<p>- Hora de inicio:" + compra.getFuncion().getInicio() + " " + "<p>"
                                     + "<p>- Hora fin:" + compra.getFuncion().getFin() + " " + "<p>"
-                                    + "<p>- Cantidad de boletos: "+ compra.getCantidad() + " " + "<p>";
-                            /*
-                            Falta poner el detalle del pago con el QR -> Eso es mapeado con la ruta al servicio que quiera acceder @Alonso
-                            */
-
+                                    + "<p>- Cantidad de boletos: "+ compra.getCantidad() + " " + "<p>"
+                                    + "<img src="+coderService.decodificar(response_for_qr.getBody().getUrl())+">";
 
                             try {
                                 sendInfoCompraCorreo(compra.getPersona().getCorreo(),content);
@@ -805,7 +803,7 @@ public class UsuarioController {
 
                         } else {
                             redirectAttributes.addFlashAttribute("msg",response.getBody().getMsg());
-                            return "usuario/pagoUsuario";
+                            return "redirect:/compra?idFuncion="+idFuncion+"&cantBoletos"+cantBoletos;
                         }
                     }
                 }
@@ -1005,7 +1003,7 @@ public class UsuarioController {
                  */
 
 
-                Pago pago = new Pago();
+                /*Pago pago = new Pago();
                 pago.setEstado("1"); //Que estado se le va a poner?
                 //Aca va el set del idtarjeta   @Agustin
                 //Aca va el set del numerotarjeta   @Agustin
@@ -1013,7 +1011,7 @@ public class UsuarioController {
                 pago.setIdCompra(reserva);
                 //Aca va el set del codigo QR   @Agustin
                 //Aca va el set del codigo de operacion @Agustin
-                pagoRepository.save(pago);
+                pagoRepository.save(pago);*/
 
                 compraRepository.save(reserva);
 
