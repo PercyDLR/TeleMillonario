@@ -27,7 +27,6 @@ public class DatosTarjeta implements Serializable {
     @NotEmpty(message = "Los nombres no pueden estar vacíos")
     private String nombresTitular;//nombre Mastercard,Visa,Diners Club
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
     @NotEmpty(message = "La fecha no puede estar vacio")
     private String fechaVencimiento;//Formato p.e 06/25
 
@@ -35,7 +34,4 @@ public class DatosTarjeta implements Serializable {
     @NotEmpty(message = "El codigo de seguridad no puede estar vacio")
     private String codigoSeguridad;//CVV p.e 986
 
-    @Email(message = "Debe tener formato de correo electronico")
-    @NotEmpty(message = "El correo de usuario no puede estar vacio")
-    private String correo;//Correo Avl28@outlook.com.pe
 }

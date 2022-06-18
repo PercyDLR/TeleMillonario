@@ -105,9 +105,11 @@
                 <div class="sign__form" style="flex-direction: unset">
                     <div class="row" style="width: 100%">
                         <div id="funciones" class="col-lg-9 col-12">
+                            <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
+                            <div th:if="${reservaEliminada != null}" th:text="${reservaEliminada}" class="alert alert-success" role="alert"></div>
                             <h3 class="home__title mb-3">Reservas</h3>
                             <div id="scroller" class="container">
-                                <div class="row mt-3" th:each="reservas : ${session.carritoDeComprasDeUsuario}">
+                                <div class="row mt-3" th:each="reservas : ${session.carritoDeComprasDeUsuario}" th:if="${reservas.getValue().getEstado() != 'Borrado'}">
                                     <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__cover">
                                             <img th:each="selfie : ${foto}"

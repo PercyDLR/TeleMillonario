@@ -166,7 +166,8 @@
                                     <td th:text="${foto.getIdsede().getIddistrito().getNombre()}">San Miguel</td>
                                     <td th:text="${foto.getIdsede().getDireccion()}">Av. Grau</td>
                                     <td>
-                                        <div th:data-latlong="${foto.getIdsede().getCoordenadas()}" th:id="|map${index.index}|"></div></td>
+<!--                                        <div th:data-latlong="${foto.getIdsede().getCoordenadas()}" th:id="|map${index.index}|"></div></td>-->
+                                        <div style="width: 100%"><iframe width="250" height="200"  th:src="|https://maps.google.com/maps?width=100%25&amp;height=400&amp;hl=en&amp;q=${foto.idsede.direccion}+(ubicacion)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed|"><a href="https://www.gps.ie/wearable-gps/">gps smartwatches</a></iframe></div>
                                     <td>
                                         <button style="cursor: pointer">
                                             <a class="circulo_botones" th:href="@{'/admin/salas'+'?idsede='+ ${foto.getIdsede().getId()}}">
