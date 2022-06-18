@@ -111,19 +111,23 @@
             <div class="container pb-5">
 
                 <form class="sign__form" style="flex-direction: unset" method="get" th:action="@{/compraReservasCarrito}">
-
+                    <!--select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
+                        <div th:each="reservas : ${session.carritoDeComprasDeUsuario}" style="display: none">
+                            <option th:each="helper : ${llavesInvertidas}" th:if="${reservas.getKey().containsValue(helper.getKey()) && reservas.getValue().getEstado().equals('Reservado')}" th:value="${helper.getValue()}"></option>
+                        </div>
+                    </select-->
                     <select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
-                        <option th:each="reservas : ${session.carritoDeComprasDeUsuario}"
-                        th:value="${reservas.value.funcion.id}"></option>
+                        <option th:each="reservas , j: ${session.carritoDeComprasDeUsuario}"
+                                th:if="${reservas.getValue().getEstado().equals('Reservado')}" th:value="${j.index+1}"></option>
                     </select>
-
                     <div class="row" style="width: 100%">
                         <div id="funciones" class="col-lg-9 col-12">
                             <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
                             <div th:if="${reservaEliminada != null}" th:text="${reservaEliminada}" class="alert alert-success" role="alert"></div>
+                            <div th:if="${ReservasSinStock != null}" th:each="mensaje : ${ReservasSinStock}" th:text="${mensaje}" class="alert alert-danger" role="alert"></div>
                             <h3 class="home__title mb-3">Elija las Reservas a Comprar</h3>
                             <div id="scroller" class="container">
-                                <div class="row mt-3 funcion-container selected" th:each="reservas : ${session.carritoDeComprasDeUsuario}"
+                                <div class="row mt-3 funcion-container selected" th:each="reservas , i: ${session.carritoDeComprasDeUsuario}"
                                      th:if="${reservas.getValue().getEstado() != 'Borrado'}" th:data-id="${reservas.value.funcion.id}">
                                     <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__cover">
@@ -135,7 +139,6 @@
                                             </a>
                                         </div>
                                     </div>
-
                                     <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__content" style="padding: 1px">
                                             <h3 class="card__title">
@@ -180,7 +183,7 @@
                                         </div>
                                         <h1 class="home__title mt-2" style="font-size: 16px; text-transform: none"
                                             th:text="|Total Función: S/${reservas.value.cantidad*reservas.value.funcion.precioentrada}|"></h1>
-                                        <a class="section__btn" style="width: 100%" th:href="@{'/borrarReserva?idReserva=' + ${reservas.value.funcion.id}}">
+                                        <a class="section__btn" style="width: 100%" th:href="@{'/borrarReserva?idReserva=' + ${i.index+1}}">
                                             <i class="bi bi-trash-fill"></i>
                                         </a>
                                     </div>

@@ -28,6 +28,7 @@ import java.util.*;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -402,20 +403,22 @@ public class UsuarioController {
                 Collection<Compra> reservas = carrito.values();
                 ArrayList<String> crucesHorarios = new ArrayList<>();
                 for (Compra reserva : reservas) {
-                    LocalTime inicioReserva = reserva.getFuncion().getInicio();
-                    LocalTime finReserva = reserva.getFuncion().getFin();
-                    LocalDate fechaReserva = reserva.getFuncion().getFecha();
-                    if (fechaReserva.equals(funcion.getFecha())){
-                        boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
-                        boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
+                    if(!reserva.getEstado().equals("Borrado")){
+                        LocalTime inicioReserva = reserva.getFuncion().getInicio();
+                        LocalTime finReserva = reserva.getFuncion().getFin();
+                        LocalDate fechaReserva = reserva.getFuncion().getFecha();
+                        if (fechaReserva.equals(funcion.getFecha())){
+                            boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
+                            boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
 
-                        boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
-                        boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
+                            boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
+                            boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
 
-                        if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
-                            existeCruce = true;
-                            String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                            crucesHorarios.add(mensaje);
+                            if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
+                                existeCruce = true;
+                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                crucesHorarios.add(mensaje);
+                            }
                         }
                     }
                 }
@@ -552,20 +555,22 @@ public class UsuarioController {
                 Collection<Compra> reservas = carrito.values();
                 ArrayList<String> crucesHorarios = new ArrayList<>();
                 for (Compra reserva : reservas) {
-                    LocalTime inicioReserva = reserva.getFuncion().getInicio();
-                    LocalTime finReserva = reserva.getFuncion().getFin();
-                    LocalDate fechaReserva = reserva.getFuncion().getFecha();
-                    if (fechaReserva.equals(funcion.getFecha())){
-                        boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
-                        boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
+                    if(!reserva.getEstado().equals("Borrado")) {
+                        LocalTime inicioReserva = reserva.getFuncion().getInicio();
+                        LocalTime finReserva = reserva.getFuncion().getFin();
+                        LocalDate fechaReserva = reserva.getFuncion().getFecha();
+                        if (fechaReserva.equals(funcion.getFecha())){
+                            boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
+                            boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
 
-                        boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
-                        boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
+                            boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
+                            boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
 
-                        if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
-                            existeCruce = true;
-                            String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                            crucesHorarios.add(mensaje);
+                            if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
+                                existeCruce = true;
+                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                crucesHorarios.add(mensaje);
+                            }
                         }
                     }
                 }
@@ -677,20 +682,22 @@ public class UsuarioController {
                 if(carrito != null){
                     Collection<Compra> reservas = carrito.values();
                     for (Compra reserva : reservas) {
-                        LocalTime inicioReserva = reserva.getFuncion().getInicio();
-                        LocalTime finReserva = reserva.getFuncion().getFin();
-                        LocalDate fechaReserva = reserva.getFuncion().getFecha();
-                        if (fechaReserva.equals(funcion.getFecha())){
-                            boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
-                            boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
+                        if(!reserva.getEstado().equals("Borrado")) {
+                            LocalTime inicioReserva = reserva.getFuncion().getInicio();
+                            LocalTime finReserva = reserva.getFuncion().getFin();
+                            LocalDate fechaReserva = reserva.getFuncion().getFecha();
+                            if (fechaReserva.equals(funcion.getFecha())){
+                                boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
+                                boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
 
-                            boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
-                            boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
+                                boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
+                                boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
 
-                            if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
-                                existeCruce = true;
-                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                                crucesHorarios.add(mensaje);
+                                if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
+                                    existeCruce = true;
+                                    String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                    crucesHorarios.add(mensaje);
+                                }
                             }
                         }
                     }
@@ -883,6 +890,18 @@ public class UsuarioController {
             model.addAttribute("listaGeneros",listaGeneros);
             model.addAttribute("foto",listaFotos);
 
+            /*LinkedHashMap<String,Integer> llaveInvertida = new LinkedHashMap<>();
+            Set<Map<Integer,String>> lla = carrito.keySet();
+            int indice = 1;
+            for(Map<Integer,String> llaves : lla){
+                if(llaves.get(indice) != null){
+                    String fechaHora = llaves.get(indice);
+                    llaveInvertida.put(fechaHora,indice);
+                }
+                indice++;
+            }
+            model.addAttribute("llavesInvertidas",llaveInvertida);*/
+
             if (reservasBorrarCarrito.size() == 0) {
                 return "usuario/carrito/carritoComprasUsuario";
             } else {
@@ -970,7 +989,8 @@ public class UsuarioController {
             redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar por lo menos una reserva");
             return "redirect:/carritoPrueba";
         }
-
+        System.out.println(listaReservasStr);
+        System.out.println(listaCantidadBoletosStr);
         if(listaReservasStr == null || listaCantidadBoletosStr == null){
             return "redirect:/anErrorHasOcurred";
         }
@@ -985,13 +1005,11 @@ public class UsuarioController {
 
         ArrayList<Integer> listaReservas = new ArrayList<>();
         ArrayList<Integer> listaCantidadBoletos = new ArrayList<>();
-
         try{
             int valorReserva;
             int valorCantidad;
             for(int i=0;i<reservas.length;i++){
                 valorReserva = Integer.parseInt(reservas[i]);
-
                 if(valorReserva <= 0 || valorReserva>carrito.size()){
                     redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
                     return "redirect:/carritoPrueba";
