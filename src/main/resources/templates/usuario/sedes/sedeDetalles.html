@@ -147,7 +147,10 @@
                     <div class="row">
 
                         <div class="col-12">
-                            <div th:data-latlong="${sede.getCoordenadas()}" id="map0"></div>
+<!--                            <div th:data-latlong="${sede.getCoordenadas()}" id="map0"></div>-->
+                            <div style="width: 100%"><iframe width="1300" height="450"
+                                                             th:src="|https://maps.google.com/maps?width=100%25&amp;height=400&amp;hl=en&amp;q=${sede.direccion}+(ubicacion)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed|">
+                                <a href="https://www.gps.ie/wearable-gps/">gps smartwatches</a></iframe></div>
                         </div>
                     </div>
                 </div>

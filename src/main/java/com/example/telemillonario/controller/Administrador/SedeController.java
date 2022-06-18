@@ -211,7 +211,7 @@ public class SedeController {
                 Sede sedeCreada=sedeRepository.findTopByOrderByIdDesc();
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);
                 if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =1;
+                    int i =0;
                     for(MultipartFile img : imagenes){
                         System.out.println("Nombre: " + img.getOriginalFilename());
                         System.out.println("Tipo: " + img.getContentType());
@@ -258,7 +258,12 @@ public class SedeController {
                 Sede sedeCreada=sedeRepository.findById(sede.getId()).get();
                 System.out.println("\nImágenes a Agregar: " + imagenes.length);
                 if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =1;
+                    Integer i=fotoRepository.NummaxFotoSede(sede.getId());
+                    if(i==null){
+                        i=0;
+                    }else{
+                        i=i+1;
+                    }
                     for(MultipartFile img : imagenes){
                         System.out.println("Nombre: " + img.getOriginalFilename());
                         System.out.println("Tipo: " + img.getContentType());
