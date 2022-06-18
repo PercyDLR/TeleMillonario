@@ -12,12 +12,12 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="sign__content">
-                                <form class="sign__form" th:action="@{/pago}" method="POST">
+                                <form class="sign__form" th:action="@{'/pago'}" method="POST">
                                     <div class="sign__group">
-                                        <input type="text" class="sign__input" name="idFuncion" th:value="${compraEnProceso.getFuncion().getId()}" hidden>
+                                        <input type="text" class="sign__input" id="idFuncion" name="idFuncion" th:value="${compraEnProceso.getFuncion().getId()}" hidden>
                                     </div>
                                     <div class="sign__group">
-                                        <input type="text" class="sign__input" name="cantBoletos" th:value="${compraEnProceso.getCantidad()}" hidden>
+                                        <input type="text" class="sign__input" id="cantBoletos" name="cantBoletos" th:value="${compraEnProceso.getCantidad()}" hidden>
                                     </div>
                                     <div class="sign__group">
                                         <input type="text" class="sign__input" name="numeroTarjeta" placeholder="Número de tarjeta">

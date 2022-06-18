@@ -139,4 +139,10 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "where (estado = 1) and (idsede = ?1) order by numero;")
     List<Foto> fotosSede(Integer idsede);
 
+    @Query(nativeQuery = true, value = "SELECT Max(numero) FROM telemillonario.fotos where idsede=?1 and estado=1 and idobra is null")
+    Integer NummaxFotoSede(Integer idsede);
+
+
+    @Query(nativeQuery = true, value = "SELECT Max(numero) FROM telemillonario.fotos where idobra=?1 and estado=1 and idsede is null and idpersona is null")
+    Integer NummaxFotoObra(Integer idobra);
 }
