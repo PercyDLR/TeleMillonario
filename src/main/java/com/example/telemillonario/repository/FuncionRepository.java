@@ -1,5 +1,7 @@
 package com.example.telemillonario.repository;
 
+import com.example.telemillonario.dto.EstadisticaFuncionDto;
+import com.example.telemillonario.dto.EstadisticasPersonaDto;
 import com.example.telemillonario.entity.Funcion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -66,5 +68,58 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
             "where f.estado=1 and s.idsede=?1 and lower(o.nombre) like %?2% and (o.restriccionedad=?3 or ?3>=2) ")
     List<Funcion> FuncTotalSedeUsuarFiltr( int idsede,String nombre,int restriccion);
 
-
+    //Querys para estadisticas de la funcion
+    //funcion mas vista
+    @Query(nativeQuery = true, value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
+            "inner join sala s on funcion.idsala = s.id\n" +
+            "inner join fotos f on o.id = f.idobra\n" +
+            "where s.idsede=?1 order by pasistencia desc limit 1")
+    EstadisticaFuncionDto obtenerFuncionMasVistaxSede(int idsede);
+    //funcion menos vista
+    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
+            "inner join sala s on funcion.idsala = s.id\n" +
+            "inner join fotos f on o.id = f.idobra\n" +
+            "where s.idsede=?1 order by pasistencia asc limit 1;")
+    EstadisticaFuncionDto obtenerFuncionMenosVistaxSede(int idsede);
+    //funcion mejor calificada
+    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
+            "inner join sala s on funcion.idsala = s.id\n" +
+            "inner join fotos f on o.id = f.idobra\n" +
+            "where s.idsede=?1 order by calificacion desc limit 1")
+    EstadisticaFuncionDto obtenerFuncionMejorCalificadaxSede(int idsede);
+    //funciones agrupadas por el porcentaje de asistencia
+    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid,f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
+            "inner join sala s on funcion.idsala = s.id\n" +
+            "inner join fotos f on o.id = f.idobra\n" +
+            "where s.idsede=?1 and f.ruta = (select fotos.ruta from fotos where fotos.idobra=o.id limit 1) order by pasistencia desc")
+    List<EstadisticaFuncionDto> obtenerFuncionesxAsistenciaxSede(int idsede);
+    //Actores con mejor calificacion de acuerdo a sede
+   @Query(nativeQuery = true,value = "select persona.id as personaid,persona.nombres as nombres,persona.apellidos as apellidos,persona.calificacion as calificacion,f3.ruta as url,s2.id as sedeid from persona\n" +
+           "inner join funcionelenco f on persona.id = f.idpersona\n" +
+           "inner join funcion f2 on f.idfuncion = f2.id\n" +
+           "inner join sala s on f2.idsala = s.id\n" +
+           "inner join sede s2 on s.idsede = s2.id\n" +
+           "inner join fotos f3 on persona.id = f3.idpersona\n" +
+           "where s2.id = ?1 and persona.idrol = 5 and f3.ruta = (select fotos.ruta from fotos where fotos.idpersona=persona.id limit 1) and f2.id = (select funcion.id from funcion\n" +
+           "inner join funcionelenco f on funcion.id = f.idfuncion\n" +
+           "inner join  persona p on f.idpersona = p.id\n" +
+           "inner join sala s on funcion.idsala = s.id\n" +
+           "inner join sede s2 on s.idsede = s2.id\n" +
+           "where p.id = persona.id and p.idrol=5 and s2.id=?1 limit 1) order by persona.calificacion desc")
+   List<EstadisticasPersonaDto> obtenerActoresMejorCalificadosxSede(int sede);
+   //Directores con mejor calificaicon de acuerdo a sede
+   @Query(nativeQuery = true,value = "select persona.id as personaid,persona.nombres as nombres,persona.apellidos as apellidos,persona.calificacion as calificacion,f3.ruta as url,s2.id as sedeid from persona\n" +
+           "inner join funcionelenco f on persona.id = f.idpersona\n" +
+           "inner join funcion f2 on f.idfuncion = f2.id\n" +
+           "inner join sala s on f2.idsala = s.id\n" +
+           "inner join sede s2 on s.idsede = s2.id\n" +
+           "inner join fotos f3 on persona.id = f3.idpersona\n" +
+           "where s2.id = ?1 and persona.idrol = 4 and f3.ruta = (select fotos.ruta from fotos where fotos.idpersona=persona.id limit 1) and f2.id = (select funcion.id from funcion\n" +
+           "inner join funcionelenco f on funcion.id = f.idfuncion\n" +
+           "inner join  persona p on f.idpersona = p.id\n" +
+           "inner join sala s on funcion.idsala = s.id\n" +
+           "inner join sede s2 on s.idsede = s2.id\n" +
+           "where p.id = persona.id and p.idrol=4 and s2.id=?1 limit 1) order by persona.calificacion desc")
+   List<EstadisticasPersonaDto> obtenerDirectoresMejorCalificadosxSede(int sede);
+   //Nota se puede mejorar y optimizar si se considera un parámetro de entrada
  }

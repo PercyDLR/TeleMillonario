@@ -410,4 +410,23 @@ public class FuncionesController {
         }
         return "redirect:/operador/funciones";
     }
+
+    @GetMapping(value = "/reportes")
+    public String obtenerEstadisticas(@RequestParam("periodicidad") Optional<String> opt_periodicidad,@RequestParam("periodo") Optional<String> opt_periodo, HttpSession session,Model model){
+        Persona persona = (Persona) session.getAttribute("usuario");
+        //Se obtiene la sede desde donde se realizarán todas las consultas para el reporte
+        int sede = persona.getIdsede().getId();
+        System.out.println("Id sede"+ sede);
+        //suponiendo que no se han enviado la periodicidad y el periodo
+        if(!opt_periodo.isPresent()&&!opt_periodicidad.isPresent()){
+            model.addAttribute("funcionMasVista",funcionRepository.obtenerFuncionMasVistaxSede(sede));
+            model.addAttribute("funcionMenosVista",funcionRepository.obtenerFuncionMenosVistaxSede(sede));
+            model.addAttribute("funcionMejorCalificada",funcionRepository.obtenerFuncionMejorCalificadaxSede(sede));
+            model.addAttribute("funcionesPorcentajeAsistencia",funcionRepository.obtenerFuncionesxAsistenciaxSede(sede));
+            model.addAttribute("actoresMejorCalificados",funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
+            model.addAttribute("directoresMejorCalificados",funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
+        }
+
+        return "/Operador/reportes";
+    }
 }
