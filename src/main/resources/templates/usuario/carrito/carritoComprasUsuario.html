@@ -30,6 +30,10 @@
                 background-color: #323239;
             }
 
+            .funcion-container.selected:hover{
+                background-color: #45454f;
+            }
+
             #scroller{
                 overflow-x: hidden;
                 overflow-y: auto;
@@ -55,7 +59,10 @@
                 padding-left: 50px;
                 transform: translate(-50%,-50%);
             }
-            .total h1{padding-bottom: 15px}
+            .total h1{
+                padding: 15px 0;
+                width: max-content;
+            }
 
             @media (max-width: 992px){
 
@@ -71,21 +78,19 @@
                     height: 75px;
                     display: flex;
                     background-color: #28282d;
-                    justify-content: center;
-                    padding-inline: 15px;
-                    padding-block: unset;
+                    justify-content: space-around;
+                    padding: 0;
                     transform: none;
                     left: 0;
                     top: unset;
                     bottom: 0;
                 }
                 .total h1{
-                    padding: 0;
+                    padding: 15px;
                     font-size: 1.2rem;
                 }
-                .total a{
-                    margin: 0;
-                    margin-left: auto;
+                .total button{
+                    margin: auto 0;
                 }
                 .total:before {
                     content: '';
@@ -110,19 +115,25 @@
             <div class="container pb-5">
 
                 <form class="sign__form" style="flex-direction: unset" method="get" th:action="@{/compraReservasCarrito}">
+                    <!--select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
+                        <div th:each="reservas : ${session.carritoDeComprasDeUsuario}" style="display: none">
+                            <option th:each="helper : ${llavesInvertidas}" th:if="${reservas.getKey().containsValue(helper.getKey()) && reservas.getValue().getEstado().equals('Reservado')}" th:value="${helper.getValue()}"></option>
+                        </div>
+                    </select-->
 
                     <select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
-                        <option th:each="reservas : ${session.carritoDeComprasDeUsuario}"
-                        th:value="${reservas.value.funcion.id}"></option>
+                        <option th:each="reservas , j: ${session.carritoDeComprasDeUsuario}" th:if="${reservas.getValue().getEstado().equals('Reservado')}"
+                                 th:data-id="${reservas.value.funcion.id}" th:value="${j.index+1}" selected></option>
                     </select>
 
                     <div class="row" style="width: 100%">
                         <div id="funciones" class="col-lg-9 col-12">
                             <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
                             <div th:if="${reservaEliminada != null}" th:text="${reservaEliminada}" class="alert alert-success" role="alert"></div>
-                            <h3 class="home__title mb-3">Elija las Funciones a Reservar</h3>
+                            <div th:if="${ReservasSinStock != null}" th:each="mensaje : ${ReservasSinStock}" th:text="${mensaje}" class="alert alert-danger" role="alert"></div>
+                            <h3 class="home__title mb-3">Elija las Reservas a Comprar</h3>
                             <div id="scroller" class="container">
-                                <div class="row mt-3 funcion-container" th:each="reservas : ${session.carritoDeComprasDeUsuario}"
+                                <div class="row mt-3 funcion-container selected" th:each="reservas , i: ${session.carritoDeComprasDeUsuario}"
                                      th:if="${reservas.getValue().getEstado() != 'Borrado'}" th:data-id="${reservas.value.funcion.id}">
                                     <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__cover">
@@ -134,19 +145,19 @@
                                             </a>
                                         </div>
                                     </div>
-
                                     <div class="col-md-4 col-sm-6 col-12 ">
                                         <div class="card__content" style="padding: 1px">
                                             <h3 class="card__title">
                                                 <a th:text="${reservas.value.funcion.idobra.nombre}"></a>
                                             </h3>
-                                            <span class="card__category" th:each="generos : ${listaGeneros}"
-                                                  th:if="${generos.idobra.id == reservas.value.funcion.idobra.id}">
-                                                <a th:text="${generos.idgenero.nombre}"></a>
+                                            <span class="card__category">
+                                                <a th:each="generos : ${listaGeneros}" th:text="${generos.idgenero.nombre}"
+                                                   th:if="${generos.idobra.id == reservas.value.funcion.idobra.id}"></a>
                                             </span>
                                             <div class="card__wrap">
                                                 <span class="card__rate"><i class="icon ion-ios-star"></i>
-                                                    <span th:text="${reservas.value.funcion.idobra.calificacion}">8.4</span>
+                                                    <span th:text="${reservas.value.funcion.idobra.calificacion != null ?
+                                                    reservas.value.funcion.idobra.calificacion : '--'}">8.4</span>
                                                 </span>
                                                 <ul class="card__list">
                                                     <li th:text="${reservas.value.funcion.idobra.restriccionedad == 1 ? '+16' : 'Todo Público'}"></li>
@@ -168,7 +179,7 @@
                                         <div class="boletos-container">
                                             <input type="number" class="sign__input" style="width: 100%; text-align: center"
                                                    id="cantidad" name="listaCantidadBoletos" th:value="${reservas.value.cantidad}"
-                                                   min="1" th:data-precio="${reservas.value.funcion.precioentrada}" readonly disabled>
+                                                   min="1" th:data-precio="${reservas.value.funcion.precioentrada}" readonly>
 
                                             <button type="button" class="boton-resta">
                                                 <i class="bi bi-dash-lg"></i>
@@ -179,6 +190,9 @@
                                         </div>
                                         <h1 class="home__title mt-2" style="font-size: 16px; text-transform: none"
                                             th:text="|Total Función: S/${reservas.value.cantidad*reservas.value.funcion.precioentrada}|"></h1>
+                                        <a class="section__btn" style="width: 100%" th:href="@{'/borrarReserva?idReserva=' + ${i.index+1}}">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="mt-5"></div>
@@ -204,18 +218,7 @@
                 const indicadorTotal = document.getElementById("indicadorTotal")
 
                 // Setea los costos iniciales
-                let total = 0
-                for(let ii=0; ii<listaInputs.length; ii++){
-                    let input = listaInputs[ii]
-                    let numBoletos = parseInt(input.value)
-                    let precioEntrada = parseFloat(input.dataset.precio)
-
-                    // Suma el precio de la función al total
-                    total += numBoletos*precioEntrada
-                }
-                // Actualiza los valores del costo total
-                indicadorTotal.dataset.total = total.toString()
-                indicadorTotal.innerText = "Total: S/" + total
+                hallarCostosTotales("selected")
 
                 // Inicializa los botones de sumar y restar
                 $(".boton-resta").click(function (){
@@ -228,9 +231,8 @@
                 // Inicializa la selección de funciones
                 $(".funcion-container").click(function (event){
 
-                    // Si se selecciona otro campo diferente al input
-                    if(event.target.tagName !== "BUTTON" && event.target.tagName !== "I"
-                    && event.target.tagName !== "INPUT"){
+                    // Si se selecciona otro campo diferente al input o boton de borrar
+                    if(!["I","BUTTON","A","INPUT"].includes(event.target.tagName)){
 
                         // Se muestra feedback visual
                         this.classList.toggle("selected")
@@ -242,7 +244,7 @@
 
                         // Permite elegir que sedes mandar
                         for (let ii=0; ii<listaReservas.options.length; ii++){
-                            if(listaReservas.options[ii].value == this.dataset.id){
+                            if(listaReservas.options[ii].dataset.id == this.dataset.id){
 
                                 listaReservas.options[ii].toggleAttribute("selected")
 
@@ -250,8 +252,26 @@
                                 break
                             }
                         }
+                        hallarCostosTotales("selected")
                     }
                 })
+
+                function hallarCostosTotales(clase){
+                    let total = 0
+                    for(let ii=0; ii<listaInputs.length; ii++){
+                        let input = listaInputs[ii]
+                        if(input.parentElement.parentElement.parentElement.classList.contains(clase)) {
+                            let numBoletos = parseInt(input.value)
+                            let precioEntrada = parseFloat(input.dataset.precio)
+
+                            // Suma el precio de la función al total
+                            total += numBoletos * precioEntrada
+                        }
+                    }
+                    // Actualiza los valores del costo total
+                    indicadorTotal.dataset.total = total.toString()
+                    indicadorTotal.innerText = "Total: S/" + total
+                }
 
                 // Actualiza los costos al cambiar la cantidad
                 function hallarCostosIndividual(btnContainer, valor){
@@ -259,18 +279,22 @@
 
                     // Verifica que el cambio de cantidad sea válido
                     if(valor != -1 || parseInt(input.value) > 1){
-                        let precio = parseFloat(input.dataset.precio)
-                        let total = parseFloat(indicadorTotal.dataset.total)
 
-                        // Se actualiza el total de la función y el input
-                        input.value = parseInt(input.value) + valor
+                        // Se actualiza el input
                         let totalFuncion = btnContainer.parentElement.getElementsByTagName("h1")[1]
+                        let precio = parseFloat(input.dataset.precio)
+
+                        input.value = parseInt(input.value) + valor
                         totalFuncion.innerText = "Total Función: S/" + (input.value*precio)
 
-                        // Se actualiza el total general
-                        total += precio*valor
-                        indicadorTotal.dataset.total = total.toString()
-                        indicadorTotal.innerText = "Total: S/" + total
+                        if(btnContainer.parentElement.parentElement.classList.contains("selected")){
+                            let total = parseFloat(indicadorTotal.dataset.total)
+
+                            // Se actualiza el total general
+                            total += precio*valor
+                            indicadorTotal.dataset.total = total.toString()
+                            indicadorTotal.innerText = "Total: S/" + total
+                        }
                     }
                 }
 

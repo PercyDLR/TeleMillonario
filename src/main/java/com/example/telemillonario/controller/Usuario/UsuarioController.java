@@ -1,6 +1,5 @@
 package com.example.telemillonario.controller.Usuario;
 
-import com.azure.core.annotation.Get;
 import com.example.telemillonario.dto.QrDto;
 import com.example.telemillonario.dto.ValidacionTarjetaDto;
 import com.example.telemillonario.entity.*;
@@ -9,12 +8,10 @@ import com.example.telemillonario.service.CoderService;
 import com.example.telemillonario.service.DatosTarjeta;
 import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.service.UsuarioService;
-import org.apache.qpid.proton.codec.security.SaslOutcomeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,10 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import reactor.core.publisher.Flux;
 
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -311,12 +306,16 @@ public class UsuarioController {
 
     //@PostMapping("/reserva")
     @GetMapping("/reserva")
-    public String reservaBoletos(@RequestParam(value = "idFuncion") String idFuncionStr,
-                                 @RequestParam(value = "cantBoletos") String cantBoletosStr,RedirectAttributes redirectAttributes, HttpSession session) {
+    public String reservaBoletos(@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
+                                 @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr,RedirectAttributes redirectAttributes, HttpSession session) {
         Persona persona = (Persona) session.getAttribute("usuario");
         int idFuncion = 0;
         int cantBoletos = 0;
         Funcion funcion = null;
+
+        if(idFuncionStr == null || cantBoletosStr == null){
+            return "redirect:/anErrorHasOcurred";
+        }
 
         try {
             idFuncion = Integer.parseInt(idFuncionStr);
@@ -404,20 +403,22 @@ public class UsuarioController {
                 Collection<Compra> reservas = carrito.values();
                 ArrayList<String> crucesHorarios = new ArrayList<>();
                 for (Compra reserva : reservas) {
-                    LocalTime inicioReserva = reserva.getFuncion().getInicio();
-                    LocalTime finReserva = reserva.getFuncion().getFin();
-                    LocalDate fechaReserva = reserva.getFuncion().getFecha();
-                    if (fechaReserva.equals(funcion.getFecha())){
-                        boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
-                        boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
+                    if(!reserva.getEstado().equals("Borrado")){
+                        LocalTime inicioReserva = reserva.getFuncion().getInicio();
+                        LocalTime finReserva = reserva.getFuncion().getFin();
+                        LocalDate fechaReserva = reserva.getFuncion().getFecha();
+                        if (fechaReserva.equals(funcion.getFecha())){
+                            boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
+                            boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
 
-                        boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
-                        boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
+                            boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
+                            boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
 
-                        if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
-                            existeCruce = true;
-                            String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                            crucesHorarios.add(mensaje);
+                            if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
+                                existeCruce = true;
+                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                crucesHorarios.add(mensaje);
+                            }
                         }
                     }
                 }
@@ -466,14 +467,18 @@ public class UsuarioController {
 
     //@PostMapping("/compra")
     @GetMapping("/compra")
-    public String compraBoletos(@RequestParam(value = "idFuncion") String idFuncionStr,
-                                @RequestParam(value = "cantBoletos") String cantBoletosStr,RedirectAttributes redirectAttributes, HttpSession session,
+    public String compraBoletos(@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
+                                @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr,RedirectAttributes redirectAttributes, HttpSession session,
                                 Model model,@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
         int idFuncion = 0;
         int cantBoletos = 0;
         Funcion funcion = null;
+
+        if(idFuncionStr == null || cantBoletosStr == null){
+            return "redirect:/anErrorHasOcurred";
+        }
 
         try {
             idFuncion = Integer.parseInt(idFuncionStr);
@@ -536,6 +541,11 @@ public class UsuarioController {
                     compraEnProceso.setFuncion(funcion);
                     compraEnProceso.setPersona(persona);
                     model.addAttribute("compraEnProceso",compraEnProceso);
+
+                    List<Foto> listaFotos = fotoRepository.unaFotoPorObra();
+                    model.addAttribute("foto",listaFotos);
+                    List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
+                    model.addAttribute("listaGeneros",listaGeneros);
                     return "usuario/pagoUsuario";
                     //session.setAttribute("compraEnProceso",compraEnProceso);
                     //return "redirect:/compraprocess";
@@ -545,20 +555,22 @@ public class UsuarioController {
                 Collection<Compra> reservas = carrito.values();
                 ArrayList<String> crucesHorarios = new ArrayList<>();
                 for (Compra reserva : reservas) {
-                    LocalTime inicioReserva = reserva.getFuncion().getInicio();
-                    LocalTime finReserva = reserva.getFuncion().getFin();
-                    LocalDate fechaReserva = reserva.getFuncion().getFecha();
-                    if (fechaReserva.equals(funcion.getFecha())){
-                        boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
-                        boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
+                    if(!reserva.getEstado().equals("Borrado")) {
+                        LocalTime inicioReserva = reserva.getFuncion().getInicio();
+                        LocalTime finReserva = reserva.getFuncion().getFin();
+                        LocalDate fechaReserva = reserva.getFuncion().getFecha();
+                        if (fechaReserva.equals(funcion.getFecha())){
+                            boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
+                            boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
 
-                        boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
-                        boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
+                            boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
+                            boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
 
-                        if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
-                            existeCruce = true;
-                            String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                            crucesHorarios.add(mensaje);
+                            if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
+                                existeCruce = true;
+                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                crucesHorarios.add(mensaje);
+                            }
                         }
                     }
                 }
@@ -599,26 +611,19 @@ public class UsuarioController {
 
     }
 
-    /*@GetMapping("/compraprocess")
-    public String procesoDeCompra(@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta, HttpSession session) {
-        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
-        if (compraEnProceso == null) {
-            return "redirect:/cartelera";
-        } else {
-            return "usuario/pagoUsuario";
-        }
-
-    }*/
-
     @PostMapping("/pago")
-    public String pagoDeCompra(@RequestParam(value = "idFuncion") String idFuncionStr,
-                               @RequestParam(value = "cantBoletos") String cantBoletosStr,@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
-                               RedirectAttributes redirectAttributes) {
+    public String pagoDeCompra(@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
+                               @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr,@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
+                               RedirectAttributes redirectAttributes,Model model) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
         int idFuncion = 0;
         int cantBoletos = 0;
         Funcion funcion = null;
+
+        if(idFuncionStr == null || cantBoletosStr == null){
+            return "redirect:/anErrorHasOcurred";
+        }
 
         try {
             idFuncion = Integer.parseInt(idFuncionStr);
@@ -677,20 +682,22 @@ public class UsuarioController {
                 if(carrito != null){
                     Collection<Compra> reservas = carrito.values();
                     for (Compra reserva : reservas) {
-                        LocalTime inicioReserva = reserva.getFuncion().getInicio();
-                        LocalTime finReserva = reserva.getFuncion().getFin();
-                        LocalDate fechaReserva = reserva.getFuncion().getFecha();
-                        if (fechaReserva.equals(funcion.getFecha())){
-                            boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
-                            boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
+                        if(!reserva.getEstado().equals("Borrado")) {
+                            LocalTime inicioReserva = reserva.getFuncion().getInicio();
+                            LocalTime finReserva = reserva.getFuncion().getFin();
+                            LocalDate fechaReserva = reserva.getFuncion().getFecha();
+                            if (fechaReserva.equals(funcion.getFecha())){
+                                boolean validacion1 = inicioReserva.isAfter(funcion.getInicio()) || inicioReserva.equals(funcion.getInicio());
+                                boolean validacion2 = inicioReserva.isBefore(funcion.getFin()) || inicioReserva.equals(funcion.getFin());
 
-                            boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
-                            boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
+                                boolean validacion3 = finReserva.isAfter(funcion.getInicio()) || finReserva.equals(funcion.getInicio());
+                                boolean validacion4 = finReserva.isBefore(funcion.getFin()) || finReserva.equals(funcion.getFin());
 
-                            if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
-                                existeCruce = true;
-                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                                crucesHorarios.add(mensaje);
+                                if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
+                                    existeCruce = true;
+                                    String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                    crucesHorarios.add(mensaje);
+                                }
                             }
                         }
                     }
@@ -720,7 +727,6 @@ public class UsuarioController {
                             todoOK=false;
                         }
                         if (todoOK) {
-                            System.out.println("--------------------------------------------");
                             double precioEntradaFuncion = funcion.getPrecioentrada();
                             double montoTotal = precioEntradaFuncion * cantBoletos;
                             int cantidadAsistentes = funcion.getCantidadasistentes();
@@ -762,10 +768,9 @@ public class UsuarioController {
                             RestTemplate restTemplate_for_qr = new RestTemplate();
                             String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
                             ResponseEntity<QrDto> response_for_qr = restTemplate_for_qr.getForEntity(qr_service, QrDto.class);
-                            String qr_link = response_for_qr.getBody().getUrl();//->Se envia a la vista
-                            //Se llena la tabla de pago
+                            String qr_link = response_for_qr.getBody().getUrl();
                             Pago pago = new Pago();
-                            pago.setEstado(1); //estado->1
+                            pago.setEstado(1);
                             if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Visa")){
                                 pago.setIdtarjeta(1);
                             }else if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Mastercard")){
@@ -824,7 +829,6 @@ public class UsuarioController {
     @GetMapping("/carritoPrueba")
     public String carritoUsuario(HttpSession session,Model model) {
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
-        //LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
         List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
         List<Foto> listaFotos = fotoRepository.unaFotoPorObra();
 
@@ -878,12 +882,25 @@ public class UsuarioController {
                     if(compra.getEstado().equals("Reservado")){
                         compra.setEstado("Borrado");
                         carrito.put(llav,compra);
+                        reservasBorrarCarrito.add(compra);
                     }
                 }
             }
             session.setAttribute("carritoDeComprasDeUsuario", carrito);
             model.addAttribute("listaGeneros",listaGeneros);
             model.addAttribute("foto",listaFotos);
+
+            /*LinkedHashMap<String,Integer> llaveInvertida = new LinkedHashMap<>();
+            Set<Map<Integer,String>> lla = carrito.keySet();
+            int indice = 1;
+            for(Map<Integer,String> llaves : lla){
+                if(llaves.get(indice) != null){
+                    String fechaHora = llaves.get(indice);
+                    llaveInvertida.put(fechaHora,indice);
+                }
+                indice++;
+            }
+            model.addAttribute("llavesInvertidas",llaveInvertida);*/
 
             if (reservasBorrarCarrito.size() == 0) {
                 return "usuario/carrito/carritoComprasUsuario";
@@ -912,7 +929,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/borrarReserva")
-    private String borrarReservaDeCarrito(@RequestParam("idReserva") String idReservaStr,RedirectAttributes redirectAttributes,HttpSession session){
+    private String borrarReservaDeCarrito(@RequestParam(value = "idReserva",required = false) String idReservaStr,RedirectAttributes redirectAttributes,HttpSession session){
+
+        if(idReservaStr == null){
+            return "redirect:/anErrorHasOcurred";
+        }
 
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
 
@@ -959,90 +980,138 @@ public class UsuarioController {
     }
 
 
-    @PostMapping("/compraReservasCarrito")
-    private String comprarReservasDelCarrito(Compra reserva,DatosTarjeta datosTarjeta,
-                                             RedirectAttributes redirectAttributes, HttpSession session){
-        Persona persona = (Persona) session.getAttribute("usuario");
-        LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+    @GetMapping("/compraReservasCarrito")
+    private String comprarReservasDelCarrito(@RequestParam(value = "listaReservas",required = false)String listaReservasStr,
+                                             @RequestParam(value = "listaCantidadBoletos",required = false)String listaCantidadBoletosStr,
+                                             RedirectAttributes redirectAttributes, HttpSession session,Model model){
+        LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+        if (carrito == null) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar por lo menos una reserva");
+            return "redirect:/carritoPrueba";
+        }
+        System.out.println(listaReservasStr);
+        System.out.println(listaCantidadBoletosStr);
+        if(listaReservasStr == null || listaCantidadBoletosStr == null){
+            return "redirect:/anErrorHasOcurred";
+        }
 
+        String[] reservas = listaReservasStr.split(",");
+        String[] cantidad = listaCantidadBoletosStr.split(",");
 
-        double montoTotal = 0;
+        if(reservas.length != cantidad.length){
+            redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+            return "redirect:/carritoPrueba";
+        }
 
-            if(reserva.getCantidad() <= 0) {
-                redirectAttributes.addFlashAttribute("mensajeErrorCantBoletos", "El numero de boletos es incorrecto");
-                return "redirect:/carrito";
-            }
-            Optional<Funcion> funcion1 = funcionRepository.findById(reserva.getFuncion().getId());
-            Funcion funcion = funcion1.get();
-            int stockFuncion = funcion.getStockentradas();
-            if(stockFuncion > 0 && reserva.getCantidad() <= stockFuncion) {
-                double precioEntradFuncion = funcion.getPrecioentrada();
-                montoTotal = montoTotal + precioEntradFuncion*reserva.getCantidad();
-
-                int cantidadAsistentes = funcion.getCantidadasistentes();
-                int stockRestanteFuncion = stockFuncion - reserva.getCantidad();
-                cantidadAsistentes = cantidadAsistentes + reserva.getCantidad();
-                if(stockRestanteFuncion == 0){
-                    funcion.setStockentradas(0);
-                    funcion.setEstado(0);
-                    funcion.setCantidadasistentes(cantidadAsistentes);
-                    funcionRepository.save(funcion);
-                }else{
-                    funcion.setStockentradas(stockRestanteFuncion);
-                    funcion.setCantidadasistentes(cantidadAsistentes);
-                    funcionRepository.save(funcion);
+        ArrayList<Integer> listaReservas = new ArrayList<>();
+        ArrayList<Integer> listaCantidadBoletos = new ArrayList<>();
+        try{
+            int valorReserva;
+            int valorCantidad;
+            for(int i=0;i<reservas.length;i++){
+                valorReserva = Integer.parseInt(reservas[i]);
+                if(valorReserva <= 0 || valorReserva>carrito.size()){
+                    redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+                    return "redirect:/carritoPrueba";
                 }
 
+                valorCantidad = Integer.parseInt(cantidad[i]);
 
-                /*
+                if(valorCantidad <= 0){
+                    redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+                    return "redirect:/carritoPrueba";
+                }
 
-               Validar datos tarjeta    @Agustin
+                listaReservas.add(valorReserva);
+                listaCantidadBoletos.add(valorCantidad);
+            }
 
-                 */
+        }catch (NumberFormatException j){
+            redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+            return "redirect:/carritoPrueba";
+        }
 
-                /*
+        for(int k : listaReservas){
+            int repetidas = 0;
+            for(int j : listaReservas){
+                if(k == j){
+                    repetidas = repetidas + 1;
+                }
 
-                    QR
+                if(repetidas > 1){
+                    redirectAttributes.addFlashAttribute("mensajeError", "La reservas no se pueden repetir");
+                    return "redirect:/carritoPrueba";
+                }
+            }
+        }
 
-                 */
+        Set<Map<Integer,String>> llavesGeneral = carrito.keySet();
+        ArrayList<Compra> reservasBorrarCarrito = new ArrayList<>();
+        ArrayList<Compra> reservasComprarCarrito = new ArrayList<>();
+        for(int m : listaReservas){
+            for(Map<Integer,String> llaves : llavesGeneral){
+                if(llaves.get(m) != null){
+                    String fechaHora = llaves.get(m);
+                    Map<Integer,String> llave = new HashMap<>();
+                    llave.put(m,fechaHora);
 
-
-                /*Pago pago = new Pago();
-                pago.setEstado("1"); //Que estado se le va a poner?
-                //Aca va el set del idtarjeta   @Agustin
-                //Aca va el set del numerotarjeta   @Agustin
-                //Aca va el set de la fechade pago  @Agustin
-                pago.setIdCompra(reserva);
-                //Aca va el set del codigo QR   @Agustin
-                //Aca va el set del codigo de operacion @Agustin
-                pagoRepository.save(pago);*/
-
-                compraRepository.save(reserva);
-
-                Set<String> llaveDeHoras = carrito.keySet();
-                String llaveReserva = null;
-                for (String fechaReserva : llaveDeHoras) {
-                   Compra compra = carrito.get(fechaReserva);
-                    if(compra.getId() == reserva.getId()){
-                        llaveReserva = fechaReserva;
+                    Compra compra = carrito.get(llave);
+                    if(compra.getEstado().equals("Borrado")){
+                        redirectAttributes.addFlashAttribute("mensajeError", "Verifique de que la(s) reserva(s) exista(n)");
+                        return "redirect:/carritoPrueba";
                     }
 
+                    Optional<Funcion> funcion1 = funcionRepository.findById(compra.getFuncion().getId());
+                    Funcion funcion = funcion1.get();
+                    Obra obra = funcion.getIdobra();
+
+                    int indiceReserva = listaReservas.indexOf(m);
+                    int cantidadBoletos = listaCantidadBoletos.get(indiceReserva);
+
+                    int stockFuncion = funcion.getStockentradas();
+
+                    if (stockFuncion < 0 || cantidadBoletos > stockFuncion){
+                        reservasBorrarCarrito.add(compra);
+                    }else{
+                        reservasComprarCarrito.add(compra);
+                    }
+
+                    break;
                 }
-                carrito.remove(llaveReserva);
-                session.setAttribute("carritoDeComprasDeUsuario", carrito);
-                redirectAttributes.addFlashAttribute("compraExitosa", "Se ha realizado su compra correctamente.");
-                return "redirect:/carrito";
-
-            }else {
-                redirectAttributes.addFlashAttribute("mensajeNoHayStock", "Ya no hay stock disponible para la obra : "+reserva.getFuncion().getIdobra().getNombre());
-                return "redirect:/carrito";
             }
+        }
 
-       /* }*/
-
-        /*-----------------------------------------------------------------------------------------------------------------------------------------*/
+        if (reservasBorrarCarrito.size() == 0) {
+            List<Foto> listaFotos = fotoRepository.unaFotoPorObra();
+            model.addAttribute("foto",listaFotos);
+            List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
+            model.addAttribute("listaGeneros",listaGeneros);
+            model.addAttribute("listaReservasCarrito",reservasComprarCarrito);
+            model.addAttribute("listaReservas",listaReservas);
+            model.addAttribute("listaCantidadBoletos",listaCantidadBoletos);
+            return "usuario/pagoReservasUsuario";
+        } else {
+            ArrayList<String> mensajes = new ArrayList<>();
+            for (Compra compra : reservasBorrarCarrito) {
+                mensajes.add("No hay stock disponible para la Funcion con Obra : "+compra.getFuncion().getIdobra().getNombre()+", con horario de inicio:"+compra.getFuncion().getInicio()+", y con hora fin:"+compra.getFuncion().getFin());
+            }
+            redirectAttributes.addFlashAttribute("ReservasSinStock", mensajes);
+            return "redirect:/carritoPrueba";
+        }
 
     }
+
+    @PostMapping("/pagoReservasCarrito")
+    public String pagoReservasCarrito(@RequestParam(value = "listaReservas",required = false)String listaReservasStr,
+                               @RequestParam(value = "listaCantidadBoletos",required = false)String listaCantidadBoletosStr,@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
+                               RedirectAttributes redirectAttributes,Model model) {
+
+
+
+
+        return "redirect:/historialPrueba";
+    }
+
 
 
     private void sendReservasBorradas(String correo,String content) throws MessagingException,UnsupportedEncodingException{
@@ -1407,22 +1476,31 @@ public class UsuarioController {
             return "anErrorHasOcurred";
         }
 
-    }*/
+    }
+    @GetMapping("/compraprocess")
+    public String procesoDeCompra(@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta, HttpSession session) {
+        Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
+        if (compraEnProceso == null) {
+            return "redirect:/cartelera";
+        } else {
+            return "usuario/pagoUsuario";
+        }
+
+    }
 
 
+        FUNCION D EPRUEBA PARA RECEPCION DE VALORES DEL FORM DE COMPRA EN OBRADETALLES
+        @PostMapping("/compra")
+        String compra(@RequestParam("funcion") Integer funcion, @RequestParam("cantidadTotalBoletos") Integer cantidadTotalBoletos) {
+        System.out.println("Id Funcion recibida: " + funcion);
+        System.out.println("Cantidad boletos:" + cantidadTotalBoletos);
+       return "usuario/obras/carteleraObras";
+    }
 
-    //FUNCION D EPRUEBA PARA RECEPCION DE VALORES DEL FORM DE COMPRA EN OBRADETALLES
-//    @PostMapping("/compra")
-//    String compra(@RequestParam("funcion") Integer funcion, @RequestParam("cantidadTotalBoletos") Integer cantidadTotalBoletos) {
-//        System.out.println("Id Funcion recibida: " + funcion);
-//        System.out.println("Cantidad boletos:" + cantidadTotalBoletos);
-//        return "usuario/obras/carteleraObras";
-//    }
+    @GetMapping("/pagoPrueba")
+    String pagoPrueba() { return "usuario/pagoUsuario";}
 
-    /*@GetMapping("/pagoPrueba")
-    String pagoPrueba() { return "usuario/pagoUsuario";}*/
-
-    /*@GetMapping("/carritoPrueba")
+    @GetMapping("/carritoPrueba")
     String carritoPrueba() {
         return "usuario/carrito/carritoComprasUsuario";
     }*/
