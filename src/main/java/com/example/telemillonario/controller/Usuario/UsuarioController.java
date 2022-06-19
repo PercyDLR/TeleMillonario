@@ -1489,6 +1489,7 @@ public class UsuarioController {
 
         List<Obragenero> listaObraGenero = obraGeneroRepository.findAll();
 
+        model.addAttribute("id", idFuncion);
         model.addAttribute("listaObraGenero", listaObraGenero);
         model.addAttribute("listaActores", listaActores);
         model.addAttribute("listaDirectores", listaDirectores);
@@ -1500,19 +1501,24 @@ public class UsuarioController {
     }
 
     @PostMapping("/guardarCalificacion")
-    public String guardarCalificacion(@RequestParam("obra") ArrayList<Integer> calificacionObra,
+    public String guardarCalificacion(@RequestParam("obra") Integer calificacionObra,
                                       @RequestParam("actores") ArrayList<Integer> calificacionActores,
                                       @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
                                       @RequestParam("id") Integer idCompra,
                                       HttpSession httpSession,
                                       RedirectAttributes redirectAttributes){
 
-//        Persona persona = (Persona) httpSession.getAttribute("usuario");
-//        Optional<Compra> optionalCompra = compraRepository.findById(idCompra);
-//        if (optionalCompra.isPresent()) {
-//            compraRepository.actualizacionEstadoCompra("Cancelado",persona.getId(), idCompra);
-//        }
-        return "redirect:/historialPrueba";
+        System.out.println("Id funcion: " + idCompra);
+        System.out.println("Calificacion obra: " + calificacionObra);
+
+        for (int calificacionActor : calificacionActores) {
+            System.out.println("Calificacion Actor: " + calificacionActor);
+        }
+        for (int calificacionDirector : calificacionDirectores) {
+            System.out.println("Calificacion Director: " + calificacionDirector);
+        }
+
+        return "redirect:/";
     }
 
 
