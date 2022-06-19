@@ -83,12 +83,30 @@
         <div th:replace="fragments/navbar :: usuario('cartelera')"></div>
 
         <div class="content" style="padding-bottom: 0">
-            <div class="container my-5">
-                <div class="row">
-                    <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
-                    <div th:if="${reservaExitosa != null}" th:text="${reservaExitosa}" class="alert alert-success" role="alert"></div>
+            <div class="container my-2">
 
-                    <div th:if="${cruceHorarioFuncion != null}" th:each="mensaje : ${cruceHorarioFuncion}" th:text="${mensaje}" class="alert alert-danger" role="alert"></div>
+                <div class="row mb-3" style="width: 100%">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${mensajeError != null}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${mensajeError}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${reservaExitosa != null}">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong th:text="${reservaExitosa}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                         th:if="${cruceHorarioFuncion != null}" th:each="mensaje : ${cruceHorarioFuncion}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${mensaje}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+
+                <div class="row">
 
                     <div class="col-12">
                         <h1 class="details__title" th:text="${obra.nombre}"></h1>
