@@ -74,6 +74,9 @@ public class UsuarioController {
     @Autowired
     CoderService coderService;
 
+    @Autowired
+    CalificacionesRepository calificacionesRepository;
+
     @GetMapping("")
     public String paginaPrincipal(Model model){
         List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
@@ -1496,7 +1499,8 @@ public class UsuarioController {
         model.addAttribute("obra", funcionRepository.getById(idFuncion).getIdobra());
         model.addAttribute("caratula", fotoRepository.caratulaDeObra(funcionRepository.getById(idFuncion).getIdobra().getId()));
         model.addAttribute("fotosPersonas", fotoRepository.findAll());
-
+        //Envio de la calificacion promedio de la obra
+        model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(funcionRepository.getById(idFuncion).getIdobra().getId()));
         return "usuario/calificacion";
     }
 
@@ -1505,18 +1509,73 @@ public class UsuarioController {
                                       @RequestParam("actores") ArrayList<Integer> calificacionActores,
                                       @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
                                       @RequestParam("id") Integer idCompra,
+                                      @RequestParam("idobra") Integer idobra,
+                                      @RequestParam("descripcion") String descripcion,
                                       HttpSession httpSession,
                                       RedirectAttributes redirectAttributes){
 
+
+        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idCompra);
         System.out.println("Id funcion: " + idCompra);
+        System.out.println("Id Obra: " + idobra);
         System.out.println("Calificacion obra: " + calificacionObra);
 
-        for (int calificacionActor : calificacionActores) {
-            System.out.println("Calificacion Actor: " + calificacionActor);
+        Persona usuario = (Persona) httpSession.getAttribute("usuario");
+        //guardamos la calificacion y reseña para la obra
+
+        Calificaciones calfReseOBra= new Calificaciones();
+
+        calfReseOBra.setCalificacion(calificacionObra);
+        calfReseOBra.setComentario(descripcion);
+        calfReseOBra.setEstado(1);
+        calfReseOBra.setPersona(usuario);
+        calfReseOBra.setObra(obraRepository.findById(idobra).get());
+
+        calificacionesRepository.save(calfReseOBra);
+
+
+//        for (int calificacionActor : calificacionActores) {
+//            System.out.println("Calificacion Actor: " + calificacionActor);
+//
+//
+//        }
+
+        //guardamos la calificacion para los actores
+        int i=0;
+        for (Funcionelenco f : listaFuncionElenco) {
+            if (f.getIdpersona().getIdrol().getId() == 5) {
+                Calificaciones calificaciones=new Calificaciones();
+                if(calificacionActores.get(i)!=0){
+                    calificaciones.setCalificacion(calificacionActores.get(i));
+                    calificaciones.setPersona(f.getIdpersona());
+                    calificaciones.setEstado(1);
+
+                    calificacionesRepository.save(calificaciones);
+                }
+            }
+            i++;
         }
-        for (int calificacionDirector : calificacionDirectores) {
-            System.out.println("Calificacion Director: " + calificacionDirector);
+
+
+//        for (int calificacionDirector : calificacionDirectores) {
+//            System.out.println("Calificacion Director: " + calificacionDirector);
+//        }
+
+        //guardamos la calificacion para los directores
+        int j=0;
+        for (Funcionelenco f : listaFuncionElenco) {
+            if (f.getIdpersona().getIdrol().getId() == 4) {
+                Calificaciones calificaciones=new Calificaciones();
+                if(calificacionActores.get(j)!=0){
+                    calificaciones.setCalificacion(calificacionActores.get(j));
+                    calificaciones.setPersona(f.getIdpersona());
+                    calificaciones.setEstado(1);
+                    calificacionesRepository.save(calificaciones);
+                }
+            }
+            j++;
         }
+
 
         return "redirect:/";
     }
@@ -1526,6 +1585,7 @@ public class UsuarioController {
 
         return "usuario/qr";
     }
+
 
 
 
