@@ -675,7 +675,6 @@ public class UsuarioController {
             }
 
             if ((obra.getRestriccionedad() == 1 && mayorEdad == true) || obra.getRestriccionedad() == 0) {
-                //LinkedHashMap<String, Compra> carrito = (LinkedHashMap<String, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
                 LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
                 boolean existeCruce = false;
                 ArrayList<String> crucesHorarios = new ArrayList<>();
@@ -708,7 +707,20 @@ public class UsuarioController {
                     redirectAttributes.addFlashAttribute("cruceHorarioFuncion", crucesHorarios);
                     return "redirect:/cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                 }else{
+                    double precioEntradaFuncion = funcion.getPrecioentrada();
+                    double montoTotal = precioEntradaFuncion * cantBoletos;
                     if (bindingResult.hasErrors()) {
+                        Compra compraEnProceso = new Compra();
+                        compraEnProceso.setCantidad(cantBoletos);
+                        compraEnProceso.setMontoTotal(montoTotal);
+                        compraEnProceso.setFuncion(funcion);
+                        compraEnProceso.setPersona(persona);
+                        model.addAttribute("compraEnProceso",compraEnProceso);
+
+                        List<Foto> listaFotos = fotoRepository.unaFotoPorObra();
+                        model.addAttribute("foto",listaFotos);
+                        List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
+                        model.addAttribute("listaGeneros",listaGeneros);
                         return "usuario/pagoUsuario";
                     } else {
                         RestTemplate restTemplate = new RestTemplate();
@@ -727,8 +739,6 @@ public class UsuarioController {
                             todoOK=false;
                         }
                         if (todoOK) {
-                            double precioEntradaFuncion = funcion.getPrecioentrada();
-                            double montoTotal = precioEntradaFuncion * cantBoletos;
                             int cantidadAsistentes = funcion.getCantidadasistentes();
                             int stockRestanteFuncion = stockFuncion - cantBoletos;
                             cantidadAsistentes = cantidadAsistentes + cantBoletos;
@@ -810,7 +820,7 @@ public class UsuarioController {
                             return "redirect:/historialPrueba";
 
                         } else {
-                            redirectAttributes.addFlashAttribute("msg",response.getBody().getMsg());
+                            redirectAttributes.addFlashAttribute("mensajeError",response.getBody().getMsg());
                             return "redirect:/compra?idFuncion="+idFuncion+"&cantBoletos"+cantBoletos;
                         }
                     }
@@ -985,12 +995,11 @@ public class UsuarioController {
                                              @RequestParam(value = "listaCantidadBoletos",required = false)String listaCantidadBoletosStr,
                                              RedirectAttributes redirectAttributes, HttpSession session,Model model){
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+        Persona persona = (Persona) session.getAttribute("usuario");
         if (carrito == null) {
             redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar por lo menos una reserva");
             return "redirect:/carritoPrueba";
         }
-        System.out.println(listaReservasStr);
-        System.out.println(listaCantidadBoletosStr);
         if(listaReservasStr == null || listaCantidadBoletosStr == null){
             return "redirect:/anErrorHasOcurred";
         }
@@ -1073,6 +1082,12 @@ public class UsuarioController {
                     if (stockFuncion < 0 || cantidadBoletos > stockFuncion){
                         reservasBorrarCarrito.add(compra);
                     }else{
+                        Compra compra1 = new Compra();
+                        compra1.setFuncion(funcion);
+                        compra1.setPersona(persona);
+                        compra1.setCantidad(cantidadBoletos);
+                        compra1.setMontoTotal(cantidadBoletos*funcion.getPrecioentrada());
+                        compra1.setEstado("Reservado");
                         reservasComprarCarrito.add(compra);
                     }
 
@@ -1087,8 +1102,8 @@ public class UsuarioController {
             List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
             model.addAttribute("listaGeneros",listaGeneros);
             model.addAttribute("listaReservasCarrito",reservasComprarCarrito);
-            model.addAttribute("listaReservas",listaReservas);
-            model.addAttribute("listaCantidadBoletos",listaCantidadBoletos);
+            model.addAttribute("listaReservas",listaReservasStr);
+            model.addAttribute("listaCantidadBoletos",listaCantidadBoletosStr);
             return "usuario/pagoReservasUsuario";
         } else {
             ArrayList<String> mensajes = new ArrayList<>();
@@ -1106,10 +1121,251 @@ public class UsuarioController {
                                @RequestParam(value = "listaCantidadBoletos",required = false)String listaCantidadBoletosStr,@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
                                RedirectAttributes redirectAttributes,Model model) {
 
+        LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
+        Persona persona = (Persona) session.getAttribute("usuario");
+
+        if (carrito == null) {
+            return "redirect:/anErrorHasOcurred";
+        }
+
+        if(listaReservasStr == null || listaCantidadBoletosStr == null){
+            return "redirect:/anErrorHasOcurred";
+        }
+
+        String[] reservas = listaReservasStr.split(",");
+        String[] cantidad = listaCantidadBoletosStr.split(",");
+
+        if(reservas.length != cantidad.length){
+            redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+            return "redirect:/carritoPrueba";
+        }
+
+        ArrayList<Integer> listaReservas = new ArrayList<>();
+        ArrayList<Integer> listaCantidadBoletos = new ArrayList<>();
+        try{
+            int valorReserva;
+            int valorCantidad;
+            for(int i=0;i<reservas.length;i++){
+                valorReserva = Integer.parseInt(reservas[i]);
+                if(valorReserva <= 0 || valorReserva>carrito.size()){
+                    redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+                    return "redirect:/carritoPrueba";
+                }
+
+                valorCantidad = Integer.parseInt(cantidad[i]);
+
+                if(valorCantidad <= 0){
+                    redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+                    return "redirect:/carritoPrueba";
+                }
+
+                listaReservas.add(valorReserva);
+                listaCantidadBoletos.add(valorCantidad);
+            }
+
+        }catch (NumberFormatException j){
+            redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+            return "redirect:/carritoPrueba";
+        }
+
+
+        for(int k : listaReservas){
+            int repetidas = 0;
+            for(int j : listaReservas){
+                if(k == j){
+                    repetidas = repetidas + 1;
+                }
+
+                if(repetidas > 1){
+                    redirectAttributes.addFlashAttribute("mensajeError", "La reservas no se pueden repetir");
+                    return "redirect:/carritoPrueba";
+                }
+            }
+        }
+
+        Set<Map<Integer,String>> llavesGeneral = carrito.keySet();
+        ArrayList<Compra> reservasBorrarCarrito = new ArrayList<>();
+        ArrayList<Compra> reservasComprarCarrito = new ArrayList<>();
+        for(int m : listaReservas){
+            for(Map<Integer,String> llaves : llavesGeneral){
+                if(llaves.get(m) != null){
+                    String fechaHora = llaves.get(m);
+                    Map<Integer,String> llave = new HashMap<>();
+                    llave.put(m,fechaHora);
+
+                    Compra compra = carrito.get(llave);
+                    if(compra.getEstado().equals("Borrado")){
+                        redirectAttributes.addFlashAttribute("mensajeError", "Verifique de que la(s) reserva(s) exista(n)");
+                        return "redirect:/carritoPrueba";
+                    }
+
+                    Optional<Funcion> funcion1 = funcionRepository.findById(compra.getFuncion().getId());
+                    Funcion funcion = funcion1.get();
+                    Obra obra = funcion.getIdobra();
+
+                    int indiceReserva = listaReservas.indexOf(m);
+                    int cantidadBoletos = listaCantidadBoletos.get(indiceReserva);
+
+                    int stockFuncion = funcion.getStockentradas();
+
+                    if (stockFuncion < 0 || cantidadBoletos > stockFuncion){
+                        reservasBorrarCarrito.add(compra);
+                    }else{
+                        //Compra compra1 = new Compra();
+                        //compra1.setFuncion(funcion);
+                        //compra1.setPersona(persona);
+                        //compra1.setCantidad(cantidadBoletos);
+                        //compra1.setMontoTotal(cantidadBoletos*funcion.getPrecioentrada());
+                        //compra1.setEstado("Reservado");
+                        reservasComprarCarrito.add(compra);
+                    }
+
+                    break;
+                }
+            }
+        }
+        if (reservasBorrarCarrito.size() == 0) {
+            if (bindingResult.hasErrors()) {
+                List<Foto> listaFotos = fotoRepository.unaFotoPorObra();
+                model.addAttribute("foto",listaFotos);
+                List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
+                model.addAttribute("listaGeneros",listaGeneros);
+                model.addAttribute("listaReservasCarrito",reservasComprarCarrito);
+                model.addAttribute("listaReservas",listaReservasStr);
+                model.addAttribute("listaCantidadBoletos",listaCantidadBoletosStr);
+                return "usuario/pagoReservasUsuario";
+            } else {
+                RestTemplate restTemplate = new RestTemplate();
+                String numero = coderService.codificar(datosTarjeta.getNumeroTarjeta());
+                String nombre = coderService.codificar(datosTarjeta.getNombresTitular());
+                String expiracion = coderService.codificar(datosTarjeta.getFechaVencimiento());
+                String cvv = coderService.codificar(datosTarjeta.getCodigoSeguridad());
+                String correo = coderService.codificar(persona.getCorreo());
+                String url = "http://20.90.180.72/validacion/verificar?numero="+numero+"&nombre="+nombre+
+                        "&expiracion="+expiracion+"&cvv="+cvv+"&correo="+correo;
+                ResponseEntity<ValidacionTarjetaDto> response = restTemplate.getForEntity(url,ValidacionTarjetaDto.class);
+                boolean todoOK;
+                if(response.getBody().getMsg().equalsIgnoreCase("Se ha verificado y agregado la tarjeta de manera correcta")||response.getBody().getMsg().equalsIgnoreCase("Se ha verificado la tarjeta de manera correcta")){
+                    todoOK=true;
+                }else{
+                    todoOK=false;
+                }
+                if (todoOK) {
+                    UUID uuid = UUID.randomUUID();
+                    String numero_operacion = uuid.toString();
+                    String url_for_qr = "url a definir"+"/numero_operacion="+numero_operacion;
+                    String url_encoded = coderService.codificar(url_for_qr);
+                    RestTemplate restTemplate_for_qr = new RestTemplate();
+                    String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
+                    ResponseEntity<QrDto> response_for_qr = restTemplate_for_qr.getForEntity(qr_service, QrDto.class);
+                    String qr_link = response_for_qr.getBody().getUrl();
+
+                    String content = "<p>Cordiales Saludos: </p>"
+                            + "<p>Se ha efectuado correctamente la siguientes compras("+reservasComprarCarrito.size()+"):</p>";
+                    for(Compra compra : reservasComprarCarrito){
+                        Optional<Funcion> funcionOptional = funcionRepository.findById(compra.getFuncion().getId());
+                        Funcion  funcion = funcionOptional.get();
+                        double precioEntradaFuncion = funcion.getPrecioentrada();
+                        double montoTotal = precioEntradaFuncion * compra.getCantidad();
+                        int cantidadAsistentes = funcion.getCantidadasistentes();
+                        int stockRestanteFuncion = funcion.getStockentradas() - compra.getCantidad();
+                        cantidadAsistentes = cantidadAsistentes + compra.getCantidad();
 
 
 
-        return "redirect:/historialPrueba";
+                        System.out.println(compra.getEstado());
+                        Compra compra1 = new Compra();
+                        compra1.setCantidad(compra.getCantidad());
+                        compra1.setEstado("Comprado");
+                        compra1.setPersona(persona);
+                        compra1.setMontoTotal(montoTotal);
+                        compra1.setPersona(persona);
+                        compra1.setFuncion(funcion);
+
+                        content = content + "<p>- Funcion de la obra:" + compra1.getFuncion().getIdobra().getNombre() + " " + "<p>"
+                                + "<p>- Sede:" + compra1.getFuncion().getIdsala().getIdsede().getNombre() + " " + "<p>"
+                                + "<p>- Sala:" + compra1.getFuncion().getIdsala().getNumero() + " " + "<p>"
+                                + "<p>- Fecha:" + compra1.getFuncion().getFecha() + " " + "<p>"
+                                + "<p>- Hora de inicio:" + compra1.getFuncion().getInicio() + " " + "<p>"
+                                + "<p>- Hora fin:" + compra1.getFuncion().getFin() + " " + "<p>"
+                                + "<p>- Cantidad de boletos: "+ compra1.getCantidad() + " " + "<p>" + "<br>";
+
+                        compraRepository.save(compra1);
+
+                        if (stockRestanteFuncion == 0) {
+                            funcion.setStockentradas(0);
+                            funcion.setEstado(0);
+                            funcion.setCantidadasistentes(cantidadAsistentes);
+                            funcionRepository.save(funcion);
+                        } else {
+                            funcion.setStockentradas(stockRestanteFuncion);
+                            funcion.setCantidadasistentes(cantidadAsistentes);
+                            funcionRepository.save(funcion);
+                        }
+
+                        Pago pago = new Pago();
+                        pago.setEstado(1);
+                        if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Visa")){
+                            pago.setIdtarjeta(1);
+                        }else if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Mastercard")){
+                            pago.setIdtarjeta(2);
+                        }else if(datosTarjeta.getNombresTitular().equalsIgnoreCase("Diners Club")){
+                            pago.setIdtarjeta(3);
+                        }else{
+                            System.out.println("Ha sucedido algo malo");
+                        }
+                        pago.setNumerotarjeta(datosTarjeta.getNumeroTarjeta());
+                        pago.setFechapago(Instant.now());
+                        pago.setIdcompra(compra1);
+                        pago.setQrlink(coderService.decodificar(response_for_qr.getBody().getUrl()));
+                        pago.setCodigo(numero_operacion);
+                        pagoRepository.save(pago);
+
+                    }
+
+                    content = content + "<img src="+coderService.decodificar(response_for_qr.getBody().getUrl())+">";
+
+
+                    Set<Map<Integer,String>> l1 = carrito.keySet();
+                    for(int m : listaReservas){
+                        for(Map<Integer,String> llaves : llavesGeneral){
+                            if(llaves.get(m) != null){
+                                String fechaHora = llaves.get(m);
+                                Map<Integer,String> llaveBorrar = new HashMap<>();
+                                llaveBorrar.put(m,fechaHora);
+                                Compra compra = carrito.get(llaveBorrar);
+                                compra.setEstado("Borrado");
+                                carrito.put(llaveBorrar,compra);
+                            }
+                        }
+                    }
+
+                    session.setAttribute("carritoDeComprasDeUsuario", carrito);
+
+                    try {
+                        sendInfoCompraCorreo(persona.getCorreo(),content);
+                    } catch (MessagingException | UnsupportedEncodingException e) {
+                        return "redirect:/anErrorHasOcurred";
+                    }
+
+                    redirectAttributes.addFlashAttribute("compraExitosa", "Se ha realizado su compra correctamente.");
+                    return "redirect:/historialPrueba";
+
+                } else {
+                    redirectAttributes.addFlashAttribute("mensajeError",response.getBody().getMsg());
+                    return "redirect:/compraReservasCarrito?listaReservas="+listaReservasStr+"&listaCantidadBoletos"+listaCantidadBoletosStr;
+                }
+            }
+
+        } else {
+            ArrayList<String> mensajes = new ArrayList<>();
+            for (Compra compra : reservasBorrarCarrito) {
+                mensajes.add("No hay stock disponible para la Funcion con Obra : "+compra.getFuncion().getIdobra().getNombre()+", con horario de inicio:"+compra.getFuncion().getInicio()+", y con hora fin:"+compra.getFuncion().getFin());
+            }
+            redirectAttributes.addFlashAttribute("ReservasSinStock", mensajes);
+            return "redirect:/carritoPrueba";
+        }
+
     }
 
 
