@@ -1265,6 +1265,12 @@ public class UsuarioController {
         return "redirect:/";
     }
 
+    @GetMapping("/qr")
+    public String qr(Model model){
+
+        return "usuario/qr";
+    }
+
 
 
 
