@@ -20,7 +20,7 @@
                     <div class="col-12">
                         <h1 class="home__title" style="text-transform: none">Historial de compras</h1>
                     </div>
-
+                    <div th:if="${compraExitosa != null}" th:text="${compraExitosa}" class="alert alert-success" role="alert"></div>
                     <div class="col-md-12 col-12" style="margin-top: 30px; overflow-x: auto">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>

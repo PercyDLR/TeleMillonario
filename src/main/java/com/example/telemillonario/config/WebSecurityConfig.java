@@ -31,8 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasAuthority("Administrador")
                 .antMatchers("/operador/**").hasAuthority("Operador")
-                .antMatchers("/perfil/**").hasAnyAuthority("Operador","Usuario")
-                .antMatchers("/","/cartelera/*","/sedes/*","/actores/*","/directores/*").access("hasAuthority('Usuario') || isAnonymous()")
+                .antMatchers("/perfil/**").hasAnyAuthority("Operador","Usuario","ROLE_USER")
+                .antMatchers("/","/cartelera/*","/sedes/*","/actores/*","/directores/*").access("hasAuthority('Usuario') || isAnonymous() || hasAuthority('ROLE_USER')")
                 .anyRequest().permitAll().and()
                 .oauth2Login()
                 .loginPage("/login")
@@ -44,11 +44,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .usersByUsernameQuery("SELECT correo, contrasenia,estado FROM persona WHERE correo = ?")
                 .authoritiesByUsernameQuery("SELECT persona.correo,rol.nombre FROM persona INNER JOIN rol ON ( persona.idrol = rol.id ) WHERE persona.correo = ? and persona.estado = 1");
+        
+
     }
 }
