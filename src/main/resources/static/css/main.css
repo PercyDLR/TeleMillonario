@@ -31,6 +31,7 @@ Primary use:	FlixGo Template
 19. Sign
 20. Page 404
 21. Scrollbar customization
+23. Alertas
 22. Custom
 ----------------------------------------*/
 
@@ -3625,6 +3626,65 @@ input.sign__input:focus, select.sign__input:focus, textarea.sign__input:focus{
     scrollbar-width: thin;
   }
 }
+
+/*==============================
+	      Alertas
+==============================*/
+.alert{
+  border-radius: 0;
+  box-shadow: 0 5px 25px 0 rgba(0,0,0,0.3);
+}
+.alert i:before{
+  background-image: -webkit-linear-gradient(0deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ff5860;
+  box-shadow:  0 0 10px 1px rgb(255 88 96 / 50%), inset 0 0 20px 3px rgb(255 88 96 / 25%);
+  margin-right: 10px;
+}
+
+.alert:before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 2px;
+  display: block;
+  background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+  box-shadow: 0 0 20px 1px rgb(255 88 96 / 50%);
+}
+
+.alert-success, .alert-danger, .alert-info{
+  background-color: #2b2b31;
+  border: 0;
+  color: rgba(255,255,255,0.9);
+}
+
+.btn-close {
+  background: none;
+  font-size: 2.5rem;
+  height: 100%;
+  display: flex;
+  padding: 0.25em !important;
+}
+.btn-close:before {
+  content: "\F62A";
+  display: inline-block;
+  font-family: bootstrap-icons !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: -0.125em;
+  -webkit-font-smoothing: antialiased;
+  background-image: -webkit-linear-gradient(0deg, #ff55a5 0%, #ff5860 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ff5860;
+}
+
 
 /*==============================
 	HTML AÑADIDO

@@ -27,11 +27,11 @@
                 padding: 10px;
             }
             .funcion-container:hover, .funcion-container.selected{
-                background-color: #323239;
+                background-color: #2d2d33;
             }
 
             .funcion-container.selected:hover{
-                background-color: #45454f;
+                background-color: #303037;
             }
 
             #scroller{
@@ -62,7 +62,9 @@
             .total h1{
                 padding: 15px 0;
                 width: max-content;
+                max-width: 200px;
             }
+
 
             @media (max-width: 992px){
 
@@ -126,11 +128,30 @@
                                  th:data-id="${reservas.value.funcion.id}" th:value="${j.index+1}" selected></option>
                     </select>
 
+                    <div class="row mb-3" style="width: 100%">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${mensajeError != null}">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong th:text="${mensajeError}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${reservaEliminada != null}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong th:text="${reservaEliminada}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                             th:if="${ReservasSinStock != null}" th:each="mensaje : ${ReservasSinStock}">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong th:text="${mensaje}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+
                     <div class="row" style="width: 100%">
                         <div id="funciones" class="col-lg-9 col-12">
-                            <div th:if="${mensajeError != null}" th:text="${mensajeError}" class="alert alert-danger" role="alert"></div>
-                            <div th:if="${reservaEliminada != null}" th:text="${reservaEliminada}" class="alert alert-success" role="alert"></div>
-                            <div th:if="${ReservasSinStock != null}" th:each="mensaje : ${ReservasSinStock}" th:text="${mensaje}" class="alert alert-danger" role="alert"></div>
+
                             <h3 class="home__title mb-3">Elija las Reservas a Comprar</h3>
                             <div id="scroller" class="container">
                                 <div class="row mt-3 funcion-container selected" th:each="reservas , i: ${session.carritoDeComprasDeUsuario}"
