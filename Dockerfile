@@ -1,7 +1,8 @@
 FROM openjdk:17.0.2-jdk
 VOLUME /tmp
-EXPOSE 8080
+EXPOSE 8443
 ADD target/telemillonario-0.0.1-SNAPSHOT.jar telemillonario.jar
+ADD src/main/resources/keystore.p12 keystore.p12
 ENTRYPOINT ["java","-jar","telemillonario.jar"]
 
 ## Comandos para correrlo
