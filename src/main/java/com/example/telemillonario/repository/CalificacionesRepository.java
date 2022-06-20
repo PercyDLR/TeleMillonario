@@ -28,4 +28,12 @@ public interface CalificacionesRepository extends JpaRepository<Calificaciones,I
 
     @Query(nativeQuery = true,value = "SELECT TRUNCATE(AVG(calificacion),1) FROM calificaciones WHERE idsede = ?1 and estado=1 ")
     Double PromCalificacionSede(int idsede);
+
+
+    @Query(nativeQuery = true,value = "SELECT count(*) FROM calificaciones WHERE idsede = ?1 and estado=1 and calificacion>=3 ")
+    Integer CantResePosi(int idsede);
+
+    @Query(nativeQuery = true,value = "SELECT count(*) FROM calificaciones WHERE idsede = ?1 and estado=1 and calificacion<3 ")
+    Integer CantReseNega(int idsede);
+
 }

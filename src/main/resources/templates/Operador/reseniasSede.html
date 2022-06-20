@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: head('Resenias Sede',~{::style})">
+        <style>
+            input::placeholder {
+                color: #000000;
+            }
+            .price img{
+                object-fit: cover;
+                object-position: 50% 50%;
+                margin-top: 0;
+                height: 240px;
+            }
+
+            .testimonial-box-container{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .testimonial-box{
+                width: 500px;
+                box-shadow: 2px 2px 30px rgba(0,0,0,0.1);
+                background-color: #FFFFFF;
+                padding:20px;
+                margin:15px;
+                cursor: pointer;
+            }
+            .profile-img{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin-right: 10px;
+            }
+            .profile-img img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+            .profile{
+                display: flex;
+                align-items: center;
+            }
+            .name-user{
+                display: flex;
+                flex-direction: column;
+            }
+            .name-user strong{
+                color: #3d3d3d;
+                font-size: 1.1rem;
+                letter-spacing: 0.5px;
+            }
+            .name-user span{
+                color: #979797;
+                font-size: 0.8rem;
+
+            }
+            .reviews{
+                color: #f9d71c;
+            }
+            .box-top{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            .client-comment p{
+                font-size: 0.9rem;
+                color: #4b4b4b;
+            }
+            .testimonial-box:hover{
+                transform:translateY(-10px);
+                transition: all ease 0.3s;
+            }
+
+        </style>
+    </head>
+
+    <body class="body">
+
+        <div th:replace="fragments/navbar :: operador('resenias')"></div>
+
+
+        <div class="container">
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="row" >
+                <!-- Teatro -->
+                <div class="col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9" style="padding-top: 20px;">
+
+                    <section class="section" style="margin: 0; padding:10px">
+                        <div>
+                            <h1 class="details__title" style="font-size: 36px" th:text="${session.usuario.idsede.getNombre()}">Gran </h1>
+                        </div>
+                    </section>
+
+                    <!-- content -->
+                    <div>
+                        <div class="card card--details card--series">
+                            <div class="row align-items-center">
+                                <!-- card cover -->
+                                <div class="col-14 col-sm-14 col-lg-4 col-xl-4">
+                                    <div class="card__cover" style="text-align: center">
+                                        <img th:src="${fotosede.ruta}" th:alt="${fotosede.ruta}">
+                                    </div>
+                                </div>
+                                <!-- end card cover -->
+
+                                <!-- card content -->
+                                <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
+                                    <div class="card__content">
+                                        <h2 style="color: #ff3366;padding-top: 10px;font-size: 25px">Detalles:</h2>
+
+                                        <br>
+
+                                        <div class="card__wrap" style="justify-content: center">
+                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Calificación promedio:</h3>
+                                            <i class="icon ion-ios-star"></i>
+                                            <span class="card__rate" th:text="${califpromsede==null ? 'Aún no hay calificaciones': califpromsede}">8.4 (10.987 reseñas)</span>
+                                        </div>
+                                        <div class="card__wrap" style="justify-content: center">
+                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Direccion:</h3>
+                                            <span class="card__rate" th:text="${sede.direccion}"></span>
+                                        </div>
+                                        <div class="card__wrap" >
+                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Nro. Salas:</h3>
+                                            <span class="card__rate" th:text="${sede.numerosalas}"></span>
+                                        </div>
+                                        <div class="card__wrap">
+                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Estado:</h3>
+                                            <span class="card__rate" th:text="${sede.estado==1 ? ' Habilitado':' Deshabilitado'}"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- end card content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Fin Teatro -->
+        </div>
+
+        <section class="section " style="padding: 0px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section__wrap">
+                            <h2 class="section__title" th:text="|Reseñas de ${session.usuario.idsede.getNombre()}|">Reseñas </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--first section--bg" style="margin-top: 0;padding: 0px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section__wrap">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <div class="container">
+            <div class="row">
+
+                <!--testimonials-box-container----->
+                <div class="testimonial-box-container">
+
+                    <!--Box1----->
+                    <div class="testimonial-box" th:each="resenia: ${ListResenias}">
+                        <!--top----->
+                        <div class="box-top">
+                            <!--perfil----->
+                            <div class="profile">
+                                <!--img----->
+                                <div class="profile-img">
+                                    <img src="https://pbs.twimg.com/media/FPMc1zXXEAUp4EX?format=jpg&name=360x360">
+                                </div>
+                                <!--nombre usuario----->
+                                <div class="name-user">
+                                    <strong th:text="|${resenia.persona.nombres} ${resenia.persona.apellidos}|">Joaquin Orellana</strong>
+                                </div>
+                            </div>
+
+                            <!--reviews----->
+                            <div class="reviews">
+                                <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.getCalificacion())}"></i>
+
+
+                            </div>
+                        </div>
+                        <div class="client-comment">
+                            <p th:text="${resenia.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
+                        </div>
+                        <button type="button" class="btn btn-danger" style="text-align: center">
+                            <a href="#" style="color: #FFFFFF">
+                                Eliminar
+                            </a>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div th:replace="fragments/footer :: js(~{::script})">
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+
+        </div>
+    </body>
+</html>
