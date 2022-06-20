@@ -1,160 +1,102 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.com">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Font -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
-        <!-- CSS -->
-
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
-              rel="stylesheet" crossorigin="anonymous"
-              integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU">
-        <link rel="stylesheet" href="../../../static/css/bootstrap-reboot.min.css">
-        <link rel="stylesheet" href="../../../static/css/bootstrap-grid.min.css">
-        <link rel="stylesheet" href="../../../static/css/owl.carousel.min.css">
-        <link rel="stylesheet" href="../../../static/css/jquery.mCustomScrollbar.min.css">
-        <link rel="stylesheet" href="../../../static/css/nouislider.min.css">
-        <link rel="stylesheet" href="../../../static/css/ionicons.min.css">
-        <link rel="stylesheet" href="../../../static/css/plyr.css">
-        <link rel="stylesheet" href="../../../static/css/photoswipe.css">
-        <link rel="stylesheet" href="../../../static/css/default-skin.css">
-        <link rel="stylesheet" href="../../../static/css/main.css">
-
-        <!-- Favicons -->
-        <link rel="icon" type="image/png" href="../../../static/icon/favicon-32x32.png" sizes="32x32">
-        <link rel="apple-touch-icon" href="../../../static/icon/favicon-32x32.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="../../../static/icon/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="../../../static/icon/apple-touch-icon-114x114.png">
-        <link rel="apple-touch-icon" sizes="144x144" href="../../../static/icon/apple-touch-icon-144x144.png">
-
-        <meta name="description" content="">
-        <meta name="keywords" content="">
-        <meta name="author" content="Dmitry Volkov">
-        <title>Reportes</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/header :: head('Reportes',~{::style})">
         <style>
-            .overlay {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                transition: opacity 500ms;
-                visibility: hidden;
-                opacity: 0;
+            input::placeholder {
+                color: #000000;
             }
-            #popup:target{
-                visibility: visible; /* Se regresa a hidden para ocultar */
-                opacity: 1; /* Se regresa a o para hacerlo "invisible" */
+            .price img{
+                object-fit: cover;
+                object-position: 50% 50%;
+                margin-top: 0;
+                height: 240px;
             }
-
-
-
         </style>
     </head>
-    <body class="body" style="background-image: url('../../../static/img/home/telon-abierto-opaco.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
-        <!-- header -->
-        <header class="header">
-            <div class="header__wrap" style="border-bottom: solid 3px #ff55a5;">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="header__content">
-                                <img src="../../../static/img/tele.PNG">
-                                <ul class="header__nav">
-                                    <li class="header__nav-item">
-                                        <a href="#" class="header__nav-link">Funciones</a>
-                                    </li>
 
-                                    <li class="header__nav-item">
-                                        <a href="#" class="header__nav-link"  style="color:#ff55a5">Reportes</a>
-                                    </li>
+    <body class="body">
 
-                                    <li class="header__nav-item">
-                                        <a href="pricing.html" class="header__nav-link">Reseñas</a>
-                                    </li>
+        <div th:replace="fragments/navbar :: operador('reportes')"></div>
 
-                                    <li class="header__nav-item">
-                                        <a href="faq.html" class="header__nav-link">Salas</a>
-                                    </li>
-                                </ul>
+        <div class="content" >
+            <div class="container mb-3">
 
-                                <!-- end header nav -->
-
-                                <!-- header auth -->
-                                <div class="header__auth">
-                                    <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
-                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Operador : Agustin Vizcarra</span>
-                                        <br>
-                                        <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Sede : Conde de Lemos</span>
-                                    </div>
-                                    <div style="margin-bottom: 7px;margin-left: 5px">
-                                        <a href="#"><img style="height: 50px;margin-top: 5px" src="../../../static/img/user.png"></a>
-                                    </div>
-                                </div>
-                                <!-- end header auth -->
-
-                                <!-- header menu btn -->
-                                <button class="header__btn" type="button">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
-                                <!-- end header menu btn -->
-                            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong th:text="${msg}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- header search -->
-            <!--            <form action="#" class="header__search">-->
-            <!--                <div class="container">-->
-            <!--                    <div class="row">-->
-            <!--                        <div class="col-12">-->
-            <!--                            <div class="header__search-content">-->
-            <!--                                <input type="text" placeholder="Search for a movie, TV Series that you are looking for">-->
+                <div class="col-md-10 col-12 my-3">
+                    <h1 class="details__title">
+                        Programación de Funciones
+                    </h1>
+                </div>
 
-            <!--                                <button type="button">search</button>-->
-            <!--                            </div>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </form>-->
-            <!-- end header search -->
-        </header>
-        <!-- end header -->
+                <form method="post" th:action="@{/operador/funciones/buscar}">
+                    <div class="row justify-content-center">
 
+                        <div class="col-md-4 col-6">
 
-        <div class="content" >
+                        </div>
 
+                        <div class="col-md-4 col-6">
 
-            <div class="container" style="margin-bottom: 30px;opacity: 200%">
-<!--                <div class="row">-->
-<!--                    <div class="col-12" style="margin-top: 30px;">-->
-<!--                        <div class="row">-->
-<!--                            <div class="col-5">-->
-<!--                                <h1 class="details__title"-->
-<!--                                    style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: x-large">-->
-<!--                                    Estadísticas-->
-<!--                                </h1>-->
-<!--                            </div>-->
-<!--                            <div class="col-3"></div>-->
-<!--                            <div class="col-4">-->
-<!--                                <div class="input-group" style="padding-top: 10px">-->
-<!--                                    <input name="campo" class="form-control text-light" type="text"-->
-<!--                                           style="text-align: center; height: auto ;background-color: transparent; border-radius: 5px; border-color: #7c7676"-->
-<!--                                           placeholder="Buscar Funcion">-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-                <br>
+                        </div>
+
+                        <div class="col-md-4 col-12">
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="filter__btn">
+                                    <a>Buscar</a>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row" >
+                    <div class="col-12 col-md-6 col-lg-4 my-4" th:object="${funcionMasVista}">
+
+                        <div class="price price--premium">
+                            <div class="price__item price__item--first">
+                                <span>Función más Vista</span>
+                            </div>
+
+                            <div class="price__item price__item--first">
+                                <span></span>
+                                <span th:text="*{nombre}"></span>
+                            </div>
+
+                            <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
+
+                            <div class="price__item"><span th:text="|Portcentaje de Asistencia: *{pasistencia}%|"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 my-4" th:object="${funcionMasVista}">
+
+                        <div class="price price--premium">
+                            <div class="price__item price__item--first">
+                                <span>Función más Vista</span>
+                            </div>
+
+                            <div class="price__item price__item--first">
+                                <span></span>
+                                <span th:text="*{nombre}"></span>
+                            </div>
+
+                            <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
+
+                            <div class="price__item"><span th:text="|Portcentaje de Asistencia: *{pasistencia}%|"></span></div>
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="row">
                     <div class="col-2">
                         <h1 class="details__title"
@@ -317,28 +259,19 @@
 
                 <div style="height: 10px"></div>
             </div>
-
-
         </div>
 
 
 
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous"></script>
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/jquery.mousewheel.min.js"></script>
-        <script src="js/jquery.mCustomScrollbar.min.js"></script>
-        <script src="js/wNumb.js"></script>
-        <script src="js/nouislider.min.js"></script>
-        <script src="js/plyr.min.js"></script>
-        <script src="js/jquery.morelines.min.js"></script>
-        <script src="js/photoswipe.min.js"></script>
-        <script src="js/photoswipe-ui-default.min.js"></script>
-        <script src="js/main.js"></script>
+        <div th:replace="fragments/footer :: js(~{::script})">
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+
+        </div>
     </body>
 </html>
