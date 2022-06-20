@@ -1534,24 +1534,35 @@ public class UsuarioController {
         calificacionesRepository.save(calfReseOBra);
 
 
-//        for (int calificacionActor : calificacionActores) {
-//            System.out.println("Calificacion Actor: " + calificacionActor);
-//
-//
-//        }
+        for (int calificacionActor : calificacionActores) {
+            System.out.println("Calificacion Actor: " + calificacionActor);
 
-        //guardamos la calificacion para los actores
-        int i=0;
+
+        }
+
+        ArrayList<Persona> listaActores = new ArrayList<>();
+        ArrayList<Persona> listaDirectores = new ArrayList<>();
+
         for (Funcionelenco f : listaFuncionElenco) {
             if (f.getIdpersona().getIdrol().getId() == 5) {
-                Calificaciones calificaciones=new Calificaciones();
-                if(calificacionActores.get(i)!=0){
-                    calificaciones.setCalificacion(calificacionActores.get(i));
-                    calificaciones.setPersona(f.getIdpersona());
-                    calificaciones.setEstado(1);
+                listaActores.add(f.getIdpersona());
+            }
+            if (f.getIdpersona().getIdrol().getId() == 4) {
+                listaDirectores.add(f.getIdpersona());
+            }
+        }
 
-                    calificacionesRepository.save(calificaciones);
-                }
+        System.out.println(calificacionActores.size());
+        //guardamos la calificacion para los actores
+        int i=0;
+        for (Persona act : listaActores) {
+            Calificaciones calificaciones=new Calificaciones();
+            if(calificacionActores.get(i)!=0){
+                calificaciones.setCalificacion(calificacionActores.get(i));
+                calificaciones.setPersona(act);
+                calificaciones.setEstado(1);
+
+                calificacionesRepository.save(calificaciones);
             }
             i++;
         }
@@ -1563,15 +1574,13 @@ public class UsuarioController {
 
         //guardamos la calificacion para los directores
         int j=0;
-        for (Funcionelenco f : listaFuncionElenco) {
-            if (f.getIdpersona().getIdrol().getId() == 4) {
-                Calificaciones calificaciones=new Calificaciones();
-                if(calificacionActores.get(j)!=0){
-                    calificaciones.setCalificacion(calificacionActores.get(j));
-                    calificaciones.setPersona(f.getIdpersona());
-                    calificaciones.setEstado(1);
-                    calificacionesRepository.save(calificaciones);
-                }
+        for (Persona per : listaDirectores) {
+            Calificaciones calificaciones=new Calificaciones();
+            if(calificacionActores.get(j)!=0){
+                calificaciones.setCalificacion(calificacionActores.get(j));
+                calificaciones.setPersona(per);
+                calificaciones.setEstado(1);
+                calificacionesRepository.save(calificaciones);
             }
             j++;
         }

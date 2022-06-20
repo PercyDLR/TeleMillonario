@@ -76,6 +76,70 @@
                 opacity: 0;
             }
 
+            .testimonial-box-container{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .testimonial-box{
+                width: 500px;
+                box-shadow: 2px 2px 30px rgba(0,0,0,0.1);
+                background-color: #FFFFFF;
+                padding:20px;
+                margin:15px;
+                cursor: pointer;
+            }
+            .profile-img{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin-right: 10px;
+            }
+            .profile-img img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+            .profile{
+                display: flex;
+                align-items: center;
+            }
+            .name-user{
+                display: flex;
+                flex-direction: column;
+            }
+            .name-user strong{
+                color: #3d3d3d;
+                font-size: 1.1rem;
+                letter-spacing: 0.5px;
+            }
+            .name-user span{
+                color: #979797;
+                font-size: 0.8rem;
+
+            }
+            .reviews{
+                color: #f9d71c;
+            }
+            .box-top{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            .client-comment p{
+                font-size: 0.9rem;
+                color: #4b4b4b;
+            }
+            .testimonial-box:hover{
+                transform:translateY(-10px);
+                transition: all ease 0.3s;
+            }
+
         </style>
 
     </head>
@@ -124,8 +188,9 @@
                                 <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-7">
                                     <div class="card__content">
                                         <div class="card__wrap">
+                                            <i class="icon ion-ios-star" style="color: #e3c20d"></i>
                                             <span class="card__rate" th:text="${califprom}">
-                                                <i class="icon ion-ios-star"></i>8.4
+                                                8.4
                                             </span>
 
                                             <ul class="card__list">
@@ -256,7 +321,7 @@
             </div>
 
             <!-- FOTOS -->
-            <section class="mt-5 pb-5" style="background-color: #2b2b31">
+            <section class="mt-5 pb-5" >
                 <div class="content__head" style="margin-bottom: 0">
                     <div class="container">
                         <div class="row">
@@ -284,7 +349,7 @@
             </section>
 
             <!-- Reseñas -->
-            <section class="mt-5 pb-5" style="background-color: #2b2b31">
+            <section class="mt-5 pb-5" >
                 <div class="content__head" style="margin-bottom: 0">
                     <div class="container">
                         <div class="row">
@@ -299,6 +364,40 @@
 
                 <div class="container">
                     <div class="row">
+
+                        <!--testimonials-box-container----->
+                        <div class="testimonial-box-container">
+
+                            <!--Box1----->
+                            <div class="testimonial-box" th:each="resenia: ${ListResenias}">
+                                <!--top----->
+                                <div class="box-top">
+                                    <!--perfil----->
+                                    <div class="profile">
+                                        <!--img----->
+                                        <div class="profile-img">
+                                            <img src="https://pbs.twimg.com/media/FPMc1zXXEAUp4EX?format=jpg&name=360x360">
+                                        </div>
+                                        <!--nombre usuario----->
+                                        <div class="name-user">
+                                            <strong th:text="|${resenia.persona.nombres} ${resenia.persona.apellidos}|">Joaquin Orellana</strong>
+                                        </div>
+                                    </div>
+
+                                    <!--reviews----->
+                                    <div class="reviews">
+                                        <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.getCalificacion())}"></i>
+
+
+                                    </div>
+                                </div>
+                                <div class="client-comment">
+                                    <p th:text="${resenia.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
+                                </div>
+
+                            </div>
+
+                        </div>
 
                     </div>
                 </div>

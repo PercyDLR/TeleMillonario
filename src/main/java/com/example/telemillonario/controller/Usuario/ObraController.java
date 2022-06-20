@@ -274,10 +274,9 @@ public class ObraController {
             model.addAttribute("funcionesDeLaSede", funcionesDeLaSede);
             //Envio de Reseñas de la obra con nombre de la persona + calificacion
 
-            model.addAttribute("ListReseñas",calificacionesRepository.buscarReseñasObra(id));
+            model.addAttribute("ListResenias",calificacionesRepository.buscarReseñasObra(id));
             //Envio de la calificacion promedio de la obra
             model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(id));
-
 
             return "usuario/obras/carteleraObraDetalles";
         } else {
