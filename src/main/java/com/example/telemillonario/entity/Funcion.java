@@ -35,7 +35,7 @@ public class Funcion implements Serializable {
     @Column(name = "precioentrada")
     private Double precioentrada;
 
-    @Positive
+    //@Positive
     @Digits(integer = 3, fraction = 0, message = "Debe ser un número entero")
     @NotNull(message = "El stock no debe estar vacio")
     @Column(name = "stockentradas")

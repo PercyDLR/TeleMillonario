@@ -1,29 +1,37 @@
 package com.example.telemillonario.controller.Operador;
 
+import com.ctc.wstx.shaded.msv_core.util.Uri;
+import com.example.telemillonario.dto.BalanceDto;
 import com.example.telemillonario.dto.EstadisticaFuncionDto;
 import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
+import com.example.telemillonario.service.ReporteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.Option;
+import javax.validation.Path;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Controller
@@ -57,63 +65,66 @@ public class FuncionesController {
     @Autowired
     ObraRepository obraRepository;
 
-    float funcionesporpagina=6;
+    @Autowired
+    ReporteService reporteService;
 
-    @GetMapping(value = {"", "/","/lista"})
-    public String listadoFunciones(Model model,@RequestParam(value = "pag",required = false) String pag,HttpSession session){
+    float funcionesporpagina = 6;
+
+    @GetMapping(value = {"", "/", "/lista"})
+    public String listadoFunciones(Model model, @RequestParam(value = "pag", required = false) String pag, HttpSession session) {
 
         int pagina;
 
-        try{
+        try {
             pagina = Integer.parseInt(pag);
-        }catch(Exception e) {
-            pagina=0;
+        } catch (Exception e) {
+            pagina = 0;
         }
 
-        Persona persona=(Persona) session.getAttribute("usuario");
+        Persona persona = (Persona) session.getAttribute("usuario");
 
-        List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSede(persona.getIdsede().getId(),(int)funcionesporpagina*pagina, (int)funcionesporpagina);
+        List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSede(persona.getIdsede().getId(), (int) funcionesporpagina * pagina, (int) funcionesporpagina);
         List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(persona.getIdsede().getId());
 
-        HashMap<Funcion,Foto> funcionesConFoto = new HashMap<>();
+        HashMap<Funcion, Foto> funcionesConFoto = new HashMap<>();
 
-        for (Funcion funcion : listFunciones){
-            for (Foto foto : listFotosObra){
-                if (foto.getIdobra() == funcion.getIdobra()){
-                    funcionesConFoto.put(funcion,foto);
+        for (Funcion funcion : listFunciones) {
+            for (Foto foto : listFotosObra) {
+                if (foto.getIdobra() == funcion.getIdobra()) {
+                    funcionesConFoto.put(funcion, foto);
                     break;
                 }
             }
         }
 
-        int cantFunc= fotoRepository.contarFunciones(persona.getIdsede().getId());
+        int cantFunc = fotoRepository.contarFunciones(persona.getIdsede().getId());
 
-        model.addAttribute("funcionesConFoto",funcionesConFoto);
+        model.addAttribute("funcionesConFoto", funcionesConFoto);
 
-        model.addAttribute("pagActual",pagina);
-        model.addAttribute("pagTotal",(int) Math.ceil(cantFunc/funcionesporpagina));
+        model.addAttribute("pagActual", pagina);
+        model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
         return "Operador/index";
     }
 
     @GetMapping(value = {"/crear"})
-    public String programarFuncionesForm(@ModelAttribute("funcion")Funcion funcion, Model model, HttpSession session){
+    public String programarFuncionesForm(@ModelAttribute("funcion") Funcion funcion, Model model, HttpSession session) {
 
         // Listas para los selectores
-        model.addAttribute("listObras",obraRepository.findAll());
-        model.addAttribute("listActores",personaRepository.listarActores("",0,10000000));
-        model.addAttribute("listDirectores",personaRepository.listarDirectores());
-        model.addAttribute("listGeneros",generoRepository.findAll());
-        model.addAttribute("fechaactual",LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        model.addAttribute("listObras", obraRepository.findAll());
+        model.addAttribute("listActores", personaRepository.listarActores("", 0, 10000000));
+        model.addAttribute("listDirectores", personaRepository.listarDirectores());
+        model.addAttribute("listGeneros", generoRepository.findAll());
+        model.addAttribute("fechaactual", LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
 
         // Listas vacias para evitar errores
         ArrayList<Integer> listaVacia = new ArrayList<>();
-        model.addAttribute("generosFuncion",listaVacia);
-        model.addAttribute("actoresFuncion",listaVacia);
-        model.addAttribute("directoresFuncion",listaVacia);
+        model.addAttribute("generosFuncion", listaVacia);
+        model.addAttribute("actoresFuncion", listaVacia);
+        model.addAttribute("directoresFuncion", listaVacia);
 
         //listado de salas para la Sede del Operador
         Persona persona = (Persona) session.getAttribute("usuario");
-        model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1));
+        model.addAttribute("listaSalasporSede", salaRepository.buscarSalasTotal(persona.getIdsede().getId(), 1));
         return "Operador/crearFuncion";
     }
 
@@ -121,44 +132,44 @@ public class FuncionesController {
 
         // Variables para hacer más entendible el código
         List<Obra> listObras = obraRepository.findAll();
-        List<Persona> listActores = personaRepository.listarActores("",0,100000);
+        List<Persona> listActores = personaRepository.listarActores("", 0, 100000);
         List<Persona> listDirectores = personaRepository.listarDirectores();
-        List<Sala> listaSalasporSede = salaRepository.buscarSalasTotal(persona.getIdsede().getId(),1);
+        List<Sala> listaSalasporSede = salaRepository.buscarSalasTotal(persona.getIdsede().getId(), 1);
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
         // Se regresan nuevamente los elementos de las listas
-        model.addAttribute("funcion",funcion);
-        model.addAttribute("listObras",listObras);
-        model.addAttribute("listActores",listActores);
-        model.addAttribute("listDirectores",listDirectores);
-        model.addAttribute("fechaactual",now);
-        model.addAttribute("listaSalasporSede",listaSalasporSede);
+        model.addAttribute("funcion", funcion);
+        model.addAttribute("listObras", listObras);
+        model.addAttribute("listActores", listActores);
+        model.addAttribute("listDirectores", listDirectores);
+        model.addAttribute("fechaactual", now);
+        model.addAttribute("listaSalasporSede", listaSalasporSede);
     }
 
     private void retornarValoresYSelect(Model model, Funcion funcion, Persona persona,
                                         String[] idactor, String[] iddirector,
                                         String duracion, String fechamasinicio) {
 
-        this.retornarValores(model,funcion,persona);
+        this.retornarValores(model, funcion, persona);
 
         // Se regresan elementos ya seleccionados
-        model.addAttribute("actoresFuncion",idactor);
-        model.addAttribute("directoresFuncion",iddirector);
-        model.addAttribute("duracion",duracion);
-        model.addAttribute("fechamasinicio",fechamasinicio);
+        model.addAttribute("actoresFuncion", idactor);
+        model.addAttribute("directoresFuncion", iddirector);
+        model.addAttribute("duracion", duracion);
+        model.addAttribute("fechamasinicio", fechamasinicio);
     }
 
     @GetMapping(value = {"/editar"})
     public String editarFuncionesForm(@ModelAttribute("funcion") Funcion funcion,
                                       @RequestParam("idfuncion") String idStr,
                                       Model model, HttpSession session,
-                                      RedirectAttributes attr){
+                                      RedirectAttributes attr) {
 
         // Se verifica que el ID sea un número
         int idfuncion = 0;
-        try{
+        try {
             idfuncion = Integer.parseInt(idStr);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             attr.addFlashAttribute("err", "El ID ingresado es inválido");
             return "redirect:/operador/funciones/lista";
         }
@@ -172,19 +183,19 @@ public class FuncionesController {
 
             // Datos de la funcion
             funcion = funcionEnDB.get();
-            long duracion = funcion.getInicio().until(funcion.getFin(),ChronoUnit.MINUTES);
+            long duracion = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
             String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
 
             // Listas para los select
-            retornarValores(model,funcion,persona);
+            retornarValores(model, funcion, persona);
 
             // Lista de los elementos YA seleccionados
-            model.addAttribute("actoresFuncion",personaRepository.actoresPorFuncion(idfuncion));
-            model.addAttribute("directoresFuncion",personaRepository.directoresPorFuncion(idfuncion));
+            model.addAttribute("actoresFuncion", personaRepository.actoresPorFuncion(idfuncion));
+            model.addAttribute("directoresFuncion", personaRepository.directoresPorFuncion(idfuncion));
 
             // Tiempo
-            model.addAttribute("duracion",duracion);
-            model.addAttribute("fechamasinicio",fechamasinicio);
+            model.addAttribute("duracion", duracion);
+            model.addAttribute("fechamasinicio", fechamasinicio);
 
             return "Operador/crearFuncion";
         } else {
@@ -197,11 +208,11 @@ public class FuncionesController {
     @PostMapping("/guardar")
     public String guardarFuncion(@ModelAttribute("funcion") @Valid Funcion funcion, BindingResult bindingResult,
                                  Model model, HttpSession session, RedirectAttributes attr,
-                                 @RequestParam(value="idobra") String idObraStr,
-                                 @RequestParam(value="fechamasinicio") String fechamasinicio,
-                                 @RequestParam(value="duracion") String duracion,
-                                 @RequestParam(value="idactor") String[] idactor,
-                                 @RequestParam(value="iddirector") String[] iddirector) {
+                                 @RequestParam(value = "idobra") String idObraStr,
+                                 @RequestParam(value = "fechamasinicio") String fechamasinicio,
+                                 @RequestParam(value = "duracion") String duracion,
+                                 @RequestParam(value = "idactor") String[] idactor,
+                                 @RequestParam(value = "iddirector") String[] iddirector) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
@@ -210,15 +221,16 @@ public class FuncionesController {
         //    Validación de Datos Ingresados
         //-----------------------------------------------
         int duracionInt = 0;
-        try{
+        try {
             duracionInt = Integer.parseInt(duracion);
-        } catch(NumberFormatException e){}
+        } catch (NumberFormatException e) {
+        }
 
         if (bindingResult.hasErrors() || duracionInt <= 0) {
 
-            retornarValoresYSelect(model,funcion,persona,idactor,iddirector,duracion,fechamasinicio);
+            retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
-            if(duracionInt <= 0) {
+            if (duracionInt <= 0) {
                 model.addAttribute("msgduracion", "La duración no es válida");
             }
 
@@ -233,15 +245,15 @@ public class FuncionesController {
             int idObra = Integer.parseInt(idObraStr);
             Optional<Obra> obra = obraRepository.findById(idObra);
 
-            if(!obra.isPresent()){
+            if (!obra.isPresent()) {
                 throw new NumberFormatException();
             }
             obraFuncion = obra.get();
 
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
 
             // Retorna los valores ingresados
-            retornarValoresYSelect(model,funcion,persona,idactor,iddirector,duracion,fechamasinicio);
+            retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
             model.addAttribute("msgObra", "La obra ingresada no es válida");
 
@@ -253,16 +265,16 @@ public class FuncionesController {
         //-----------------------------------------------
 
         LocalDateTime fecha;
-        try{
+        try {
             fecha = LocalDateTime.parse(fechamasinicio);
 
-            if(now.isAfter(fecha)){
+            if (now.isAfter(fecha)) {
                 throw new Exception();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
             // Retorna los valores ingresados
-            retornarValoresYSelect(model,funcion,persona,idactor,iddirector,duracion,fechamasinicio);
+            retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
             model.addAttribute("msgfecha", "La fecha no es válida");
 
@@ -297,28 +309,28 @@ public class FuncionesController {
         List<Integer> elencoSeleccionado = new ArrayList<>();
 
         // Se comparan los datos de elenco ingresados con los de la DB
-        int maxSeleccionados = Math.max(idactor.length,iddirector.length) ;
+        int maxSeleccionados = Math.max(idactor.length, iddirector.length);
 
-        for(int ii=0; ii < maxSeleccionados; ii++ ){
+        for (int ii = 0; ii < maxSeleccionados; ii++) {
 
             boolean actorCoincide = false;
             boolean directorCoincide = false;
 
-            for(int jj=0; jj < elencoEnDB.size(); jj++){
+            for (int jj = 0; jj < elencoEnDB.size(); jj++) {
 
                 // Valida los miembros del elenco seleccionados
-                if(ii < idactor.length && idactor[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
+                if (ii < idactor.length && idactor[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())) {
                     elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
                     actorCoincide = true;
 
-                } else if(ii < iddirector.length && iddirector[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())){
+                } else if (ii < iddirector.length && iddirector[ii].equals(elencoEnDB.get(jj).getIdpersona().getId().toString())) {
                     elencoSeleccionado.add(elencoEnDB.get(jj).getIdpersona().getId());
                     directorCoincide = true;
                 }
             }
 
             // Si un miembro del elenco no está en DB, se agrega
-            if(ii<iddirector.length && !directorCoincide){
+            if (ii < iddirector.length && !directorCoincide) {
                 Funcionelenco funcelen = new Funcionelenco();
                 int idsdictint = Integer.parseInt(iddirector[ii]);
                 funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
@@ -326,7 +338,7 @@ public class FuncionesController {
                 funcelen.setEstado(1);
                 funcionElencoRepository.save(funcelen);
 
-            } else if(ii<idactor.length && !actorCoincide){
+            } else if (ii < idactor.length && !actorCoincide) {
                 Funcionelenco funcelen = new Funcionelenco();
                 int idsdictint = Integer.parseInt(idactor[ii]);
                 funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
@@ -337,20 +349,20 @@ public class FuncionesController {
         }
 
         // Si un miembro del elenco ya no ha sido seleccionado, se elimina
-        for(Funcionelenco fe : elencoEnDB) {
+        for (Funcionelenco fe : elencoEnDB) {
             int id = fe.getIdpersona().getId();
-            if (!elencoSeleccionado.contains(id)){
+            if (!elencoSeleccionado.contains(id)) {
                 funcionElencoRepository.deleteById(fe.getId());
             }
         }
 
-        attr.addFlashAttribute("msg","Función Guardada Exitosamente");
+        attr.addFlashAttribute("msg", "Función Guardada Exitosamente");
         return "redirect:/operador/funciones";
     }
 
 
     @PostMapping("/buscar")
-    public String buscarFuncion (Model model,@RequestParam("parametro") String parametro,RedirectAttributes attr,@RequestParam(value = "pag",required = false) String pag,HttpSession session){
+    public String buscarFuncion(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr, @RequestParam(value = "pag", required = false) String pag, HttpSession session) {
 
         try {
             if (parametro.equals("")) { // verifica que no esté vacío
@@ -362,22 +374,22 @@ public class FuncionesController {
 
                 int pagina;
 
-                try{
+                try {
                     pagina = Integer.parseInt(pag);
-                }catch(Exception e) {
-                    pagina=0;
+                } catch (Exception e) {
+                    pagina = 0;
                 }
 
-                Persona persona=(Persona) session.getAttribute("usuario");
+                Persona persona = (Persona) session.getAttribute("usuario");
 
-                List<Foto> listfuncfoto= fotoRepository.buscarFotoFuncionesPorNombre(persona.getIdsede().getId(),parametro,(int)funcionesporpagina*pagina, (int)funcionesporpagina);
-                List<Foto> listfunctotal= fotoRepository.buscarFuncionesParaContarPorNombre(persona.getIdsede().getId(),parametro);
-                int cantFunc= listfunctotal.size();
+                List<Foto> listfuncfoto = fotoRepository.buscarFotoFuncionesPorNombre(persona.getIdsede().getId(), parametro, (int) funcionesporpagina * pagina, (int) funcionesporpagina);
+                List<Foto> listfunctotal = fotoRepository.buscarFuncionesParaContarPorNombre(persona.getIdsede().getId(), parametro);
+                int cantFunc = listfunctotal.size();
 
-                model.addAttribute("listfunc",listfuncfoto);
+                model.addAttribute("listfunc", listfuncfoto);
 
-                model.addAttribute("pagActual",pagina);
-                model.addAttribute("pagTotal",(int) Math.ceil(cantFunc/funcionesporpagina));
+                model.addAttribute("pagActual", pagina);
+                model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
 
                 return "Operador/index";
             }
@@ -392,12 +404,12 @@ public class FuncionesController {
     public String borrarFuncion(@RequestParam("idfuncion") String idFuncionStr,
                                 Model model, RedirectAttributes attr) {
 
-        try{
+        try {
             int idFuncion = Integer.parseInt(idFuncionStr);
 
             Optional<Funcion> funcion = funcionRepository.findById(idFuncion);
 
-            if(!funcion.isPresent()){
+            if (!funcion.isPresent()) {
                 throw new NumberFormatException();
             }
 
@@ -407,155 +419,10 @@ public class FuncionesController {
 
             attr.addFlashAttribute("msg1", "Funcion borrada exitosamente");
 
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             attr.addFlashAttribute("msg", "El ID de la función es inválido");
         }
         return "redirect:/operador/funciones";
-    }
-
-    @GetMapping(value = "/reportes")
-    public String obtenerEstadisticas(@RequestParam("periodicidad") Optional<String> opt_periodicidad,@RequestParam("periodo") Optional<String> opt_periodo, HttpSession session,Model model,RedirectAttributes attr){
-        Persona persona = (Persona) session.getAttribute("usuario");
-        //Se obtiene la sede desde donde se realizarán todas las consultas para el reporte
-        int sede = persona.getIdsede().getId();
-        System.out.println("Id sede"+ sede);
-        //suponiendo que no se han enviado la periodicidad y el periodo
-        if(!opt_periodo.isPresent()&&!opt_periodicidad.isPresent()){
-            model.addAttribute("funcionMasVista",funcionRepository.obtenerFuncionMasVistaxSede(sede));
-            model.addAttribute("funcionMenosVista",funcionRepository.obtenerFuncionMenosVistaxSede(sede));
-            model.addAttribute("funcionMejorCalificada",funcionRepository.obtenerFuncionMejorCalificadaxSede(sede));
-            model.addAttribute("funcionesPorcentajeAsistencia",funcionRepository.obtenerFuncionesxAsistenciaxSede(sede));
-            model.addAttribute("actoresMejorCalificados",funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
-            model.addAttribute("directoresMejorCalificados",funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
-        }else{
-            if(opt_periodicidad.get().equalsIgnoreCase("Mensual")){
-                Optional<EstadisticaFuncionDto> funcionMasVistaxMes = null;
-                Optional<EstadisticaFuncionDto> funcionMenosVistaxMes = null;
-                Optional<EstadisticaFuncionDto> funcionMejorCalificadaxMes = null;
-                Optional<List<EstadisticaFuncionDto>> funcionesVistasxMes = null;
-                switch (opt_periodo.get()){
-                    case "Enero":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,1);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,1);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,1);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,1);
-                        break;
-                    case "Febrero":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,2);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,2);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,2);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,2);
-                        break;
-                    case "Marzo":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,3);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,3);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,3);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,3);
-                        break;
-                    case "Abril":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,4);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,4);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,4);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,4);
-                        break;
-                    case "Mayo":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,5);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,5);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,5);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,5);
-                        break;
-                    case "Junio":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,6);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,6);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,6);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,6);
-                        break;
-                    case "Julio":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,7);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,7);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,7);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,7);
-                        break;
-                    case "Agosto":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,8);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,8);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,8);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,8);
-                        break;
-                    case "Setiembre":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,9);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,9);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,9);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,9);
-                        break;
-                    case "Octubre":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,10);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,10);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,10);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,10);
-                        break;
-                    case "Noviembre":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,11);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,11);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,11);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,11);
-                        break;
-                    case "Diciembre":
-                        funcionMasVistaxMes = funcionRepository.obtenerFuncionMasVistaxMesxSede(sede,12);
-                        funcionMenosVistaxMes = funcionRepository.obtenerFuncionMenosVistaxMesxSede(sede,12);
-                        funcionMejorCalificadaxMes = funcionRepository.obtenerFuncionMejorCalificadaxMesxSede(sede,12);
-                        funcionesVistasxMes = funcionRepository.obtenerFuncionesMejorCalificadasxMesxSede(sede,12);
-                        break;
-                    default:
-                        System.out.println("Ha ocurrido un problema");
-                        attr.addFlashAttribute("msg","Se envió un mes inválido");
-                        return "redirect:/operador/funciones/reportes";
-                }
-                if(funcionMasVistaxMes.isPresent()&&funcionMenosVistaxMes.isPresent()&& funcionMejorCalificadaxMes.isPresent() && funcionesVistasxMes.isPresent()){
-                    //si se encontró todo lo solicitado segun mes
-                    model.addAttribute("funcionMasVista",funcionMasVistaxMes.get());
-                    model.addAttribute("funcionMenosVista",funcionMenosVistaxMes.get());
-                    model.addAttribute("funcionMejorCalificada",funcionMejorCalificadaxMes.get());
-                    model.addAttribute("funcionesPorcentajeAsistencia",funcionesVistasxMes.get());
-                    model.addAttribute("actoresMejorCalificados",funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
-                    model.addAttribute("directoresMejorCalificados",funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
-                }else{
-                    //En caso no haya encontrado nada
-                    attr.addFlashAttribute("msg","No se encontraron estadisticas de las funciones para el mes solicitado");
-                    return "redirect:/operador/funciones/reportes";
-                }
-            }else if(opt_periodicidad.get().equalsIgnoreCase("Anual")){
-                try{
-                    int anio = Integer.parseInt(opt_periodo.get());
-                    Optional<EstadisticaFuncionDto> funcionMasVistaxAnio = funcionRepository.obtenerFuncionMasVistaxAnioxSede(sede,anio);
-                    Optional<EstadisticaFuncionDto> funcionMenosVistaxAnio = funcionRepository.obtenerFuncionMenosVistaxAñoxSede(sede,anio);
-                    Optional<EstadisticaFuncionDto> funcionMejorCalificadaxAnio = funcionRepository.obtenerFuncionMejorCalificadaxAnioxSede(sede,anio);
-                    Optional<List<EstadisticaFuncionDto>> funcionesVistasxAnio = funcionRepository.obtenerFuncionesMejorCalificadasxAnioxSede(sede,anio);
-                    if(funcionesVistasxAnio.isPresent()&&funcionMasVistaxAnio.isPresent()&&funcionMejorCalificadaxAnio.isPresent()&& funcionMenosVistaxAnio.isPresent()){
-                        //si se encontró todo lo solicitado segun año
-                        model.addAttribute("funcionMasVista",funcionMasVistaxAnio.get());
-                        model.addAttribute("funcionMenosVista",funcionMenosVistaxAnio.get());
-                        model.addAttribute("funcionMejorCalificada",funcionMejorCalificadaxAnio.get());
-                        model.addAttribute("funcionesPorcentajeAsistencia",funcionesVistasxAnio.get());
-                        model.addAttribute("actoresMejorCalificados",funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
-                        model.addAttribute("directoresMejorCalificados",funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
-                    }else{
-                        //en caso no se encontro nada
-                        attr.addFlashAttribute("msg","No se encontraron estadisticas de las funciones para el año solicitado");
-                        return "redirect:/operador/funciones/reportes";
-                    }
-                }catch(Exception e){
-                    //en caso haya un error en parseo
-                    attr.addFlashAttribute("msg","Se envió un año con formato incorrecto");
-                    return "redirect:/operador/funciones/reportes";
-                }
-            }else{
-                //Se envio una periodicidad inválida
-                attr.addFlashAttribute("msg","Se envió una periodicad inválida");
-                return "redirect:/operador/funciones/reportes";
-            }
-        }
-        return "/Operador/reportes";
     }
 }
 

@@ -43,6 +43,9 @@ public class ObraController {
     @Autowired
     SedeRepository sedeRepository;
 
+    @Autowired
+    CalificacionesRepository calificacionesRepository;
+
     //Variables Importantes
     int funcionesxpagina = 12;
 
@@ -269,6 +272,12 @@ public class ObraController {
             model.addAttribute("listaDirectoresYActores", listaDirectoresYActores);
             model.addAttribute("listaSedesConObra", listaSedesConObra);
             model.addAttribute("funcionesDeLaSede", funcionesDeLaSede);
+            //Envio de Reseñas de la obra con nombre de la persona + calificacion
+
+            model.addAttribute("ListResenias",calificacionesRepository.buscarReseñasObra(id));
+            //Envio de la calificacion promedio de la obra
+            model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(id));
+
             return "usuario/obras/carteleraObraDetalles";
         } else {
             a.addFlashAttribute("msg", -1);

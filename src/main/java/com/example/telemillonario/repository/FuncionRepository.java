@@ -1,5 +1,6 @@
 package com.example.telemillonario.repository;
 
+import com.example.telemillonario.dto.BalanceDto;
 import com.example.telemillonario.dto.EstadisticaFuncionDto;
 import com.example.telemillonario.dto.EstadisticasPersonaDto;
 import com.example.telemillonario.entity.Funcion;
@@ -172,4 +173,22 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
             "inner join fotos f on o.id = f.idobra\n" +
             "where s.idsede=?1 and f.ruta = (select fotos.ruta from fotos where fotos.idobra=o.id limit 1) and YEAR(funcion.fecha)=?2 order by pasistencia desc")
     Optional<List<EstadisticaFuncionDto>> obtenerFuncionesMejorCalificadasxAnioxSede(int sede,int anio);
- }
+    //queries para el reporte de excel
+    @Query(nativeQuery = true,value = "select s2.nombre as sede,funcion.id as funcionid,o.id as obraid,o.nombre as nombre,s.numero as salanumero,funcion.fecha as fecha,funcion.inicio as horainicio,funcion.fin as horafin,funcion.precioentrada as preciounitario,funcion.stockentradas as stock,funcion.cantidadasistentes as asistencia,o.calificacion as calificacion,o.restriccionedad as restriccion from funcion inner join obra o on funcion.idobra = o.id\n" +
+            "inner join  sala s on funcion.idsala = s.id\n" +
+            "inner join sede s2 on s.idsede = s2.id\n" +
+            "where s.idsede=?1")
+    List<BalanceDto> obtenerBalancexSede(int sede);
+    //query segun mes
+    @Query(nativeQuery = true,value = "select s2.nombre as sede,funcion.id as funcionid,o.id as obraid,o.nombre as nombre,s.numero as salanumero,funcion.fecha as fecha,funcion.inicio as horainicio,funcion.fin as horafin,funcion.precioentrada as preciounitario,funcion.stockentradas as stock,funcion.cantidadasistentes as asistencia,o.calificacion as calificacion,o.restriccionedad as restriccion from funcion inner join obra o on funcion.idobra = o.id\n" +
+            "inner join  sala s on funcion.idsala = s.id\n" +
+            "inner join sede s2 on s.idsede = s2.id\n" +
+            "where s.idsede=?1 and MONTH(funcion.fecha)=?2")
+    Optional<List<BalanceDto>> obtenerBalancexSedexMes(int sede,int mes);
+    //query segun año
+    @Query(nativeQuery = true,value = "select s2.nombre as sede,funcion.id as funcionid,o.id as obraid,o.nombre as nombre,s.numero as salanumero,funcion.fecha as fecha,funcion.inicio as horainicio,funcion.fin as horafin,funcion.precioentrada as preciounitario,funcion.stockentradas as stock,funcion.cantidadasistentes as asistencia,o.calificacion as calificacion,o.restriccionedad as restriccion from funcion inner join obra o on funcion.idobra = o.id\n" +
+            "inner join  sala s on funcion.idsala = s.id\n" +
+            "inner join sede s2 on s.idsede = s2.id\n" +
+            "where s.idsede=?1 and YEAR(funcion.fecha)=?2")
+    Optional<List<BalanceDto>> obtenerBalancexSedexAnio(int sede,int anio);
+}
