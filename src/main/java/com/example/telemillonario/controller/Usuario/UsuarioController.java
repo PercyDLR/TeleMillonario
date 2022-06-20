@@ -1210,7 +1210,6 @@ public class UsuarioController {
                     int cantidadBoletos = listaCantidadBoletos.get(indiceReserva);
 
                     int stockFuncion = funcion.getStockentradas();
-
                     if (stockFuncion < 0 || cantidadBoletos > stockFuncion){
                         reservasBorrarCarrito.add(compra);
                     }else{
@@ -1220,6 +1219,7 @@ public class UsuarioController {
                         //compra1.setCantidad(cantidadBoletos);
                         //compra1.setMontoTotal(cantidadBoletos*funcion.getPrecioentrada());
                         //compra1.setEstado("Reservado");
+                        compra.setCantidad(cantidadBoletos);
                         reservasComprarCarrito.add(compra);
                     }
 
