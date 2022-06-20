@@ -1538,8 +1538,11 @@ public class UsuarioController {
             calificacionesRepository.save(calfReseSede);
         }
 
-
-
+        //Guardar promedio calif sede en tabla sede
+        Double promsede=calificacionesRepository.PromCalificacionSede(idsede);
+        Sede sedactu =sedeRepository.getById(idsede);
+        sedactu.setCalificacion(promsede);
+        sedeRepository.save(sedactu);
 
         //guardamos la calificacion y reseña para la obra
 
@@ -1555,7 +1558,11 @@ public class UsuarioController {
             calificacionesRepository.save(calfReseOBra);
         }
 
-
+        //Guardar promedio calif obra en tabla obra
+        Double promobra=calificacionesRepository.PromCalificacionOBra(idobra);
+        Obra obraact =obraRepository.getById(idobra);
+        obraact.setCalificacion(promobra);
+        obraRepository.save(obraact);
 
 //        for (int calificacionActor : calificacionActores) {
 //            System.out.println("Calificacion Actor: " + calificacionActor);
@@ -1586,6 +1593,7 @@ public class UsuarioController {
                 calificaciones.setEstado(1);
 
                 calificacionesRepository.save(calificaciones);
+
             }
             i++;
         }
