@@ -25,6 +25,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -633,6 +634,17 @@ public class UsuarioController {
             if (idFuncion <= 0) {
                 return "redirect:/anErrorHasOcurred";
             } else {
+
+                try{
+                    Random rand = new Random();
+                    int randomNum = rand.nextInt(5000);
+                    System.out.println("Se esperaron " + randomNum + "s");
+                    //TimeUnit.SECONDS.sleep(randomNum);
+                    Thread.sleep(randomNum);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 Optional<Funcion> funcion1 = funcionRepository.findById(idFuncion);
                 if (funcion1.isPresent()) {
                     funcion = funcion1.get();
@@ -741,6 +753,9 @@ public class UsuarioController {
                         }else{
                             todoOK=false;
                         }
+
+                        System.out.println(response.getBody().getMsg());
+
                         if (todoOK) {
                             int cantidadAsistentes = funcion.getCantidadasistentes();
                             int stockRestanteFuncion = stockFuncion - cantBoletos;
@@ -763,20 +778,15 @@ public class UsuarioController {
                             compra.setEstado("Comprado");
                             compra.setFuncion(funcion);
                             compra.setMontoTotal(montoTotal);
+
+
                             compraRepository.save(compra);
 
                             //Codigo unico de operacion
                             //https://www.baeldung.com/java-uuid
                             UUID uuid = UUID.randomUUID();
                             String numero_operacion = uuid.toString();
-                            /*
-                            Generación de la URL a setear en el codigo para que redirija al metodo ->Alonso
-                            p.e:
-                            url: http://localhost:8080/{nombre de controlador}/numero_operacion={numero de operacion}
-                            tener en cuenta que el preludio de la url tiene que ser dinamico y que se tiene que mostrar
-                            el resumen de compras
-                            */
-                            String url_for_qr = "url a definir"+"/numero_operacion="+numero_operacion;//@Alonso
+                            String url_for_qr = "http://telemillonario.hopto.org/qr/numero_operacion="+numero_operacion;//se tiene que implementar el metodo
                             String url_encoded = coderService.codificar(url_for_qr);
                             RestTemplate restTemplate_for_qr = new RestTemplate();
                             String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
@@ -816,6 +826,7 @@ public class UsuarioController {
                             try {
                                 sendInfoCompraCorreo(compra.getPersona().getCorreo(),content);
                             } catch (MessagingException | UnsupportedEncodingException e) {
+                                e.getMessage();
                                 return "redirect:/anErrorHasOcurred";
                             }
 
@@ -964,7 +975,7 @@ public class UsuarioController {
                 redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
                 return "redirect:/carritoPrueba";
             }
-        } catch (NumberFormatException m) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
             return "redirect:/carritoPrueba";
         }
@@ -1127,11 +1138,16 @@ public class UsuarioController {
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
         Persona persona = (Persona) session.getAttribute("usuario");
 
+        System.out.println("listaReservas: " + listaReservasStr);
+        System.out.println("listaBoletos: " + listaCantidadBoletosStr);
+
         if (carrito == null) {
+            System.out.println("El carrito no existe");
             return "redirect:/anErrorHasOcurred";
         }
 
         if(listaReservasStr == null || listaCantidadBoletosStr == null){
+            System.out.println("Los datos no se recibieron bien");
             return "redirect:/anErrorHasOcurred";
         }
 
@@ -1266,6 +1282,17 @@ public class UsuarioController {
                     String content = "<p>Cordiales Saludos: </p>"
                             + "<p>Se ha efectuado correctamente la siguientes compras("+reservasComprarCarrito.size()+"):</p>";
                     for(Compra compra : reservasComprarCarrito){
+
+                        try{
+                            Random rand = new Random();
+                            int randomNum = rand.nextInt(5000);
+                            System.out.println("Se esperaron " + randomNum + "s");
+                            //TimeUnit.SECONDS.sleep(randomNum);
+                            Thread.sleep(randomNum);
+                        } catch (Exception e){
+                            System.out.println(e.getMessage());
+                        }
+
                         Optional<Funcion> funcionOptional = funcionRepository.findById(compra.getFuncion().getId());
                         Funcion  funcion = funcionOptional.get();
                         double precioEntradaFuncion = funcion.getPrecioentrada();
@@ -1348,6 +1375,7 @@ public class UsuarioController {
                     try {
                         sendInfoCompraCorreo(persona.getCorreo(),content);
                     } catch (MessagingException | UnsupportedEncodingException e) {
+                        System.out.println("No se pudo mandar el correo");
                         return "redirect:/anErrorHasOcurred";
                     }
 
@@ -1498,19 +1526,28 @@ public class UsuarioController {
         model.addAttribute("listaDirectores", listaDirectores);
         model.addAttribute("obra", funcionRepository.getById(idFuncion).getIdobra());
         model.addAttribute("caratula", fotoRepository.caratulaDeObra(funcionRepository.getById(idFuncion).getIdobra().getId()));
+        model.addAttribute("fotosede",fotoRepository.caratulaDeSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
+        model.addAttribute("sede",funcionRepository.getById(idFuncion).getIdsala().getIdsede());
         model.addAttribute("fotosPersonas", fotoRepository.findAll());
         //Envio de la calificacion promedio de la obra
         model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(funcionRepository.getById(idFuncion).getIdobra().getId()));
+
+        //Envio de la calificacion promedio de la sede
+        model.addAttribute("califpromsede",calificacionesRepository.PromCalificacionSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
+
         return "usuario/calificacion";
     }
 
     @PostMapping("/guardarCalificacion")
     public String guardarCalificacion(@RequestParam("obra") Integer calificacionObra,
+                                      @RequestParam("sede") Integer calificacionSede,
                                       @RequestParam("actores") ArrayList<Integer> calificacionActores,
                                       @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
                                       @RequestParam("id") Integer idCompra,
                                       @RequestParam("idobra") Integer idobra,
+                                      @RequestParam("idsede") Integer idsede,
                                       @RequestParam("descripcion") String descripcion,
+                                      @RequestParam("descripcionsede") String descripcionsede,
                                       HttpSession httpSession,
                                       RedirectAttributes redirectAttributes){
 
@@ -1521,17 +1558,38 @@ public class UsuarioController {
         System.out.println("Calificacion obra: " + calificacionObra);
 
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
+
+        //guardamos la calificacion y reseña para la sede
+
+        if(calificacionSede!=0 ){
+            Calificaciones calfReseSede= new Calificaciones();
+
+            calfReseSede.setCalificacion(calificacionSede);
+            calfReseSede.setComentario(descripcionsede);
+            calfReseSede.setEstado(1);
+            calfReseSede.setPersona(usuario);
+            calfReseSede.setSede(sedeRepository.findById(idsede).get());
+
+            calificacionesRepository.save(calfReseSede);
+        }
+
+
+
+
         //guardamos la calificacion y reseña para la obra
 
-        Calificaciones calfReseOBra= new Calificaciones();
+        if(calificacionObra!=0 ){
+            Calificaciones calfReseOBra= new Calificaciones();
 
-        calfReseOBra.setCalificacion(calificacionObra);
-        calfReseOBra.setComentario(descripcion);
-        calfReseOBra.setEstado(1);
-        calfReseOBra.setPersona(usuario);
-        calfReseOBra.setObra(obraRepository.findById(idobra).get());
+            calfReseOBra.setCalificacion(calificacionObra);
+            calfReseOBra.setComentario(descripcion);
+            calfReseOBra.setEstado(1);
+            calfReseOBra.setPersona(usuario);
+            calfReseOBra.setObra(obraRepository.findById(idobra).get());
 
-        calificacionesRepository.save(calfReseOBra);
+            calificacionesRepository.save(calfReseOBra);
+        }
+
 
 
 //        for (int calificacionActor : calificacionActores) {
@@ -1539,19 +1597,30 @@ public class UsuarioController {
 //
 //
 //        }
+        //listas de actores y directores de la funcion
+        ArrayList<Persona> listaActores = new ArrayList<>();
+        ArrayList<Persona> listaDirectores = new ArrayList<>();
 
-        //guardamos la calificacion para los actores
-        int i=0;
         for (Funcionelenco f : listaFuncionElenco) {
             if (f.getIdpersona().getIdrol().getId() == 5) {
-                Calificaciones calificaciones=new Calificaciones();
-                if(calificacionActores.get(i)!=0){
-                    calificaciones.setCalificacion(calificacionActores.get(i));
-                    calificaciones.setPersona(f.getIdpersona());
-                    calificaciones.setEstado(1);
+                listaActores.add(f.getIdpersona());
+            }
+            if (f.getIdpersona().getIdrol().getId() == 4) {
+                listaDirectores.add(f.getIdpersona());
+            }
+        }
 
-                    calificacionesRepository.save(calificaciones);
-                }
+        System.out.println(calificacionActores.size());
+        //guardamos la calificacion para los actores
+        int i=0;
+        for (Persona act : listaActores) {
+            Calificaciones calificaciones=new Calificaciones();
+            if(calificacionActores.get(i)!=0){
+                calificaciones.setCalificacion(calificacionActores.get(i));
+                calificaciones.setPersona(act);
+                calificaciones.setEstado(1);
+
+                calificacionesRepository.save(calificaciones);
             }
             i++;
         }
@@ -1563,15 +1632,13 @@ public class UsuarioController {
 
         //guardamos la calificacion para los directores
         int j=0;
-        for (Funcionelenco f : listaFuncionElenco) {
-            if (f.getIdpersona().getIdrol().getId() == 4) {
-                Calificaciones calificaciones=new Calificaciones();
-                if(calificacionActores.get(j)!=0){
-                    calificaciones.setCalificacion(calificacionActores.get(j));
-                    calificaciones.setPersona(f.getIdpersona());
-                    calificaciones.setEstado(1);
-                    calificacionesRepository.save(calificaciones);
-                }
+        for (Persona per : listaDirectores) {
+            Calificaciones calificaciones=new Calificaciones();
+            if(calificacionDirectores.get(j)!=0){
+                calificaciones.setCalificacion(calificacionDirectores.get(j));
+                calificaciones.setPersona(per);
+                calificaciones.setEstado(1);
+                calificacionesRepository.save(calificaciones);
             }
             j++;
         }
