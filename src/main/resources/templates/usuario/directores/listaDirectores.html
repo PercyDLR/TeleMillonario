@@ -98,6 +98,10 @@
                                                     <a th:href="@{'/directores/DetallesDirector?id=' + ${director.id}}"
                                                        th:text="|${director.nombres} ${director.apellidos}|"></a>
                                                 </h3>
+                                                <i class="icon ion-ios-star" style="color: #ff5860"></i>
+                                                <span class="card__rate" th:text="${director.calificacion == null ? '-': director.calificacion}">
+                                                        8.4
+                                                    </span>
                                                 <span class="card__category">
                                             </div>
                                         </div>

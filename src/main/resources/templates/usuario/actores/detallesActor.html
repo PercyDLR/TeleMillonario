@@ -63,6 +63,10 @@
                 <div class="row text-center">
                         <div class="col-12">
                             <h1 class="details__title" th:text="|${actor.nombres} ${actor.apellidos}|"></h1>
+                            <i class="icon ion-ios-star" style="color: #ff5860"></i>
+                            <span class="card__rate" th:text="${actor.calificacion == null ? '-': actor.calificacion}">
+                                                        8.4
+                                                    </span>
                         </div>
 
                         <div class="col-12 col-xl-12">
@@ -203,7 +207,10 @@
                                                 </span>
 
                                                         <div class="card__wrap">
-                                                            <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
+                                                            <i class="icon ion-ios-star" style="color: #ff5860"></i>
+                                                            <span class="card__rate" th:text="${obragenero.key.calificacion == null ? '-': obragenero.key.calificacion}">
+                                                        8.4
+                                                    </span>
 
                                                             <ul class="card__list">
                                                                 <li th:text="${obragenero.key.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>

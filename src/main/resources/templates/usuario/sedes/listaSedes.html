@@ -99,6 +99,10 @@
                                                     </b>
                                                 </h3>
                                                 <h3 class="card__title" style="font-size: 15px" th:text="${sede.iddistrito.nombre}"></h3>
+                                                <i class="icon ion-ios-star" style="color: #ff5860"></i>
+                                                <span class="card__rate" th:text="${sede.calificacion == null ? '-': sede.calificacion}">
+                                                        8.4
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
