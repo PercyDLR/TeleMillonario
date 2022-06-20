@@ -1498,19 +1498,28 @@ public class UsuarioController {
         model.addAttribute("listaDirectores", listaDirectores);
         model.addAttribute("obra", funcionRepository.getById(idFuncion).getIdobra());
         model.addAttribute("caratula", fotoRepository.caratulaDeObra(funcionRepository.getById(idFuncion).getIdobra().getId()));
+        model.addAttribute("fotosede",fotoRepository.caratulaDeSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
+        model.addAttribute("sede",funcionRepository.getById(idFuncion).getIdsala().getIdsede());
         model.addAttribute("fotosPersonas", fotoRepository.findAll());
         //Envio de la calificacion promedio de la obra
         model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(funcionRepository.getById(idFuncion).getIdobra().getId()));
+
+        //Envio de la calificacion promedio de la sede
+        model.addAttribute("califpromsede",calificacionesRepository.PromCalificacionSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
+
         return "usuario/calificacion";
     }
 
     @PostMapping("/guardarCalificacion")
     public String guardarCalificacion(@RequestParam("obra") Integer calificacionObra,
+                                      @RequestParam("sede") Integer calificacionSede,
                                       @RequestParam("actores") ArrayList<Integer> calificacionActores,
                                       @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
                                       @RequestParam("id") Integer idCompra,
                                       @RequestParam("idobra") Integer idobra,
+                                      @RequestParam("idsede") Integer idsede,
                                       @RequestParam("descripcion") String descripcion,
+                                      @RequestParam("descripcionsede") String descripcionsede,
                                       HttpSession httpSession,
                                       RedirectAttributes redirectAttributes){
 
@@ -1521,25 +1530,46 @@ public class UsuarioController {
         System.out.println("Calificacion obra: " + calificacionObra);
 
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
-        //guardamos la calificacion y reseña para la obra
 
-        Calificaciones calfReseOBra= new Calificaciones();
+        //guardamos la calificacion y reseña para la sede
 
-        calfReseOBra.setCalificacion(calificacionObra);
-        calfReseOBra.setComentario(descripcion);
-        calfReseOBra.setEstado(1);
-        calfReseOBra.setPersona(usuario);
-        calfReseOBra.setObra(obraRepository.findById(idobra).get());
+        if(calificacionSede!=0 ){
+            Calificaciones calfReseSede= new Calificaciones();
 
-        calificacionesRepository.save(calfReseOBra);
+            calfReseSede.setCalificacion(calificacionSede);
+            calfReseSede.setComentario(descripcionsede);
+            calfReseSede.setEstado(1);
+            calfReseSede.setPersona(usuario);
+            calfReseSede.setSede(sedeRepository.findById(idsede).get());
 
-
-        for (int calificacionActor : calificacionActores) {
-            System.out.println("Calificacion Actor: " + calificacionActor);
-
-
+            calificacionesRepository.save(calfReseSede);
         }
 
+
+
+
+        //guardamos la calificacion y reseña para la obra
+
+        if(calificacionObra!=0 ){
+            Calificaciones calfReseOBra= new Calificaciones();
+
+            calfReseOBra.setCalificacion(calificacionObra);
+            calfReseOBra.setComentario(descripcion);
+            calfReseOBra.setEstado(1);
+            calfReseOBra.setPersona(usuario);
+            calfReseOBra.setObra(obraRepository.findById(idobra).get());
+
+            calificacionesRepository.save(calfReseOBra);
+        }
+
+
+
+//        for (int calificacionActor : calificacionActores) {
+//            System.out.println("Calificacion Actor: " + calificacionActor);
+//
+//
+//        }
+        //listas de actores y directores de la funcion
         ArrayList<Persona> listaActores = new ArrayList<>();
         ArrayList<Persona> listaDirectores = new ArrayList<>();
 
@@ -1576,8 +1606,8 @@ public class UsuarioController {
         int j=0;
         for (Persona per : listaDirectores) {
             Calificaciones calificaciones=new Calificaciones();
-            if(calificacionActores.get(j)!=0){
-                calificaciones.setCalificacion(calificacionActores.get(j));
+            if(calificacionDirectores.get(j)!=0){
+                calificaciones.setCalificacion(calificacionDirectores.get(j));
                 calificaciones.setPersona(per);
                 calificaciones.setEstado(1);
                 calificacionesRepository.save(calificaciones);

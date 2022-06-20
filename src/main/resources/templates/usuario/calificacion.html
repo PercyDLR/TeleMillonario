@@ -88,7 +88,7 @@
 <!--                                                                class="icon ion-ios-star"></i>8.4</span>-->
                                                         <i
                                                                 class="icon ion-ios-star" style="color: #e3c20d"></i>
-                                                        <span class="card__rate" th:text="${califprom}">8.4</span>
+                                                        <span class="card__rate" th:text="${califprom==null ? '-': califprom}">8.4</span>
 
                                                         <ul class="card__list" style="margin-left: 0px;">
                                                             <li th:text="${obra.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>
@@ -137,6 +137,92 @@
                     </div>
                 </div>
             </section>
+            <div class="catalog">
+                <div class="container">
+                    <div class="row">
+                        <!-- card -->
+                        <div class="col-12" style="margin-bottom: 48px;">
+                            <h1 class="home__title" style="font-size: 30px">Sede</h1>
+                        </div>
+
+                        <!-- end card -->
+                    </div>
+
+                    <div class="catalog">
+                        <div class="container">
+                            <div class="row" style="margin-top: 48px;">
+                                <!-- card -->
+                                <div class="col-6 col-sm-12 col-lg-3" style="padding-inline: 5px"></div>
+                                <div class="col-6 col-sm-12 col-lg-6" style="padding-inline: 5px">
+                                    <div class="card card--list">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-4">
+                                                <div class="card__cover">
+                                                    <img th:src="${fotosede.getRuta()}" alt="portada">
+                                                    <a href="#" class="card__play">
+                                                        <i class="icon ion-ios-play"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-8">
+                                                <div class="card__content" style="padding: 1px">
+                                                    <h3 class="card__title">
+                                                        <a href="#" th:text="${sede.getNombre()}"></a>
+                                                    </h3>
+
+                                                    <div class="card__wrap">
+                                                        <!--                                                        <span class="card__rate"><i-->
+                                                        <!--                                                                class="icon ion-ios-star"></i>8.4</span>-->
+                                                        <i
+                                                                class="icon ion-ios-star" style="color: #e3c20d"> </i>
+                                                        <span class="card__rate" th:text="${califpromsede==null ? '-': califpromsede}">8.4</span>
+
+                                                    </div>
+
+                                                    <div class="card__description">
+                                                        <p th:text="${sede.descripcion}"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <h4 class="home__title" style="font-size: 20px">Deja una reseña para la obra</h4>
+                                        <br>
+                                        <input name="idsede" th:value="${sede.id}" hidden>
+                                        <div class="row">
+                                            <textarea id="descripcionsede" rows="4" maxlength="500" name="descripcionsede"
+                                                      style="width: 100%;height: 80%;border-color: #FFFFFF;color: #000000;border-radius: 7px">
+                                                </textarea>
+                                        </div>
+
+                                        <input id="estrellasSede" name="sede" value="0" hidden>
+                                        <div class="row">
+                                            <p class="clasificacion mt-2" style="text-align: center">
+                                                <input th:id="|raadio1${sede.id}|" type="radio" name="radioObra" value="5" onclick="calificarSede(this.id)">
+                                                <label th:for="|raadio1${sede.id}|">★</label>
+                                                <input th:id="|raadio2${sede.id}|" type="radio" name="radioObra" value="4" onclick="calificarSede(this.id)">
+                                                <label th:for="|raadio2${sede.id}|">★</label>
+                                                <input th:id="|raadio3${sede.id}|" type="radio" name="radioObra" value="3" onclick="calificarSede(this.id)">
+                                                <label th:for="|raadio3${sede.id}|">★</label>
+                                                <input th:id="|raadio4${sede.id}|" type="radio" name="radioObra" value="2" onclick="calificarSede(this.id)">
+                                                <label th:for="|raadio4${sede.id}|">★</label>
+                                                <input th:id="|raadio5${sede.id}|" type="radio" name="radioObra" value="1" onclick="calificarSede(this.id)">
+                                                <label th:for="|raadio5${sede.id}|">★</label>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-12 col-lg-3" style="padding-inline: 5px"></div>
+                                <!-- end card -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
             <div class="catalog">
                 <div class="container">
@@ -269,6 +355,12 @@
                     // console.log("estrellasDirector"+id);
                     document.getElementById("estrellasDirector"+id).value = document.getElementById(calificacionDirector).value;
                 }
+
+                function calificarSede(calificacionSede) {
+                    console.log(document.getElementById(calificacionSede).value);
+                    document.getElementById("estrellasSede").value = document.getElementById(calificacionSede).value;
+                }
+
             </script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
