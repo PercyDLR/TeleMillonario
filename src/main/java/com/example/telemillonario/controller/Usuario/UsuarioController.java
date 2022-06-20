@@ -25,6 +25,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -34,6 +35,12 @@ import javax.validation.Valid;
 
 @Controller
 public class UsuarioController {
+
+    @Autowired
+    TarjetaRepository tarjetaRepository;
+
+    @Autowired
+    PagoRepository pagoRepository;
 
     @Autowired
     FuncionElencoRepository funcionElencoRepository;
@@ -67,9 +74,6 @@ public class UsuarioController {
 
     @Autowired
     CompraRepository compraRepository;
-
-    @Autowired
-    PagoRepository pagoRepository;
 
     @Autowired
     CoderService coderService;
@@ -633,6 +637,17 @@ public class UsuarioController {
             if (idFuncion <= 0) {
                 return "redirect:/anErrorHasOcurred";
             } else {
+
+                try{
+                    Random rand = new Random();
+                    int randomNum = rand.nextInt(5000);
+                    System.out.println("Se esperaron " + randomNum + "s");
+                    //TimeUnit.SECONDS.sleep(randomNum);
+                    Thread.sleep(randomNum);
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
                 Optional<Funcion> funcion1 = funcionRepository.findById(idFuncion);
                 if (funcion1.isPresent()) {
                     funcion = funcion1.get();
@@ -741,6 +756,9 @@ public class UsuarioController {
                         }else{
                             todoOK=false;
                         }
+
+                        System.out.println(response.getBody().getMsg());
+
                         if (todoOK) {
                             int cantidadAsistentes = funcion.getCantidadasistentes();
                             int stockRestanteFuncion = stockFuncion - cantBoletos;
@@ -763,6 +781,8 @@ public class UsuarioController {
                             compra.setEstado("Comprado");
                             compra.setFuncion(funcion);
                             compra.setMontoTotal(montoTotal);
+
+
                             compraRepository.save(compra);
 
                             //Codigo unico de operacion
@@ -809,6 +829,7 @@ public class UsuarioController {
                             try {
                                 sendInfoCompraCorreo(compra.getPersona().getCorreo(),content);
                             } catch (MessagingException | UnsupportedEncodingException e) {
+                                e.getMessage();
                                 return "redirect:/anErrorHasOcurred";
                             }
 
@@ -957,7 +978,7 @@ public class UsuarioController {
                 redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
                 return "redirect:/carritoPrueba";
             }
-        } catch (NumberFormatException m) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
             return "redirect:/carritoPrueba";
         }
@@ -1120,11 +1141,16 @@ public class UsuarioController {
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
         Persona persona = (Persona) session.getAttribute("usuario");
 
+        System.out.println("listaReservas: " + listaReservasStr);
+        System.out.println("listaBoletos: " + listaCantidadBoletosStr);
+
         if (carrito == null) {
+            System.out.println("El carrito no existe");
             return "redirect:/anErrorHasOcurred";
         }
 
         if(listaReservasStr == null || listaCantidadBoletosStr == null){
+            System.out.println("Los datos no se recibieron bien");
             return "redirect:/anErrorHasOcurred";
         }
 
@@ -1203,7 +1229,6 @@ public class UsuarioController {
                     int cantidadBoletos = listaCantidadBoletos.get(indiceReserva);
 
                     int stockFuncion = funcion.getStockentradas();
-
                     if (stockFuncion < 0 || cantidadBoletos > stockFuncion){
                         reservasBorrarCarrito.add(compra);
                     }else{
@@ -1213,6 +1238,7 @@ public class UsuarioController {
                         //compra1.setCantidad(cantidadBoletos);
                         //compra1.setMontoTotal(cantidadBoletos*funcion.getPrecioentrada());
                         //compra1.setEstado("Reservado");
+                        compra.setCantidad(cantidadBoletos);
                         reservasComprarCarrito.add(compra);
                     }
 
@@ -1259,6 +1285,17 @@ public class UsuarioController {
                     String content = "<p>Cordiales Saludos: </p>"
                             + "<p>Se ha efectuado correctamente la siguientes compras("+reservasComprarCarrito.size()+"):</p>";
                     for(Compra compra : reservasComprarCarrito){
+
+                        try{
+                            Random rand = new Random();
+                            int randomNum = rand.nextInt(5000);
+                            System.out.println("Se esperaron " + randomNum + "s");
+                            //TimeUnit.SECONDS.sleep(randomNum);
+                            Thread.sleep(randomNum);
+                        } catch (Exception e){
+                            System.out.println(e.getMessage());
+                        }
+
                         Optional<Funcion> funcionOptional = funcionRepository.findById(compra.getFuncion().getId());
                         Funcion  funcion = funcionOptional.get();
                         double precioEntradaFuncion = funcion.getPrecioentrada();
@@ -1341,6 +1378,7 @@ public class UsuarioController {
                     try {
                         sendInfoCompraCorreo(persona.getCorreo(),content);
                     } catch (MessagingException | UnsupportedEncodingException e) {
+                        System.out.println("No se pudo mandar el correo");
                         return "redirect:/anErrorHasOcurred";
                     }
 
@@ -1621,8 +1659,22 @@ public class UsuarioController {
     }
 
     @GetMapping("/qr")
-    public String qr(Model model){
+    public String qr(Model model, @RequestParam("codigo") String codigo){
 
+        List<Pago> listaPagos = pagoRepository.listaPago(codigo);
+        boolean mostrarPago = true;
+        double pago = 0;
+        for (Pago p : listaPagos) {
+            pago = pago + p.getIdcompra().getMontoTotal();
+            if (p.getEstado() == 0) {
+                mostrarPago = false;
+            }
+        }
+        model.addAttribute("Pago", listaPagos.get(0));
+        model.addAttribute("listaPagos", listaPagos);
+        model.addAttribute("mostrarPago", mostrarPago);
+        model.addAttribute("total", pago);
+        model.addAttribute("listaTarjetas", tarjetaRepository.findAll());
         return "usuario/qr";
     }
 

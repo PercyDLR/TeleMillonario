@@ -124,9 +124,8 @@
     </head>
     <body class="body">
 
-        <div class="content" style="height: 100%">
+        <div class="content" style="height: 100%" th:if="${mostrarPago}">
             <div class="container pb-5">
-
                 <form class="sign__form" style="flex-direction: unset;padding-bottom: 10px;padding-top: 25px;">
                     <div class="row" style="width: 100%; text-align: center">
                         <div id="funciones" class="col-lg-12 col-12">
@@ -137,40 +136,59 @@
                 <form class="sign__form" style="flex-direction: unset;padding-bottom: 25px;padding-top: 25px;">
                     <div class="row" style="width: 100%; text-align: center">
                         <div id="funciones" class="col-lg-12 col-12">
-                            <h3 style="font-size: 15px; display: inline" class="home__title mb-3">Fecha de pago: 2022-08-01</h3>
-                            <h3 style="font-size: 15px; display: inline" class="home__title mb-3">Código: AAAA-AAAA-AAAA</h3>
+                            <h3 style="font-size: 15px; display: inline" class="home__title mb-3" th:text="|Fecha de pago: ${Pago.fechapago}|"></h3>
+                            <h3 style="font-size: 15px; display: inline" class="home__title mb-3" th:text="|Código: ${Pago.codigo}|"></h3>
                         </div>
                     </div>
                 </form>
                 <form class="sign__form" style="flex-direction: unset">
                     <div class="row" style="width: 100%; text-align: left">
                         <div class="barralateral col-lg-6 col-12">
-                            <h3 style="font-size: 15px" class="home__title mb-3">Nombres: Alejandro Manuel</h3>
-                            <h3 style="font-size: 15px" class="home__title mb-3">Apellidos: Saldarriaga Carranza</h3>
-                            <h3 style="font-size: 15px" class="home__title mb-3">Tarjeta: VISA </h3>
+                            <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Nombres: ${Pago.idcompra.persona.nombres}|"></h3>
+                            <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Apellidos: ${Pago.idcompra.persona.apellidos}|"></h3>
+                            <h3 style="font-size: 15px" class="home__title mb-3" th:each="tarjeta : ${listaTarjetas}" th:if="${tarjeta.id == Pago.idtarjeta}" th:text="|Tarjeta: ${tarjeta.nombre}|"></h3>
                             <br>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
+<!--                            <br>-->
+<!--                            <br>-->
+<!--                            <br>-->
+<!--                            <br>-->
+<!--                            <br>-->
                         </div>
                         <div class="col-lg-6 col-12" style="text-align: left;padding-left: 75px;">
 <!--                            <div class="total">-->
-                                <h3 style="font-size: 15px" class="home__title mb-3">Obra de la funcion: Radio Resistencia</h3>
-                                <h3 style="font-size: 15px" class="home__title mb-3">Sede: Gran Teatro Nacional</h3>
-                                <h3 style="font-size: 15px" class="home__title mb-3">Sala: 1</h3>
-                                <h3 style="font-size: 15px" class="home__title mb-3">Fecha de la función: 2022-08-08</h3>
-                                <h3 style="font-size: 15px" class="home__title mb-3">Hora de inicio: 13:00:00</h3>
-                                <h3 style="font-size: 15px" class="home__title mb-3">N° tickets: 2</h3>
+                            <div th:each="pago : ${listaPagos}">
+                                <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Obra de la funcion: ${pago.idcompra.funcion.idobra.nombre}|"></h3>
+                                <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Sede: ${pago.idcompra.funcion.idsala.idsede.nombre}|"></h3>
+                                <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Sala: ${pago.idcompra.funcion.idsala.numero}|"></h3>
+                                <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Fecha de la funcion: ${pago.idcompra.funcion.fecha}|"></h3>
+                                <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Hora de inicio: ${pago.idcompra.funcion.inicio}|"></h3>
+                                <h3 style="font-size: 15px" class="home__title mb-3" th:text="|N de tickets: ${pago.idcompra.cantidad}|"></h3>
+                                <br>
+                            </div>
+
                             <br>
-                                <h3 style="font-size: 20px" class="home__title mb-3">Monto total: S/50.00</h3>
+                                <h3 style="font-size: 20px" class="home__title mb-3" th:text="|Monto total: S/${total}|"></h3>
 <!--                                <h1 id="indicadorTotal" data-total="" class="home__title" style="margin-block: auto" >Total: ...</h1>-->
 <!--                            </div>-->
                         </div>
                     </div>
                 </form>
 
+            </div>
+        </div>
+
+        <div class="content page-404" style="padding: 0" th:unless="${mostrarPago}">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-404__wrap">
+                            <div class="page-404__content">
+                                <h1 class="page-404__title">Lo sentimos</h1>
+                                <p class="page-404__text">Su compra ha sido invalidada</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

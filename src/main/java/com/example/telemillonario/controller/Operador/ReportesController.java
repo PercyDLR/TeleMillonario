@@ -36,7 +36,7 @@ public class ReportesController {
     @Autowired
     ReporteService reporteService;
 
-    @GetMapping(value = "/reportes")
+    @GetMapping( "")
     public String obtenerEstadisticas(@RequestParam("periodicidad") Optional<String> opt_periodicidad,
                                       @RequestParam("periodo") Optional<String> opt_periodo,
                                       HttpSession session, Model model, RedirectAttributes attr) {
