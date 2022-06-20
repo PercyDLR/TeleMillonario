@@ -39,6 +39,8 @@ public class SedesController {
     @Autowired
     DistritoRepository distritoRepository;
 
+    @Autowired
+    CalificacionesRepository calificacionesRepository;
     int sedesxpagina=9;
     int obraxpagina = 12;
 
@@ -185,6 +187,11 @@ public class SedesController {
             model.addAttribute("generos", generoRepository.findAll());
 
             model.addAttribute("listaFotos", fotoRepository.fotosSede(id));
+            //Envio de Reseñas de la sede con nombre de la persona + calificacion
+
+            model.addAttribute("ListResenias",calificacionesRepository.buscarReseñasSede(id));
+            //Envio de la calificacion promedio de la sede
+            model.addAttribute("califpromsede",calificacionesRepository.PromCalificacionSede(id));
             return "usuario/sedes/sedeDetalles";
 
         } else {

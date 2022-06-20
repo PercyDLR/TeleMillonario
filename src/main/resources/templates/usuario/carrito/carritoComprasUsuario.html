@@ -114,9 +114,9 @@
         <div th:replace="fragments/navbar :: usuario('')"></div>
 
         <div class="content" style="height: 100%">
-            <div class="container pb-5">
+            <form class="sign__form" style="flex-direction: unset" method="get" th:action="@{/compraReservasCarrito}">
+                <div class="container pb-5">
 
-                <form class="sign__form" style="flex-direction: unset" method="get" th:action="@{/compraReservasCarrito}">
                     <!--select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
                         <div th:each="reservas : ${session.carritoDeComprasDeUsuario}" style="display: none">
                             <option th:each="helper : ${llavesInvertidas}" th:if="${reservas.getKey().containsValue(helper.getKey()) && reservas.getValue().getEstado().equals('Reservado')}" th:value="${helper.getValue()}"></option>
@@ -127,8 +127,7 @@
                         <option th:each="reservas , j: ${session.carritoDeComprasDeUsuario}" th:if="${reservas.getValue().getEstado().equals('Reservado')}"
                                  th:data-id="${reservas.value.funcion.id}" th:value="${j.index+1}" selected></option>
                     </select>
-
-                    <div class="row mb-3" style="width: 100%">
+                    <div class="row">
                         <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${mensajeError != null}">
                             <i class="bi bi-exclamation-triangle-fill"></i>
                             <strong th:text="${mensajeError}"></strong>
@@ -226,9 +225,8 @@
                             </div>
                         </div>
                     </div>
-                </form>
-
-            </div>
+                </div>
+            </form>
         </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">

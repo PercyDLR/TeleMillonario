@@ -13,19 +13,19 @@ public interface CalificacionesRepository extends JpaRepository<Calificaciones,I
 
 
     @Query(nativeQuery = true,value = "SELECT * FROM calificaciones WHERE idobra = ?1 and estado=1 ")
-    List<Compra> buscarReseñasObra(int idobra);
+    List<Calificaciones> buscarReseñasObra(int idobra);
 
     @Query(nativeQuery = true,value = "SELECT * FROM calificaciones WHERE idsede = ?1 and estado=1 ")
-    List<Compra> buscarReseñasSede(int idsede);
+    List<Calificaciones> buscarReseñasSede(int idsede);
 
 
     @Query(nativeQuery = true,value = "SELECT TRUNCATE(AVG(calificacion),1) FROM calificaciones WHERE idobra = ?1 and estado=1 ")
-    Integer PromCalificacionOBra(int idobra);
+    Double PromCalificacionOBra(int idobra);
 
     @Query(nativeQuery = true,value = "SELECT TRUNCATE(AVG(calificacion),1) FROM calificaciones WHERE idpersona = ?1 and estado=1 ")
-    Integer PromCalificacionElenco(int idpersona);
+    Double PromCalificacionElenco(int idpersona);
 
 
     @Query(nativeQuery = true,value = "SELECT TRUNCATE(AVG(calificacion),1) FROM calificaciones WHERE idsede = ?1 and estado=1 ")
-    Integer PromCalificacionSede(int idpersona);
+    Double PromCalificacionSede(int idsede);
 }
