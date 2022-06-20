@@ -36,6 +36,12 @@ import javax.validation.Valid;
 public class UsuarioController {
 
     @Autowired
+    TarjetaRepository tarjetaRepository;
+
+    @Autowired
+    PagoRepository pagoRepository;
+
+    @Autowired
     FuncionElencoRepository funcionElencoRepository;
 
     @Autowired
@@ -67,9 +73,6 @@ public class UsuarioController {
 
     @Autowired
     CompraRepository compraRepository;
-
-    @Autowired
-    PagoRepository pagoRepository;
 
     @Autowired
     CoderService coderService;
@@ -1581,8 +1584,22 @@ public class UsuarioController {
     }
 
     @GetMapping("/qr")
-    public String qr(Model model){
+    public String qr(Model model, @RequestParam("codigo") String codigo){
 
+        List<Pago> listaPagos = pagoRepository.listaPago(codigo);
+        boolean mostrarPago = true;
+        double pago = 0;
+        for (Pago p : listaPagos) {
+            pago = pago + p.getIdcompra().getMontoTotal();
+            if (p.getEstado() == 0) {
+                mostrarPago = false;
+            }
+        }
+        model.addAttribute("Pago", listaPagos.get(0));
+        model.addAttribute("listaPagos", listaPagos);
+        model.addAttribute("mostrarPago", mostrarPago);
+        model.addAttribute("total", pago);
+        model.addAttribute("listaTarjetas", tarjetaRepository.findAll());
         return "usuario/qr";
     }
 
