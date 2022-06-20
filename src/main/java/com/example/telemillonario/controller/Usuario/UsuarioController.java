@@ -769,14 +769,7 @@ public class UsuarioController {
                             //https://www.baeldung.com/java-uuid
                             UUID uuid = UUID.randomUUID();
                             String numero_operacion = uuid.toString();
-                            /*
-                            Generación de la URL a setear en el codigo para que redirija al metodo ->Alonso
-                            p.e:
-                            url: http://localhost:8080/{nombre de controlador}/numero_operacion={numero de operacion}
-                            tener en cuenta que el preludio de la url tiene que ser dinamico y que se tiene que mostrar
-                            el resumen de compras
-                            */
-                            String url_for_qr = "url a definir"+"/numero_operacion="+numero_operacion;//@Alonso
+                            String url_for_qr = "http://telemillonario.hopto.org/qr/numero_operacion="+numero_operacion;//se tiene que implementar el metodo
                             String url_encoded = coderService.codificar(url_for_qr);
                             RestTemplate restTemplate_for_qr = new RestTemplate();
                             String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
