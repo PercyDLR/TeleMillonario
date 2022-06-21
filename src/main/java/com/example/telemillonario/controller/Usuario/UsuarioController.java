@@ -640,7 +640,7 @@ public class UsuarioController {
                 return "redirect:/anErrorHasOcurred";
             } else {
 
-                /*try{
+                try{
                     Random rand = new Random();
                     int randomNum = rand.nextInt(5000);
                     System.out.println("Se esperaron " + randomNum + "s");
@@ -648,7 +648,7 @@ public class UsuarioController {
                     Thread.sleep(randomNum);
                 } catch (Exception e){
                     System.out.println(e.getMessage());
-                }*/
+                }
 
                 Optional<Funcion> funcion1 = funcionRepository.findById(idFuncion);
                 if (funcion1.isPresent()) {
@@ -792,7 +792,7 @@ public class UsuarioController {
                             //https://www.baeldung.com/java-uuid
                             UUID uuid = UUID.randomUUID();
                             String numero_operacion = uuid.toString();
-                            String url_for_qr = "http://telemillonario.hopto.org/qr/numero_operacion="+numero_operacion;//se tiene que implementar el metodo
+                            String url_for_qr = "http://telemillonario.hopto.org/qr?codigo="+numero_operacion;//se tiene que implementar el metodo
                             String url_encoded = coderService.codificar(url_for_qr);
                             RestTemplate restTemplate_for_qr = new RestTemplate();
                             String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
@@ -1284,7 +1284,7 @@ public class UsuarioController {
                 if (todoOK) {
                     UUID uuid = UUID.randomUUID();
                     String numero_operacion = uuid.toString();
-                    String url_for_qr = "http://localhost:8080/qr?codigo="+numero_operacion;
+                    String url_for_qr = "http://telemillonario.hopto.org/qr/codigo="+numero_operacion;
                     String url_encoded = coderService.codificar(url_for_qr);
                     RestTemplate restTemplate_for_qr = new RestTemplate();
                     String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
@@ -1295,7 +1295,7 @@ public class UsuarioController {
                             + "<p>Se ha efectuado correctamente la siguientes compras("+reservasComprarCarrito.size()+"):</p>";
                     for(Compra compra : reservasComprarCarrito){
 
-                        /*try{
+                        try{
                             Random rand = new Random();
                             int randomNum = rand.nextInt(5000);
                             System.out.println("Se esperaron " + randomNum + "s");
@@ -1303,7 +1303,7 @@ public class UsuarioController {
                             Thread.sleep(randomNum);
                         } catch (Exception e){
                             System.out.println(e.getMessage());
-                        }*/
+                        }
 
                         Optional<Funcion> funcionOptional = funcionRepository.findById(compra.getFuncion().getId());
                         Funcion  funcion = funcionOptional.get();
