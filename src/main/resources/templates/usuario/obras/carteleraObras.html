@@ -71,7 +71,7 @@
                                 </div>
 
                                 <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                                    <button type="submit" class="form__btn" style="width: 50%; margin: 0;">
+                                    <button type="submit" class="form__btn" style="width: 50%; margin: 0; font-size: 1.25rem;">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
@@ -116,9 +116,9 @@
 <!--                                                </span>-->
 
                                                 <div class="card__wrap">
-                                                    <i class="icon ion-ios-star" style="color: #ff5860"></i>
-                                                    <span class="card__rate" th:text="${obragenero.key.calificacion == null ? '-': obragenero.key.calificacion}">
-                                                        8.4
+                                                    <span class="card__rate">
+                                                        <i class="icon ion-ios-star"></i>
+                                                        <span th:text="${obragenero.key.calificacion == null ? '--': obragenero.key.calificacion}"></span>
                                                     </span>
 
                                                     <ul class="card__list">

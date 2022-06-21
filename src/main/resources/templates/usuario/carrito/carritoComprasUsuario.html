@@ -25,10 +25,10 @@
                 padding: 10px;
             }
             .funcion-container:hover, .funcion-container.selected{
-                background-color: #2d2d33;
+                background-color: #303037;;
             }
             .funcion-container.selected:hover{
-                background-color: #303037;
+                background-color: #41414c;
             }
 
             #scroller{
@@ -110,7 +110,7 @@
 
         <div class="content" style="height: 100%">
             <div class="container pb-5">
-                <form class="sign__form" style="flex-direction: unset" method="get" th:action="@{/compraReservasCarrito}">
+                <form class="sign__form" method="get" th:action="@{/compraReservasCarrito}">
 
                     <!--select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
                         <div th:each="reservas : ${session.carritoDeComprasDeUsuario}" style="display: none">
@@ -120,26 +120,29 @@
 
                     <select id="listaReservas" name="listaReservas" style="display: none" multiple hidden>
                         <option th:each="reservas , j: ${session.carritoDeComprasDeUsuario}" th:if="${reservas.getValue().getEstado().equals('Reservado')}"
-                                 th:data-id="${reservas.value.funcion.id}" th:value="${j.index+1}" selected></option>
+                                th:data-id="${reservas.value.funcion.id}" th:value="${j.index+1}" selected></option>
                     </select>
-                    <div class="row">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${mensajeError != null}">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            <strong th:text="${mensajeError}"></strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
 
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${reservaEliminada != null}">
-                            <i class="bi bi-check-circle-fill"></i>
-                            <strong th:text="${reservaEliminada}"></strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="row" style="width: 100%">
+                        <div class="col-12">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${mensajeError != null}">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <strong th:text="${mensajeError}"></strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
 
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                             th:if="${ReservasSinStock != null}" th:each="mensaje : ${ReservasSinStock}">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            <strong th:text="${mensaje}"></strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${reservaEliminada != null}">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <strong th:text="${reservaEliminada}"></strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <div class="alert alert-success alert-dismissible fade show" role="alert"
+                                 th:if="${ReservasSinStock != null}" th:each="mensaje : ${ReservasSinStock}">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <strong th:text="${mensaje}"></strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                         </div>
                     </div>
 

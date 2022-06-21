@@ -46,7 +46,7 @@ public class ReportesController {
         int sede = persona.getIdsede().getId();
 
         //Si no se han enviado la periodicidad y el periodo
-        if (!opt_periodo.isPresent() && !opt_periodicidad.isPresent()) {
+        if (!opt_periodo.isPresent() || !opt_periodicidad.isPresent() || opt_periodicidad.get().equals("") || opt_periodo.get().equals("")) {
             model.addAttribute("funcionMasVista", funcionRepository.obtenerFuncionMasVistaxSede(sede));
             model.addAttribute("funcionMenosVista", funcionRepository.obtenerFuncionMenosVistaxSede(sede));
             model.addAttribute("funcionMejorCalificada", funcionRepository.obtenerFuncionMejorCalificadaxSede(sede));
@@ -91,7 +91,7 @@ public class ReportesController {
 
             default:
                 //Se envio una periodicidad inválida
-                attr.addFlashAttribute("msg", "Se envió una periodicad inválida");
+                attr.addFlashAttribute("msg", "Se envió una periodicidad inválida");
                 return "redirect:/operador/reportes";
 
         }
@@ -136,7 +136,7 @@ public class ReportesController {
         File file = null;
 
         //Si no se han enviado la periodicidad ni el periodo, se manda por defecto el balance general
-        if (!opt_periodo.isPresent() && !opt_periodicidad.isPresent()) {
+        if (!opt_periodo.isPresent() || !opt_periodicidad.isPresent() || opt_periodicidad.get().equals("") || opt_periodo.get().equals("")) {
 
             List<BalanceDto> balancexSedeAux = funcionRepository.obtenerBalancexSede(sede);
             file = reporteService.generarReporte(opt_periodicidad,opt_periodo,balancexSedeAux,name);
