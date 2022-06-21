@@ -300,6 +300,7 @@
                                         </div>
                                         <div th:if="${listaPersonasCalificadas.contains(director)}">
                                             <div class="row" style="text-align: center">
+                                                <input th:id="|estrellasDirector${director.id}|" name="directores" value="0" hidden>
                                                 <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este director</b></h3>
                                             </div>
                                         </div>
@@ -358,6 +359,7 @@
                                         </div>
                                         <div th:if="${listaPersonasCalificadas.contains(actor)}">
                                             <div class="row" style="text-align: center">
+                                                <input th:id="|estrellasActor${actor.id}|" name="actores" value="0" hidden>
                                                 <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este actor</b></h3>
                                             </div>
                                         </div>

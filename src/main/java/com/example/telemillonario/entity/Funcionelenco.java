@@ -11,11 +11,11 @@ public class Funcionelenco implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idpersona")
     private Persona idpersona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idfuncion")
     private Funcion idfuncion;
 

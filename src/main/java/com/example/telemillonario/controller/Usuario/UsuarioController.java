@@ -1622,7 +1622,7 @@ public class UsuarioController {
                                       @RequestParam("sede") Integer calificacionSede,
                                       @RequestParam("actores") ArrayList<Integer> calificacionActores,
                                       @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
-                                      @RequestParam("id") Integer idCompra,
+                                      @RequestParam("id") Integer idFuncion,
                                       @RequestParam("idobra") Integer idobra,
                                       @RequestParam("idsede") Integer idsede,
                                       @RequestParam("descripcion") String descripcion,
@@ -1630,15 +1630,19 @@ public class UsuarioController {
                                       HttpSession httpSession,
                                       RedirectAttributes redirectAttributes){
 
-
-        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idCompra);
-        System.out.println("Id funcion: " + idCompra);
+        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idFuncion);
+        System.out.println("Id funcion: " + idFuncion);
         System.out.println("Id Obra: " + idobra);
         System.out.println("Calificacion obra: " + calificacionObra);
+        System.out.println("Calificacion sede: " + calificacionSede);
+        for (int a : calificacionActores) {
+            System.out.println("Calificacion Actor: " + a);
+        }
+        for (int a : calificacionDirectores) {
+            System.out.println("Calificacion Director: " + a);
+        }
 
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
-
-
 
         //guardamos la calificacion y reseña para la obra
 
@@ -1679,13 +1683,6 @@ public class UsuarioController {
         sedactu.setCalificacion(promsede);
         sedeRepository.save(sedactu);
 
-
-
-//        for (int calificacionActor : calificacionActores) {
-//            System.out.println("Calificacion Actor: " + calificacionActor);
-//
-//
-//        }
         //listas de actores y directores de la funcion
         ArrayList<Persona> listaActores = new ArrayList<>();
         ArrayList<Persona> listaDirectores = new ArrayList<>();
@@ -1727,7 +1724,6 @@ public class UsuarioController {
 //        for (int calificacionDirector : calificacionDirectores) {
 //            System.out.println("Calificacion Director: " + calificacionDirector);
 //        }
-
         //guardamos la calificacion para los directores
         int j=0;
         for (Persona dir : listaDirectores) {
