@@ -290,6 +290,16 @@ public class FuncionesController {
         //hora inicio
         LocalTime hora = fecha.toLocalTime();
 
+        // Se establece la cantidad de asistentes de la función
+        if (funcion.getId() != null){
+            Funcion funcionEnDB = funcionRepository.findById(funcion.getId()).get();
+            funcion.setCantidadasistentes(funcionEnDB.getCantidadasistentes());
+        } else{
+            funcion.setCantidadasistentes(0);
+        }
+
+        System.out.println(funcion.getCantidadasistentes());
+
         // Se guarda la fecha
         funcion.setEstado(1);
         funcion.setFecha(dia);

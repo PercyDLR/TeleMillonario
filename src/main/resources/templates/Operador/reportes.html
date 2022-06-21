@@ -100,7 +100,9 @@
 
                             <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
 
-                            <div class="price__item"><span th:text="|Portcentaje de Asistencia: *{pasistencia}%|"></span></div>
+                            <div class="price__item">
+                                <span th:text="|Porcentaje de Asistencia: ${funcionMasVista.pasistencia != null ? funcionMasVista.pasistencia : '0'}%|"></span>
+                            </div>
                         </div>
                     </div>
 
@@ -118,7 +120,9 @@
 
                             <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
 
-                            <div class="price__item"><span th:text="|Calificación Promedio: *{calificacion}%|"></span></div>
+                            <div class="price__item">
+                                <span th:text="|Calificación Promedio: *{calificacion}|"></span>
+                            </div>
                         </div>
                     </div>
 
@@ -136,7 +140,9 @@
 
                             <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
 
-                            <div class="price__item"><span th:text="|Portcentaje de Asistencia: *{pasistencia}%|"></span></div>
+                            <div class="price__item">
+                                <span th:text="|Porcentaje de Asistencia: ${funcionMasVista.pasistencia != null ? funcionMasVista.pasistencia : '0'}%|"></span>
+                            </div>
                         </div>
                     </div>
 
@@ -170,11 +176,11 @@
 
                                     <div class="card__content">
                                         <h3 class="card__title">
-                                            <a href="#" th:text="${actor.nombres + ' ' + actor.apellidos}"></a>
+                                            <a href="#" th:text="${actor.nombres + ' ' + (funcionMasVista.pasistencia != null ? funcionMasVista.pasistencia : '0')}"></a>
                                         </h3>
                                         <span class="card__rate">
                                             <i class="icon ion-ios-star"></i>
-                                            <span th:text="${actor.calificacion}"></span>
+                                            <span th:text="${actor.calificacion != null ? actor.calificacion : '--'}"></span>
                                         </span>
                                     </div>
                                 </div>
@@ -232,7 +238,7 @@
                                         </h3>
                                         <span class="card__rate">
                                             <i class="icon ion-ios-star"></i>
-                                            <span th:text="${director.calificacion}"></span>
+                                            <span th:text="${director.calificacion != null ? director.calificacion : '--'}"></span>
                                         </span>
                                     </div>
                                 </div>
