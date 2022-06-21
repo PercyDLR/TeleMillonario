@@ -54,7 +54,7 @@ public class ReportesController {
             model.addAttribute("actoresMejorCalificados", funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
             model.addAttribute("directoresMejorCalificados", funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
 
-            return "/Operador/reportes";
+            return "Operador/reportes";
         }
 
         Optional<EstadisticaFuncionDto> funcionMasVista = null;
@@ -113,7 +113,7 @@ public class ReportesController {
         model.addAttribute("periodicidad", opt_periodicidad.get());
         model.addAttribute("periodo", periodo);
 
-        return "/Operador/reportes";
+        return "Operador/reportes";
     }
 
     @GetMapping(value = "/exportar",produces = MediaType.APPLICATION_JSON_VALUE)
