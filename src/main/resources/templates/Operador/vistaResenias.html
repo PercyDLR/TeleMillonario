@@ -35,7 +35,7 @@
             <br>
             <br>
 
-            <div class="row" >
+            <div class="row" style="display: flex;justify-content: center" >
 
                 <!-- Teatro -->
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" style="padding-top: 20px;">
@@ -66,15 +66,15 @@
                                             <br>
 
                                             <div class="card__wrap" style="justify-content: center">
-                                                <i class="icon ion-ios-star"></i>
+                                                <i class="icon ion-ios-star" style="color: #e8bd3c"></i>
                                                 <span class="card__rate" th:text="${califpromsede==null ? 'Aún no hay calificaciones': califpromsede}">8.4 (10.987 reseñas)</span>
                                             </div>
                                             <div class="card__wrap" style="justify-content: center">
-                                                <i class="icon ion-ios-star"></i>
+                                                <i class="icon ion-ios-star" style="color: #e8bd3c"></i>
                                                 <span class="card__rate" th:text="|${cantreseposi} reseñas positivas|">8502 reseñas positivas</span>
                                             </div>
                                             <div class="card__wrap" style="justify-content: center">
-                                                <i class="icon ion-ios-star"></i>
+                                                <i class="icon ion-ios-star" style="color: #e8bd3c"></i>
                                                 <span class="card__rate" th:text="|${cantresenega} reseñas negativas|">2485 reseñas negativas</span>
                                             </div>
 
@@ -97,139 +97,9 @@
             </div>
         </div>
 
-        <section class="section section--first section--bg" style="margin-top: 0">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section__wrap">
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- expected premiere -->
-        <section class="section section--bg" data-bg="../../../static/img/section/section.jpg">
-            <div class="container">
-                <div class="row">
-                    <!-- section title -->
-                    <div class="col-12">
-                        <h2 class="section__title">Funciones</h2>
-                    </div>
-                    <!-- end section title -->
 
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="../../../static/img/covers/cover.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Independencia</a></h3>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="../../../static/img/covers/cover3.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">La Ternura</a></h3>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="../../../static/img/covers/cover2.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Ollantay</a></h3>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>6.3</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="../../../static/img/covers/cover6.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Historias de Arena</a></h3>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.9</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="../../../static/img/covers/cover4.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Los Tambores</a></h3>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="../../../static/img/covers/cover5.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Ña Catita</a></h3>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- section btn -->
-                    <div class="col-12">
-                        <a href="#" class="section__btn">Mostrar más</a>
-                    </div>
-                    <!-- end section btn -->
-                </div>
-            </div>
-        </section>
-        <!-- end expected premiere -->
 
         <div th:replace="fragments/footer :: js(~{::script})">
 
