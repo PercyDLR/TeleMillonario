@@ -70,7 +70,7 @@ public class LoginController {
     @Autowired
     CompraRepository compraRepository;
 
-    @GetMapping("/list")
+    @GetMapping("/loginByGoogle")
     public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session, RedirectAttributes redirectAttributes,HttpServletRequest request){
         OAuth2AuthorizedClient client = auth2AuthorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(),authentication.getName());
         String name = (String)  authentication.getPrincipal().getAttributes().get("given_name");
@@ -120,7 +120,7 @@ public class LoginController {
         }
 
         return "login/signin";
-    }
+   }
 
     @GetMapping("/crearCuenta")
     public String registrarse(@ModelAttribute("usuario") Persona usuario, Model model){

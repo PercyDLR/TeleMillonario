@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll().and()
                 .oauth2Login()
                 .loginPage("/login")
-                .defaultSuccessUrl("/list",true);
+                .defaultSuccessUrl("/loginByGoogle",true);
     }
 
     @Autowired
