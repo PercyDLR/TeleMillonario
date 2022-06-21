@@ -167,11 +167,11 @@
         <div class="content" style="padding-bottom: 0">
             <div class="container my-5">
                 <div class="row text-center">
-                    <div class="col-12">
+                    <div class="col-12" style="text-align: center">
                         <h1 class="details__title" style="margin-bottom: 10px;"><b th:text="${sede.nombre}"></b></h1>
-                        <h1 class="details__title" style="font-size: 30px" th:text="${sede.iddistrito.nombre}"></h1>
+                        <h1 class="details__title" style="font-size: 30px; margin-bottom: 10px;" th:text="${sede.iddistrito.nombre}"></h1>
                         <i class="icon ion-ios-star" style="color: #ff5860"></i>
-                        <span class="card__rate" th:text="${sede.calificacion == null ? '-': sede.calificacion}">
+                        <span class="card__rate" style="margin-bottom: 30px;" th:text="${sede.calificacion == null ? '-': sede.calificacion}">
                                                         8.4
                                                 </span>
                     </div>

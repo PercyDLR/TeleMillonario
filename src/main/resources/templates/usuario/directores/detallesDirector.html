@@ -62,9 +62,9 @@
             <div class="container my-5">
                 <div class="row text-center">
                     <div class="col-12">
-                        <h1 class="details__title" th:text="|${director.nombres} ${director.apellidos}|"></h1>
+                        <h1 class="details__title" style="margin-bottom: 10px;" th:text="|${director.nombres} ${director.apellidos}|"></h1>
                         <i class="icon ion-ios-star" style="color: #ff5860"></i>
-                        <span class="card__rate" th:text="${director.calificacion == null ? '-': director.calificacion}">
+                        <span class="card__rate" style="margin-bottom: 30px;" th:text="${director.calificacion == null ? '-': director.calificacion}">
                                                         8.4
                                                     </span>
                     </div>
