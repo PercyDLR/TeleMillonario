@@ -22,7 +22,7 @@ public interface CalificacionesRepository extends JpaRepository<Calificaciones,I
     @Query(nativeQuery = true,value = "SELECT TRUNCATE(AVG(calificacion),1) FROM calificaciones WHERE idobra = ?1 and estado=1 ")
     Double PromCalificacionOBra(int idobra);
 
-    @Query(nativeQuery = true,value = "SELECT TRUNCATE(AVG(calificacion),1) FROM calificaciones WHERE idpersona = ?1 and estado=1 ")
+    @Query(nativeQuery = true,value = "SELECT TRUNCATE(AVG(calificacion),1) FROM calificaciones WHERE idelenco = ?1 and estado=1 ")
     Double PromCalificacionPersonaElenco(int idpersona);
 
 
@@ -35,5 +35,9 @@ public interface CalificacionesRepository extends JpaRepository<Calificaciones,I
 
     @Query(nativeQuery = true,value = "SELECT count(*) FROM calificaciones WHERE idsede = ?1 and estado=1 and calificacion<3 ")
     Integer CantReseNega(int idsede);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.calificaciones\n" +
+            "where (estado = 1) and (idpersona = ?1);")
+    List<Calificaciones> listaCalificacionesUsuario(Integer idpersona);
 
 }

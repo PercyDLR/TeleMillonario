@@ -49,6 +49,15 @@
                         <div class="col-12 my-5">
                             <h1 class="home__title">Calificación de la función</h1>
                         </div>
+                        <div class="row">
+                            <div class="col-12" style="width: fit-content">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${mensajeadvertencia != null}">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <strong th:text="${mensajeadvertencia}"></strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <h1 class="home__title" style="font-size: 30px">Obra</h1>
                         </div>
@@ -59,7 +68,7 @@
                         <div class="container">
                             <div class="row" style="margin-top: 48px;">
                                 <!-- card -->
-                                <div class="col-6 col-sm-12 col-lg-3" style="padding-inline: 5px"></div>
+                                <div class="col-6 col-sm-12 col-lg-1" style="padding-inline: 5px"></div>
                                 <div class="col-6 col-sm-12 col-lg-6" style="padding-inline: 5px">
                                     <div class="card card--list">
                                         <div class="row">
@@ -87,8 +96,8 @@
 <!--                                                        <span class="card__rate"><i-->
 <!--                                                                class="icon ion-ios-star"></i>8.4</span>-->
                                                         <i
-                                                                class="icon ion-ios-star" style="color: #e3c20d"></i>
-                                                        <span class="card__rate" th:text="${califprom==null ? '-': califprom}">8.4</span>
+                                                                class="icon ion-ios-star" style="color: #ff5860"></i>
+                                                        <span class="card__rate" th:text="${obra.calificacion == null ? '-': obra.calificacion}">8.4</span>
 
                                                         <ul class="card__list" style="margin-left: 0px;">
                                                             <li th:text="${obra.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>
@@ -100,37 +109,67 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <h4 class="home__title" style="font-size: 20px">Deja una reseña para la obra</h4>
-                                        <br>
-                                        <input name="idobra" th:value="${obra.id}" hidden>
-                                        <div class="row">
-                                            <textarea id="descripcion" rows="4" maxlength="500" name="descripcion"
-                                                      style="width: 100%;height: 80%;border-color: #FFFFFF;color: #000000;border-radius: 7px">
-                                                </textarea>
-                                        </div>
 
-                                        <input name="id" th:value="${id}" hidden>
-                                        <input id="estrellasObra" name="obra" value="0" hidden>
-                                        <div class="row">
-                                            <p class="clasificacion mt-2" style="text-align: center">
-                                                <input th:id="|raadio1${obra.id}|" type="radio" name="radioObra" value="5" onclick="calificarObra(this.id)">
-                                                <label th:for="|raadio1${obra.id}|">★</label>
-                                                <input th:id="|raadio2${obra.id}|" type="radio" name="radioObra" value="4" onclick="calificarObra(this.id)">
-                                                <label th:for="|raadio2${obra.id}|">★</label>
-                                                <input th:id="|raadio3${obra.id}|" type="radio" name="radioObra" value="3" onclick="calificarObra(this.id)">
-                                                <label th:for="|raadio3${obra.id}|">★</label>
-                                                <input th:id="|raadio4${obra.id}|" type="radio" name="radioObra" value="2" onclick="calificarObra(this.id)">
-                                                <label th:for="|raadio4${obra.id}|">★</label>
-                                                <input th:id="|raadio5${obra.id}|" type="radio" name="radioObra" value="1" onclick="calificarObra(this.id)">
-                                                <label th:for="|raadio5${obra.id}|">★</label>
-                                            </p>
                                         </div>
+<!--                                        <br>-->
+<!--                                        <br>-->
+<!--                                        <h4 class="home__title" style="font-size: 20px">Deja una reseña para la obra</h4>-->
+<!--                                        <br>-->
+<!--                                        <input name="idobra" th:value="${obra.id}" hidden>-->
+<!--                                        <div class="row">-->
+<!--                                            <textarea id="descripcion" rows="4" maxlength="500" name="descripcion"-->
+<!--                                                      style="width: 100%;height: 80%;border-color: #FFFFFF;color: #000000;border-radius: 7px">-->
+<!--                                                </textarea>-->
+<!--                                        </div>-->
+
+<!--                                        <input name="id" th:value="${id}" hidden>-->
+<!--                                        <input id="estrellasObra" name="obra" value="0" hidden>-->
+<!--                                        <div class="row">-->
+<!--                                            <p class="clasificacion mt-2" style="text-align: center">-->
+<!--                                                <input th:id="|raadio1${obra.id}|" type="radio" name="radioObra" value="5" onclick="calificarObra(this.id)">-->
+<!--                                                <label th:for="|raadio1${obra.id}|">★</label>-->
+<!--                                                <input th:id="|raadio2${obra.id}|" type="radio" name="radioObra" value="4" onclick="calificarObra(this.id)">-->
+<!--                                                <label th:for="|raadio2${obra.id}|">★</label>-->
+<!--                                                <input th:id="|raadio3${obra.id}|" type="radio" name="radioObra" value="3" onclick="calificarObra(this.id)">-->
+<!--                                                <label th:for="|raadio3${obra.id}|">★</label>-->
+<!--                                                <input th:id="|raadio4${obra.id}|" type="radio" name="radioObra" value="2" onclick="calificarObra(this.id)">-->
+<!--                                                <label th:for="|raadio4${obra.id}|">★</label>-->
+<!--                                                <input th:id="|raadio5${obra.id}|" type="radio" name="radioObra" value="1" onclick="calificarObra(this.id)">-->
+<!--                                                <label th:for="|raadio5${obra.id}|">★</label>-->
+<!--                                            </p>-->
+<!--                                        </div>-->
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-12 col-lg-3" style="padding-inline: 5px"></div>
+                                <input name="idobra" th:value="${obra.id}" hidden>
+                                <input name="id" th:value="${id}" hidden>
+                                <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px; margin: 50px 30px;" th:unless="${listaObrasCalificadas.contains(obra)}">
+                                    <input id="estrellasObra" name="obra" value="0" hidden>
+                                    <div class="row">
+                                        <p class="clasificacion mt-2" style="text-align: center">
+                                            <input th:id="|raadio1${obra.id}|" type="radio" name="radioObra" value="5" onclick="calificarObra(this.id)">
+                                            <label th:for="|raadio1${obra.id}|">★</label>
+                                            <input th:id="|raadio2${obra.id}|" type="radio" name="radioObra" value="4" onclick="calificarObra(this.id)">
+                                            <label th:for="|raadio2${obra.id}|">★</label>
+                                            <input th:id="|raadio3${obra.id}|" type="radio" name="radioObra" value="3" onclick="calificarObra(this.id)">
+                                            <label th:for="|raadio3${obra.id}|">★</label>
+                                            <input th:id="|raadio4${obra.id}|" type="radio" name="radioObra" value="2" onclick="calificarObra(this.id)">
+                                            <label th:for="|raadio4${obra.id}|">★</label>
+                                            <input th:id="|raadio5${obra.id}|" type="radio" name="radioObra" value="1" onclick="calificarObra(this.id)">
+                                            <label th:for="|raadio5${obra.id}|">★</label>
+                                        </p>
+                                    </div>
+                                    <div class="row sign__group">
+                                            <textarea class="sign__input" id="descripcion" required rows="4" maxlength="500" name="descripcion" placeholder="Deje una reseña para la obra" style="width: 100%; height: 80%; border-radius: 7px"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px; margin: 50px 30px;" th:if="${listaObrasCalificadas.contains(obra)}">
+                                    <div class="row" style="text-align: center">
+                                        <input id="estrellasObra" name="obra" value="0" hidden>
+                                        <textarea class="sign__input" id="descripcion" rows="4" maxlength="500"  name="descripcion" placeholder="Deje una reseña para la obra" style="width: 100%; height: 80%; border-radius: 7px" hidden></textarea>
+                                        <h3 class="card__title"><b>Usted ya ha calificado esta obra</b></h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-12 col-lg-1" style="padding-inline: 5px"></div>
                                 <!-- end card -->
                             </div>
                         </div>
@@ -152,7 +191,7 @@
                         <div class="container">
                             <div class="row" style="margin-top: 48px;">
                                 <!-- card -->
-                                <div class="col-6 col-sm-12 col-lg-3" style="padding-inline: 5px"></div>
+                                <div class="col-6 col-sm-12 col-lg-1" style="padding-inline: 5px"></div>
                                 <div class="col-6 col-sm-12 col-lg-6" style="padding-inline: 5px">
                                     <div class="card card--list">
                                         <div class="row">
@@ -172,11 +211,9 @@
                                                     </h3>
 
                                                     <div class="card__wrap">
-                                                        <!--                                                        <span class="card__rate"><i-->
-                                                        <!--                                                                class="icon ion-ios-star"></i>8.4</span>-->
                                                         <i
-                                                                class="icon ion-ios-star" style="color: #e3c20d"> </i>
-                                                        <span class="card__rate" th:text="${califpromsede==null ? '-': califpromsede}">8.4</span>
+                                                                class="icon ion-ios-star" style="color: #ff5860"> </i>
+                                                        <span class="card__rate" th:text="${sede.calificacion == null ? '-': sede.calificacion}">8.4</span>
 
                                                     </div>
 
@@ -186,35 +223,38 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <br>
-                                        <h4 class="home__title" style="font-size: 20px">Deja una reseña para la obra</h4>
-                                        <br>
-                                        <input name="idsede" th:value="${sede.id}" hidden>
-                                        <div class="row">
-                                            <textarea id="descripcionsede" rows="4" maxlength="500" name="descripcionsede"
-                                                      style="width: 100%;height: 80%;border-color: #FFFFFF;color: #000000;border-radius: 7px">
-                                                </textarea>
-                                        </div>
 
-                                        <input id="estrellasSede" name="sede" value="0" hidden>
-                                        <div class="row">
-                                            <p class="clasificacion mt-2" style="text-align: center">
-                                                <input th:id="|raadio1${sede.id}|" type="radio" name="radioObra" value="5" onclick="calificarSede(this.id)">
-                                                <label th:for="|raadio1${sede.id}|">★</label>
-                                                <input th:id="|raadio2${sede.id}|" type="radio" name="radioObra" value="4" onclick="calificarSede(this.id)">
-                                                <label th:for="|raadio2${sede.id}|">★</label>
-                                                <input th:id="|raadio3${sede.id}|" type="radio" name="radioObra" value="3" onclick="calificarSede(this.id)">
-                                                <label th:for="|raadio3${sede.id}|">★</label>
-                                                <input th:id="|raadio4${sede.id}|" type="radio" name="radioObra" value="2" onclick="calificarSede(this.id)">
-                                                <label th:for="|raadio4${sede.id}|">★</label>
-                                                <input th:id="|raadio5${sede.id}|" type="radio" name="radioObra" value="1" onclick="calificarSede(this.id)">
-                                                <label th:for="|raadio5${sede.id}|">★</label>
-                                            </p>
-                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-12 col-lg-3" style="padding-inline: 5px"></div>
+                                <input name="idsede" th:value="${sede.id}" hidden>
+                                <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px; margin: 50px 30px;" th:unless="${listaSedesCalificadas.contains(sede)}">
+                                    <input id="estrellasSede" name="sede" value="0" hidden>
+                                    <div class="row">
+                                        <p class="clasificacion mt-2" style="text-align: center">
+                                            <input th:id="|raadio1${sede.id}|" type="radio" name="radioSede" value="5" onclick="calificarSede(this.id)">
+                                            <label th:for="|raadio1${sede.id}|">★</label>
+                                            <input th:id="|raadio2${sede.id}|" type="radio" name="radioSede" value="4" onclick="calificarSede(this.id)">
+                                            <label th:for="|raadio2${sede.id}|">★</label>
+                                            <input th:id="|raadio3${sede.id}|" type="radio" name="radioSede" value="3" onclick="calificarSede(this.id)">
+                                            <label th:for="|raadio3${sede.id}|">★</label>
+                                            <input th:id="|raadio4${sede.id}|" type="radio" name="radioSede" value="2" onclick="calificarSede(this.id)">
+                                            <label th:for="|raadio4${sede.id}|">★</label>
+                                            <input th:id="|raadio5${sede.id}|" type="radio" name="radioSede" value="1" onclick="calificarSede(this.id)">
+                                            <label th:for="|raadio5${sede.id}|">★</label>
+                                        </p>
+                                    </div>
+                                    <div class="row sign__group">
+                                            <textarea class="sign__input" id="descripcionsede" required rows="4" maxlength="500" name="descripcionsede" placeholder="Deje una reseña para la sede" style="width: 100%; height: 80%; border-radius: 7px"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px; margin: 50px 30px;" th:if="${listaSedesCalificadas.contains(sede)}">
+                                    <div class="row" style="text-align: center">
+                                        <input id="estrellasSede" name="sede" value="0" hidden>
+                                        <h3 class="card__title"><b>Usted ya ha calificado esta sede</b></h3>
+                                        <textarea class="sign__input" id="descripcionsede" rows="4" maxlength="500" name="descripcionsede" placeholder="Deje una reseña para la sede" style="width: 100%; height: 80%; border-radius: 7px" hidden></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-12 col-lg-1" style="padding-inline: 5px"></div>
                                 <!-- end card -->
                             </div>
                         </div>
@@ -238,7 +278,7 @@
                                     <div class="col-12 col-sm-9" style="text-align: center">
                                         <div class="card__cover">
                                             <img th:each="foto : ${fotosPersonas}"
-                                                 th:if="${(foto.idpersona != null) && (foto.idpersona.id == director.id)}"
+                                                 th:if="${(foto.idpersona != null) && (foto.idpersona.id == director.id) && (foto.numero == 0)}"
                                                  th:src="${foto.ruta}" alt="portada">
                                             <a href="#" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
@@ -252,19 +292,27 @@
                                             <a href="#"
                                                th:text="${director.apellidos}"></a>
                                         </h3>
-                                        <input th:id="|estrellasDirector${director.id}|" name="directores" value="0" hidden>
-                                        <p class="clasificacion mt-2">
-                                            <input th:id="|radio1${director.id}|" th:name="|radio${director.id}|" type="radio" value="5" onclick="calificarDirector(this.id)">
-                                            <label th:for="|radio1${director.id}|">★</label>
-                                            <input th:id="|radio2${director.id}|" th:name="|radio${director.id}|" type="radio" value="4" onclick="calificarDirector(this.id)">
-                                            <label th:for="|radio2${director.id}|">★</label>
-                                            <input th:id="|radio3${director.id}|" th:name="|radio${director.id}|" type="radio" value="3" onclick="calificarDirector(this.id)">
-                                            <label th:for="|radio3${director.id}|">★</label>
-                                            <input th:id="|radio4${director.id}|" th:name="|radio${director.id}|" type="radio" value="2" onclick="calificarDirector(this.id)">
-                                            <label th:for="|radio4${director.id}|">★</label>
-                                            <input th:id="|radio5${director.id}|" th:name="|radio${director.id}|" type="radio" value="1" onclick="calificarDirector(this.id)">
-                                            <label th:for="|radio5${director.id}|">★</label>
-                                        </p>
+                                        <div th:unless="${listaPersonasCalificadas.contains(director)}">
+                                            <input th:id="|estrellasDirector${director.id}|" name="directores" value="0" hidden>
+                                            <p class="clasificacion mt-2">
+                                                <input th:id="|radio1${director.id}|" th:name="|radio${director.id}|" type="radio" value="5" onclick="calificarDirector(this.id)">
+                                                <label th:for="|radio1${director.id}|">★</label>
+                                                <input th:id="|radio2${director.id}|" th:name="|radio${director.id}|" type="radio" value="4" onclick="calificarDirector(this.id)">
+                                                <label th:for="|radio2${director.id}|">★</label>
+                                                <input th:id="|radio3${director.id}|" th:name="|radio${director.id}|" type="radio" value="3" onclick="calificarDirector(this.id)">
+                                                <label th:for="|radio3${director.id}|">★</label>
+                                                <input th:id="|radio4${director.id}|" th:name="|radio${director.id}|" type="radio" value="2" onclick="calificarDirector(this.id)">
+                                                <label th:for="|radio4${director.id}|">★</label>
+                                                <input th:id="|radio5${director.id}|" th:name="|radio${director.id}|" type="radio" value="1" onclick="calificarDirector(this.id)">
+                                                <label th:for="|radio5${director.id}|">★</label>
+                                            </p>
+                                        </div>
+                                        <div th:if="${listaPersonasCalificadas.contains(director)}">
+                                            <div class="row" style="text-align: center">
+                                                <input th:id="|estrellasDirector${director.id}|" name="directores" value="0" hidden>
+                                                <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este director</b></h3>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -289,7 +337,7 @@
                                     <div class="col-12 col-sm-9" style="text-align: center">
                                         <div class="card__cover">
                                             <img th:each="foto : ${fotosPersonas}"
-                                                 th:if="${(foto.idpersona != null) && (foto.idpersona.id == actor.id)}"
+                                                 th:if="${(foto.idpersona != null) && (foto.idpersona.id == actor.id) && (foto.numero == 0)}"
                                                  th:src="${foto.ruta}" alt="portada">
                                             <a href="#" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
@@ -303,19 +351,27 @@
                                             <a href="#"
                                                th:text="${actor.apellidos}"></a>
                                         </h3>
-                                        <input th:id="|estrellasActor${actor.id}|" name="actores" value="0" hidden>
-                                        <p class="clasificacion mt-2">
-                                            <input th:id="|radio1${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="5" onclick="calificarActor(this.id)">
-                                            <label th:for="|radio1${actor.id}|">★</label>
-                                            <input th:id="|radio2${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="4" onclick="calificarActor(this.id)">
-                                            <label th:for="|radio2${actor.id}|">★</label>
-                                            <input th:id="|radio3${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="3" onclick="calificarActor(this.id)">
-                                            <label th:for="|radio3${actor.id}|">★</label>
-                                            <input th:id="|radio4${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="2" onclick="calificarActor(this.id)">
-                                            <label th:for="|radio4${actor.id}|">★</label>
-                                            <input th:id="|radio5${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="1" onclick="calificarActor(this.id)">
-                                            <label th:for="|radio5${actor.id}|">★</label>
-                                        </p>
+                                        <div th:unless="${listaPersonasCalificadas.contains(actor)}">
+                                            <input th:id="|estrellasActor${actor.id}|" name="actores" value="0" hidden>
+                                            <p class="clasificacion mt-2">
+                                                <input th:id="|radio1${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="5" onclick="calificarActor(this.id)">
+                                                <label th:for="|radio1${actor.id}|">★</label>
+                                                <input th:id="|radio2${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="4" onclick="calificarActor(this.id)">
+                                                <label th:for="|radio2${actor.id}|">★</label>
+                                                <input th:id="|radio3${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="3" onclick="calificarActor(this.id)">
+                                                <label th:for="|radio3${actor.id}|">★</label>
+                                                <input th:id="|radio4${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="2" onclick="calificarActor(this.id)">
+                                                <label th:for="|radio4${actor.id}|">★</label>
+                                                <input th:id="|radio5${actor.id}|" th:name="|radio${actor.id}|" type="radio" value="1" onclick="calificarActor(this.id)">
+                                                <label th:for="|radio5${actor.id}|">★</label>
+                                            </p>
+                                        </div>
+                                        <div th:if="${listaPersonasCalificadas.contains(actor)}">
+                                            <div class="row" style="text-align: center">
+                                                <input th:id="|estrellasActor${actor.id}|" name="actores" value="0" hidden>
+                                                <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este actor</b></h3>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>

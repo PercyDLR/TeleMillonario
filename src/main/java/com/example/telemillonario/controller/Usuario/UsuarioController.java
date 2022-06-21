@@ -474,15 +474,16 @@ public class UsuarioController {
 
     //@PostMapping("/compra")
     @GetMapping("/compra")
-    public String compraBoletos(@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
+    public String compraBoletos(@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta,@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
                                 @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr,RedirectAttributes redirectAttributes, HttpSession session,
-                                Model model,@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta) {
+                                Model model) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
         int idFuncion = 0;
         int cantBoletos = 0;
         Funcion funcion = null;
-
+        System.out.println(idFuncionStr);
+        System.out.println(cantBoletosStr);
         if(idFuncionStr == null || cantBoletosStr == null){
             return "redirect:/anErrorHasOcurred";
         }
@@ -553,6 +554,7 @@ public class UsuarioController {
                     model.addAttribute("foto",listaFotos);
                     List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
                     model.addAttribute("listaGeneros",listaGeneros);
+
                     return "usuario/pagoUsuario";
                     //session.setAttribute("compraEnProceso",compraEnProceso);
                     //return "redirect:/compraprocess";
@@ -619,8 +621,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/pago")
-    public String pagoDeCompra(@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
-                               @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr,@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
+    public String pagoDeCompra(@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult,@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
+                               @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr, HttpSession session,
                                RedirectAttributes redirectAttributes,Model model) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
@@ -728,6 +730,7 @@ public class UsuarioController {
                     double precioEntradaFuncion = funcion.getPrecioentrada();
                     double montoTotal = precioEntradaFuncion * cantBoletos;
                     if (bindingResult.hasErrors()) {
+                        System.out.println("----------------LLEGO BINDING RESULT");
                         Compra compraEnProceso = new Compra();
                         compraEnProceso.setCantidad(cantBoletos);
                         compraEnProceso.setMontoTotal(montoTotal);
@@ -756,9 +759,9 @@ public class UsuarioController {
                         }else{
                             todoOK=false;
                         }
-
+                        System.out.println("-------------------");
                         System.out.println(response.getBody().getMsg());
-
+                        System.out.println(todoOK);
                         if (todoOK) {
                             int cantidadAsistentes = funcion.getCantidadasistentes();
                             int stockRestanteFuncion = stockFuncion - cantBoletos;
@@ -778,7 +781,7 @@ public class UsuarioController {
                             Compra compra = new Compra();
                             compra.setPersona(persona);
                             compra.setCantidad(cantBoletos);
-                            compra.setEstado("Comprado");
+                            compra.setEstado("Vigente");
                             compra.setFuncion(funcion);
                             compra.setMontoTotal(montoTotal);
 
@@ -789,7 +792,7 @@ public class UsuarioController {
                             //https://www.baeldung.com/java-uuid
                             UUID uuid = UUID.randomUUID();
                             String numero_operacion = uuid.toString();
-                            String url_for_qr = "http://telemillonario.hopto.org/qr/numero_operacion="+numero_operacion;//se tiene que implementar el metodo
+                            String url_for_qr = "http://telemillonario.hopto.org/qr?codigo="+numero_operacion;//se tiene que implementar el metodo
                             String url_encoded = coderService.codificar(url_for_qr);
                             RestTemplate restTemplate_for_qr = new RestTemplate();
                             String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
@@ -830,6 +833,7 @@ public class UsuarioController {
                                 sendInfoCompraCorreo(compra.getPersona().getCorreo(),content);
                             } catch (MessagingException | UnsupportedEncodingException e) {
                                 e.getMessage();
+                                System.out.println("llego aca");
                                 return "redirect:/anErrorHasOcurred";
                             }
 
@@ -837,8 +841,13 @@ public class UsuarioController {
                             return "redirect:/historialPrueba";
 
                         } else {
-                            redirectAttributes.addFlashAttribute("mensajeError",response.getBody().getMsg());
-                            return "redirect:/compra?idFuncion="+idFuncion+"&cantBoletos"+cantBoletos;
+                            String mensaje = response.getBody().getMsg();
+                            redirectAttributes.addFlashAttribute("mensajeError", mensaje);
+                            System.out.println(mensaje);
+                            System.out.println("llego aca");
+                            System.out.println(idFuncionStr);
+                            System.out.println(cantBoletosStr);
+                            return "redirect:/compra?idFuncion="+idFuncionStr+"&cantBoletos="+cantBoletosStr;
                         }
                     }
                 }
@@ -1008,7 +1017,7 @@ public class UsuarioController {
 
 
     @GetMapping("/compraReservasCarrito")
-    private String comprarReservasDelCarrito(@RequestParam(value = "listaReservas",required = false)String listaReservasStr,
+    private String comprarReservasDelCarrito(@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta,@RequestParam(value = "listaReservas",required = false)String listaReservasStr,
                                              @RequestParam(value = "listaCantidadBoletos",required = false)String listaCantidadBoletosStr,
                                              RedirectAttributes redirectAttributes, HttpSession session,Model model){
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
@@ -1275,7 +1284,7 @@ public class UsuarioController {
                 if (todoOK) {
                     UUID uuid = UUID.randomUUID();
                     String numero_operacion = uuid.toString();
-                    String url_for_qr = "url a definir"+"/numero_operacion="+numero_operacion;
+                    String url_for_qr = "http://telemillonario.hopto.org/qr/codigo="+numero_operacion;
                     String url_encoded = coderService.codificar(url_for_qr);
                     RestTemplate restTemplate_for_qr = new RestTemplate();
                     String qr_service = "http://20.90.180.72/validacion/qrcode?link="+url_encoded;
@@ -1309,7 +1318,7 @@ public class UsuarioController {
                         System.out.println(compra.getEstado());
                         Compra compra1 = new Compra();
                         compra1.setCantidad(compra.getCantidad());
-                        compra1.setEstado("Comprado");
+                        compra1.setEstado("Vigente");
                         compra1.setPersona(persona);
                         compra1.setMontoTotal(montoTotal);
                         compra1.setPersona(persona);
@@ -1387,7 +1396,7 @@ public class UsuarioController {
 
                 } else {
                     redirectAttributes.addFlashAttribute("mensajeError",response.getBody().getMsg());
-                    return "redirect:/compraReservasCarrito?listaReservas="+listaReservasStr+"&listaCantidadBoletos"+listaCantidadBoletosStr;
+                    return "redirect:/compraReservasCarrito?listaReservas="+listaReservasStr+"&listaCantidadBoletos="+listaCantidadBoletosStr;
                 }
             }
 
@@ -1492,6 +1501,58 @@ public class UsuarioController {
         model.addAttribute("historialCompras", listaComprasRevisadas);
         //model.addAttribute("listaGeneros", compraGenero);
         model.addAttribute("duracionFuncioncompra", duracionFuncioncompra);
+
+        //Habilitar boton de calificacion
+
+        List<Calificaciones> listaCalificacionesUsuario = calificacionesRepository.listaCalificacionesUsuario(persona.getId());
+
+        List<Obra> listaObrasCalificadas = new ArrayList<>();
+        for (Calificaciones l : listaCalificacionesUsuario) {
+            if (l.getObra() != null && !listaObrasCalificadas.contains(l.getObra())) {
+                listaObrasCalificadas.add(l.getObra());
+            }
+        }
+        List<Sede> listaSedesCalificadas = new ArrayList<>();
+        for (Calificaciones l : listaCalificacionesUsuario) {
+            if (l.getSede() != null && !listaSedesCalificadas.contains(l.getSede())) {
+                listaSedesCalificadas.add(l.getSede());
+            }
+        }
+        List<Persona> listaPersonasCalificadas = new ArrayList<>();
+        for (Calificaciones l : listaCalificacionesUsuario) {
+            if (l.getElenco() != null && !listaPersonasCalificadas.contains(l.getElenco())) {
+                listaPersonasCalificadas.add(l.getElenco());
+            }
+        }
+
+        LinkedHashMap<Compra, Boolean> calificacionHabilitada = new LinkedHashMap<>();
+        for (Compra c : listaCompras) {
+
+            boolean habilitado = false;
+            boolean yaValidado = false;
+            List<Funcionelenco> elenco = funcionElencoRepository.buscarFuncionElenco(c.getFuncion().getId());
+            List<Persona> listaPersonasElenco = new ArrayList<>();
+            for (Funcionelenco f : elenco) {
+                listaPersonasElenco.add(f.getIdpersona());
+            }
+            for (Persona p : listaPersonasElenco) {
+                if (!listaPersonasCalificadas.contains(p) && !yaValidado) {
+                    habilitado = true;
+                    yaValidado = true;
+                }
+            }
+            if (!listaObrasCalificadas.contains(c.getFuncion().getIdobra()) && !yaValidado) {
+                habilitado = true;
+                yaValidado = true;
+            }
+            if (!listaSedesCalificadas.contains(c.getFuncion().getIdsala().getIdsede()) && !yaValidado) {
+                habilitado = true;
+                yaValidado = true;
+            }
+            calificacionHabilitada.put(c, habilitado);
+
+        }
+        model.addAttribute("calificacionHabilitada", calificacionHabilitada);
         return "usuario/carrito/historialComprasUsuario";
     }
 
@@ -1507,7 +1568,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/calificarObra")
-    public String calificarObra(@RequestParam("id") Integer idFuncion, Model model){
+    public String calificarObra(@RequestParam("id") Integer idFuncion, Model model, HttpSession httpSession){
 
         List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idFuncion);
         ArrayList<Persona> listaActores = new ArrayList<>();
@@ -1533,21 +1594,44 @@ public class UsuarioController {
         model.addAttribute("fotosede",fotoRepository.caratulaDeSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
         model.addAttribute("sede",funcionRepository.getById(idFuncion).getIdsala().getIdsede());
         model.addAttribute("fotosPersonas", fotoRepository.findAll());
-        //Envio de la calificacion promedio de la obra
-        model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(funcionRepository.getById(idFuncion).getIdobra().getId()));
 
-        //Envio de la calificacion promedio de la sede
-        model.addAttribute("califpromsede",calificacionesRepository.PromCalificacionSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
+        //Evaluacion si el usuario en sesion ya
+        Persona persona = (Persona) httpSession.getAttribute("usuario");
+        List<Calificaciones> listaCalificacionesUsuario = calificacionesRepository.listaCalificacionesUsuario(persona.getId());
+
+        List<Obra> listaObrasCalificadas = new ArrayList<>();
+        for (Calificaciones c : listaCalificacionesUsuario) {
+            if (c.getObra() != null && !listaObrasCalificadas.contains(c.getObra())) {
+                listaObrasCalificadas.add(c.getObra());
+            }
+        }
+        List<Sede> listaSedesCalificadas = new ArrayList<>();
+        for (Calificaciones c : listaCalificacionesUsuario) {
+            if (c.getSede() != null && !listaSedesCalificadas.contains(c.getSede())) {
+                listaSedesCalificadas.add(c.getSede());
+            }
+        }
+        List<Persona> listaPersonasCalificadas = new ArrayList<>();
+        for (Calificaciones c : listaCalificacionesUsuario) {
+            if (c.getElenco() != null && !listaPersonasCalificadas.contains(c.getElenco())) {
+                listaPersonasCalificadas.add(c.getElenco());
+            }
+        }
+
+        model.addAttribute("listaObrasCalificadas", listaObrasCalificadas);
+        model.addAttribute("listaSedesCalificadas", listaSedesCalificadas);
+        model.addAttribute("listaPersonasCalificadas", listaPersonasCalificadas);
 
         return "usuario/calificacion";
     }
+
 
     @PostMapping("/guardarCalificacion")
     public String guardarCalificacion(@RequestParam("obra") Integer calificacionObra,
                                       @RequestParam("sede") Integer calificacionSede,
                                       @RequestParam("actores") ArrayList<Integer> calificacionActores,
                                       @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
-                                      @RequestParam("id") Integer idCompra,
+                                      @RequestParam("id") Integer idFuncion,
                                       @RequestParam("idobra") Integer idobra,
                                       @RequestParam("idsede") Integer idsede,
                                       @RequestParam("descripcion") String descripcion,
@@ -1555,16 +1639,51 @@ public class UsuarioController {
                                       HttpSession httpSession,
                                       RedirectAttributes redirectAttributes){
 
-
-        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idCompra);
-        System.out.println("Id funcion: " + idCompra);
+        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idFuncion);
+        System.out.println("Id funcion: " + idFuncion);
         System.out.println("Id Obra: " + idobra);
         System.out.println("Calificacion obra: " + calificacionObra);
+        System.out.println("Calificacion sede: " + calificacionSede);
+        for (int a : calificacionActores) {
+            System.out.println("Calificacion Actor: " + a);
+        }
+        for (int a : calificacionDirectores) {
+            System.out.println("Calificacion Director: " + a);
+        }
 
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
 
-        //guardamos la calificacion y reseña para la sede
 
+        //Validacion para verificar si ha completado la calificacion de la obra y sede + sus reseñas
+
+//        if(descripcion.isBlank() || calificacionObra==0|| calificacionSede==0||descripcionsede.isBlank()){
+//
+//            redirectAttributes.addFlashAttribute("mensajeadvertencia", "Debe dejar una reseña y calificación tanto para la obra como la sede");
+//            return "redirect:/calificarObra?id="+idFuncion;
+//        }
+
+
+        //guardamos la calificacion y reseña para la obra
+
+        if(calificacionObra!=0 ){
+            Calificaciones calfReseOBra= new Calificaciones();
+
+            calfReseOBra.setCalificacion(calificacionObra);
+            calfReseOBra.setComentario(descripcion);
+            calfReseOBra.setEstado(1);
+            calfReseOBra.setPersona(usuario);
+            calfReseOBra.setObra(obraRepository.findById(idobra).get());
+            calificacionesRepository.save(calfReseOBra);
+        }
+
+        //Guardar promedio calif obra en tabla obra
+        Double promobra=calificacionesRepository.PromCalificacionOBra(idobra);
+        Obra obraact =obraRepository.getById(idobra);
+        obraact.setCalificacion(promobra);
+        obraRepository.save(obraact);
+
+
+        //guardamos la calificacion y reseña para la sede
         if(calificacionSede!=0 ){
             Calificaciones calfReseSede= new Calificaciones();
 
@@ -1583,31 +1702,6 @@ public class UsuarioController {
         sedactu.setCalificacion(promsede);
         sedeRepository.save(sedactu);
 
-        //guardamos la calificacion y reseña para la obra
-
-        if(calificacionObra!=0 ){
-            Calificaciones calfReseOBra= new Calificaciones();
-
-            calfReseOBra.setCalificacion(calificacionObra);
-            calfReseOBra.setComentario(descripcion);
-            calfReseOBra.setEstado(1);
-            calfReseOBra.setPersona(usuario);
-            calfReseOBra.setObra(obraRepository.findById(idobra).get());
-
-            calificacionesRepository.save(calfReseOBra);
-        }
-
-        //Guardar promedio calif obra en tabla obra
-        Double promobra=calificacionesRepository.PromCalificacionOBra(idobra);
-        Obra obraact =obraRepository.getById(idobra);
-        obraact.setCalificacion(promobra);
-        obraRepository.save(obraact);
-
-//        for (int calificacionActor : calificacionActores) {
-//            System.out.println("Calificacion Actor: " + calificacionActor);
-//
-//
-//        }
         //listas de actores y directores de la funcion
         ArrayList<Persona> listaActores = new ArrayList<>();
         ArrayList<Persona> listaDirectores = new ArrayList<>();
@@ -1628,36 +1722,54 @@ public class UsuarioController {
             Calificaciones calificaciones=new Calificaciones();
             if(calificacionActores.get(i)!=0){
                 calificaciones.setCalificacion(calificacionActores.get(i));
-                calificaciones.setPersona(act);
+                calificaciones.setPersona(usuario);
                 calificaciones.setEstado(1);
-
+                calificaciones.setElenco(act);
                 calificacionesRepository.save(calificaciones);
+                //Guardar promedio calif actor en tabla persona
+                Double actorprom=calificacionesRepository.PromCalificacionPersonaElenco(act.getId());
+                Persona actoract =personaRepository.getById(act.getId());
+                actoract.setCalificacion(actorprom);
+                personaRepository.save(actoract);
 
             }
             i++;
         }
 
 
+
+
+
 //        for (int calificacionDirector : calificacionDirectores) {
 //            System.out.println("Calificacion Director: " + calificacionDirector);
 //        }
-
         //guardamos la calificacion para los directores
         int j=0;
-        for (Persona per : listaDirectores) {
+        for (Persona dir : listaDirectores) {
             Calificaciones calificaciones=new Calificaciones();
             if(calificacionDirectores.get(j)!=0){
                 calificaciones.setCalificacion(calificacionDirectores.get(j));
-                calificaciones.setPersona(per);
+                calificaciones.setPersona(usuario);
                 calificaciones.setEstado(1);
+                calificaciones.setElenco(dir);
                 calificacionesRepository.save(calificaciones);
+                //Guardar promedio calif director en tabla persona
+                Double direcprom=calificacionesRepository.PromCalificacionPersonaElenco(dir.getId());
+                Persona diract =personaRepository.getById(dir.getId());
+                diract.setCalificacion(direcprom);
+                personaRepository.save(diract);
             }
             j++;
         }
 
 
-        return "redirect:/";
+
+        redirectAttributes.addFlashAttribute("mensajeExito", "Calificación exitosa");
+
+        return "redirect:/historialPrueba";
     }
+
+
 
     @GetMapping("/qr")
     public String qr(Model model, @RequestParam("codigo") String codigo){

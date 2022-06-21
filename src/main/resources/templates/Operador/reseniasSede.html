@@ -93,6 +93,16 @@
                 <!-- Teatro -->
                 <div class="col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9" style="padding-top: 20px;">
 
+                    <div class="row">
+                        <div class="col-12" style="width: fit-content">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${msg != null}">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <strong th:text="${msg}"></strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+
                     <section class="section" style="margin: 0; padding:10px">
                         <div>
                             <h1 class="details__title" style="font-size: 36px" th:text="${session.usuario.idsede.getNombre()}">Gran </h1>
@@ -118,12 +128,12 @@
 
                                         <br>
 
-                                        <div class="card__wrap" style="justify-content: center">
+                                        <div class="card__wrap" >
                                             <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Calificación promedio:</h3>
-                                            <i class="icon ion-ios-star"></i>
+                                            <i class="icon ion-ios-star" style="color: #e8bd3c"></i>
                                             <span class="card__rate" th:text="${califpromsede==null ? 'Aún no hay calificaciones': califpromsede}">8.4 (10.987 reseñas)</span>
                                         </div>
-                                        <div class="card__wrap" style="justify-content: center">
+                                        <div class="card__wrap" >
                                             <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Direccion:</h3>
                                             <span class="card__rate" th:text="${sede.direccion}"></span>
                                         </div>
@@ -204,8 +214,8 @@
                         <div class="client-comment">
                             <p th:text="${resenia.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
                         </div>
-                        <button type="button" class="btn btn-danger" style="text-align: center">
-                            <a href="#" style="color: #FFFFFF">
+                        <button type="button" class="btn btn-danger" style="text-align: center;margin-left: 350px">
+                            <a th:href="@{'/operador/resenias/borrar?id='+${resenia.id}}" style="color: #FFFFFF">
                                 Eliminar
                             </a>
                         </button>

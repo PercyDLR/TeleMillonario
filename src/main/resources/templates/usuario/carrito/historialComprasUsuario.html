@@ -15,12 +15,24 @@
         <div class="content" style="margin-top: 15px">
             <div class="container" style="margin-bottom: 30px">
 
+                <div class="row mb-3" style="width: 100%">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${mensajeExito != null}">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong th:text="${mensajeExito}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${compraExitosa != null}">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong th:text="${compraExitosa}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+
                 <div class="row">
 
                     <div class="col-12">
                         <h1 class="home__title" style="text-transform: none">Historial de compras</h1>
                     </div>
-                    <div th:if="${compraExitosa != null}" th:text="${compraExitosa}" class="alert alert-success" role="alert"></div>
                     <div class="col-md-12 col-12" style="margin-top: 30px; overflow-x: auto">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
@@ -38,7 +50,7 @@
                             <!--Aqui hacer el th:each. Agregar tmb en el i para el i.index-->
                             <tbody th:each="compras : ${historialCompras}">
                                 <!--cambiar el id por heading${i.index+1}}-->
-                                <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle">
+                                <tr data-toggle="collapse" th:data-target="'#demo'+${compras.id}" class="accordion-toggle">
                                     <td class="align-middle" style="padding-bottom: 9px;"
                                         th:text="${compras.getFuncion().getIdsala().getIdsede().getNombre()}"></td>
                                     <td class="align-middle" style="padding-bottom: 9px;"
@@ -67,9 +79,9 @@
                                             </a>
                                         </button>
                                     </td>
-                                    <td class="align-middle" style="padding-bottom: 9px;">
+                                    <td class="align-middle" style="padding-bottom: 9px;" th:each="habilitado : ${calificacionHabilitada}" th:if="${compras.id eq habilitado.key.id}">
                                         <button type="submit" class="btn btn-info"
-                                                th:disabled="${(compras.estado eq 'Cancelado') || (compras.estado eq 'Vigente')}">
+                                                th:disabled="${(compras.estado eq 'Cancelado') || (compras.estado eq 'Vigente') || !((compras.id eq habilitado.key.id) && habilitado.value)}">
                                             <a th:href="@{'/calificarObra?id='+${compras.funcion.id}}" style="color: #FFFFFF">
                                                 Calificar
                                             </a>
@@ -84,7 +96,7 @@
                                 <tr>
                                     <td colspan="12" class="hiddenRow"
                                         style="padding-left: 0px;padding-right: 0px;padding-top: 0px; padding-bottom: 0px;">
-                                        <div class="accordian-body collapse" id="demo1">
+                                        <div class="accordian-body collapse" th:id="|demo${compras.id}|">
                                             <table class="table table-striped table-dark">
                                                 <thead>
                                                     <tr>
