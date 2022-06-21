@@ -46,7 +46,7 @@ public class ReportesController {
         int sede = persona.getIdsede().getId();
 
         //Si no se han enviado la periodicidad y el periodo
-        if (!opt_periodo.isPresent() && !opt_periodicidad.isPresent()) {
+        if (!opt_periodo.isPresent() || !opt_periodicidad.isPresent() || opt_periodicidad.get().equals("") || opt_periodo.get().equals("")) {
             model.addAttribute("funcionMasVista", funcionRepository.obtenerFuncionMasVistaxSede(sede));
             model.addAttribute("funcionMenosVista", funcionRepository.obtenerFuncionMenosVistaxSede(sede));
             model.addAttribute("funcionMejorCalificada", funcionRepository.obtenerFuncionMejorCalificadaxSede(sede));
@@ -69,7 +69,7 @@ public class ReportesController {
 
         } catch (NumberFormatException e){
             attr.addFlashAttribute("msg", "Se envió un periodo inválido");
-            return "redirect:/operador/funciones/reportes";
+            return "redirect:/operador/reportes";
         }
 
         switch(opt_periodicidad.get()){
@@ -91,8 +91,8 @@ public class ReportesController {
 
             default:
                 //Se envio una periodicidad inválida
-                attr.addFlashAttribute("msg", "Se envió una periodicad inválida");
-                return "redirect:/operador/funciones/reportes";
+                attr.addFlashAttribute("msg", "Se envió una periodicidad inválida");
+                return "redirect:/operador/reportes";
 
         }
 
@@ -100,7 +100,7 @@ public class ReportesController {
         if (funcionMasVista.isEmpty() || funcionMenosVista.isEmpty() ||
                 funcionMejorCalificada.isEmpty() || funcionesVistas.isEmpty()) {
             attr.addFlashAttribute("msg", "No se encontraron estadisticas de las funciones para el mes solicitado");
-            return "redirect:/operador/funciones/reportes";
+            return "redirect:/operador/reportes";
         }
 
         model.addAttribute("funcionMasVista", funcionMasVista.get());
@@ -109,6 +109,9 @@ public class ReportesController {
         model.addAttribute("funcionesPorcentajeAsistencia", funcionesVistas.get());
         model.addAttribute("actoresMejorCalificados", funcionRepository.obtenerActoresMejorCalificadosxSede(sede));
         model.addAttribute("directoresMejorCalificados", funcionRepository.obtenerDirectoresMejorCalificadosxSede(sede));
+
+        model.addAttribute("periodicidad", opt_periodicidad.get());
+        model.addAttribute("periodo", periodo);
 
         return "/Operador/reportes";
     }
@@ -133,7 +136,7 @@ public class ReportesController {
         File file = null;
 
         //Si no se han enviado la periodicidad ni el periodo, se manda por defecto el balance general
-        if (!opt_periodo.isPresent() && !opt_periodicidad.isPresent()) {
+        if (!opt_periodo.isPresent() || !opt_periodicidad.isPresent() || opt_periodicidad.get().equals("") || opt_periodo.get().equals("")) {
 
             List<BalanceDto> balancexSedeAux = funcionRepository.obtenerBalancexSede(sede);
             file = reporteService.generarReporte(opt_periodicidad,opt_periodo,balancexSedeAux,name);

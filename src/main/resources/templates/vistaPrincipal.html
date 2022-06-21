@@ -56,7 +56,10 @@
                                                th:if="(${oG.idobra.id} == ${obra.id}) and (${oG.estado} == 1)"
                                                th:text="${oG.idgenero.nombre}"></a>
                                         </span>
-                                        <span class="card__rate" th:text="${obra.calificacion}"><i class="icon ion-ios-star"></i>4.5</span>
+                                        <span class="card__rate">
+                                            <i class="icon ion-ios-star"></i>
+                                            <span th:text="${obra.calificacion}"></span>
+                                        </span>
                                     </div>
                                 </div>
                                 <!-- end card -->

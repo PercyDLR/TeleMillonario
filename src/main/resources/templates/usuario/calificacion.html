@@ -165,7 +165,7 @@
                                 <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px; margin: 50px 30px;" th:if="${listaObrasCalificadas.contains(obra)}">
                                     <div class="row" style="text-align: center">
                                         <input id="estrellasObra" name="obra" value="0" hidden>
-                                        <textarea class="sign__input" id="descripcion" rows="4" maxlength="500" required  name="descripcion" placeholder="Deje una reseña para la obra" style="width: 100%; height: 80%; border-radius: 7px" hidden></textarea>
+                                        <textarea class="sign__input" id="descripcion" rows="4" maxlength="500"  name="descripcion" placeholder="Deje una reseña para la obra" style="width: 100%; height: 80%; border-radius: 7px" hidden></textarea>
                                         <h3 class="card__title"><b>Usted ya ha calificado esta obra</b></h3>
                                     </div>
                                 </div>
@@ -251,7 +251,7 @@
                                     <div class="row" style="text-align: center">
                                         <input id="estrellasSede" name="sede" value="0" hidden>
                                         <h3 class="card__title"><b>Usted ya ha calificado esta sede</b></h3>
-                                        <textarea class="sign__input" id="descripcionsede" rows="4" maxlength="500" required name="descripcionsede" placeholder="Deje una reseña para la sede" style="width: 100%; height: 80%; border-radius: 7px" hidden></textarea>
+                                        <textarea class="sign__input" id="descripcionsede" rows="4" maxlength="500" name="descripcionsede" placeholder="Deje una reseña para la sede" style="width: 100%; height: 80%; border-radius: 7px" hidden></textarea>
                                     </div>
                                 </div>
                                 <div class="col-6 col-sm-12 col-lg-1" style="padding-inline: 5px"></div>
@@ -278,7 +278,7 @@
                                     <div class="col-12 col-sm-9" style="text-align: center">
                                         <div class="card__cover">
                                             <img th:each="foto : ${fotosPersonas}"
-                                                 th:if="${(foto.idpersona != null) && (foto.idpersona.id == director.id)}"
+                                                 th:if="${(foto.idpersona != null) && (foto.idpersona.id == director.id) && (foto.numero == 0)}"
                                                  th:src="${foto.ruta}" alt="portada">
                                             <a href="#" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
@@ -309,6 +309,7 @@
                                         </div>
                                         <div th:if="${listaPersonasCalificadas.contains(director)}">
                                             <div class="row" style="text-align: center">
+                                                <input th:id="|estrellasDirector${director.id}|" name="directores" value="0" hidden>
                                                 <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este director</b></h3>
                                             </div>
                                         </div>
@@ -367,6 +368,7 @@
                                         </div>
                                         <div th:if="${listaPersonasCalificadas.contains(actor)}">
                                             <div class="row" style="text-align: center">
+                                                <input th:id="|estrellasActor${actor.id}|" name="actores" value="0" hidden>
                                                 <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este actor</b></h3>
                                             </div>
                                         </div>

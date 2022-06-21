@@ -474,15 +474,16 @@ public class UsuarioController {
 
     //@PostMapping("/compra")
     @GetMapping("/compra")
-    public String compraBoletos(@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
+    public String compraBoletos(@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta,@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
                                 @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr,RedirectAttributes redirectAttributes, HttpSession session,
-                                Model model,@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta) {
+                                Model model) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
         int idFuncion = 0;
         int cantBoletos = 0;
         Funcion funcion = null;
-
+        System.out.println(idFuncionStr);
+        System.out.println(cantBoletosStr);
         if(idFuncionStr == null || cantBoletosStr == null){
             return "redirect:/anErrorHasOcurred";
         }
@@ -553,6 +554,7 @@ public class UsuarioController {
                     model.addAttribute("foto",listaFotos);
                     List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
                     model.addAttribute("listaGeneros",listaGeneros);
+
                     return "usuario/pagoUsuario";
                     //session.setAttribute("compraEnProceso",compraEnProceso);
                     //return "redirect:/compraprocess";
@@ -619,8 +621,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/pago")
-    public String pagoDeCompra(@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
-                               @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr,@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult, HttpSession session,
+    public String pagoDeCompra(@ModelAttribute("datosTarjeta") @Valid DatosTarjeta datosTarjeta, BindingResult bindingResult,@RequestParam(value = "idFuncion",required = false) String idFuncionStr,
+                               @RequestParam(value = "cantBoletos",required = false) String cantBoletosStr, HttpSession session,
                                RedirectAttributes redirectAttributes,Model model) {
 
         Persona persona = (Persona) session.getAttribute("usuario");
@@ -728,6 +730,7 @@ public class UsuarioController {
                     double precioEntradaFuncion = funcion.getPrecioentrada();
                     double montoTotal = precioEntradaFuncion * cantBoletos;
                     if (bindingResult.hasErrors()) {
+                        System.out.println("----------------LLEGO BINDING RESULT");
                         Compra compraEnProceso = new Compra();
                         compraEnProceso.setCantidad(cantBoletos);
                         compraEnProceso.setMontoTotal(montoTotal);
@@ -756,9 +759,9 @@ public class UsuarioController {
                         }else{
                             todoOK=false;
                         }
-
+                        System.out.println("-------------------");
                         System.out.println(response.getBody().getMsg());
-
+                        System.out.println(todoOK);
                         if (todoOK) {
                             int cantidadAsistentes = funcion.getCantidadasistentes();
                             int stockRestanteFuncion = stockFuncion - cantBoletos;
@@ -778,7 +781,7 @@ public class UsuarioController {
                             Compra compra = new Compra();
                             compra.setPersona(persona);
                             compra.setCantidad(cantBoletos);
-                            compra.setEstado("Comprado");
+                            compra.setEstado("Vigente");
                             compra.setFuncion(funcion);
                             compra.setMontoTotal(montoTotal);
 
@@ -830,6 +833,7 @@ public class UsuarioController {
                                 sendInfoCompraCorreo(compra.getPersona().getCorreo(),content);
                             } catch (MessagingException | UnsupportedEncodingException e) {
                                 e.getMessage();
+                                System.out.println("llego aca");
                                 return "redirect:/anErrorHasOcurred";
                             }
 
@@ -837,8 +841,13 @@ public class UsuarioController {
                             return "redirect:/historialPrueba";
 
                         } else {
-                            redirectAttributes.addFlashAttribute("mensajeError",response.getBody().getMsg());
-                            return "redirect:/compra?idFuncion="+idFuncion+"&cantBoletos"+cantBoletos;
+                            String mensaje = response.getBody().getMsg();
+                            redirectAttributes.addFlashAttribute("mensajeError", mensaje);
+                            System.out.println(mensaje);
+                            System.out.println("llego aca");
+                            System.out.println(idFuncionStr);
+                            System.out.println(cantBoletosStr);
+                            return "redirect:/compra?idFuncion="+idFuncionStr+"&cantBoletos="+cantBoletosStr;
                         }
                     }
                 }
@@ -1008,7 +1017,7 @@ public class UsuarioController {
 
 
     @GetMapping("/compraReservasCarrito")
-    private String comprarReservasDelCarrito(@RequestParam(value = "listaReservas",required = false)String listaReservasStr,
+    private String comprarReservasDelCarrito(@ModelAttribute("datosTarjeta") DatosTarjeta datosTarjeta,@RequestParam(value = "listaReservas",required = false)String listaReservasStr,
                                              @RequestParam(value = "listaCantidadBoletos",required = false)String listaCantidadBoletosStr,
                                              RedirectAttributes redirectAttributes, HttpSession session,Model model){
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
@@ -1309,7 +1318,7 @@ public class UsuarioController {
                         System.out.println(compra.getEstado());
                         Compra compra1 = new Compra();
                         compra1.setCantidad(compra.getCantidad());
-                        compra1.setEstado("Comprado");
+                        compra1.setEstado("Vigente");
                         compra1.setPersona(persona);
                         compra1.setMontoTotal(montoTotal);
                         compra1.setPersona(persona);
@@ -1387,7 +1396,7 @@ public class UsuarioController {
 
                 } else {
                     redirectAttributes.addFlashAttribute("mensajeError",response.getBody().getMsg());
-                    return "redirect:/compraReservasCarrito?listaReservas="+listaReservasStr+"&listaCantidadBoletos"+listaCantidadBoletosStr;
+                    return "redirect:/compraReservasCarrito?listaReservas="+listaReservasStr+"&listaCantidadBoletos="+listaCantidadBoletosStr;
                 }
             }
 
@@ -1622,7 +1631,7 @@ public class UsuarioController {
                                       @RequestParam("sede") Integer calificacionSede,
                                       @RequestParam("actores") ArrayList<Integer> calificacionActores,
                                       @RequestParam("directores") ArrayList<Integer> calificacionDirectores,
-                                      @RequestParam("id") Integer idCompra,
+                                      @RequestParam("id") Integer idFuncion,
                                       @RequestParam("idobra") Integer idobra,
                                       @RequestParam("idsede") Integer idsede,
                                       @RequestParam("descripcion") String descripcion,
@@ -1630,22 +1639,28 @@ public class UsuarioController {
                                       HttpSession httpSession,
                                       RedirectAttributes redirectAttributes){
 
-
-        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idCompra);
-        System.out.println("Id funcion: " + idCompra);
+        List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idFuncion);
+        System.out.println("Id funcion: " + idFuncion);
         System.out.println("Id Obra: " + idobra);
         System.out.println("Calificacion obra: " + calificacionObra);
+        System.out.println("Calificacion sede: " + calificacionSede);
+        for (int a : calificacionActores) {
+            System.out.println("Calificacion Actor: " + a);
+        }
+        for (int a : calificacionDirectores) {
+            System.out.println("Calificacion Director: " + a);
+        }
 
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
 
 
         //Validacion para verificar si ha completado la calificacion de la obra y sede + sus reseñas
 
-        if(descripcion.isBlank() || calificacionObra==0|| calificacionSede==0||descripcionsede.isBlank()){
-
-            redirectAttributes.addFlashAttribute("mensajeadvertencia", "Debe dejar una reseña y calificación tanto para la obra como la sede");
-            return "redirect:/calificarObra?id="+idCompra;
-        }
+//        if(descripcion.isBlank() || calificacionObra==0|| calificacionSede==0||descripcionsede.isBlank()){
+//
+//            redirectAttributes.addFlashAttribute("mensajeadvertencia", "Debe dejar una reseña y calificación tanto para la obra como la sede");
+//            return "redirect:/calificarObra?id="+idFuncion;
+//        }
 
 
         //guardamos la calificacion y reseña para la obra
@@ -1687,13 +1702,6 @@ public class UsuarioController {
         sedactu.setCalificacion(promsede);
         sedeRepository.save(sedactu);
 
-
-
-//        for (int calificacionActor : calificacionActores) {
-//            System.out.println("Calificacion Actor: " + calificacionActor);
-//
-//
-//        }
         //listas de actores y directores de la funcion
         ArrayList<Persona> listaActores = new ArrayList<>();
         ArrayList<Persona> listaDirectores = new ArrayList<>();
@@ -1735,7 +1743,6 @@ public class UsuarioController {
 //        for (int calificacionDirector : calificacionDirectores) {
 //            System.out.println("Calificacion Director: " + calificacionDirector);
 //        }
-
         //guardamos la calificacion para los directores
         int j=0;
         for (Persona dir : listaDirectores) {

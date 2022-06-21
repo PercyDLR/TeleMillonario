@@ -31,13 +31,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasAuthority("Administrador")
                 .antMatchers("/operador/**").hasAuthority("Operador")
-                .antMatchers("/calificarObra").hasAuthority("Usuario")
+                .antMatchers("/calificarObra", "/historialPrueba").hasAuthority("Usuario")
                 .antMatchers("/perfil/**").hasAnyAuthority("Operador","Usuario","ROLE_USER")
                 .antMatchers("/","/cartelera/*","/sedes/*","/actores/*","/directores/*").access("hasAuthority('Usuario') || isAnonymous() || hasAuthority('ROLE_USER')")
                 .anyRequest().permitAll().and()
                 .oauth2Login()
                 .loginPage("/login")
-                .defaultSuccessUrl("/list",true);
+                .defaultSuccessUrl("/loginByGoogle",true);
     }
 
     @Autowired
