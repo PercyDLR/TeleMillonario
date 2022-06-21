@@ -36,4 +36,8 @@ public interface CalificacionesRepository extends JpaRepository<Calificaciones,I
     @Query(nativeQuery = true,value = "SELECT count(*) FROM calificaciones WHERE idsede = ?1 and estado=1 and calificacion<3 ")
     Integer CantReseNega(int idsede);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM telemillonario.calificaciones\n" +
+            "where (estado = 1) and (idpersona = ?1);")
+    List<Calificaciones> listaCalificacionesUsuario(Integer idpersona);
+
 }

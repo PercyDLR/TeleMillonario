@@ -1492,6 +1492,58 @@ public class UsuarioController {
         model.addAttribute("historialCompras", listaComprasRevisadas);
         //model.addAttribute("listaGeneros", compraGenero);
         model.addAttribute("duracionFuncioncompra", duracionFuncioncompra);
+
+        //Habilitar boton de calificacion
+
+        List<Calificaciones> listaCalificacionesUsuario = calificacionesRepository.listaCalificacionesUsuario(persona.getId());
+
+        List<Obra> listaObrasCalificadas = new ArrayList<>();
+        for (Calificaciones l : listaCalificacionesUsuario) {
+            if (l.getObra() != null && !listaObrasCalificadas.contains(l.getObra())) {
+                listaObrasCalificadas.add(l.getObra());
+            }
+        }
+        List<Sede> listaSedesCalificadas = new ArrayList<>();
+        for (Calificaciones l : listaCalificacionesUsuario) {
+            if (l.getSede() != null && !listaSedesCalificadas.contains(l.getSede())) {
+                listaSedesCalificadas.add(l.getSede());
+            }
+        }
+        List<Persona> listaPersonasCalificadas = new ArrayList<>();
+        for (Calificaciones l : listaCalificacionesUsuario) {
+            if (l.getElenco() != null && !listaPersonasCalificadas.contains(l.getElenco())) {
+                listaPersonasCalificadas.add(l.getElenco());
+            }
+        }
+
+        LinkedHashMap<Compra, Boolean> calificacionHabilitada = new LinkedHashMap<>();
+        for (Compra c : listaCompras) {
+
+            boolean habilitado = false;
+            boolean yaValidado = false;
+            List<Funcionelenco> elenco = funcionElencoRepository.buscarFuncionElenco(c.getFuncion().getId());
+            List<Persona> listaPersonasElenco = new ArrayList<>();
+            for (Funcionelenco f : elenco) {
+                listaPersonasElenco.add(f.getIdpersona());
+            }
+            for (Persona p : listaPersonasElenco) {
+                if (!listaPersonasCalificadas.contains(p) && !yaValidado) {
+                    habilitado = true;
+                    yaValidado = true;
+                }
+            }
+            if (!listaObrasCalificadas.contains(c.getFuncion().getIdobra()) && !yaValidado) {
+                habilitado = true;
+                yaValidado = true;
+            }
+            if (!listaSedesCalificadas.contains(c.getFuncion().getIdsala().getIdsede()) && !yaValidado) {
+                habilitado = true;
+                yaValidado = true;
+            }
+            calificacionHabilitada.put(c, habilitado);
+
+        }
+        model.addAttribute("calificacionHabilitada", calificacionHabilitada);
         return "usuario/carrito/historialComprasUsuario";
     }
 
@@ -1507,7 +1559,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/calificarObra")
-    public String calificarObra(@RequestParam("id") Integer idFuncion, Model model){
+    public String calificarObra(@RequestParam("id") Integer idFuncion, Model model, HttpSession httpSession){
 
         List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idFuncion);
         ArrayList<Persona> listaActores = new ArrayList<>();
@@ -1533,11 +1585,33 @@ public class UsuarioController {
         model.addAttribute("fotosede",fotoRepository.caratulaDeSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
         model.addAttribute("sede",funcionRepository.getById(idFuncion).getIdsala().getIdsede());
         model.addAttribute("fotosPersonas", fotoRepository.findAll());
-        //Envio de la calificacion promedio de la obra
-        model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(funcionRepository.getById(idFuncion).getIdobra().getId()));
 
-        //Envio de la calificacion promedio de la sede
-        model.addAttribute("califpromsede",calificacionesRepository.PromCalificacionSede(funcionRepository.getById(idFuncion).getIdsala().getIdsede().getId()));
+        //Evaluacion si el usuario en sesion ya
+        Persona persona = (Persona) httpSession.getAttribute("usuario");
+        List<Calificaciones> listaCalificacionesUsuario = calificacionesRepository.listaCalificacionesUsuario(persona.getId());
+
+        List<Obra> listaObrasCalificadas = new ArrayList<>();
+        for (Calificaciones c : listaCalificacionesUsuario) {
+            if (c.getObra() != null && !listaObrasCalificadas.contains(c.getObra())) {
+                listaObrasCalificadas.add(c.getObra());
+            }
+        }
+        List<Sede> listaSedesCalificadas = new ArrayList<>();
+        for (Calificaciones c : listaCalificacionesUsuario) {
+            if (c.getSede() != null && !listaSedesCalificadas.contains(c.getSede())) {
+                listaSedesCalificadas.add(c.getSede());
+            }
+        }
+        List<Persona> listaPersonasCalificadas = new ArrayList<>();
+        for (Calificaciones c : listaCalificacionesUsuario) {
+            if (c.getElenco() != null && !listaPersonasCalificadas.contains(c.getElenco())) {
+                listaPersonasCalificadas.add(c.getElenco());
+            }
+        }
+
+        model.addAttribute("listaObrasCalificadas", listaObrasCalificadas);
+        model.addAttribute("listaSedesCalificadas", listaSedesCalificadas);
+        model.addAttribute("listaPersonasCalificadas", listaPersonasCalificadas);
 
         return "usuario/calificacion";
     }
@@ -1654,9 +1728,9 @@ public class UsuarioController {
             }
             j++;
         }
+        redirectAttributes.addFlashAttribute("mensajeExito", "Calificación exitosa");
 
-
-        return "redirect:/";
+        return "redirect:/historialPrueba";
     }
 
     @GetMapping("/qr")

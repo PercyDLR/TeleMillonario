@@ -31,7 +31,7 @@ public class Obra implements Serializable {
     @Column(name = "nombre", length = 100)
     private String nombre;
 
-    @Size(max=40,message = "La descripcion no puede ser mayor a 500 caracteres")
+    @Size(max=500,message = "La descripcion no puede ser mayor a 500 caracteres")
     @NotBlank(message = "La descripcion no puede estar vacia")
     @Column(name = "descripcion", length = 500)
     private String descripcion;
