@@ -1659,7 +1659,7 @@ public class UsuarioController {
         if(descripcion.isBlank() || calificacionObra==0|| calificacionSede==0||descripcionsede.isBlank()){
 
             redirectAttributes.addFlashAttribute("mensajeadvertencia", "Debe dejar una reseña y calificación tanto para la obra como la sede");
-            return "redirect:/calificarObra?id="+idCompra;
+            return "redirect:/calificarObra?id="+idFuncion;
         }
 
 
