@@ -1616,6 +1616,7 @@ public class UsuarioController {
         return "usuario/calificacion";
     }
 
+
     @PostMapping("/guardarCalificacion")
     public String guardarCalificacion(@RequestParam("obra") Integer calificacionObra,
                                       @RequestParam("sede") Integer calificacionSede,
@@ -1637,8 +1638,29 @@ public class UsuarioController {
 
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
 
-        //guardamos la calificacion y reseña para la sede
 
+
+        //guardamos la calificacion y reseña para la obra
+
+        if(calificacionObra!=0 ){
+            Calificaciones calfReseOBra= new Calificaciones();
+
+            calfReseOBra.setCalificacion(calificacionObra);
+            calfReseOBra.setComentario(descripcion);
+            calfReseOBra.setEstado(1);
+            calfReseOBra.setPersona(usuario);
+            calfReseOBra.setObra(obraRepository.findById(idobra).get());
+            calificacionesRepository.save(calfReseOBra);
+        }
+
+        //Guardar promedio calif obra en tabla obra
+        Double promobra=calificacionesRepository.PromCalificacionOBra(idobra);
+        Obra obraact =obraRepository.getById(idobra);
+        obraact.setCalificacion(promobra);
+        obraRepository.save(obraact);
+
+
+        //guardamos la calificacion y reseña para la sede
         if(calificacionSede!=0 ){
             Calificaciones calfReseSede= new Calificaciones();
 
@@ -1657,25 +1679,7 @@ public class UsuarioController {
         sedactu.setCalificacion(promsede);
         sedeRepository.save(sedactu);
 
-        //guardamos la calificacion y reseña para la obra
 
-        if(calificacionObra!=0 ){
-            Calificaciones calfReseOBra= new Calificaciones();
-
-            calfReseOBra.setCalificacion(calificacionObra);
-            calfReseOBra.setComentario(descripcion);
-            calfReseOBra.setEstado(1);
-            calfReseOBra.setPersona(usuario);
-            calfReseOBra.setObra(obraRepository.findById(idobra).get());
-
-            calificacionesRepository.save(calfReseOBra);
-        }
-
-        //Guardar promedio calif obra en tabla obra
-        Double promobra=calificacionesRepository.PromCalificacionOBra(idobra);
-        Obra obraact =obraRepository.getById(idobra);
-        obraact.setCalificacion(promobra);
-        obraRepository.save(obraact);
 
 //        for (int calificacionActor : calificacionActores) {
 //            System.out.println("Calificacion Actor: " + calificacionActor);
@@ -1702,14 +1706,22 @@ public class UsuarioController {
             Calificaciones calificaciones=new Calificaciones();
             if(calificacionActores.get(i)!=0){
                 calificaciones.setCalificacion(calificacionActores.get(i));
-                calificaciones.setPersona(act);
+                calificaciones.setPersona(usuario);
                 calificaciones.setEstado(1);
-
+                calificaciones.setElenco(act);
                 calificacionesRepository.save(calificaciones);
+                //Guardar promedio calif actor en tabla persona
+                Double actorprom=calificacionesRepository.PromCalificacionPersonaElenco(act.getId());
+                Persona actoract =personaRepository.getById(act.getId());
+                actoract.setCalificacion(actorprom);
+                personaRepository.save(actoract);
 
             }
             i++;
         }
+
+
+
 
 
 //        for (int calificacionDirector : calificacionDirectores) {
@@ -1718,20 +1730,31 @@ public class UsuarioController {
 
         //guardamos la calificacion para los directores
         int j=0;
-        for (Persona per : listaDirectores) {
+        for (Persona dir : listaDirectores) {
             Calificaciones calificaciones=new Calificaciones();
             if(calificacionDirectores.get(j)!=0){
                 calificaciones.setCalificacion(calificacionDirectores.get(j));
-                calificaciones.setPersona(per);
+                calificaciones.setPersona(usuario);
                 calificaciones.setEstado(1);
+                calificaciones.setElenco(dir);
                 calificacionesRepository.save(calificaciones);
+                //Guardar promedio calif director en tabla persona
+                Double direcprom=calificacionesRepository.PromCalificacionPersonaElenco(dir.getId());
+                Persona diract =personaRepository.getById(dir.getId());
+                diract.setCalificacion(direcprom);
+                personaRepository.save(diract);
             }
             j++;
         }
+
+
+
         redirectAttributes.addFlashAttribute("mensajeExito", "Calificación exitosa");
 
         return "redirect:/historialPrueba";
     }
+
+
 
     @GetMapping("/qr")
     public String qr(Model model, @RequestParam("codigo") String codigo){
