@@ -781,7 +781,7 @@ public class UsuarioController {
                             Compra compra = new Compra();
                             compra.setPersona(persona);
                             compra.setCantidad(cantBoletos);
-                            compra.setEstado("Comprado");
+                            compra.setEstado("Vigente");
                             compra.setFuncion(funcion);
                             compra.setMontoTotal(montoTotal);
 
@@ -1318,7 +1318,7 @@ public class UsuarioController {
                         System.out.println(compra.getEstado());
                         Compra compra1 = new Compra();
                         compra1.setCantidad(compra.getCantidad());
-                        compra1.setEstado("Comprado");
+                        compra1.setEstado("Vigente");
                         compra1.setPersona(persona);
                         compra1.setMontoTotal(montoTotal);
                         compra1.setPersona(persona);
@@ -1656,11 +1656,11 @@ public class UsuarioController {
 
         //Validacion para verificar si ha completado la calificacion de la obra y sede + sus reseñas
 
-        if(descripcion.isBlank() || calificacionObra==0|| calificacionSede==0||descripcionsede.isBlank()){
-
-            redirectAttributes.addFlashAttribute("mensajeadvertencia", "Debe dejar una reseña y calificación tanto para la obra como la sede");
-            return "redirect:/calificarObra?id="+idFuncion;
-        }
+//        if(descripcion.isBlank() || calificacionObra==0|| calificacionSede==0||descripcionsede.isBlank()){
+//
+//            redirectAttributes.addFlashAttribute("mensajeadvertencia", "Debe dejar una reseña y calificación tanto para la obra como la sede");
+//            return "redirect:/calificarObra?id="+idFuncion;
+//        }
 
 
         //guardamos la calificacion y reseña para la obra
