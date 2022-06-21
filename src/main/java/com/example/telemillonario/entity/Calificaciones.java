@@ -31,6 +31,19 @@ public class Calificaciones {
     @JoinColumn(name = "idsede")
     private Sede sede;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idelenco")
+    private Persona elenco;
+
+    public Persona getElenco() {
+        return elenco;
+    }
+
+    public void setElenco(Persona elenco) {
+        this.elenco = elenco;
+    }
+
     public Persona getPersona() {
         return persona;
     }
