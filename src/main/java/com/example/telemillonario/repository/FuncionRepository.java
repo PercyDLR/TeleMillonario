@@ -83,7 +83,7 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 order by pasistencia asc limit 1;")
+            "where s.idsede=?1 order by pasistencia asc limit 1")
     EstadisticaFuncionDto obtenerFuncionMenosVistaxSede(int idsede);
     //funcion mejor calificada
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
