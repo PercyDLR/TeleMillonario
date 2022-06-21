@@ -77,7 +77,25 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6 col-lg-4 my-4" th:object="${funcionMasVista}">
+                    <div class="col-12 col-md-6 col-lg-4 my-4" th:object="${funcionMejorCalificada}">
+
+                        <div class="price price--premium">
+                            <div class="price__item price__item--first">
+                                <span>Función más Vista</span>
+                            </div>
+
+                            <div class="price__item price__item--first">
+                                <span></span>
+                                <span th:text="*{nombre}"></span>
+                            </div>
+
+                            <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
+
+                            <div class="price__item"><span th:text="|Calificación Promedio: *{calificacion}%|"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4 my-4" th:object="${funcionMenosVista}">
 
                         <div class="price price--premium">
                             <div class="price__item price__item--first">
@@ -94,6 +112,7 @@
                             <div class="price__item"><span th:text="|Portcentaje de Asistencia: *{pasistencia}%|"></span></div>
                         </div>
                     </div>
+
 
                 </div>
 
