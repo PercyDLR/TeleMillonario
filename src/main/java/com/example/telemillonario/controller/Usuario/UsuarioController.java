@@ -1639,6 +1639,14 @@ public class UsuarioController {
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
 
 
+        //Validacion para verificar si ha completado la calificacion de la obra y sede + sus reseñas
+
+        if(descripcion.isBlank() || calificacionObra==0|| calificacionSede==0||descripcionsede.isBlank()){
+
+            redirectAttributes.addFlashAttribute("mensajeadvertencia", "Debe dejar una reseña y calificación tanto para la obra como la sede");
+            return "redirect:/calificarObra?id="+idCompra;
+        }
+
 
         //guardamos la calificacion y reseña para la obra
 
