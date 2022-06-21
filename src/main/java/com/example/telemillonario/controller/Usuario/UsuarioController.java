@@ -1501,6 +1501,7 @@ public class UsuarioController {
         Optional<Compra> optionalCompra = compraRepository.findById(idCompra);
         if (optionalCompra.isPresent()) {
             compraRepository.actualizacionEstadoCompra("Cancelado",persona.getId(), idCompra);
+            funcionRepository.actualizacionCantidadBoletos(optionalCompra.get().getCantidad() + funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getStockentradas(), funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getId());
         }
          return "redirect:/historialPrueba";
     }

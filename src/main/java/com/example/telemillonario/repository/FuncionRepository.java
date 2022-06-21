@@ -5,8 +5,10 @@ import com.example.telemillonario.dto.EstadisticaFuncionDto;
 import com.example.telemillonario.dto.EstadisticasPersonaDto;
 import com.example.telemillonario.entity.Funcion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -191,4 +193,11 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
             "inner join sede s2 on s.idsede = s2.id\n" +
             "where s.idsede=?1 and YEAR(funcion.fecha)=?2")
     Optional<List<BalanceDto>> obtenerBalancexSedexAnio(int sede,int anio);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "update telemillonario.funcion\n" +
+            "set stockentradas = ?1\n" +
+            "where id = ?2")
+    void actualizacionCantidadBoletos(Integer stockentradas, Integer id);
 }
