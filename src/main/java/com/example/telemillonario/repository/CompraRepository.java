@@ -12,8 +12,11 @@ import java.util.List;
 @Repository
 public interface CompraRepository extends JpaRepository<Compra,Integer> {
 
-    @Query(nativeQuery = true,value = "SELECT * FROM compra WHERE idpersona = ?1")
-    List<Compra> historialCompras( int idPersona);
+    @Query(nativeQuery = true,value = "select c.* from telemillonario.compra c\n" +
+            "inner join telemillonario.pago p on (p.idcompra = c.id)\n" +
+            "where c.idpersona = ?1\n" +
+            "order by p.fechapago desc;")
+    List<Compra> historialCompras(int idPersona);
 
     @Transactional
     @Modifying

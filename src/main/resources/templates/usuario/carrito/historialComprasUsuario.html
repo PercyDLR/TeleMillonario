@@ -26,6 +26,21 @@
                         <strong th:text="${compraExitosa}"></strong>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${exitoCancelar != null}">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <strong th:text="${exitoCancelar}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${noDejarCalificar != null}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${noDejarCalificar}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${noDejarCancelar != null}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${noDejarCancelar}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -37,8 +52,7 @@
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
-                                    <th>Sede</th>
-                                    <th>Sala</th>
+                                    <th>Fecha y hora de pago</th>
                                     <th>Fecha de la funcion</th>
                                     <th>Obra</th>
                                     <th>Estado</th>
@@ -51,10 +65,8 @@
                             <tbody th:each="compras : ${historialCompras}">
                                 <!--cambiar el id por heading${i.index+1}}-->
                                 <tr data-toggle="collapse" th:data-target="'#demo'+${compras.id}" class="accordion-toggle">
-                                    <td class="align-middle" style="padding-bottom: 9px;"
-                                        th:text="${compras.getFuncion().getIdsala().getIdsede().getNombre()}"></td>
-                                    <td class="align-middle" style="padding-bottom: 9px;"
-                                        th:text="|Sala ${compras.getFuncion().getIdsala().getNumero()}|"></td>
+                                    <td class="align-middle" style="padding-bottom: 9px;" th:each="pago : ${listaPagos}" th:if="${pago.idcompra.id == compras.id}"
+                                        th:text="${pago.fechapago}"></td>
                                     <td class="align-middle" style="padding-bottom: 9px;"
                                         th:text="${compras.getFuncion().getFecha()}"></td>
                                     <td class="align-middle" style="padding-bottom: 9px;">
@@ -82,7 +94,7 @@
                                     <td class="align-middle" style="padding-bottom: 9px;" th:each="habilitado : ${calificacionHabilitada}" th:if="${compras.id eq habilitado.key.id}">
                                         <button type="submit" class="btn btn-info"
                                                 th:disabled="${(compras.estado eq 'Cancelado') || (compras.estado eq 'Vigente') || !((compras.id eq habilitado.key.id) && habilitado.value)}">
-                                            <a th:href="@{'/calificarObra?id='+${compras.funcion.id}}" style="color: #FFFFFF">
+                                            <a th:href="@{'/calificarObra?id='+${compras.funcion.id}+'&idCompra='+${compras.id}}" style="color: #FFFFFF">
                                                 Calificar
                                             </a>
                                         </button>
@@ -100,6 +112,8 @@
                                             <table class="table table-striped table-dark">
                                                 <thead>
                                                     <tr>
+                                                        <th style="padding-bottom: 9px;">Sede</th>
+                                                        <th style="padding-bottom: 9px;">Sala</th>
                                                         <th style="padding-bottom: 9px;">Boletos comprados</th>
                                                         <th style="padding-bottom: 9px;">Costo total</th>
                                                         <th style="padding-bottom: 9px;">Hora de inicio</th>
@@ -109,6 +123,10 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
+                                                        <td class="align-middle" style="padding-bottom: 9px;"
+                                                            th:text="${compras.getFuncion().getIdsala().getIdsede().getNombre()}"></td>
+                                                        <td class="align-middle" style="padding-bottom: 9px;"
+                                                            th:text="|Sala ${compras.getFuncion().getIdsala().getNumero()}|"></td>
                                                         <td class="align-middle" style="padding-bottom: 9px;"
                                                             th:text="${compras.cantidad}"></td>
                                                         <td class="align-middle" style="padding-bottom: 9px;"
