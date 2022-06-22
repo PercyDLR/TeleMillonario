@@ -811,7 +811,7 @@ public class UsuarioController {
                             }
 
                             pago.setNumerotarjeta(datosTarjeta.getNumeroTarjeta());
-                            pago.setFechapago(Instant.now());
+                            pago.setFechapago(LocalDateTime.now());
                             pago.setIdcompra(compra);
                             pago.setQrlink(coderService.decodificar(response_for_qr.getBody().getUrl()));
                             pago.setCodigo(numero_operacion);
@@ -1357,7 +1357,7 @@ public class UsuarioController {
                             System.out.println("Ha sucedido algo malo");
                         }
                         pago.setNumerotarjeta(datosTarjeta.getNumeroTarjeta());
-                        pago.setFechapago(Instant.now());
+                        pago.setFechapago(LocalDateTime.now());
                         pago.setIdcompra(compra1);
                         pago.setQrlink(coderService.decodificar(response_for_qr.getBody().getUrl()));
                         pago.setCodigo(numero_operacion);
@@ -1489,7 +1489,16 @@ public class UsuarioController {
 
         model.addAttribute("historialCompras", listaComprasRevisadas);
 
-        model.addAttribute("listaPagos", pagoRepository.findAll());
+        List<Pago> listaPagos = pagoRepository.findAll();
+        LinkedHashMap<Pago, String> fechaHoraPago = new LinkedHashMap<>();
+        for (Pago p : listaPagos) {
+            String datetime = p.getFechapago().toString();
+            String[] parts = datetime.split("T");
+            String strDatetime = parts[0] + " " + parts[1];
+            fechaHoraPago.put(p, strDatetime);
+        }
+        model.addAttribute("listaPagos", fechaHoraPago);
+
         //model.addAttribute("listaGeneros", compraGenero);
         model.addAttribute("duracionFuncioncompra", duracionFuncioncompra);
 

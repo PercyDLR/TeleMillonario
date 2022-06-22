@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pago")
@@ -24,7 +25,7 @@ public class Pago implements Serializable {
     private String numerotarjeta;
 
     @Column(name = "fechapago")
-    private Instant fechapago;
+    private LocalDateTime fechapago;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idcompra")
@@ -60,11 +61,11 @@ public class Pago implements Serializable {
         this.idcompra = idcompra;
     }
 
-    public Instant getFechapago() {
+    public LocalDateTime getFechapago() {
         return fechapago;
     }
 
-    public void setFechapago(Instant fechapago) {
+    public void setFechapago(LocalDateTime fechapago) {
         this.fechapago = fechapago;
     }
 

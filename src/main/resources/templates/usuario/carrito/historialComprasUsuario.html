@@ -65,8 +65,8 @@
                             <tbody th:each="compras : ${historialCompras}">
                                 <!--cambiar el id por heading${i.index+1}}-->
                                 <tr data-toggle="collapse" th:data-target="'#demo'+${compras.id}" class="accordion-toggle">
-                                    <td class="align-middle" style="padding-bottom: 9px;" th:each="pago : ${listaPagos}" th:if="${pago.idcompra.id == compras.id}"
-                                        th:text="${pago.fechapago}"></td>
+                                    <td class="align-middle" style="padding-bottom: 9px;" th:each="pago : ${listaPagos}" th:if="${pago.key.idcompra.id == compras.id}"
+                                        th:text="${pago.value}"></td>
                                     <td class="align-middle" style="padding-bottom: 9px;"
                                         th:text="${compras.getFuncion().getFecha()}"></td>
                                     <td class="align-middle" style="padding-bottom: 9px;">
