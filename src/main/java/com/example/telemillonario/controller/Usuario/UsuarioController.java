@@ -1565,10 +1565,22 @@ public class UsuarioController {
             if (compra.getEstado().equals("Cancelado") || compra.getEstado().equals("Asistido")) {
                 redirectAttributes.addFlashAttribute("noDejarCancelar", "Esta compra no puede ser cancelada");
             } else {
-                compraRepository.actualizacionEstadoCompra("Cancelado",persona.getId(), idCompra);
-                funcionRepository.actualizacionCantidadBoletos(optionalCompra.get().getCantidad() + funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getStockentradas(), funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getId());
-                pagoRepository.cancelarPago(idCompra);
-                redirectAttributes.addFlashAttribute("exitoCancelar", "Su compra ha sido cancelada exitosamente");
+
+                LocalDate fechaIniFin = compra.getFuncion().getFecha();
+                LocalTime horaIni = compra.getFuncion().getInicio();
+                LocalTime horaFin = compra.getFuncion().getFin();
+                LocalDateTime fechaHoraIni = LocalDateTime.of(fechaIniFin, horaIni);
+                LocalDateTime fechaHoraFin = LocalDateTime.of(fechaIniFin, horaFin);
+                LocalDateTime fechaHoraLimite = fechaHoraIni.minusHours(1);
+                LocalDateTime now = LocalDateTime.now();
+                if (now.isAfter(fechaHoraLimite) && now.isBefore(fechaHoraFin)) {
+                    redirectAttributes.addFlashAttribute("noCancelarPorHora", "Ha pasado la hora límite para cancelar su compra");
+                } else {
+                    compraRepository.actualizacionEstadoCompra("Cancelado",persona.getId(), idCompra);
+                    funcionRepository.actualizacionCantidadBoletos(optionalCompra.get().getCantidad() + funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getStockentradas(), funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getId());
+                    pagoRepository.cancelarPago(idCompra);
+                    redirectAttributes.addFlashAttribute("exitoCancelar", "Su compra ha sido cancelada exitosamente");
+                }
             }
         }
         return "redirect:/historialPrueba";

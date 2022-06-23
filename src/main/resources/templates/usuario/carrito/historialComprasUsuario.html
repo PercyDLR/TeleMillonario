@@ -41,12 +41,18 @@
                         <strong th:text="${noDejarCancelar}"></strong>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${noCancelarPorHora != null}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${noCancelarPorHora}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
 
                 <div class="row">
 
                     <div class="col-12">
                         <h1 class="home__title" style="text-transform: none">Historial de compras</h1>
+                        <h1 class="home__title" style="text-transform: none; font-size: 20px">*Podrá usted cancelar su compra hasta 1h antes de inicio de la función</h1>
                     </div>
                     <div class="col-md-12 col-12" style="margin-top: 30px; overflow-x: auto">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
