@@ -124,7 +124,7 @@
     </head>
     <body class="body">
 
-        <div class="content" style="height: 100%" th:if="${mostrarPago}">
+        <div class="content" style="height: 100%" th:if="${listaPagos.size() > 0}">
             <div class="container pb-5">
                 <form class="sign__form" style="flex-direction: unset;padding-bottom: 10px;padding-top: 25px;">
                     <div class="row" style="width: 100%; text-align: center">
@@ -163,6 +163,7 @@
                                 <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Fecha de la funcion: ${pago.idcompra.funcion.fecha}|"></h3>
                                 <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Hora de inicio: ${pago.idcompra.funcion.inicio}|"></h3>
                                 <h3 style="font-size: 15px" class="home__title mb-3" th:text="|N de tickets: ${pago.idcompra.cantidad}|"></h3>
+                                <h3 style="font-size: 15px" class="home__title mb-3" th:text="|Monto: ${pago.idcompra.montoTotal}|"></h3>
                                 <br>
                             </div>
 
@@ -177,7 +178,7 @@
             </div>
         </div>
 
-        <div class="content page-404" style="padding: 0" th:unless="${mostrarPago}">
+        <div class="content page-404" style="padding: 0" th:unless="${listaPagos.size() > 0}">
             <div class="container">
                 <div class="row">
                     <div class="col-12">

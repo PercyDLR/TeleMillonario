@@ -166,6 +166,10 @@ public class LoginController {
                 session.setAttribute("fotoPerfil",fotoPerfil);
 
                 //Se regresa a la anterior url sólo si es usuario
+                if(urlAnterior.contains("crearCuenta") || urlAnterior.contains("validacionSignUp") ||
+                        urlAnterior.contains("login") || urlAnterior.contains("cambiar")){
+                    return "redirect:/";
+                }
                 return "redirect:" + urlAnterior;
         }
     }
