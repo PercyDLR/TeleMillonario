@@ -54,7 +54,29 @@
                         <h1 class="home__title" style="text-transform: none">Historial de compras</h1>
                         <h1 class="home__title" style="text-transform: none; font-size: 20px">*Podrá usted cancelar su compra hasta 1h antes de inicio de la función</h1>
                     </div>
-                    <div class="col-md-12 col-12" style="margin-top: 30px; overflow-x: auto">
+                    <div class="col-12 mt-4">
+                        <form method="post" th:action="@{/BusquedaYFiltros}">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-10 col-md-5 col-6 sign__group">
+                                    <select class="sign__input" name="filtro" style="width: 950px">
+                                        <option th:selected="${filtro == 0}" value="0">Sin filtro</option>
+                                        <option th:selected="${filtro == 1}" value="1">Compra realizada hace 1 dia</option>
+                                        <option th:selected="${filtro == 2}" value="2">Compra realizada hace 2 dias</option>
+                                        <option th:selected="${filtro == 3}" value="3">Compra realizada hace 1 semana</option>
+                                        <option th:selected="${filtro == 4}" value="4">Compra realizada hace 1 mes</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                                    <button type="submit" class="form__btn" style="width: 50%; margin: 0;">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-12 col-12" style="margin-top: 2px; overflow-x: auto">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
@@ -153,6 +175,7 @@
                         </table>
                     </div>
                 </div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/historialPrueba?filtro='+${filtro}+'&')"></div>
             </div>
         </div>
         <br>

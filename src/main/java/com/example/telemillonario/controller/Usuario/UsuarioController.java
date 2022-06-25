@@ -1632,15 +1632,15 @@ public class UsuarioController {
         return  content;
     }
 
-
-
-
+    int comprasxpagina = 9;
 
     @GetMapping("/historialPrueba")
-    String historialPrueba(Model model,HttpSession session) {
+    String historialPrueba(Model model, HttpSession session,
+                           @RequestParam(value = "pag",defaultValue = "0") String pag,
+                           @RequestParam(value = "filtro", required = false, defaultValue = "0") String filtro) {
         Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
         compraEnProceso = null;
-        session.setAttribute("compraEnProceso",compraEnProceso);
+        session.setAttribute("compraEnProceso", compraEnProceso);
 
         Persona persona = (Persona) session.getAttribute("usuario");
 
@@ -1649,18 +1649,66 @@ public class UsuarioController {
         for (Compra c : listaCompras) {
             LocalDate fechaActual = LocalDate.now();
             if (fechaActual.compareTo(c.getFuncion().getFecha()) > 0) { //Fecha ya paso, debo cambiarle a estado cancelado
-                compraRepository.actualizacionEstadoCompra("Asistido",persona.getId(), c.getId());
+                compraRepository.actualizacionEstadoCompra("Asistido", persona.getId(), c.getId());
             } else if (fechaActual.compareTo(c.getFuncion().getFecha()) == 0) { //Fecha es hoy
                 LocalTime tiempoActual = LocalTime.now();
                 if (tiempoActual.compareTo(c.getFuncion().getFin()) > 0) { //Ya acabo la funcion
-                    compraRepository.actualizacionEstadoCompra("Asistido",persona.getId(), c.getId());
+                    compraRepository.actualizacionEstadoCompra("Asistido", persona.getId(), c.getId());
                 }
             }
             listaComprasRevisadas.add(c);
         }
 
-        List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
-        model.addAttribute("listaGeneros",listaGeneros);
+        //Paginacion y filtrado
+        int pagina;
+        try {
+            pagina = Integer.parseInt(pag);
+        } catch (Exception e) {
+            pagina = 0;
+        }
+        int fil;
+        try {
+            fil = Integer.parseInt(filtro);
+        } catch (Exception e) {
+            fil = 0;
+        }
+
+        List<Compra> listaComprasFiltradas = new ArrayList<>();
+        if (fil == 0 || (fil != 1 && fil != 2 && fil != 3 && fil != 4)) {
+            listaComprasFiltradas = listaComprasRevisadas;
+        } else {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime limit = null;
+            if (fil == 1) {
+                limit = now.minusDays(1);
+            } else if (fil == 2) {
+                limit = now.minusDays(2);
+            } else if (fil == 3) {
+                limit = now.minusWeeks(1);
+            } else if (fil == 4) {
+                limit = now.minusMonths(1);
+            }
+            for (Compra c : listaComprasRevisadas) {
+                Pago pago = pagoRepository.encontrarPagoPorIdCompra(c.getId());
+                if (limit != null && (pago.getFechapago().isAfter(limit) && pago.getFechapago().isBefore(now))) {
+                    listaComprasFiltradas.add(c);
+                }
+            }
+        }
+        List<Compra> listaComprasAEnviar = new ArrayList<>();
+        int i = 0;
+        for (Compra c : listaComprasFiltradas) {
+            if (i >= pagina * comprasxpagina && i < pagina * comprasxpagina + comprasxpagina && i < listaComprasFiltradas.size()) {
+                listaComprasAEnviar.add(c);
+            }
+            i = i + 1;
+        }
+        model.addAttribute("historialCompras", listaComprasAEnviar);
+        model.addAttribute("filtro", fil);
+        model.addAttribute("pagActual", pagina);
+
+        model.addAttribute("pagTotal", (int) Math.ceil((float) listaComprasFiltradas.size() / (float) comprasxpagina));
+        //Paginacion y filtrado
 
         LinkedHashMap<Compra, String> duracionFuncioncompra = new LinkedHashMap<>();
         for (Compra c : listaCompras) {
@@ -1679,8 +1727,6 @@ public class UsuarioController {
             }
             duracionFuncioncompra.put(c, duracionHoraStr + ":" + duracionMinutosStr + "h");
         }
-
-        model.addAttribute("historialCompras", listaComprasRevisadas);
 
         List<Pago> listaPagos = pagoRepository.findAll();
         LinkedHashMap<Pago, String> fechaHoraPago = new LinkedHashMap<>();
@@ -1747,6 +1793,13 @@ public class UsuarioController {
         }
         model.addAttribute("calificacionHabilitada", calificacionHabilitada);
         return "usuario/carrito/historialComprasUsuario";
+    }
+
+    @PostMapping("/BusquedaYFiltros")
+    String busqueda(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+                    @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
+
+        return "redirect:/historialPrueba?filtro=" + filtro + "&pag=" + pag;
     }
 
     @GetMapping("/actualizarEstadoCompra")
