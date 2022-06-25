@@ -114,7 +114,7 @@
                                     <td class="align-middle" style="padding-bottom: 9px;">
                                         <button type="button" class="btn btn-danger" style="text-align: center"
                                                 th:disabled="${(compras.estado eq 'Cancelado') || (compras.estado eq 'Asistido')}">
-                                            <a th:href="@{'/actualizarEstadoCompra?id='+${compras.id}}" style="color: #FFFFFF">
+                                            <a th:onclick="|advertencia(${compras.id})|" style="color: #FFFFFF">
                                                 Cancelar
                                             </a>
                                         </button>
@@ -179,8 +179,41 @@
             </div>
         </div>
         <br>
+
+
+
+        <div id="popup" class="overlay">
+            <div class="row">
+                <div class="col-12">
+                    <div class="sign__content">
+                        <form action="#" class="sign__form">
+                            <a class="sign__logo">
+                                <img th:src="@{/img/tele.png}" alt="logo">
+                            </a>
+                            <div class="sign__group">
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                    ¿Estás seguro de querer cancelar su compra de esta funcion?</h5>
+                            </div>
+                            <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
+                            <a id="borrar" class="sign__btn">Continuar</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!--                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/admin/actores?busqueda='+${busqueda}+'&')"></div>-->
         <div th:replace="fragments/footer :: js(~{::script})">
+            <script th:inline="javascript">
+                function advertencia(idcompra) {
+                    let popup = document.getElementById('popup');
+
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/actualizarEstadoCompra?id='}]] + idcompra;
+                    popup.style.display = 'block';
+                }
+
+            </script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                     crossorigin="anonymous">
