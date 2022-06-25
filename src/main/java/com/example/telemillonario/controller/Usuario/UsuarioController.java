@@ -92,6 +92,15 @@ public class UsuarioController {
         }
         model.addAttribute("listaCaratulas", listaCaratulas);
 
+        List<Sede> listaSedes = sedeRepository.obtenerSedesDestacadasPaginaPrincipal();
+        model.addAttribute("listaSedes",listaSedes);
+
+        ArrayList<Foto> listaFotoSede = new ArrayList<>();
+        for (Sede s : listaSedes) {
+            listaFotoSede.add(fotoRepository.fotoSede(s.getId()));
+        }
+        model.addAttribute("listaFotoSede", listaFotoSede);
+
         List<Obragenero> obraGenero = obraGeneroRepository.findAll();
         model.addAttribute("obraGenero",obraGenero);
 
@@ -1829,17 +1838,16 @@ public class UsuarioController {
     public String qr(Model model, @RequestParam("codigo") String codigo){
 
         List<Pago> listaPagos = pagoRepository.listaPago(codigo);
-        boolean mostrarPago = true;
+        ArrayList<Pago> listaPagosValidos = new ArrayList<>();
         double pago = 0;
         for (Pago p : listaPagos) {
-            pago = pago + p.getIdcompra().getMontoTotal();
             if (p.getEstado() == 0) {
-                mostrarPago = false;
+                pago = pago + p.getIdcompra().getMontoTotal();
+                listaPagosValidos.add(p);
             }
         }
         model.addAttribute("Pago", listaPagos.get(0));
-        model.addAttribute("listaPagos", listaPagos);
-        model.addAttribute("mostrarPago", mostrarPago);
+        model.addAttribute("listaPagos", listaPagosValidos);
         model.addAttribute("total", pago);
         model.addAttribute("listaTarjetas", tarjetaRepository.findAll());
         return "usuario/qr";

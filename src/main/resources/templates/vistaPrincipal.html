@@ -101,161 +101,27 @@
 
                     <div class="col-12">
                         <div class="owl-carousel home__carousel">
-                            <div class="item">
+                            <div class="item" th:each="sede : ${listaSedes}">
                                 <!-- card -->
                                 <div class="card card--big">
                                     <div class="card__cover">
-                                        <img th:src="@{/img/sedes/TeatroMunicipalLima.png}" alt="">
-                                        <a href="#" class="card__play">
+                                        <img th:each="foto : ${listaFotoSede}"
+                                             th:if="${foto != null && foto.idsede.id == sede.id}"
+                                             th:src="${foto.ruta}" alt="portada">
+                                        <a th:href="@{'/sedes/DetallesSede?id=' + ${sede.id}}" class="card__play">
                                             <i class="icon ion-ios-play"></i>
                                         </a>
                                     </div>
                                     <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Teatro Municipal de Lima</a></h3>
+                                        <h3 class="card__title" th:text="${sede.nombre}">Historias de Arena</h3>
                                         <span class="card__category">
-										<a href="#">Cercado de Lima</a>
+                                            <a th:text="${sede.iddistrito.nombre}"></a>
+                                        </span>
 									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>4.3</span>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-
-                            <div class="item">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/sedes/GranTeatroNacional.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Gran Teatro Nacional</a></h3>
-                                        <span class="card__category">
-										<a href="#">San Borja</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>4.8</span>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-
-                            <div class="item">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/sedes/MicroteatroLima.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Micro Teatro de Lima</a></h3>
-                                        <span class="card__category">
-										<a href="#">Lima</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>5</span>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-
-                            <div class="item">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/sedes/TeatroMunicipalTacna.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Teatro Municipal de Tacna</a></h3>
-                                        <span class="card__category">
-										<a href="#">Tacna</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>3.7</span>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-
-                            <div class="item">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/sedes/TeatroMunicipalLima.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Teatro Municipal de Lima</a></h3>
-                                        <span class="card__category">
-										<a href="#">Cercado de Lima</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>4.3</span>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-
-                            <div class="item">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/sedes/GranTeatroNacional.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Gran Teatro Nacional</a></h3>
-                                        <span class="card__category">
-										<a href="#">San Borja</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>4.8</span>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-
-                            <div class="item">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/sedes/MicroteatroLima.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Micro Teatro de Lima</a></h3>
-                                        <span class="card__category">
-										<a href="#">Lima</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>5</span>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-
-                            <div class="item">
-                                <!-- card -->
-                                <div class="card card--big">
-                                    <div class="card__cover">
-                                        <img th:src="@{/img/sedes/TeatroMunicipalTacna.png}" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Teatro Municipal de Tacna</a></h3>
-                                        <span class="card__category">
-										<a href="#">Tacna</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>3.7</span>
+                                        <span class="card__rate">
+                                            <i class="icon ion-ios-star"></i>
+                                            <span th:text="${sede.calificacion}"></span>
+                                        </span>
                                     </div>
                                 </div>
                                 <!-- end card -->

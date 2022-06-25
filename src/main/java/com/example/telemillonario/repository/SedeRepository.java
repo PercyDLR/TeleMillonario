@@ -1,5 +1,6 @@
 package com.example.telemillonario.repository;
 
+import com.example.telemillonario.entity.Obra;
 import com.example.telemillonario.entity.Sede;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,9 @@ public interface SedeRepository extends JpaRepository<Sede,Integer> {
     Sede findTopByOrderByIdDesc();
 
     List<Sede> findByEstado(int estado);
+
+    @Query(nativeQuery = true,value = "SELECT * FROM sede WHERE estado = 1 ORDER BY calificacion DESC LIMIT 12")
+    List<Sede> obtenerSedesDestacadasPaginaPrincipal();
 
     @Query(nativeQuery = true, value = "Select count(*) from " +
             "(select any_value(fo.id) from telemillonario.fotos fo where fo.idobra IS NULL and fo.idsede is not null and fo.estado=1 group by idsede ) as Result")
