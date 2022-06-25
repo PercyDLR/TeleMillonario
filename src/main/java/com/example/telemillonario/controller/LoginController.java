@@ -41,6 +41,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -188,10 +189,6 @@ public class LoginController {
         LocalDate fechaRegistrada = usuario.getNacimiento();
         Period period = Period.between(fechaRegistrada, fechaActual);
 
-        System.out.print(period.getYears() + " years,");
-        System.out.print(period.getMonths() + " months,");
-        System.out.print(period.getDays() + " days");
-
         if (period.getYears() < 0 || period.getMonths() < 0 || (period.getDays() <= 0 && (period.getYears() < 0 || period.getMonths() < 0))) {
             model.addAttribute("errDate", -1);
             errorNacimiento = true;
@@ -210,34 +207,49 @@ public class LoginController {
             }
         }
 
-
+        System.out.println("--------------");
         DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
         boolean errDNI = true;
         //Verificamos si existe el dni
         if(datosPersona.getSuccess().equalsIgnoreCase("true")){
             //pasamos a mayuscula los nombres apellidos de la persona que se registro
-            /*String nombresUpperCase = usuario.getNombres().toUpperCase();
-            String apellidosUpperCase = usuario.getApellidos().toUpperCase();
-            String nombresApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
+            String nombresUpperCase = usuario.getNombres();
+            String cadenaNormalize = Normalizer.normalize(nombresUpperCase,Normalizer.Form.NFD);
+            nombresUpperCase = cadenaNormalize.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+            String apellidosUpperCase = usuario.getApellidos();
+            String cadenaNormalize2 = Normalizer.normalize(apellidosUpperCase,Normalizer.Form.NFD);
+            apellidosUpperCase = cadenaNormalize2.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
 
-            //el punto aca es que cuando se registre tiene que ingresar todos sus nombres con todos sus apellidos
-            String nombresApellidosAPI = datosPersona.getNombres() + " " + datosPersona.getApellido_paterno() + " " + datosPersona.getApellido_materno();
+            String ApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
 
-            if(!nombresApellidosUpperCase.equals(nombresApellidosAPI)){
-                model.addAttribute("errDniNoCorrespondePersona", 1);
-            }*/
-            errDNI = false;
-        }
-        else{
+            String ApellidosAPI = datosPersona.getApellido_paterno() + " " + datosPersona.getApellido_materno();
+
+            String NombresAPI = datosPersona.getNombres();
+
+            System.out.println(usuario.getNombres());
+            System.out.println(ApellidosAPI.contains(apellidosUpperCase));
+            System.out.println(NombresAPI);
+            System.out.println(nombresUpperCase);
+            System.out.println(ApellidosAPI);
+            System.out.println(apellidosUpperCase);
+            System.out.println(NombresAPI.contains(nombresUpperCase));
+
+            if(ApellidosAPI.contains(apellidosUpperCase) && NombresAPI.contains(nombresUpperCase)){
+                errDNI = false;
+            }
+
+        }else{
             model.addAttribute("errDni", errDNI);
         }
-        /*if(!datosPersona.getSuccess().equalsIgnoreCase("true")){
-            model.addAttribute("errDni", errDNI);
-        }*/
+
 
         if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
+            }
+
+            if(errDNI == true){
+                model.addAttribute("errDni", errDNI);
             }
 
             return "login/signup";

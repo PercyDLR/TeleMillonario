@@ -1465,7 +1465,7 @@ public class UsuarioController {
                 "                                        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
                 "                                        <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"500\" style=\"margin-top:40px; margin-bottom:40px; border:2px solid #ddd\">\n" +
                 "                                            <tbody>\n" +
-                "                                                <tr>\n" +
+                "                                                <tr style='background-color: #2b2b31;'>\n" +
                 "                                                    <td>\n" +
                 "                                                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
                 "                                                            <tbody>\n" +
