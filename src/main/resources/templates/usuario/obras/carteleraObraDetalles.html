@@ -165,6 +165,12 @@
                         <strong th:text="${mensaje}"></strong>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                         th:if="${cruceMismaFuncion != null}" th:each="msg : ${cruceMismaFuncion}">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong th:text="${msg}"></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
 
                 <div class="row">

@@ -418,6 +418,7 @@ public class UsuarioController {
                 boolean existeCruce = false;
                 Collection<Compra> reservas = carrito.values();
                 ArrayList<String> crucesHorarios = new ArrayList<>();
+                ArrayList<String> mensajeMismaFuncion = new ArrayList<>();
                 for (Compra reserva : reservas) {
                     if(!reserva.getEstado().equals("Borrado")){
                         LocalTime inicioReserva = reserva.getFuncion().getInicio();
@@ -432,14 +433,25 @@ public class UsuarioController {
 
                             if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
                                 existeCruce = true;
-                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                                crucesHorarios.add(mensaje);
+                                System.out.println("--------------------------------------");
+                                System.out.println(reserva.getFuncion().getId());
+                                System.out.println(funcion.getId());
+                                if(reserva.getFuncion().getId().equals(funcion.getId())){
+                                    System.out.println("MISMA FUNCION");
+                                    String msg = "Ya existe una reserva para la funcion con la obra "+ reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                    mensajeMismaFuncion.add(msg);
+                                }else{
+                                    String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                    crucesHorarios.add(mensaje);
+                                }
+                                System.out.println("--------------------------------------");
                             }
                         }
                     }
                 }
                 if (existeCruce) {
                     redirectAttributes.addFlashAttribute("cruceHorarioFuncion", crucesHorarios);
+                    redirectAttributes.addFlashAttribute("cruceMismaFuncion",mensajeMismaFuncion);
                     return "redirect:/cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                 }else{
                     double precioEntradaFuncion = funcion.getPrecioentrada();
@@ -572,6 +584,7 @@ public class UsuarioController {
                 boolean existeCruce = false;
                 Collection<Compra> reservas = carrito.values();
                 ArrayList<String> crucesHorarios = new ArrayList<>();
+                ArrayList<String> mensajeMismaFuncion = new ArrayList<>();
                 for (Compra reserva : reservas) {
                     if(!reserva.getEstado().equals("Borrado")) {
                         LocalTime inicioReserva = reserva.getFuncion().getInicio();
@@ -586,14 +599,21 @@ public class UsuarioController {
 
                             if ((validacion1 && validacion2) || (validacion3 && validacion4)) {
                                 existeCruce = true;
-                                String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
-                                crucesHorarios.add(mensaje);
+                                if(reserva.getFuncion().getId().equals(funcion.getId())){
+                                    String msg = "Existe una reserva para la funcion con la obra "+ reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                    mensajeMismaFuncion.add(msg);
+                                }else{
+                                    String mensaje = "Existe un cruce de horario de funcion con la obra " + reserva.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + reserva.getFuncion().getInicio() + ",con hora fin :" + reserva.getFuncion().getFin();
+                                    crucesHorarios.add(mensaje);
+                                }
+
                             }
                         }
                     }
                 }
                 if (existeCruce) {
                     redirectAttributes.addFlashAttribute("cruceHorarioFuncion", crucesHorarios);
+                    redirectAttributes.addFlashAttribute("cruceMismaFuncion",mensajeMismaFuncion);
                     return "redirect:/cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                 }else{
                     double precioEntradaFuncion = funcion.getPrecioentrada();
