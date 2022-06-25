@@ -838,8 +838,14 @@ public class UsuarioController {
                                     + "<p>- Cantidad de boletos: "+ compra.getCantidad() + " " + "<p>"
                                     + "<img src="+coderService.decodificar(response_for_qr.getBody().getUrl())+">";*/
 
-                            String URL = fotoRepository.fotoObra(compra.getFuncion().getIdobra().getId());
-                            String content = obtenerContentCorreo(URL,compra,coderService.decodificar(response_for_qr.getBody().getUrl()),datosTarjeta,numero_operacion);
+                            ArrayList<String> URLS = new ArrayList<>();
+                            URLS.add(fotoRepository.fotoObra(compra.getFuncion().getIdobra().getId()));
+
+                            ArrayList<Compra> compras = new ArrayList<>();
+                            compras.add(compra);
+
+
+                            String content = obtenerContentCorreo(URLS,compras,coderService.decodificar(response_for_qr.getBody().getUrl()),datosTarjeta,numero_operacion);
 
                             try {
                                 sendInfoCompraCorreo(compra.getPersona().getCorreo(),content);
@@ -1303,20 +1309,11 @@ public class UsuarioController {
                     ResponseEntity<QrDto> response_for_qr = restTemplate_for_qr.getForEntity(qr_service, QrDto.class);
                     String qr_link = response_for_qr.getBody().getUrl();
 
-                    String content = "<p>Cordiales Saludos: </p>"
-                            + "<p>Se ha efectuado correctamente la siguientes compras("+reservasComprarCarrito.size()+"):</p>";
+                    /*String content = "<p>Cordiales Saludos: </p>"
+                            + "<p>Se ha efectuado correctamente la siguientes compras("+reservasComprarCarrito.size()+"):</p>";*/
+                    ArrayList<String> URLS = new ArrayList<>();
+                    ArrayList<Compra> enviarCompras = new ArrayList<>();
                     for(Compra compra : reservasComprarCarrito){
-
-                        /*try{
-                            Random rand = new Random();
-                            int randomNum = rand.nextInt(5000);
-                            System.out.println("Se esperaron " + randomNum + "s");
-                            //TimeUnit.SECONDS.sleep(randomNum);
-                            Thread.sleep(randomNum);
-                        } catch (Exception e){
-                            System.out.println(e.getMessage());
-                        }*/
-
                         Optional<Funcion> funcionOptional = funcionRepository.findById(compra.getFuncion().getId());
                         Funcion  funcion = funcionOptional.get();
                         double precioEntradaFuncion = funcion.getPrecioentrada();
@@ -1325,7 +1322,7 @@ public class UsuarioController {
                         int stockRestanteFuncion = funcion.getStockentradas() - compra.getCantidad();
                         cantidadAsistentes = cantidadAsistentes + compra.getCantidad();
 
-
+                        URLS.add(fotoRepository.fotoObra(compra.getFuncion().getIdobra().getId()));
 
                         System.out.println(compra.getEstado());
                         Compra compra1 = new Compra();
@@ -1336,14 +1333,14 @@ public class UsuarioController {
                         compra1.setPersona(persona);
                         compra1.setFuncion(funcion);
 
-                        content = content + "<p>- Funcion de la obra:" + compra1.getFuncion().getIdobra().getNombre() + " " + "<p>"
+                        /*content = content + "<p>- Funcion de la obra:" + compra1.getFuncion().getIdobra().getNombre() + " " + "<p>"
                                 + "<p>- Sede:" + compra1.getFuncion().getIdsala().getIdsede().getNombre() + " " + "<p>"
                                 + "<p>- Sala:" + compra1.getFuncion().getIdsala().getNumero() + " " + "<p>"
                                 + "<p>- Fecha:" + compra1.getFuncion().getFecha() + " " + "<p>"
                                 + "<p>- Hora de inicio:" + compra1.getFuncion().getInicio() + " " + "<p>"
                                 + "<p>- Hora fin:" + compra1.getFuncion().getFin() + " " + "<p>"
-                                + "<p>- Cantidad de boletos: "+ compra1.getCantidad() + " " + "<p>" + "<br>";
-
+                                + "<p>- Cantidad de boletos: "+ compra1.getCantidad() + " " + "<p>" + "<br>";*/
+                        enviarCompras.add(compra1);
                         compraRepository.save(compra1);
 
                         if (stockRestanteFuncion == 0) {
@@ -1377,7 +1374,7 @@ public class UsuarioController {
 
                     }
 
-                    content = content + "<img src="+coderService.decodificar(response_for_qr.getBody().getUrl())+">";
+                    //content = content + "<img src="+coderService.decodificar(response_for_qr.getBody().getUrl())+">";
 
 
                     Set<Map<Integer,String>> l1 = carrito.keySet();
@@ -1395,6 +1392,15 @@ public class UsuarioController {
                     }
 
                     session.setAttribute("carritoDeComprasDeUsuario", carrito);
+                    String content = obtenerContentCorreo(URLS,enviarCompras,coderService.decodificar(response_for_qr.getBody().getUrl()),datosTarjeta,numero_operacion);
+
+                    /*try {
+                        sendInfoCompraCorreo(persona.getCorreo(),content);
+                    } catch (MessagingException | UnsupportedEncodingException e) {
+                        e.getMessage();
+                        System.out.println("llego aca");
+                        return "redirect:/anErrorHasOcurred";
+                    }*/
 
                     try {
                         sendInfoCompraCorreo(persona.getCorreo(),content);
@@ -1456,9 +1462,15 @@ public class UsuarioController {
     }
 
 
-    private String obtenerContentCorreo(String URL,Compra compra,String QR,DatosTarjeta datosTarjeta,String numeroOperacion){
+    private String obtenerContentCorreo(ArrayList<String> URL,ArrayList<Compra> compras,String QR,DatosTarjeta datosTarjeta,String numeroOperacion){
 
         DateTimeFormatter dtf5 = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm");
+        Compra compra = compras.get(0);
+        double montoTotal = 0;
+        for(Compra compra2 : compras){
+            montoTotal = montoTotal + compra2.getMontoTotal();
+        }
+
 
         String content = "<div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
                 "            <div>\n" +
@@ -1474,12 +1486,12 @@ public class UsuarioController {
                 "                                        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
                 "                                        <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"500\" style=\"margin-top:40px; margin-bottom:40px; border:2px solid #ddd\">\n" +
                 "                                            <tbody>\n" +
-                "                                                <tr style='background-color: #2b2b31;'>\n" +
+                "                                                <tr>\n" +
                 "                                                    <td>\n" +
                 "                                                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
                 "                                                            <tbody>\n" +
                 "                                                                <tr>\n" +
-                "                                                                    <td height=\"80\">\n" +
+                "                                                                    <td height=\"80\" style='background-color: #2b2b31;'>\n" +
                 "                                                                        <img data-imagetype=\"AttachmentByCid\"  naturalheight=\"0\" naturalwidth=\"0\" src='https://telemillonariocontainer.blob.core.windows.net/telemillonario/tele.png' alt=\"logo_cinemark\" style=\"width: 250px; margin: 0px auto; display: block; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
                 "                                                                    </td>\n" +
                 "                                                                </tr>\n" +
@@ -1507,17 +1519,28 @@ public class UsuarioController {
                 "                                                                </tr>\n" +
                 "                                                                <tr>\n" +
                 "                                                                    <td height=\"\" width=\"100%;\" style=\"font-family:'Arial',sans-serif; padding:0 20px 20px\">\n" +
-                "                                                                        <h2 style=\"color:#ff5860; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Descripción de la compra </h2>\n" +
+                "                                                                        <h2 style=\"color:#ff5860; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Descripción de la compra </h2>\n";
+                                                                                         int i = 0;
+                                                                                         for(Compra compra1 : compras){
+                                                                                             System.out.println(compra1.getFuncion().getIdobra().getNombre());
+                                                                                             System.out.println(compra1.getFuncion().getIdsala().getIdsede().getNombre());
+                                                                                             System.out.println(compra1.getFuncion().getFecha());
+                                                                                             System.out.println(compra1.getFuncion().getInicio());
+                                                                                             System.out.println(compra1.getFuncion().getIdsala().getNumero());
+                                                                                             content = content +
                 "                                                                        <div class=\"x_cover-container\" style=\"float:left; margin-right:15px; max-width:250px; overflow:hidden\">\n" +
-                "                                                                            <img data-imagetype=\"External\" src='"+URL+"' alt=\"img_movie\" style='max-width:120px;height:130px'>\n" +
+                "                                                                            <img data-imagetype=\"External\" src='"+URL.get(i)+"' alt=\"img_movie\" style='max-width:120px;height:130px'>\n" +
                 "                                                                        </div>\n" +
                 "                                                                        <div class=\"x_text-details\" style=\"display:block\">\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\">"+compra.getFuncion().getIdobra().getNombre()+"</span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Teatro: </strong>"+compra.getFuncion().getIdsala().getIdsede().getNombre()+" </span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Fecha: </strong>"+compra.getFuncion().getFecha()+" </span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Hora:</strong>"+compra.getFuncion().getInicio()+"</span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Sala:</strong>"+compra.getFuncion().getIdsala().getNumero()+"</span>\n" +
-                "                                                                        </div>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\">"+compra1.getFuncion().getIdobra().getNombre()+"</span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Teatro: </strong>"+compra1.getFuncion().getIdsala().getIdsede().getNombre()+" </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Fecha: </strong>"+compra1.getFuncion().getFecha()+" </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Hora:</strong>"+compra1.getFuncion().getInicio()+"</span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Sala:</strong>"+compra1.getFuncion().getIdsala().getNumero()+"</span>\n" +
+                "                                                                        </div>\n" ;
+                                                                                              i = i +1;
+                                                                                         }
+                                                                                         content = content +
                 "                                                                    </td>\n" +
                 "                                                                </tr>\n" +
                 "                                                                <tr>\n" +
@@ -1528,19 +1551,23 @@ public class UsuarioController {
                 "                                                                        <h2 style=\"color:#ff5860; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Detalle de la compra </h2>\n" +
                 "                                                                        <ul style=\"list-style-type:none; font-family:'Arial',sans-serif; font-size:14px; padding:0 5px\">\n" +
                 "                                                                            <div id=\"x_payment-details\" style=\"padding:10px\">\n" +
-                "                                                                                <div id=\"x_pricing-table\" style=\"width:75%; margin:0 auto\">\n" +
+                "                                                                                <div id=\"x_pricing-table\" style=\"width:104%; margin:0 auto\">\n" +
                 "                                                                                    <table class=\"x_pricing\" style=\"width:100%\">\n" +
                 "                                                                                        <tbody>\n" +
                 "                                                                                            <tr>\n" +
                 "                                                                                                <td><strong>Entradas</strong></td>\n" +
                 "                                                                                                <td align=\"right\" style=\"\"><strong>Precio</strong></td>\n" +
-                "                                                                                            </tr>\n" +
+                "                                                                                            </tr>\n" ;
+                                                                                                        for(Compra compra3 : compras){
+                                                                                                            content = content +
                 "                                                                                            <tr>\n" +
-                "                                                                                                <td>"+compra.getCantidad()+" BOLETO(S)<br aria-hidden=\"true\"></td>\n" +
-                "                                                                                                <td align=\"right\" style=\"\">S/ "+compra.getMontoTotal()+"<br aria-hidden=\"true\"></td>\n" +
-                "                                                                                            </tr>\n" +
+                "                                                                                                <td>"+compra3.getCantidad()+" BOLETO(S) "+compra3.getFuncion().getIdobra().getNombre()+"<br aria-hidden=\"true\"></td>\n" +
+                "                                                                                                <td align=\"right\" style=\"\">S/ "+compra3.getMontoTotal()+"<br aria-hidden=\"true\"></td>\n" +
+                "                                                                                            </tr>\n" ;
+                                                                                                        }
+                                                                                                        content = content +
                 "                                                                                            <tr>\n" +
-                "                                                                                                <td colspan=\"2\" align=\"right\" style=\"border-top-width:1.5px; border-top-color:#B5121B; border-top-style:solid\"><br aria-hidden=\"true\">Total: S/ "+compra.getMontoTotal()+" </td>\n" +
+                "                                                                                                <td colspan=\"2\" align=\"right\" style=\"border-top-width:1.5px; border-top-color:#B5121B; border-top-style:solid\"><br aria-hidden=\"true\">Total: S/ "+montoTotal+" </td>\n" +
                 "                                                                                            </tr>\n" +
                 "                                                                                        </tbody>\n" +
                 "                                                                                    </table>\n" +
@@ -1598,7 +1625,7 @@ public class UsuarioController {
                 "                                                                                </tr>\n" +
                 "                                                                                <tr>\n" +
                 "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Total compra</strong> </p></td>\n" +
-                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">S/ "+compra.getMontoTotal()+" </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">S/ "+montoTotal+" </p></td>\n" +
                 "                                                                                </tr>\n" +
                 "                                                                            </tbody>\n" +
                 "                                                                        </table>\n" +
