@@ -1659,6 +1659,134 @@ public class UsuarioController {
         return  content;
     }
 
+
+    private String sendContentBorrarCompra(){
+        String content =
+                "<div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
+                "            <div>\n" +
+                "                <div class=\"wide-content-host\">\n" +
+                "                    <div class=\"VToAP ufHEA\" style=\"margin-right: 20px; margin-left: 8px; padding: 0px 12px 12px; width: calc(100% - 53.5px);\">\n" +
+                "                        <div class=\"n5mNi PXxvZ e8EOp\">\n" +
+                "                        </div>\n" +
+                "                        <div role=\"region\" tabindex=\"-1\" aria-label=\"Cuerpo del mensaje\" class=\"njsxS qhSqO TiApU allowTextSelection\">\n" +
+                "                            <div>\n" +
+                "                                <div class=\"rps_9eb5\">\n" +
+                "                                    <div>\n" +
+                "                                        <meta content=\"IE=edge\">\n" +
+                "                                        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "                                        <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"500\" style=\"margin-top:40px; margin-bottom:40px; border:2px solid #ddd\">\n" +
+                "                                            <tbody>\n" +
+                "                                                <tr>\n" +
+                "                                                    <td>\n" +
+                "                                                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                                                            <tbody>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"80\">\n" +
+                "                                                                        <img data-imagetype=\"AttachmentByCid\" originalsrc=\"cid:624df001181f0_48452aea300733bc3194686@ip-172-31-14-158.mail\" data-custom=\"AQMkADAwATZiZmYAZC1mMTM0LTJjZmEtMDACLTAwCgBGAAADZOwlzrv3GUiWXsyz3HUkywcAaQuXifxask6eUQXifjNTfQAAAgEMAAAAaQuXifxask6eUQXifjNTfQAFWutangAAAAESABAAGqtPKorY8Uu8fqChhJwQ6g%3D%3D\" naturalheight=\"0\" naturalwidth=\"0\" src=\"https://attachment.outlook.live.net/owa/MSA%3Ahachi_9747%40hotmail.com/service.svc/s/GetAttachmentThumbnail?id=AQMkADAwATZiZmYAZC1mMTM0LTJjZmEtMDACLTAwCgBGAAADZOwlzrv3GUiWXsyz3HUkywcAaQuXifxask6eUQXifjNTfQAAAgEMAAAAaQuXifxask6eUQXifjNTfQAFWutangAAAAESABAAGqtPKorY8Uu8fqChhJwQ6g%3D%3D&amp;thumbnailType=2&amp;isc=1&amp;token=eyJhbGciOiJSUzI1NiIsImtpZCI6IkZBRDY1NDI2MkM2QUYyOTYxQUExRThDQUI3OEZGMUIyNzBFNzA3RTkiLCJ0eXAiOiJKV1QiLCJ4NXQiOiItdFpVSml4cThwWWFvZWpLdDRfeHNuRG5CLWsifQ.eyJvcmlnaW4iOiJodHRwczovL291dGxvb2subGl2ZS5jb20iLCJ1YyI6IjE3NTlkM2MzN2ZiMTQxNGM4MTllN2I2N2FlZmQ1NWQ1IiwidmVyIjoiRXhjaGFuZ2UuQ2FsbGJhY2suVjEiLCJhcHBjdHhzZW5kZXIiOiJPd2FEb3dubG9hZEA4NGRmOWU3Zi1lOWY2LTQwYWYtYjQzNS1hYWFhYWFhYWFhYWEiLCJpc3NyaW5nIjoiV1ciLCJhcHBjdHgiOiJ7XCJtc2V4Y2hwcm90XCI6XCJvd2FcIixcInB1aWRcIjpcIjE4OTk5NDcyNTQ2MjM0ODJcIixcInNjb3BlXCI6XCJPd2FEb3dubG9hZFwiLFwib2lkXCI6XCIwMDA2YmZmZC1mMTM0LTJjZmEtMDAwMC0wMDAwMDAwMDAwMDBcIixcInByaW1hcnlzaWRcIjpcIlMtMS0yODI3LTQ0MjM2NS00MDQ2NzI4NDQyXCJ9IiwibmJmIjoxNjU2MDMyNjEyLCJleHAiOjE2NTYwMzMyMTIsImlzcyI6IjAwMDAwMDAyLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMEA4NGRmOWU3Zi1lOWY2LTQwYWYtYjQzNS1hYWFhYWFhYWFhYWEiLCJhdWQiOiIwMDAwMDAwMi0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXR0YWNobWVudC5vdXRsb29rLmxpdmUubmV0QDg0ZGY5ZTdmLWU5ZjYtNDBhZi1iNDM1LWFhYWFhYWFhYWFhYSIsImhhcHAiOiJvd2EifQ.TOcWsNMiQ4RikAKylAZCmQ_fvaW1MviHhQGAHbaw7ce3K5MXMMfvkX8Ys2kXOZPY2C5Z1VXd0az8a2Zyi0GhwCL9boqcy9niNFP5v8Xho84zLx95Ap3j3RnzicCMhQ-7pD4C6FzFQ1WJeGy9tQFmUEmlost4hZZOJAOXDW1usFVklatSwFcc2Q_gN1SxmaNIr9pXdxIwUbpCdMUWoQhvhrrg5wk8oTrf7LMWQSEUNHPhjzSVqbeJ9A9xAxjj3rhEBKEZbxORpOYT7hYSODpBdtffiI1OOdZGRVdiXPtPKA0I28tupMpfwD3gDxOvjj92PTQTPEVsjK0IxPSFxsJ7yQ&amp;X-OWA-CANARY=RrbRwp5bsUOCsVTYbSuNlHBIPmF9VdoYLYZTMJzEoycouEs-RCbw4ZywDXE8O5Gg3qpBhPRpdC4.&amp;owa=outlook.live.com&amp;scriptVer=20220603005.10&amp;animation=true\" alt=\"logo_cinemark\" style=\"width: 250px; margin: 0px auto; display: block; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"80\" bgcolor=\"#b5121c\" style=\"padding:0 20px\">\n" +
+                "                                                                        <h2 style=\"color:#fff; font-family:'Arial',sans-serif; font-weight:500; font-size:20px; margin:0 0 5px\">\n" +
+                "                                                                            <span style=\"text-transform:uppercase; font-family:'Arial',sans-serif\">¡ Hola ALONSO ROSALES ANTUNEZ ! </span>\n" +
+                "                                                                        </h2>\n" +
+                "                                                                        <p style=\"color:#fff; font-family:'Arial',sans-serif; font-size:14px; font-weight:300; margin:0\">A continuación verás el detalle de tu reembolso</p>\n" +
+                "                                                                        <div>\n" +
+                "                                                                            <div align=\"left\" style=\"color:#fff\">06 de Abril de 2022 02:54 PM </div>\n" +
+                "                                                                        </div>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"\" width=\"100%;\" style=\"font-family:'Arial',sans-serif; padding:0 20px 20px\">\n" +
+                "                                                                        <h2 style=\"color:#b5121d; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Descripción de la compra </h2>\n" +
+                "                                                                        <div class=\"x_cover-container\" style=\"float:left; margin-right:15px; max-width:250px; overflow:hidden\">\n" +
+                "                                                                            <img data-imagetype=\"External\" src=\"https://cinemarkmedia.modyocdn.com/pe/300x400/87979.jpg\" alt=\"img_movie\" style=\"max-width:120px\">\n" +
+                "                                                                        </div>\n" +
+                "                                                                        <div class=\"x_text-details\" style=\"display:block\">\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\">Doctor strange en el multiverso d </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Teatro: </strong>: Cinemark megaplaza </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Fecha: </strong>: Jueves, 05 de Mayo de 2022 </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Hora:</strong> 02:00 p. m. </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Sala:</strong> 6 </span>\n" +
+                "                                                                        </div>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td bgcolor=\"#eee\" style=\"\"></td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px 20px\">\n" +
+                "                                                                        <h2 style=\"color:#b5121d; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Detalle del reembolso</h2>\n" +
+                "                                                                        <ul style=\"list-style-type:none; font-family:'Arial',sans-serif; font-size:14px; padding:0 5px\">\n" +
+                "                                                                            <div id=\"x_payment-details\" style=\"padding:10px\">\n" +
+                "                                                                                <div id=\"x_pricing-table\" style=\"width:75%; margin:0 auto\">\n" +
+                "                                                                                    <table class=\"x_pricing\" style=\"width:100%\">\n" +
+                "                                                                                        <tbody>\n" +
+                "                                                                                            <tr>\n" +
+                "                                                                                                <td><strong>Entradas</strong></td>\n" +
+                "                                                                                                <td align=\"right\" style=\"\"><strong>Precio</strong></td>\n" +
+                "                                                                                            </tr>\n" +
+                "                                                                                            <tr>\n" +
+                "                                                                                                <td>1 GENERAL ADULTO XD 3D <br aria-hidden=\"true\"></td>\n" +
+                "                                                                                                <td align=\"right\" style=\"\">S/ 28.20<br aria-hidden=\"true\"></td>\n" +
+                "                                                                                            </tr>\n" +
+                "                                                                                            <tr>\n" +
+                "                                                                                                <td colspan=\"2\" align=\"right\" style=\"border-top-width:1.5px; border-top-color:#B5121B; border-top-style:solid\"><br aria-hidden=\"true\">Reembolso Total: S/ 54.70 </td>\n" +
+                "                                                                                            </tr>\n" +
+                "                                                                                        </tbody>\n" +
+                "                                                                                    </table>\n" +
+                "                                                                                </div>\n" +
+                "                                                                            </div>\n" +
+                "                                                                        </ul>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td bgcolor=\"#eee\" style=\"\">\n" +
+                "                                                                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                                                                            <tbody style=\"background-color: white\">\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\">\n" +
+                "                                                                                        <p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Respuesta medio de pago</strong> </p>\n" +
+                "                                                                                    </td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">Cancelacion aprobada </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Código de transacción</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">d2b15d82-c720-42d6-b4b9-2cdbbc6d40bc </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Medio de pago</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">PayU VISA </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Número tarjeta</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">426 </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Fecha Cancelacion</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">06 de Abril de 2022 02:54 PM </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                            </tbody>\n" +
+                "                                                                        </table>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                            </tbody>\n" +
+                "                                                        </table>\n" +
+                "                                                    </td>\n" +
+                "                                                </tr>\n" +
+                "                                            </tbody>\n" +
+                "                                        </table>\n" +
+                "                                    </div>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>";
+        return  content;
+    }
+
     int comprasxpagina = 9;
 
     @GetMapping("/historialPrueba")
