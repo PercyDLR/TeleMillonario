@@ -640,7 +640,7 @@ public class UsuarioController {
                 return "redirect:/anErrorHasOcurred";
             } else {
 
-                try{
+                /*try{
                     Random rand = new Random();
                     int randomNum = rand.nextInt(5000);
                     System.out.println("Se esperaron " + randomNum + "s");
@@ -648,7 +648,7 @@ public class UsuarioController {
                     Thread.sleep(randomNum);
                 } catch (Exception e){
                     System.out.println(e.getMessage());
-                }
+                }*/
 
                 Optional<Funcion> funcion1 = funcionRepository.findById(idFuncion);
                 if (funcion1.isPresent()) {
@@ -818,7 +818,7 @@ public class UsuarioController {
                             pagoRepository.save(pago);
 
 
-                            String content = "<p>Cordiales Saludos: </p>"
+                            /*String content = "<p>Cordiales Saludos: </p>"
                                     + "<p>Se ha efectuado correctamente la siguiente compra:</p>"
                                     + "<p>- Funcion de la obra:" + compra.getFuncion().getIdobra().getNombre() + " " + "<p>"
                                     + "<p>- Sede:" + compra.getFuncion().getIdsala().getIdsede().getNombre() + " " + "<p>"
@@ -827,7 +827,10 @@ public class UsuarioController {
                                     + "<p>- Hora de inicio:" + compra.getFuncion().getInicio() + " " + "<p>"
                                     + "<p>- Hora fin:" + compra.getFuncion().getFin() + " " + "<p>"
                                     + "<p>- Cantidad de boletos: "+ compra.getCantidad() + " " + "<p>"
-                                    + "<img src="+coderService.decodificar(response_for_qr.getBody().getUrl())+">";
+                                    + "<img src="+coderService.decodificar(response_for_qr.getBody().getUrl())+">";*/
+
+                            String URL = fotoRepository.fotoObra(compra.getFuncion().getIdobra().getId());
+                            String content = obtenerContentCorreo(URL,compra,coderService.decodificar(response_for_qr.getBody().getUrl()),datosTarjeta,numero_operacion);
 
                             try {
                                 sendInfoCompraCorreo(compra.getPersona().getCorreo(),content);
@@ -1295,7 +1298,7 @@ public class UsuarioController {
                             + "<p>Se ha efectuado correctamente la siguientes compras("+reservasComprarCarrito.size()+"):</p>";
                     for(Compra compra : reservasComprarCarrito){
 
-                        try{
+                        /*try{
                             Random rand = new Random();
                             int randomNum = rand.nextInt(5000);
                             System.out.println("Se esperaron " + randomNum + "s");
@@ -1303,7 +1306,7 @@ public class UsuarioController {
                             Thread.sleep(randomNum);
                         } catch (Exception e){
                             System.out.println(e.getMessage());
-                        }
+                        }*/
 
                         Optional<Funcion> funcionOptional = funcionRepository.findById(compra.getFuncion().getId());
                         Funcion  funcion = funcionOptional.get();
@@ -1442,6 +1445,187 @@ public class UsuarioController {
 
         mailSender.send(message);
     }
+
+
+    private String obtenerContentCorreo(String URL,Compra compra,String QR,DatosTarjeta datosTarjeta,String numeroOperacion){
+
+        DateTimeFormatter dtf5 = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm");
+
+        String content = "<div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
+                "            <div>\n" +
+                "                <div class=\"wide-content-host\">\n" +
+                "                    <div class=\"VToAP ufHEA\" style=\"margin-right: 20px; margin-left: 8px; padding: 0px 12px 12px; width: calc(100% - 53.5px);\">\n" +
+                "                        <div class=\"n5mNi PXxvZ e8EOp\">\n" +
+                "                        </div>\n" +
+                "                        <div role=\"region\" tabindex=\"-1\" aria-label=\"Cuerpo del mensaje\" class=\"njsxS qhSqO TiApU allowTextSelection\">\n" +
+                "                            <div>\n" +
+                "                                <div class=\"rps_9eb5\">\n" +
+                "                                    <div>\n" +
+                "                                        <meta content=\"IE=edge\">\n" +
+                "                                        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "                                        <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"500\" style=\"margin-top:40px; margin-bottom:40px; border:2px solid #ddd\">\n" +
+                "                                            <tbody>\n" +
+                "                                                <tr>\n" +
+                "                                                    <td>\n" +
+                "                                                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                                                            <tbody>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"80\">\n" +
+                "                                                                        <img data-imagetype=\"AttachmentByCid\"  naturalheight=\"0\" naturalwidth=\"0\" src='https://telemillonariocontainer.blob.core.windows.net/telemillonario/tele.png' alt=\"logo_cinemark\" style=\"width: 250px; margin: 0px auto; display: block; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"80\" bgcolor=\"#ff5860\" style=\"padding:0 20px\">\n" +
+                "                                                                        <h2 style=\"font-family:'Arial',sans-serif; font-weight:500; font-size:20px; margin:0 0 5px\">\n" +
+                "                                                                            <span style=\"color:#fff;text-transform:uppercase; font-family:'Arial',sans-serif\">¡ Hola "+compra.getPersona().getNombres()+' '+compra.getPersona().getApellidos()+ " ! </span>\n" +
+                "                                                                        </h2>\n" +
+                "                                                                        <p style=\"color:white;font-family:'Arial',sans-serif; font-size:14px; font-weight:300; margin:0\">A continuación verás el detalle de tu compra.</p>\n" +
+                "                                                                        <div>\n" +
+                "                                                                            <div align=\"left\" style=\"color:#fff\">"+dtf5.format(LocalDateTime.now())+"</div>\n" +
+                "                                                                        </div>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"80\" align=\"center\" bgcolor=\"#eee\" style=\"padding-top:40px; padding-bottom:20px; border-bottom-width:1px; border-bottom-color:#d2d2d2; border-bottom-style:solid\">\n" +
+                "                                                                        <span style=\"background-color:#fff!important; display:table; padding:0px\"><img data-imagetype=\"AttachmentByCid\"   naturalheight=\"0\" naturalwidth=\"0\" src='"+QR+"' alt=\"qrcode\" style=\"background-color: rgb(255, 255, 255); margin: 0px auto 10px; padding: 10px 0px 0px; border: 0px; width: 150px !important; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
+                "                                                                        </span>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td bgcolor=\"#eee\" style=\"\">\n" +
+                "\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"\" width=\"100%;\" style=\"font-family:'Arial',sans-serif; padding:0 20px 20px\">\n" +
+                "                                                                        <h2 style=\"color:#ff5860; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Descripción de la compra </h2>\n" +
+                "                                                                        <div class=\"x_cover-container\" style=\"float:left; margin-right:15px; max-width:250px; overflow:hidden\">\n" +
+                "                                                                            <img data-imagetype=\"External\" src='"+URL+"' alt=\"img_movie\" style='max-width:120px;height:130px'>\n" +
+                "                                                                        </div>\n" +
+                "                                                                        <div class=\"x_text-details\" style=\"display:block\">\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\">"+compra.getFuncion().getIdobra().getNombre()+"</span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Teatro: </strong>"+compra.getFuncion().getIdsala().getIdsede().getNombre()+" </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Fecha: </strong>"+compra.getFuncion().getFecha()+" </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Hora:</strong>"+compra.getFuncion().getInicio()+"</span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Sala:</strong>"+compra.getFuncion().getIdsala().getNumero()+"</span>\n" +
+                "                                                                        </div>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td bgcolor=\"#eee\" style=\"\"></td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px 20px\">\n" +
+                "                                                                        <h2 style=\"color:#ff5860; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Detalle de la compra </h2>\n" +
+                "                                                                        <ul style=\"list-style-type:none; font-family:'Arial',sans-serif; font-size:14px; padding:0 5px\">\n" +
+                "                                                                            <div id=\"x_payment-details\" style=\"padding:10px\">\n" +
+                "                                                                                <div id=\"x_pricing-table\" style=\"width:75%; margin:0 auto\">\n" +
+                "                                                                                    <table class=\"x_pricing\" style=\"width:100%\">\n" +
+                "                                                                                        <tbody>\n" +
+                "                                                                                            <tr>\n" +
+                "                                                                                                <td><strong>Entradas</strong></td>\n" +
+                "                                                                                                <td align=\"right\" style=\"\"><strong>Precio</strong></td>\n" +
+                "                                                                                            </tr>\n" +
+                "                                                                                            <tr>\n" +
+                "                                                                                                <td>"+compra.getCantidad()+" BOLETO(S)<br aria-hidden=\"true\"></td>\n" +
+                "                                                                                                <td align=\"right\" style=\"\">S/ "+compra.getMontoTotal()+"<br aria-hidden=\"true\"></td>\n" +
+                "                                                                                            </tr>\n" +
+                "                                                                                            <tr>\n" +
+                "                                                                                                <td colspan=\"2\" align=\"right\" style=\"border-top-width:1.5px; border-top-color:#B5121B; border-top-style:solid\"><br aria-hidden=\"true\">Total: S/ "+compra.getMontoTotal()+" </td>\n" +
+                "                                                                                            </tr>\n" +
+                "                                                                                        </tbody>\n" +
+                "                                                                                    </table>\n" +
+                "                                                                                </div>\n" +
+                "                                                                            </div>\n" +
+                "                                                                        </ul>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td bgcolor=\"#c1ce50\" style=\"\">\n" +
+                "                                                                        <h4 align=\"center\" style=\"margin-top:20px; color:#000000; text-transform:uppercase; font-size:13px!important\">Recomendaciones para una experiencia segura en nuestros teatros: </h4>\n" +
+                "                                                                        <ul style=\"margin:0; padding:0px 40px 40px\">\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px\">Respeta tu ubicación en la sala y mantén en todo momento la sana distancia.</li>\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px\">Usa siempre doble mascarilla durante toda tu estadía.</li>\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px\">Higieniza tus manos constantemente con el alcohol en gel que hemos colocado dentro de todos nuestros cines.</li>\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px\">Sigue las indicaciones de salida de la sala de manera ordenada y así todos evitaremos aglomeraciones.</li>\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px\">Si siente síntomas COVID-19 como fiebre, tos, estornudos o dificultad para respirar, expectoración, pérdida del gusto o del olfato, cansancio u otros síntomas, evite salir de casa y asistir a lugares o eventos públicos.</li>\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px\">Sobre las validaciones de vacunación completa*: te recomendamos llevar tu carnet de vacunación física o virtualmente para presentarlo frente a los podios. Puedes también descargarlo desde la web oficial del minsa y tenerla en tu celular ingresando a este link: https://gis.minsa.gob.pe/CarneVacunacion/</li>\n" +
+                "                                                                            <p style=\"font-size:12px; margin-bottom:10px\">*El requisito de validación de vacunación completa aplica únicamente para los Cinemark en ciudades donde se haya superado el 40% de vacunación completa en la ciudad.</p>\n" +
+                "                                                                        </ul>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td bgcolor=\"#eee\" style=\"\">\n" +
+                "                                                                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                                                                            <tbody>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td colspan=\"2\" height=\"\" width=\"100%;\" style=\"padding:0 20px 20px\">\n" +
+                "                                                                                        <h2 style=\"color:#ff5860; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Detalle del pago </h2>\n" +
+                "                                                                                    </td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\">\n" +
+                "                                                                                        <p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Respuesta medio de pago</strong> </p>\n" +
+                "                                                                                    </td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">Transacción aprobada </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Código de transacción</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">"+numeroOperacion+"</p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Medio de pago</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">"+datosTarjeta.getNombresTitular()+"</p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Número tarjeta</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">"+datosTarjeta.getNumeroTarjeta()+" </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Fecha compra</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">"+dtf5.format(LocalDateTime.now())+"</p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                                <tr>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Total compra</strong> </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">S/ "+compra.getMontoTotal()+" </p></td>\n" +
+                "                                                                                </tr>\n" +
+                "                                                                            </tbody>\n" +
+                "                                                                        </table>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                                <tr>\n" +
+                "                                                                    <td>\n" +
+                "                                                                        <h4 align=\"center\" style=\"margin-top:20px; color:#ff5860; text-transform:uppercase; font-size:13px!important\">Términos y condiciones de compra online </h4>\n" +
+                "                                                                        <ul style=\"margin:0; padding:0px 40px 40px\">\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px; color:#737373\">Esta entrada es tu comprobante de pago.</li>\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px; color:#737373\">Para validar la entrada y combos es indispensable presentar la tarjeta y DNI con la que fue realizada la compra. Esta medida de seguridad protege su compra de estafadores y ventas no oficiales.</li>\n" +
+                "                                                                            <li style=\"font-size:12px; margin-bottom:10px; color:#737373\">Para películas con clasificación mayores de 16 años es indispensable presentar el documento de identidad al momento de ingresar a la sala.</li>\n" +
+                "                                                                        </ul>\n" +
+                "                                                                    </td>\n" +
+                "                                                                </tr>\n" +
+                "                                                            </tbody>\n" +
+                "                                                        </table>\n" +
+                "                                                    </td>\n" +
+                "                                                </tr>\n" +
+                "                                            </tbody>\n" +
+                "                                        </table>\n" +
+                "                                    </div>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>";
+
+        return  content;
+    }
+
+
+
+
 
     @GetMapping("/historialPrueba")
     String historialPrueba(Model model,HttpSession session) {

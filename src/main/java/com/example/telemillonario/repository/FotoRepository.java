@@ -115,6 +115,9 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
     List<Foto> buscarFotosObra(int idobra);
 
 
+    @Query(nativeQuery = true,value = "SELECT ruta FROM fotos WHERE idobra = ?1 AND estado = 1 GROUP BY idobra")
+    String fotoObra(int idObra);
+
     //Una foto cualquiera de la obra
     @Query(nativeQuery = true,value = "SELECT * FROM fotos where idobra is not null and estado = 1 and numero=0")
     List<Foto> unaFotoPorObra();
