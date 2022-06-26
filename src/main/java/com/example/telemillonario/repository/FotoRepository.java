@@ -10,6 +10,10 @@ import java.util.List;
 @Repository
 public interface FotoRepository extends JpaRepository<Foto,Integer> {
 
+//    List<Foto> findByIdpersonaOrderByNumero(Integer id);
+
+    @Query(nativeQuery = true, value = "select * from telemillonario.fotos\n" +
+            "where (idpersona = ?1) order by numero;")
     List<Foto> findByIdpersonaOrderByNumero(Integer id);
 
 //    List<Foto> findByIdsedeOrderByNumero(int id);
