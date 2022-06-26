@@ -10,12 +10,11 @@
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"
                     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
                     crossorigin="anonymous"></script>
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
-                    defer></script>
 
             <div sec:authorize="hasAuthority('Usuario')">
                 <script th:src="@{/js/notificaciones.js}"></script>
             </div>
+
             <script  src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
             <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
             <script th:src="@{/js/owl.carousel.min.js}"></script>

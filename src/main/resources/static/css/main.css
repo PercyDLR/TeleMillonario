@@ -3750,14 +3750,26 @@ input.sign__input:focus, select.sign__input:focus, textarea.sign__input:focus{
 }
 
 /*==============================
+     Correcciones Bootstrap
+==============================*/
+.nav-tabs .nav-link.active {
+  color: #fff;
+  background-color: unset;
+  border: 0;
+}
+.nav-tabs, .nav-tabs .nav-link,.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+  border: 0;
+}
+
+@media(max-width: 576px){
+  .nav{
+    flex-direction: column;
+  }
+}
+
+/*==============================
 	HTML AÑADIDO
 ==============================*/
-
-/*LO DE ABAJO ES PARA EL FORMULARIO */
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: "Roboto", sans-serif;
-  color: #000; }
 
 a {
   -webkit-transition: .3s all ease;

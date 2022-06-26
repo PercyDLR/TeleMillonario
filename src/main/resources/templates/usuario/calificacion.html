@@ -28,6 +28,10 @@
                 unicode-bidi: bidi-override;
             }
 
+            .clasificacion label{
+                font-size: 50px;
+            }
+
             label:hover,
             label:hover ~ label {
                 color: #ff5860;
@@ -40,57 +44,232 @@
         </style>
     </head>
     <body class="body">
+        <div th:replace="fragments/navbar :: usuario('')"></div>
 
-        <form method="post" th:action="@{/guardarCalificacion}" >
-            <section class="home" style="padding-block: 1px; margin-top: 0px">
-                <div class="container" style="margin-top: 48px;">
+        <div class="col-12" th:if="${mensajeadvertencia != null}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong th:text="${mensajeadvertencia}"></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <section class="content mt-5" style="background-color: #2b2b31">
+
+            <div class="content__head">
+                <div class="container">
                     <div class="row">
+                        <div class="col-12">
+                            <!-- content title -->
+                            <h2 class="content__title">Reseñas</h2>
+                            <!-- end content title -->
 
-                        <div class="col-12 my-5">
-                            <h1 class="home__title">Calificación de la función</h1>
-                        </div>
-                        <div class="row">
-                            <div class="col-12" style="width: fit-content">
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${mensajeadvertencia != null}">
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                    <strong th:text="${mensajeadvertencia}"></strong>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <!-- content tabs nav -->
+                            <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#tab-1"
+                                       role="tab" aria-controls="tab-1" aria-selected="true">Obra</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-2"
+                                       role="tab" aria-controls="tab-2" aria-selected="false">Sede</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-3"
+                                       role="tab" aria-controls="tab-3" aria-selected="false">Actores</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab-4"
+                                       role="tab" aria-controls="tab-4" aria-selected="false">Directores</a>
+                                </li>
+                            </ul>
+                            <!-- end content tabs nav -->
+
+                            <!-- content mobile tabs nav -->
+                            <div class="content__mobile-tabs" id="content__mobile-tabs">
+                                <div class="content__mobile-tabs-btn dropdown-toggle" role="navigation"
+                                     id="mobile-tabs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <input type="button" value="Obra">
+                                    <span></span>
+                                </div>
+
+                                <div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="1-tab" data-toggle="tab" href="#tab-1"
+                                               role="tab" aria-controls="tab-1" aria-selected="true">Obra</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2"
+                                               role="tab" aria-controls="tab-2" aria-selected="false">Sede</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"
+                                               role="tab" aria-controls="tab-3" aria-selected="false">Actores</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="4-tab" data-toggle="tab" href="#tab-4"
+                                               role="tab" aria-controls="tab-4" aria-selected="false">Directores</a>
+                                        </li>
+
+                                    </ul>
                                 </div>
                             </div>
+                            <!-- end content mobile tabs nav -->
                         </div>
-                        <div class="col-12">
-                            <h1 class="home__title" style="font-size: 30px">Obra</h1>
-                        </div>
-
                     </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- content tabs -->
+
+                        <form method="post" th:action="@{/guardarCalificacion}">
+
+                            <div class="tab-content" id="myTabContent">
+                                <!-- Obra -->
+                                <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-sm-6 col-12" style="padding-inline: 50px">
+                                            <div class="card__cover">
+                                                <img th:src="${caratula.getRuta()}" alt="portada">
+                                                <a class="card__play" th:href="@{'/cartelera/DetallesObra?id=' + ${caratula.idobra.id}}">
+                                                    <i class="icon ion-ios-play"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <div class="card__content">
+                                                <h3 class="card__title">
+                                                    <a th:href="@{'/cartelera/DetallesObra?id=' + ${caratula.idobra.id}}"
+                                                       th:text="${obra.nombre}"></a>
+                                                </h3>
+                                                <span class="card__category">
+                                                        <a href="#" th:each="obraGenero : ${listaObraGenero}"
+                                                           th:if="${obraGenero.idobra.id == obra.id }"
+                                                           th:text="${obraGenero.idgenero.nombre}"></a>
+                                                    </span>
+
+                                                <div class="card__wrap">
+                                                     <span class="card__rate">
+                                                         <i class="icon ion-ios-star"></i>
+                                                         <span th:text="${obra.calificacion == null ? '--': obra.calificacion}"></span>
+                                                     </span>
+
+                                                    <ul class="card__list">
+                                                        <li th:text="${obra.restriccionedad == 1 ? '16+': 'Todo Público'}"></li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="card__description">
+                                                    <p th:text="${obra.descripcion}"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input name="idobra" th:value="${obra.id}" hidden>
+                                        <input name="id" th:value="${id}" hidden>
+
+                                        <div class="col-lg-6 col-12 form mt-4" th:unless="${listaObrasCalificadas.contains(obra)}">
+
+                                            <input id="estrellasObra" name="obra" value="0" hidden>
+
+                                            <p class="clasificacion" style="text-align: center">
+                                                <input th:id="|raadio1${obra.id}|" type="radio" name="radioObra" value="5" onclick="calificarObra(this.id)">
+                                                <label th:for="|raadio1${obra.id}|">★</label>
+                                                <input th:id="|raadio2${obra.id}|" type="radio" name="radioObra" value="4" onclick="calificarObra(this.id)">
+                                                <label th:for="|raadio2${obra.id}|">★</label>
+                                                <input th:id="|raadio3${obra.id}|" type="radio" name="radioObra" value="3" onclick="calificarObra(this.id)">
+                                                <label th:for="|raadio3${obra.id}|">★</label>
+                                                <input th:id="|raadio4${obra.id}|" type="radio" name="radioObra" value="2" onclick="calificarObra(this.id)">
+                                                <label th:for="|raadio4${obra.id}|">★</label>
+                                                <input th:id="|raadio5${obra.id}|" type="radio" name="radioObra" value="1" onclick="calificarObra(this.id)">
+                                                <label th:for="|raadio5${obra.id}|">★</label>
+                                            </p>
+
+                                            <label>Comentario</label>
+                                            <textarea class="sign__input" id="descripcion" rows="4" maxlength="500" name="descripcion"
+                                                      placeholder="Deje un Comentario sobre la Obra" style="width: 100%; height: 45%; resize: none"></textarea>
+                                        </div>
+
+                                        <div class="col-md-6 col-12" th:if="${listaObrasCalificadas.contains(obra)}">
+                                                <input id="estrellasObra" name="obra" value="0" hidden>
+                                                <textarea id="descripcion" maxlength="500" name="descripcion" hidden></textarea>
+                                                <h3 class="card__title"><b>Usted ya ha calificado esta obra</b></h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sede -->
+                                <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            Sede
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Actores -->
+                                <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            Actores
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Directores -->
+                                <div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="4-tab">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            Directores
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
 
                     <div class="catalog">
                         <div class="container">
                             <div class="row" style="margin-top: 48px;">
                                 <!-- card -->
-                                <div class="col-6 col-sm-12 col-lg-1" style="padding-inline: 5px"></div>
-                                <div class="col-6 col-sm-12 col-lg-6" style="padding-inline: 5px">
+                                <div class="col-6 col-sm-12 col-lg-6">
                                     <div class="card card--list">
                                         <div class="row">
                                             <div class="col-12 col-sm-4">
                                                 <div class="card__cover">
                                                     <img th:src="${caratula.getRuta()}" alt="portada">
-                                                    <a href="#" class="card__play">
+                                                    <a th:href="@{'/cartelera/DetallesObra?id=' + ${caratula.idobra.id}}" class="card__play">
                                                         <i class="icon ion-ios-play"></i>
                                                     </a>
                                                 </div>
                                             </div>
 
                                             <div class="col-12 col-sm-8">
-                                                <div class="card__content" style="padding: 1px">
+                                                <div class="card__content">
                                                     <h3 class="card__title">
                                                         <a href="#" th:text="${obra.nombre}"></a>
                                                     </h3>
                                                     <span class="card__category">
-                                                    <a href="#" th:each="obraGenero : ${listaObraGenero}"
-                                                       th:if="${obraGenero.idobra.id == obra.id }"
-                                                       th:text="${obraGenero.idgenero.nombre}"></a>
-                                                </span>
+                                                        <a href="#" th:each="obraGenero : ${listaObraGenero}"
+                                                           th:if="${obraGenero.idobra.id == obra.id }"
+                                                           th:text="${obraGenero.idgenero.nombre}"></a>
+                                                    </span>
 
                                                     <div class="card__wrap">
 <!--                                                        <span class="card__rate"><i-->
@@ -140,10 +319,14 @@
 <!--                                        </div>-->
                                     </div>
                                 </div>
+
                                 <input name="idobra" th:value="${obra.id}" hidden>
                                 <input name="id" th:value="${id}" hidden>
-                                <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px; margin: 50px 30px;" th:unless="${listaObrasCalificadas.contains(obra)}">
+
+                                <div class="col-6 col-sm-12 col-lg-4" th:unless="${listaObrasCalificadas.contains(obra)}">
+
                                     <input id="estrellasObra" name="obra" value="0" hidden>
+
                                     <div class="row">
                                         <p class="clasificacion mt-2" style="text-align: center">
                                             <input th:id="|raadio1${obra.id}|" type="radio" name="radioObra" value="5" onclick="calificarObra(this.id)">
@@ -159,17 +342,18 @@
                                         </p>
                                     </div>
                                     <div class="row sign__group">
-                                            <textarea class="sign__input" id="descripcion" rows="4" maxlength="500" name="descripcion" placeholder="Deje una reseña para la obra" style="width: 100%; height: 80%; border-radius: 7px"></textarea>
+                                            <textarea class="sign__input" id="descripcion" rows="4" maxlength="500" name="descripcion"
+                                                      placeholder="Deje una reseña para la obra"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px; margin: 50px 30px;" th:if="${listaObrasCalificadas.contains(obra)}">
                                     <div class="row" style="text-align: center">
                                         <input id="estrellasObra" name="obra" value="0" hidden>
-                                        <textarea class="sign__input" id="descripcion" rows="4" maxlength="500"  name="descripcion" placeholder="Deje una reseña para la obra" style="width: 100%; height: 80%; border-radius: 7px" hidden></textarea>
+
+                                        <textarea id="descripcion" maxlength="500" name="descripcion" hidden></textarea>
                                         <h3 class="card__title"><b>Usted ya ha calificado esta obra</b></h3>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-12 col-lg-1" style="padding-inline: 5px"></div>
                                 <!-- end card -->
                             </div>
                         </div>
@@ -385,7 +569,6 @@
                     </button>
                 </div>
             </div>
-        </form>
 
         <div th:replace="fragments/footer :: js(~{::script})">
             <script>

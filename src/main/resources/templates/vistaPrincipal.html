@@ -58,7 +58,7 @@
                                         </span>
                                         <span class="card__rate">
                                             <i class="icon ion-ios-star"></i>
-                                            <span th:text="${obra.calificacion}"></span>
+                                            <span th:text="${obra.calificacion != null ? obra.calificacion : '--'}"></span>
                                         </span>
                                     </div>
                                 </div>
@@ -117,10 +117,10 @@
                                         <span class="card__category">
                                             <a th:text="${sede.iddistrito.nombre}"></a>
                                         </span>
-									</span>
+
                                         <span class="card__rate">
                                             <i class="icon ion-ios-star"></i>
-                                            <span th:text="${sede.calificacion}"></span>
+                                            <span th:text="${sede.calificacion != null ? sede.calificacion : '--'}"></span>
                                         </span>
                                     </div>
                                 </div>
