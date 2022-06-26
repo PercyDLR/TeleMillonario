@@ -75,11 +75,11 @@ $(document).ready(function () {
 	Tabs
 	==============================*/
 	$('.content__mobile-tabs-menu li').each(function () {
-		$(this).attr('data-value', $(this).text().toLowerCase());
+		$(this).attr('data-value', $(this).text().trim().toLowerCase());
 	});
 
 	$('.content__mobile-tabs-menu li').on('click', function () {
-		var text = $(this).text();
+		var text = $(this).text().trim();
 		var item = $(this);
 		var id = item.closest('.content__mobile-tabs').attr('id');
 		$('#' + id).find('.content__mobile-tabs-btn input').val(text);
