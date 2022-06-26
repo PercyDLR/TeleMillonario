@@ -264,7 +264,6 @@ public class UsuarioController {
                 if (img.getOriginalFilename().length() != 0) {
                     try {
                         List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(usuario.getId());
-
                         // Borado de fotos
                         if (fotosEnDB.size() > 0) {
                             for (Foto foto : fotosEnDB) {

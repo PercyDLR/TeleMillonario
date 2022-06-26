@@ -272,11 +272,23 @@ public class ObraController {
             model.addAttribute("listaDirectoresYActores", listaDirectoresYActores);
             model.addAttribute("listaSedesConObra", listaSedesConObra);
             model.addAttribute("funcionesDeLaSede", funcionesDeLaSede);
-            //Envio de Reseñas de la obra con nombre de la persona + calificacion
 
-            model.addAttribute("ListResenias",calificacionesRepository.buscarReseñasObra(id));
+            //Envio de Reseñas de la obra con nombre de la persona + calificacion+foto del usuario
+
+            LinkedHashMap<Calificaciones,String> reseniasconurlfotousuario= new LinkedHashMap<>();
+            List<Calificaciones> ListResenias = calificacionesRepository.buscarReseñasObra(id);
+            for (Calificaciones calf :ListResenias){
+                List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(calf.getPersona().getId());
+                if(fotosEnDB.size()>0){
+                    reseniasconurlfotousuario.put(calf,fotosEnDB.get(0).getRuta());
+                }else{
+                    reseniasconurlfotousuario.put(calf,"/img/user.png");
+                }
+            }
+            model.addAttribute("reseniasconfoto",reseniasconurlfotousuario);
             //Envio de la calificacion promedio de la obra
             model.addAttribute("califprom",calificacionesRepository.PromCalificacionOBra(id));
+
 
             return "usuario/obras/carteleraObraDetalles";
         } else {

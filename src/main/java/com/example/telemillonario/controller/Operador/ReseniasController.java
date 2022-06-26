@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,9 +63,22 @@ public class ReseniasController {
         model.addAttribute("fotosede",fotoRepository.fotoSede(operador.getIdsede().getId()));
         //Envio de la calificacion promedio de la sede
         model.addAttribute("califpromsede",calificacionesRepository.PromCalificacionSede(operador.getIdsede().getId()));
-        //Envio de Reseñas de la sede con nombre de la persona + calificacion
 
-        model.addAttribute("ListResenias",calificacionesRepository.buscarReseñasSede(operador.getIdsede().getId()));
+
+        //Envio de Reseñas de la obra con nombre de la persona + calificacion+foto del usuario
+
+        LinkedHashMap<Calificaciones,String> reseniasconurlfotousuario= new LinkedHashMap<>();
+        List<Calificaciones> ListResenias = calificacionesRepository.buscarReseñasSede(operador.getIdsede().getId());
+        for (Calificaciones calf :ListResenias){
+            List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(calf.getPersona().getId());
+            if(fotosEnDB.size()>0){
+                reseniasconurlfotousuario.put(calf,fotosEnDB.get(0).getRuta());
+            }else{
+                reseniasconurlfotousuario.put(calf,"/img/user.png");
+            }
+        }
+        model.addAttribute("reseniasconfoto",reseniasconurlfotousuario);
+
 
         return "Operador/reseniasSede";
     }

@@ -168,11 +168,15 @@
 
                                     <li class="header__nav-item" style="margin-bottom: 0">
                                         <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
+                                                <span>Operador:</span>
+                                            </div>
                                             <div class="cuenta" style="size: 10px; color: white">
                                                 <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
+
                                             </div>
 
-                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
+                                            <div class="cuenta" style="size: 8px; color: white">
                                                 <span th:text="${session.usuario.idsede.nombre}"></span>
                                             </div>
                                         </a>
