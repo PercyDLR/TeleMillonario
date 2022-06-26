@@ -209,7 +209,7 @@
                                                       placeholder="Deje un Comentario sobre la Obra" style="width: 100%; height: calc(100% - 100px); resize: none"></textarea>
                                         </div>
 
-                                        <div class="col-md-6 col-12" th:if="${listaObrasCalificadas.contains(obra)}">
+                                        <div class="col-md-6 col-12" th:if="${listaObrasCalificadas.contains(obra)}" style="display: flex; align-items: center; justify-content: center;">
                                                 <input id="estrellasObra" name="obra" value="0" hidden>
                                                 <textarea id="descripcion" maxlength="500" name="descripcion" hidden></textarea>
                                                 <h3 class="card__title"><b>Usted ya ha calificado esta obra</b></h3>
@@ -273,10 +273,10 @@
                                                       placeholder="Deje un Comentario sobre la Sede" style="width: 100%; height: calc(100% - 100px); resize: none"></textarea>
                                         </div>
 
-                                        <div class="col-md-6 col-12" th:if="${listaObrasCalificadas.contains(obra)}">
+                                        <div class="col-md-5 col-12" th:if="${listaObrasCalificadas.contains(obra)}" style="display: flex; align-items: center; justify-content: center;">
                                             <input id="estrellasSede" name="sede" value="0" hidden>
                                             <textarea id="descripcionsede" maxlength="500" name="descripcionsede" hidden></textarea>
-                                            <h3 class="card__title"><b>Usted ya ha Calificado a esta Sede</b></h3>
+                                            <h3 class="card__title"><b>Usted ya ha calificado a esta sede</b></h3>
                                         </div>
                                     </div>
                                 </div>
@@ -320,7 +320,7 @@
                                                 <div th:if="${listaPersonasCalificadas.contains(actor)}">
                                                     <div class="row" style="text-align: center">
                                                         <input th:id="|estrellasActor${actor.id}|" name="actores" value="0" hidden>
-                                                        <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este actor</b></h3>
+                                                        <h3 class="card__title" style="font-size: 15px"><b>Usted ya ha calificado a este actor</b></h3>
                                                     </div>
                                                 </div>
                                             </div>
@@ -367,7 +367,7 @@
                                                 <div th:if="${listaPersonasCalificadas.contains(director)}">
                                                     <div class="row" style="text-align: center">
                                                         <input th:id="|estrellasDirector${director.id}|" name="directores" value="0" hidden>
-                                                        <h3 class="card__title" style="font-size: 10px"><b>Usted ya ha calificado a este director</b></h3>
+                                                        <h3 class="card__title" style="font-size: 15px"><b>Usted ya ha calificado a este director</b></h3>
                                                     </div>
                                                 </div>
                                             </div>
@@ -375,7 +375,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="form__btn" style="margin-inline: auto">Calificar</button>
+                            <!--style="margin-inline: auto"-->
+                            <div style="text-align: center;">
+                                <a class="cancel__btn" style="display:inline; padding-right: 20px;" th:href="@{/historialPrueba}">Cancelar</a>
+                                <button type="submit" class="form__btn" style="display:inline;" >Calificar</button>
+                            </div>
                         </form>
                     </div>
                 </div>
