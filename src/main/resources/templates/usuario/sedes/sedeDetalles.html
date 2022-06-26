@@ -371,7 +371,7 @@
 
 
             <!-- Reseñas -->
-            <section class="mt-5 pb-5" th:if="${ListResenias.size()!=0}" >
+            <section class="mt-5 pb-5" th:if="${reseniasconfoto.size()!=0}" >
                 <div class="content__head" style="margin-bottom: 0">
                     <div class="container">
                         <div class="row">
@@ -391,30 +391,30 @@
                         <div class="testimonial-box-container">
 
                             <!--Box1----->
-                            <div class="testimonial-box" th:each="resenia: ${ListResenias}">
+                            <div class="testimonial-box" th:each="resenia : ${reseniasconfoto}">
                                 <!--top----->
                                 <div class="box-top">
                                     <!--perfil----->
                                     <div class="profile">
                                         <!--img----->
                                         <div class="profile-img">
-                                            <img src="https://pbs.twimg.com/media/FPMc1zXXEAUp4EX?format=jpg&name=360x360">
+                                            <img th:src="${resenia.value}">
                                         </div>
                                         <!--nombre usuario----->
                                         <div class="name-user">
-                                            <strong th:text="|${resenia.persona.nombres} ${resenia.persona.apellidos}|">Joaquin Orellana</strong>
+                                            <strong th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|">Joaquin Orellana</strong>
                                         </div>
                                     </div>
 
                                     <!--reviews----->
                                     <div class="reviews">
-                                        <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.getCalificacion())}"></i>
+                                        <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.key.getCalificacion())}"></i>
 
 
                                     </div>
                                 </div>
                                 <div class="client-comment">
-                                    <p th:text="${resenia.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
+                                    <p th:text="${resenia.key.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
                                 </div>
 
                             </div>

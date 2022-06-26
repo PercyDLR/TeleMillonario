@@ -187,9 +187,20 @@ public class SedesController {
             model.addAttribute("generos", generoRepository.findAll());
 
             model.addAttribute("listaFotos", fotoRepository.fotosSede(id));
-            //Envio de Reseñas de la sede con nombre de la persona + calificacion
+            //Envio de Reseñas de la obra con nombre de la persona + calificacion+foto del usuario
 
-            model.addAttribute("ListResenias",calificacionesRepository.buscarReseñasSede(id));
+            LinkedHashMap<Calificaciones,String> reseniasconurlfotousuario= new LinkedHashMap<>();
+            List<Calificaciones> ListResenias = calificacionesRepository.buscarReseñasSede(id);
+            for (Calificaciones calf :ListResenias){
+                List<Foto> fotosEnDB = fotoRepository.findByIdpersonaOrderByNumero(calf.getPersona().getId());
+                if(fotosEnDB.size()>0){
+                    reseniasconurlfotousuario.put(calf,fotosEnDB.get(0).getRuta());
+                }else{
+                    reseniasconurlfotousuario.put(calf,"/img/user.png");
+                }
+            }
+            model.addAttribute("reseniasconfoto",reseniasconurlfotousuario);
+
             //Envio de la calificacion promedio de la sede
             model.addAttribute("califpromsede",calificacionesRepository.PromCalificacionSede(id));
             return "usuario/sedes/sedeDetalles";

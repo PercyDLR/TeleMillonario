@@ -189,33 +189,33 @@
                 <div class="testimonial-box-container">
 
                     <!--Box1----->
-                    <div class="testimonial-box" th:each="resenia: ${ListResenias}">
+                    <div class="testimonial-box" th:each="resenia : ${reseniasconfoto}">
                         <!--top----->
                         <div class="box-top">
                             <!--perfil----->
                             <div class="profile">
                                 <!--img----->
                                 <div class="profile-img">
-                                    <img src="https://pbs.twimg.com/media/FPMc1zXXEAUp4EX?format=jpg&name=360x360">
+                                    <img th:src="${resenia.value}">
                                 </div>
                                 <!--nombre usuario----->
                                 <div class="name-user">
-                                    <strong th:text="|${resenia.persona.nombres} ${resenia.persona.apellidos}|">Joaquin Orellana</strong>
+                                    <strong th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|">Joaquin Orellana</strong>
                                 </div>
                             </div>
 
                             <!--reviews----->
                             <div class="reviews">
-                                <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.getCalificacion())}"></i>
+                                <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.key.getCalificacion())}"></i>
 
 
                             </div>
                         </div>
                         <div class="client-comment">
-                            <p th:text="${resenia.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
+                            <p th:text="${resenia.key.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
                         </div>
                         <button type="button" class="btn btn-danger" style="text-align: center;margin-left: 350px">
-                            <a th:href="@{'/operador/resenias/borrar?id='+${resenia.id}}" style="color: #FFFFFF">
+                            <a th:onclick="|advertencia(${resenia.key.id})|" style="color: #FFFFFF">
                                 Eliminar
                             </a>
                         </button>
@@ -226,10 +226,36 @@
             </div>
         </div>
 
-
+        <div id="popup" class="overlay">
+            <div class="row">
+                <div class="col-12">
+                    <div class="sign__content">
+                        <form action="#" class="sign__form">
+                            <a class="sign__logo">
+                                <img th:src="@{/img/tele.png}" alt="logo">
+                            </a>
+                            <div class="sign__group">
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                    ¿Estás seguro de querer borrar esta reseña de la sede?</h5>
+                            </div>
+                            <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
+                            <a id="borrar" class="sign__btn">Continuar</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">
+            <script th:inline="javascript">
+                function advertencia(idresenia) {
+                    let popup = document.getElementById('popup');
 
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/operador/resenias/borrar?id='}]] + idresenia;
+                    popup.style.display = 'block';
+                }
+
+            </script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                     crossorigin="anonymous">
