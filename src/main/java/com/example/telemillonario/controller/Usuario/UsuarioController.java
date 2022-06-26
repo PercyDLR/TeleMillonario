@@ -1481,10 +1481,25 @@ public class UsuarioController {
         mailSender.send(message);
     }
 
+    private void sendInfoCompraCancelada(String correo,String content) throws  MessagingException,UnsupportedEncodingException{
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
+        helper.setTo(correo);
+
+        String subject = "Cancelación Compra Realizada";
+
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+        mailSender.send(message);
+    }
+
 
     private String obtenerContentCorreo(ArrayList<String> URL,ArrayList<Compra> compras,String QR,DatosTarjeta datosTarjeta,String numeroOperacion){
 
-        DateTimeFormatter dtf5 = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm");
+        DateTimeFormatter dtf5 = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm a");
         Compra compra = compras.get(0);
         double montoTotal = 0;
         for(Compra compra2 : compras){
@@ -1680,7 +1695,17 @@ public class UsuarioController {
     }
 
 
-    private String sendContentBorrarCompra(){
+    private String sendContentBorrarCompra(Pago pago){
+        DateTimeFormatter dtf5 = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm a");
+        List<Tarjeta> listaTarjetas = tarjetaRepository.findAll();
+        String titularTarjeta = null;
+        for (Tarjeta t : listaTarjetas) {
+            if (t.getId() == pago.getIdtarjeta()) {
+                titularTarjeta = t.getNombre();
+            }
+        }
+        Foto caratulaObra = fotoRepository.caratulaDeObra(pago.getIdcompra().getFuncion().getIdobra().getId());
+
         String content =
                 "<div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
                 "            <div>\n" +
@@ -1708,11 +1733,11 @@ public class UsuarioController {
                 "                                                                <tr>\n" +
                 "                                                                    <td height=\"80\" bgcolor=\"#b5121c\" style=\"padding:0 20px\">\n" +
                 "                                                                        <h2 style=\"color:#fff; font-family:'Arial',sans-serif; font-weight:500; font-size:20px; margin:0 0 5px\">\n" +
-                "                                                                            <span style=\"text-transform:uppercase; font-family:'Arial',sans-serif\">¡ Hola ALONSO ROSALES ANTUNEZ ! </span>\n" +
+                "                                                                            <span style=\"text-transform:uppercase; font-family:'Arial',sans-serif\">¡ Hola " + pago.getIdcompra().getPersona().getNombres().toUpperCase() + " " + pago.getIdcompra().getPersona().getApellidos().toUpperCase() + " ! </span>\n" +
                 "                                                                        </h2>\n" +
                 "                                                                        <p style=\"color:#fff; font-family:'Arial',sans-serif; font-size:14px; font-weight:300; margin:0\">A continuación verás el detalle de tu reembolso</p>\n" +
                 "                                                                        <div>\n" +
-                "                                                                            <div align=\"left\" style=\"color:#fff\">06 de Abril de 2022 02:54 PM </div>\n" +
+                "                                                                            <div align=\"left\" style=\"color:#fff\">" + LocalDateTime.now().format(dtf5) + " </div>\n" +
                 "                                                                        </div>\n" +
                 "                                                                    </td>\n" +
                 "                                                                </tr>\n" +
@@ -1720,14 +1745,14 @@ public class UsuarioController {
                 "                                                                    <td height=\"\" width=\"100%;\" style=\"font-family:'Arial',sans-serif; padding:0 20px 20px\">\n" +
                 "                                                                        <h2 style=\"color:#b5121d; margin-top:20px; font-size:18px; text-transform:uppercase; font-family:'Arial',sans-serif\">Descripción de la compra </h2>\n" +
                 "                                                                        <div class=\"x_cover-container\" style=\"float:left; margin-right:15px; max-width:250px; overflow:hidden\">\n" +
-                "                                                                            <img data-imagetype=\"External\" src=\"https://cinemarkmedia.modyocdn.com/pe/300x400/87979.jpg\" alt=\"img_movie\" style=\"max-width:120px\">\n" +
+                "                                                                            <img data-imagetype=\"External\" src=\"" + caratulaObra.getRuta() + " \" alt=\"img_movie\" style=\"max-width:120px\">\n" +
                 "                                                                        </div>\n" +
                 "                                                                        <div class=\"x_text-details\" style=\"display:block\">\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\">Doctor strange en el multiverso d </span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Teatro: </strong>: Cinemark megaplaza </span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Fecha: </strong>: Jueves, 05 de Mayo de 2022 </span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Hora:</strong> 02:00 p. m. </span>\n" +
-                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Sala:</strong> 6 </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\">" + pago.getIdcompra().getFuncion().getIdobra().getNombre() + " </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Teatro: </strong> " + pago.getIdcompra().getFuncion().getIdsala().getIdsede().getNombre() + " </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Fecha: </strong> " + pago.getIdcompra().getFuncion().getFecha() + " </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Hora:</strong> " + pago.getIdcompra().getFuncion().getInicio() + " </span>\n" +
+                "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Sala:</strong> " + pago.getIdcompra().getFuncion().getIdsala().getNumero() + " </span>\n" +
                 "                                                                        </div>\n" +
                 "                                                                    </td>\n" +
                 "                                                                </tr>\n" +
@@ -1747,11 +1772,11 @@ public class UsuarioController {
                 "                                                                                                <td align=\"right\" style=\"\"><strong>Precio</strong></td>\n" +
                 "                                                                                            </tr>\n" +
                 "                                                                                            <tr>\n" +
-                "                                                                                                <td>1 GENERAL ADULTO XD 3D <br aria-hidden=\"true\"></td>\n" +
-                "                                                                                                <td align=\"right\" style=\"\">S/ 28.20<br aria-hidden=\"true\"></td>\n" +
+                "                                                                                                <td>" + pago.getIdcompra().getCantidad() + " BOLETO(S) " + pago.getIdcompra().getFuncion().getIdobra().getNombre() + " <br aria-hidden=\"true\"></td>\n" +
+                "                                                                                                <td align=\"right\" style=\"\">S/ " + pago.getIdcompra().getMontoTotal() + "<br aria-hidden=\"true\"></td>\n" +
                 "                                                                                            </tr>\n" +
                 "                                                                                            <tr>\n" +
-                "                                                                                                <td colspan=\"2\" align=\"right\" style=\"border-top-width:1.5px; border-top-color:#B5121B; border-top-style:solid\"><br aria-hidden=\"true\">Reembolso Total: S/ 54.70 </td>\n" +
+                "                                                                                                <td colspan=\"2\" align=\"right\" style=\"border-top-width:1.5px; border-top-color:#B5121B; border-top-style:solid\"><br aria-hidden=\"true\">Reembolso Total: S/ " + pago.getIdcompra().getMontoTotal() + " </td>\n" +
                 "                                                                                            </tr>\n" +
                 "                                                                                        </tbody>\n" +
                 "                                                                                    </table>\n" +
@@ -1772,19 +1797,19 @@ public class UsuarioController {
                 "                                                                                </tr>\n" +
                 "                                                                                <tr>\n" +
                 "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Código de transacción</strong> </p></td>\n" +
-                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">d2b15d82-c720-42d6-b4b9-2cdbbc6d40bc </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">" + pago.getCodigo() + " </p></td>\n" +
                 "                                                                                </tr>\n" +
                 "                                                                                <tr>\n" +
                 "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Medio de pago</strong> </p></td>\n" +
-                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">PayU VISA </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">" + titularTarjeta + " </p></td>\n" +
                 "                                                                                </tr>\n" +
                 "                                                                                <tr>\n" +
                 "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Número tarjeta</strong> </p></td>\n" +
-                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">426 </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\"> </p> " + pago.getNumerotarjeta() + " </td>\n" +
                 "                                                                                </tr>\n" +
                 "                                                                                <tr>\n" +
                 "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:15px; text-transform:uppercase; font-family:'Arial',sans-serif\"><strong>Fecha Cancelacion</strong> </p></td>\n" +
-                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">06 de Abril de 2022 02:54 PM </p></td>\n" +
+                "                                                                                    <td height=\"\" width=\"100%;\" style=\"padding:0 20px\"><p style=\"color:#454545; margin-top:10px; font-size:14px; font-family:'Arial',sans-serif\">" + LocalDateTime.now().format(dtf5) + " </p></td>\n" +
                 "                                                                                </tr>\n" +
                 "                                                                            </tbody>\n" +
                 "                                                                        </table>\n" +
@@ -2001,6 +2026,14 @@ public class UsuarioController {
                     funcionRepository.actualizacionCantidadBoletos(optionalCompra.get().getCantidad() + funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getStockentradas(), funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getId());
                     pagoRepository.cancelarPago(idCompra);
                     redirectAttributes.addFlashAttribute("exitoCancelar", "Su compra ha sido cancelada exitosamente");
+
+                    String content = sendContentBorrarCompra(pagoRepository.encontrarPagoPorIdCompra(idCompra));
+                    try {
+                        sendInfoCompraCancelada(persona.getCorreo(),content);
+                    } catch (MessagingException | UnsupportedEncodingException e) {
+                        System.out.println("No se pudo mandar el correo");
+                        return "redirect:/anErrorHasOcurred";
+                    }
                 }
             }
         }
