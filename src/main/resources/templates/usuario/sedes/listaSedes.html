@@ -12,7 +12,7 @@
                 object-fit: cover;
                 object-position: 50% 50%;
                 margin-top: 0;
-                aspect-ratio: 9 / 15;
+                aspect-ratio: 9 / 13;
             }
 
             .sign__group{
@@ -48,13 +48,13 @@
                     <div class="col-12 my-5">
                         <form method="post" th:action="@{/sedes/BusquedaYFiltros}">
                             <div class="row justify-content-center">
-                                <div class="col-lg-7 col-12 sign__group">
+                                <div class="col-md-5 col-sm-6 col-12">
 
                                     <input type="text" class="sign__input"
                                            placeholder="Busque una sede" name="busqueda"
                                            th:value="${busqueda}" maxlength="100">
                                 </div>
-                                <div class="col-lg-3 col-md-5 col-6 sign__group">
+                                <div class="col-md-5 col-sm-6 col-12">
                                     <select class="sign__input" name="filtro">
                                         <option th:selected="${filtro == 0}" value="">Seleccione un distrito</option>
                                         <option th:each="d : ${listaDistritos}" th:selected="${filtro == d.id}" th:value="${d.id}" th:text="${d.nombre}"></option>
@@ -62,7 +62,7 @@
                                 </div>
 
                                 <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                                    <button type="submit" class="form__btn" style="width: 50%; margin: 0;">
+                                    <button type="submit" class="form__btn" style="width: 80%; margin: 0;">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
@@ -76,10 +76,10 @@
                     <div class="container">
                         <div class="row">
                             <!-- card -->
-                            <div class="col-6 col-sm-12 col-lg-4" style="padding-inline: 5px" th:each="sede : ${listaSedes}">
+                            <div class="col-6 col-md-4" th:each="sede : ${listaSedes}">
                                 <div class="card card--list">
                                     <div class="row">
-                                        <div class="col-12 col-sm-10">
+                                        <div class="col-12">
                                             <div class="card__cover">
                                                 <img th:each="foto : ${listaFotos}"
                                                      th:if="${foto != null && foto.idsede.id == sede.id}"
@@ -90,18 +90,17 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-sm-10 mt-3">
-                                            <div class="card__content" style="padding: 1px; height: 100%; text-align: center">
-                                                <h3 class="card__title" style="font-size: 18px">
-                                                    <b>
-                                                        <a th:href="@{'/sedes/DetallesSede?id=' + ${sede.id}}"
-                                                           th:text="${sede.nombre}"></a>
-                                                    </b>
+                                        <div class="col-12 mt-3">
+                                            <div class="card__content" style="text-align: center; height: fit-content">
+                                                <h3 class="card__title">
+                                                    <a th:href="@{'/sedes/DetallesSede?id=' + ${sede.id}}" th:text="${sede.nombre}"></a>
                                                 </h3>
-                                                <h3 class="card__title" style="font-size: 15px" th:text="${sede.iddistrito.nombre}"></h3>
-                                                <i class="icon ion-ios-star" style="color: #ff5860"></i>
-                                                <span class="card__rate" th:text="${sede.calificacion == null ? '-': sede.calificacion}">
-                                                        8.4
+                                                <span class="card__category" style="justify-content: center">
+                                                    <a th:text="${sede.iddistrito.nombre}"></a>
+                                                </span>
+                                                <span class="card__rate">
+                                                    <i class="icon ion-ios-star"></i>
+                                                    <span th:text="${sede.calificacion == null ? '--': sede.calificacion}"></span>
                                                 </span>
                                             </div>
                                         </div>
