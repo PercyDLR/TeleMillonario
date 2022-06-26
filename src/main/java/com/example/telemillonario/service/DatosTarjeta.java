@@ -28,8 +28,8 @@ public class DatosTarjeta implements Serializable {
     private String numeroTarjeta;//formato 4557-2341-5567-8890
 
 
-    @NotEmpty(message = "Los nombres no pueden estar vacíos")
-    //@NotNull(message = "Los nombres no pueden estar vacíos")
+//    @NotEmpty(message = "Los nombres no pueden estar vacíos")
+    @NotNull(message = "Debe elegir un tipo de tarjeta ")
     private String nombresTitular;//nombre Mastercard,Visa,Diners Club
 
     @NotEmpty(message = "La fecha no puede estar vacio")

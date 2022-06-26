@@ -1823,12 +1823,17 @@ public class UsuarioController {
         List<Compra> listaComprasRevisadas = new ArrayList<>();
         for (Compra c : listaCompras) {
             LocalDate fechaActual = LocalDate.now();
-            if (fechaActual.compareTo(c.getFuncion().getFecha()) > 0) { //Fecha ya paso, debo cambiarle a estado cancelado
-                compraRepository.actualizacionEstadoCompra("Asistido", persona.getId(), c.getId());
+            if (fechaActual.compareTo(c.getFuncion().getFecha()) > 0) { //Fecha ya paso, debo cambiarle a estado asistido
+                if (!c.getEstado().equals("Cancelado")){//Comparacion par que si esta cancelado no deba cambiarlo a asistido
+                    compraRepository.actualizacionEstadoCompra("Asistido", persona.getId(), c.getId());
+                }
+
             } else if (fechaActual.compareTo(c.getFuncion().getFecha()) == 0) { //Fecha es hoy
                 LocalTime tiempoActual = LocalTime.now();
                 if (tiempoActual.compareTo(c.getFuncion().getFin()) > 0) { //Ya acabo la funcion
-                    compraRepository.actualizacionEstadoCompra("Asistido", persona.getId(), c.getId());
+                    if (!c.getEstado().equals("Cancelado")){//Comparacion par que si esta cancelado no deba cambiarlo a asistido
+                        compraRepository.actualizacionEstadoCompra("Asistido", persona.getId(), c.getId());
+                    }
                 }
             }
             listaComprasRevisadas.add(c);
