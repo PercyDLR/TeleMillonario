@@ -26,11 +26,11 @@
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('numeroTarjeta')}"
                                              th:errors="*{numeroTarjeta}"></div>
                                     </div>
-                                    <div class="sign__group">
-                                        <input type="text" name="Nombre de la Tarjeta" class="sign__input" placeholder="Nombres del titular"  th:field="*{nombresTitular}" th:classappend="${#fields.hasErrors('nombresTitular')?'is-invalid':''}">
-                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nombresTitular')}"
-                                             th:errors="*{nombresTitular}"></div>
-                                    </div>
+<!--                                    <div class="sign__group">-->
+<!--                                        <input type="text" name="Nombre de la Tarjeta" class="sign__input" placeholder="Nombres del titular"  th:field="*{nombresTitular}" th:classappend="${#fields.hasErrors('nombresTitular')?'is-invalid':''}">-->
+<!--                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nombresTitular')}"-->
+<!--                                             th:errors="*{nombresTitular}"></div>-->
+<!--                                    </div>-->
                                     <div class="sign__group">
                                         <input type="text" name="fechaVencimiento" class="sign__input" th:field="*{fechaVencimiento}" placeholder="Fecha de vencimiento" th:classappend="${#fields.hasErrors('fechaVencimiento')?'is-invalid':''}">
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaVencimiento')}"
@@ -40,9 +40,39 @@
                                         <input type="text" name="codigoSeguridad" class="sign__input" th:field="*{codigoSeguridad}" placeholder="Codigo de seguridad" th:classappend="${#fields.hasErrors('codigoSeguridad')?'is-invalid':''}">
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('codigoSeguridad')}"
                                              th:errors="*{codigoSeguridad}"></div>
+
                                     </div>
+
+                                    <div  class="sign__group sign__group--checkbox" style="text-align: center;padding-top: 25px">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" th:field="*{nombresTitular}"  value="Visa"
+                                                   id="nombresTitular">
+                                            <label style="padding-right: 15px" class="form-check-label text-light" for="nombresTitular">
+                                                Visa
+                                            </label>
+                                            <input class="form-check-input text-light" th:field="*{nombresTitular}" type="radio"  value="Mastercard"
+                                                   id="nombresTitular2" >
+                                            <label style="padding-right: 15px" class="form-check-label text-light" for="nombresTitular2">
+                                                Mastercard
+                                            </label>
+                                            <input class="form-check-input text-light" th:field="*{nombresTitular}" type="radio"  value="Diners Club"
+                                                   id="nombresTitular3" >
+                                            <label class="form-check-label text-light" for="nombresTitular3">
+                                                Diners Club
+                                            </label>
+
+                                        </div>
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nombresTitular')}"
+                                             th:errors="*{nombresTitular}"></div>
+                                    </div>
+
                                     <a class="sign__btn" th:href="@{'/carritoPrueba'}">Cancelar</a>
                                     <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
+                                    <div style="background-color: white;margin-top: 20px">
+                                        <img style="width: 120px" src="https://enclave.rae.es/sites/default/files/visa_mastercard.png" alt="logo">
+                                        <img style="width: 120px" src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Diners_Club_Logo3.svg" alt="logo">
+                                    </div>
                                 </form>
                             </div>
                         </div>
