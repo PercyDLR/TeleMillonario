@@ -23,6 +23,7 @@
 									   th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}" th:hidden="${google eq 1}">
 								<div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
 									 th:errors="*{nombres}"></div>
+								<!--div class="invalid-feedback d-block" th:if="${(errNombre != null) && (errNombre == true)}">Los nombres no pueden contener caracteres.</div-->
 							</div>
 
 							<div class="sign__group">
@@ -31,14 +32,14 @@
 									   th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}" th:hidden="${google eq 1}">
 								<div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
 									 th:errors="*{apellidos}"></div>
-
+								<!--div class="invalid-feedback d-block" th:if="${(errApellido != null) && (errApellido == true)}">Los apellidos no pueden contener caracteres.</div-->
 							</div>
 							<div class="sign__group">
 								<input type="text" class="sign__input" placeholder="DNI" name = "dni" th:value="${usuario.getDni()}" required maxlength="8"
 									   th:classappend="${#fields.hasErrors('dni')?'is-invalid':''}">
 								<div class="invalid-feedback" th:if="${#fields.hasErrors('dni')}"
 									 th:errors="*{dni}"></div>
-								<div class="invalid-feedback d-block" th:if="${(errDni != null) && (errDni eq 1)}">El DNI ingresado ya está en uso</div>
+								<div class="invalid-feedback d-block" th:if="${(errDni != null) && (errDni == true)}">Verifique el DNI ingresado</div>
 
 							</div>
 							<div class="sign__group">

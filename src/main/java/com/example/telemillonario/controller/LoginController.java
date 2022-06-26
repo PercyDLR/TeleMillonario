@@ -45,6 +45,8 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Optional;
 
 @Controller
@@ -70,6 +72,8 @@ public class LoginController {
 
     @Autowired
     CompraRepository compraRepository;
+
+    //String regex = "^[\\'\\-,.][^0-9_!¡?÷?¿/\\\\+=@#$%ˆ&*(){}|~<>;:[\\]]]{1,}$";
 
     @GetMapping("/loginByGoogle")
     public String listar(Model model, OAuth2AuthenticationToken authentication, HttpSession session, RedirectAttributes redirectAttributes,HttpServletRequest request){
@@ -182,27 +186,75 @@ public class LoginController {
                                    Model model,
                                    RedirectAttributes a) throws InterruptedException, IOException, MessagingException {
 
+        System.out.println("------------------------------------------------------------------");
+        //Validacion nombre
+        /*Pattern pattern = Pattern.compile(regex);
+        Matcher matcherNombres = pattern.matcher(usuario.getNombres());
+        boolean errorNombre = matcherNombres.find();
+
+        Pattern pattern1 = Pattern.compile(regex);
+        Matcher matcherApellidos = pattern1.matcher(usuario.getApellidos());
+        boolean errorApellido = matcherApellidos.find();
+
+
+        if(errorNombre == false){
+            errorNombre = true;
+        }
+
+        if(errorApellido == false){
+            errorNombre = true;
+        }
+
+        System.out.println("Error Nombre: "+errorNombre);
+        System.out.println("Errror Apellido: "+errorApellido);
+
+
+        if(matcherApellidos.find() != false){
+            errorApellido = true;
+        }
+        System.out.println("Errror Apellido 2: "+errorApellido);*/
+        //Validacion contraseña y Recontraseña
         boolean errorRecontrasenia = false;
-        if (recontrasenia.equals("") || recontrasenia == null) {
+        boolean contraseniaDiferente = recontrasenia.equals(usuario.getContrasenia());
+        if (recontrasenia.equals("") || recontrasenia == null || contraseniaDiferente == false) {
             model.addAttribute("errRecontrasenia", 1);
             errorRecontrasenia = true;
         }
 
+        //Validacion Fecha de Nacimiento
         boolean errorNacimiento = false;
         LocalDate fechaActual = LocalDate.now();
         LocalDate fechaRegistrada = usuario.getNacimiento();
         Period period = Period.between(fechaRegistrada, fechaActual);
-
         if (period.getYears() < 0 || period.getMonths() < 0 || (period.getDays() <= 0 && (period.getYears() < 0 || period.getMonths() < 0))) {
             model.addAttribute("errDate", -1);
             errorNacimiento = true;
+        }
+
+        //Validacion DNI
+        DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
+        boolean errDNI = true;
+        if(datosPersona.getSuccess().equalsIgnoreCase("true")){
+            String nombresUpperCase = usuario.getNombres();
+            String cadenaNormalize = Normalizer.normalize(nombresUpperCase,Normalizer.Form.NFD);
+            nombresUpperCase = cadenaNormalize.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+            String apellidosUpperCase = usuario.getApellidos();
+            String cadenaNormalize2 = Normalizer.normalize(apellidosUpperCase,Normalizer.Form.NFD);
+            apellidosUpperCase = cadenaNormalize2.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+            String ApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
+            String ApellidosAPI = datosPersona.getApellido_paterno() + " " + datosPersona.getApellido_materno();
+            String NombresAPI = datosPersona.getNombres();
+            if(ApellidosAPI.contains(apellidosUpperCase) && NombresAPI.contains(nombresUpperCase)){
+                errDNI = false;
+            }
+
         }
 
         boolean coincidencias = false;
         List<Persona> listaPersonas = personaRepository.findAll();
         for (Persona p : listaPersonas) {
             if (p.getDni() != null && p.getDni().equals(usuario.getDni())) {
-                model.addAttribute("errDni", 1);
+                model.addAttribute("errDni", errDNI);
                 coincidencias = true;
             }
             if (p.getCorreo() != null && p.getCorreo().equals(usuario.getCorreo())) {
@@ -211,42 +263,7 @@ public class LoginController {
             }
         }
 
-        System.out.println("--------------");
-        DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
-        boolean errDNI = true;
-        //Verificamos si existe el dni
-        if(datosPersona.getSuccess().equalsIgnoreCase("true")){
-            //pasamos a mayuscula los nombres apellidos de la persona que se registro
-            String nombresUpperCase = usuario.getNombres();
-            String cadenaNormalize = Normalizer.normalize(nombresUpperCase,Normalizer.Form.NFD);
-            nombresUpperCase = cadenaNormalize.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
-            String apellidosUpperCase = usuario.getApellidos();
-            String cadenaNormalize2 = Normalizer.normalize(apellidosUpperCase,Normalizer.Form.NFD);
-            apellidosUpperCase = cadenaNormalize2.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
-
-            String ApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
-
-            String ApellidosAPI = datosPersona.getApellido_paterno() + " " + datosPersona.getApellido_materno();
-
-            String NombresAPI = datosPersona.getNombres();
-
-            System.out.println(usuario.getNombres());
-            System.out.println(ApellidosAPI.contains(apellidosUpperCase));
-            System.out.println(NombresAPI);
-            System.out.println(nombresUpperCase);
-            System.out.println(ApellidosAPI);
-            System.out.println(apellidosUpperCase);
-            System.out.println(NombresAPI.contains(nombresUpperCase));
-
-            if(ApellidosAPI.contains(apellidosUpperCase) && NombresAPI.contains(nombresUpperCase)){
-                errDNI = false;
-            }
-
-        }else{
-            model.addAttribute("errDni", errDNI);
-        }
-
-
+        //if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI || errorNombre || errorApellido){
         if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
@@ -256,17 +273,21 @@ public class LoginController {
                 model.addAttribute("errDni", errDNI);
             }
 
+            /*if(errorNombre == true){
+                model.addAttribute("errNombre", errorNombre);
+            }
+
+            if(errorApellido == true){
+                model.addAttribute("errApellido", errorApellido);
+            }*/
             return "login/signup";
         } else {
 
-            //generamos su bcript de contraseña
-            System.out.println(usuario.getContrasenia());
             String contraseniaBCrypt = new BCryptPasswordEncoder().encode(usuario.getContrasenia());
             usuario.setContrasenia(contraseniaBCrypt);
 
             //le asignamos el rol 2 -> usuario
             usuario.setIdrol(rolRepository.getById(2));
-            //Estado -> 1
             usuario.setEstado(1);
             personaRepository.save(usuario);
             a.addFlashAttribute("msg", 1);
