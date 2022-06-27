@@ -213,7 +213,8 @@ public class ObraController {
     }
 
     @GetMapping("/DetallesObra")
-    String detallesObra(@RequestParam("id") int id, Model model, RedirectAttributes a, HttpSession session) {
+    String detallesObra(@RequestParam("id") int id, @RequestParam(value = "idsede", defaultValue = "0") String sedeSeleccionada,
+                        Model model, RedirectAttributes a, HttpSession session) {
         /*Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
         if (compraEnProceso != null) {
             compraEnProceso = null;
@@ -264,7 +265,12 @@ public class ObraController {
                 }
             }
 
-            List<Sede> lista = sedeRepository.findAll();
+            try{
+                int sedeElegida = Integer.parseInt(sedeSeleccionada);
+                model.addAttribute("sedeSeleccionada",sedeElegida);
+            } catch(Exception e){
+                model.addAttribute("sedeSeleccionada",0);
+            }
 
             model.addAttribute("obra", obra);
             model.addAttribute("listaFotos", listaFotos);

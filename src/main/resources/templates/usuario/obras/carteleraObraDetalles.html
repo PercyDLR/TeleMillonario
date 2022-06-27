@@ -232,13 +232,14 @@
                             <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
                                 <div class="card-header" id="headingOne">
                                     <button type="button" th:data-target="|#funciones-${sede.key.id}|"
-                                            data-toggle="collapse" aria-expanded="true" th:aria-controls="|funciones-${sede.key.id}|">
+                                            data-toggle="collapse" th:aria-expanded="${sede.key.id == sedeSeleccionada}" th:aria-controls="|funciones-${sede.key.id}|">
                                         <span th:text="${sede.key.nombre}"></span>
                                         <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
                                     </button>
                                 </div>
 
-                                <div th:id="|funciones-${sede.key.id}|" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div th:id="|funciones-${sede.key.id}|" class="collapse" th:classappend="${sede.key.id == sedeSeleccionada ? 'show' : ''}"
+                                     aria-labelledby="headingOne" data-parent="#accordion">
                                     <div class="card-body">
                                         <div class="grid">
                                             <button type="button" class="form__btn funcion" th:each="funcion : ${sede.value}"

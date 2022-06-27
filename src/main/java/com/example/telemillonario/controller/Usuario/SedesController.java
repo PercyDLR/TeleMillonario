@@ -41,7 +41,7 @@ public class SedesController {
 
     @Autowired
     CalificacionesRepository calificacionesRepository;
-    int sedesxpagina=9;
+    int sedesxpagina=12;
     int obraxpagina = 12;
 
     @GetMapping("")
