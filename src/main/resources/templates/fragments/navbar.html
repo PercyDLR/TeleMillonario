@@ -157,7 +157,7 @@
 
                                     <li class="header__nav-item" style="margin: 5px">
                                         <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <img style="height: 50px; margin-top: 0" th:src="@{/img/user.png}"></a>
+                                            <img style="height: 50px; width: 50px; margin-top: 0;border-radius: 50%; object-fit:cover" th:src="${session.fotoPerfil}"></a>
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
                                             <li><a th:href="@{/operador/perfil}">Perfil</a></li>

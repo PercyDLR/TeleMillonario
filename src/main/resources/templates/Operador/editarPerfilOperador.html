@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="fragments/header :: head('Perfil',~{::style})">
+        <style>
+            div.sign__group input{
+                width: 1000px;
+                max-width: calc(100% - 5rem);
+            }
+            .perfil{
+                height: 150px;
+                max-height: 150px;
+                max-width: fit-content;
+            }
+            #img_container img {
+                margin: 5px;
+                width: 160px;
+                object-fit:cover
+            }
+        </style>
+    </head>
+
+    <body class="body">
+        <div th:replace="fragments/navbar :: operador('Perfil')"></div>
+
+        <div class="sign content" style="padding: 0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sign__content" style="margin-top: 70px">
+
+                            <!-- authorization form -->
+                            <form class="sign__form" method="post" th:object="${usuario}" th:action="@{/operador/perfil/guardar}" enctype="multipart/form-data">
+                                <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;">
+                                    Editar Perfil
+                                </h3>
+
+                                <div class="row">
+                                    <div class="col-12" style="width: fit-content">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong th:text="${err}"></strong>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5">
+                                    <div class="col-md-8 col-12">
+
+                                        <div class="sign__group">
+                                            <input hidden th:field="*{id}">
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="nombres">Nombres</label>
+                                            <input class="sign__input"
+                                                   th:value="*{nombres}" id="nombres" disabled>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="apellidos">Apellidos</label>
+                                            <input class="sign__input"
+                                                   th:value="*{apellidos}" id="apellidos" disabled>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="dni">DNI&ensp;&ensp;&ensp;&ensp;&ensp;</label>
+                                            <input class="sign__input"
+                                                   th:value="*{dni}" id="dni" disabled>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="correo">Correo &ensp;&ensp;</label>
+                                            <input class="sign__input"
+                                                   th:value="*{correo}" id="correo" disabled>
+                                        </div>
+
+                                    </div>
+
+                                    <!--Selector Imagenes-->
+                                    <div class="col-md-4 col-12" style="padding-left: 10px">
+
+                                        <!--Encabezado-->
+                                        <section class="section section--first" style="margin: 0; padding:10px">
+                                            <div class="row">
+                                                <div class="col-12" style="padding-left: 15px">
+                                                    <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px; text-align: center">
+                                                        Foto</h1>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-12" style="padding-left: 10px">
+
+                                                    <!--Visor de Imagenes-->
+                                                    <div id="img_container" style="text-align: center">
+                                                        <img class="perfil" th:src="${session.fotoPerfil}">
+                                                    </div>
+
+                                                    <!-- Boton para agregar imagenes -->
+                                                    <div class="card__wrap">
+                                                        <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
+                                                            Cambiar Foto
+                                                        </label>
+                                                        <input name="imagen" type="file" id="file-input" accept="image/png, image/jpeg"
+                                                               style="display: none" onchange="preview()">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-6" style="justify-content: center">
+                                        <a th:href="@{/operador/perfil}" class="cancel__btn">Cancelar</a>
+                                    </div>
+
+                                    <div class="col-6" style="justify-content: center">
+                                        <button class="sign__btn" type="submit">Guardar
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+                            <!-- end authorization form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/footer :: js(~{::script})">
+
+            <script>
+                // El input donde se agregan las imágenes
+                let fileInput = document.getElementById("file-input");
+                // Donde se muestran las vistas previas
+                let imgContainer = document.getElementById("img_container");
+
+                // Agrega y quita imagenes de la vista previa e input
+                function preview(){
+
+                    // Deja solo las imágenes de la DB, para posteriormente agregar las nuevas
+                    imgContainer.innerHTML = ""
+
+                    for(i of fileInput.files){
+
+                        let reader = new FileReader();
+
+                        // Crea las imágenes de la vista previa
+                        reader.onload=()=>{
+                            let img = document.createElement("img");
+                            img.setAttribute("src",reader.result);
+                            img.setAttribute("class", "perfil")
+                            img.setAttribute("style", "margin: 5px; width: 160px; object-fit:cover")
+                            imgContainer.appendChild(img);
+                        }
+                        reader.readAsDataURL(i);
+                    }
+                }
+
+            </script>
+
+            <script type="text/javascript">
+
+                var d = new Date()
+                d.setDate(d.getDate() - 1)
+                datePickerId.max = d.toISOString().split("T")[0] ;
+
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
+    </body>
+</html>

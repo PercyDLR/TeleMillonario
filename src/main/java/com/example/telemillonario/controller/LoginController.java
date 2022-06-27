@@ -158,6 +158,15 @@ public class LoginController {
             case "Administrador":
                 return "redirect:/admin/sedes";
             case "Operador":
+                String fotoPerfilOper;
+                try{
+                    fotoPerfilOper = fotoRepository.findByIdpersonaOrderByNumero(persona.getId()).get(0).getRuta();
+                } catch (Exception e){
+                    fotoPerfilOper = "/img/user.png";
+                }
+
+                session.setAttribute("fotoPerfil",fotoPerfilOper);
+
                 return "redirect:/operador/funciones/lista";
             default:
                 String fotoPerfil;
