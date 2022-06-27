@@ -2879,6 +2879,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   top: 0;
   left: 0;
   width: 40px;
+  height: 35px;
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
