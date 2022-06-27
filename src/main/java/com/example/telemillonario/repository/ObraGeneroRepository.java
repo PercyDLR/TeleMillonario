@@ -27,7 +27,7 @@ public interface ObraGeneroRepository extends JpaRepository<Obragenero,Integer> 
             "inner join telemillonario.obra o on (f.idobra = o.id)\n" +
             "inner join telemillonario.obragenero og on (o.id = og.idobra)\n" +
             "inner join telemillonario.genero g on (og.idgenero = g.id)\n" +
-            "where (o.estado = 1) and (se.id = ?1) and (o.restriccionedad like %?2%) and (g.id like %?3%) and (o.nombre like %?4%)\n" +
+            "where (o.estado = 1) and (f.estado = 1) and (se.id = ?1) and (o.restriccionedad like %?2%) and (g.id like %?3%) and (o.nombre like %?4%)\n" +
             "order by og.idobra;")
     List<Obragenero> buscarFuncionGeneroPorFiltrosSede(Integer idSede ,String restriccionEdad, String genero, String nombreObra);
 
