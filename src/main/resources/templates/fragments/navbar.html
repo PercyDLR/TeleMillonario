@@ -66,11 +66,11 @@
 
                                     <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin-bottom: 0">
                                         <a role="button" id="dropdown4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div class="cuenta" style="size: 10px;color: white">
+                                            <div class="cuenta" style="color: white">
                                                 <span th:text="${session.usuario.nombres}"></span>
                                             </div>
 
-                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
+                                            <div class="cuenta" style="color: rgba(255,255,255,0.5)">
                                                 <span th:text="${session.usuario.apellidos}"></span>
                                             </div>
                                         </a>
@@ -168,16 +168,18 @@
 
                                     <li class="header__nav-item" style="margin-bottom: 0">
                                         <a role="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
-                                                <span>Operador:</span>
-                                            </div>
-                                            <div class="cuenta" style="size: 10px; color: white">
+
+                                            <div class="cuenta" style="color: white">
                                                 <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
 
                                             </div>
 
-                                            <div class="cuenta" style="size: 8px; color: white">
+                                            <div class="cuenta" style="font-size: 0.8rem; color: rgba(255,255,255,0.5)">
                                                 <span th:text="${session.usuario.idsede.nombre}"></span>
+                                            </div>
+
+                                            <div class="cuenta" style="font-size: 0.8rem; color: rgba(255,255,255,0.5)">
+                                                <span>Operador</span>
                                             </div>
                                         </a>
 
@@ -267,11 +269,11 @@
 
                                     <li class="header__nav-item" style="margin-bottom: 0">
                                         <a role="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div class="cuenta" style="size: 10px;color: white">
+                                            <div class="cuenta" style="color: white">
                                                 <span th:text="${session.usuario.nombres + ' ' + session.usuario.apellidos}"></span>
                                             </div>
 
-                                            <div class="cuenta" style="size: 8px; color: rgba(255,255,255,0.5)">
+                                            <div class="cuenta" style="color: rgba(255,255,255,0.5)">
                                                 <span>Administrador</span>
                                             </div>
                                         </a>
