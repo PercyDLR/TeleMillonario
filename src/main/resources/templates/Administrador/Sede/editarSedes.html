@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Crear Sede',~{::style})">
+    <head th:replace="fragments/header :: head(${sede.id == 0 ? 'Crear Sede' : 'Editar Sede'},~{::style})">
         <style>
-            input::placeholder {
-                color: #000000;
-            }
             div.card__cover img {
                 margin-inline: auto;
                 max-height: 150px;
@@ -19,240 +16,199 @@
             .owl-dots{
                 height: 0;
             }
+            .sign__input{
+                width: 100%;
+            }
         </style>
     </head>
-    <body >
-        <!-- header -->
-        <div th:replace="fragments/navbar :: admin('crear')"></div>
-        <!-- end header -->
-    <div>
-        <div class="header__wrap " style="border-bottom: solid 3px #ff55a5;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="header__content">
-                            <a th:href="@{admin}"><img src="img/tele.png"></a>
-                            <ul class="header__nav">
-                                <li class="header__nav-item">
-                                    <a  th:href="@{/admin}" class="header__nav-link" style="color:#ff55a5">Sedes</a>
-                                </li>
 
-                                <li class="header__nav-item">
-                                    <a th:href="@{/Operadores}" class="header__nav-link">Operadores</a>
-                                </li>
+    <body class="body">
+        <div th:replace="fragments/navbar :: admin('sedes')"></div>
 
-                                <li class="header__nav-item">
-                                    <a th:href="@{/actor}" class="header__nav-link">Actores</a>
-                                </li>
+        <div class="content">
+            <div class="sign">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="sign__content">
 
-                                <li class="header__nav-item">
-                                    <a th:href="@{/admin2}" class="header__nav-link">Directores</a>
-                                </li>
-                                <li class="header__nav-item">
-                                    <a th:href="@{/listaClientes}" class="header__nav-link">Clientes</a>
-                                </li>
-                            </ul>
-                            <div class="header__auth">
-                                <div style="margin-left: 30px;margin-top: 17px;text-align: -webkit-right;margin-bottom: 20px">
-                                    <span style="font-size: 14px;font-weight: 300;color : white;font-family: 'Open Sans', sans-serif">Administrador : Alonso Rosales</span>
-                                </div>
-                                <div style="margin-bottom: 7px;margin-left: 5px">
-                                    <a href="#"><img style="height: 50px;margin-top: 5px" src="img/user.png"></a>
-                                </div>
-                            </div>
-                            <button class="header__btn" type="button">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="content" >
-            <div class="container">
-                <div class="row align-items-stretch justify-content-center no-gutters">
-                    <div class="col-md-7">
-                        <form class="mb-5" method="post" th:action="@{'/admin/sedes/guardar'}" th:object="${sede}" enctype="multipart/form-data">
-                            <div class="form h-100 contact-wrap p-5" style="border-radius: 40px;border: 20px solid #292524">
-                                <h3 class="text-center" th:text="${sede.id == 0 ? 'Crear Sede' : 'Editar Sede'}" style="padding-bottom: 30px;font-size: 7rem;font-size: 93px;color: white;font-family: 'Open Sans';font-weight: 900;"><b>Editar Sede</b></h3>
+                                <!-- authorization form -->
+                                <form class="sign__form" method="post" th:object="${sede}" th:action="@{/admin/sedes/guardar}" enctype="multipart/form-data">
+                                    <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;"
+                                        th:text="${sede.id == 0 ? 'Crear Sede' : 'Editar Sede'}"></h3>
 
-                                <div class="row">
-                                    <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
-
-                                        <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
-                                        <option th:each="imagen : ${imagenes}"
-                                                th:id="|img-${imagen.id}|"
-                                                th:value="${imagen.id}"></option>
-                                    </select>
-                                    <input type="hidden" th:field="*{id}">
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label class="col-form-label"><b>Nombre</b></label>
-                                        <input type="text" class="form-control" th:field="*{nombre}">
-                                        <div class="text-danger" th:if="${#fields.hasErrors('nombre')}"
-                                             th:errors="*{nombre}"></div>
-                                    </div>
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label class="col-form-label"><b>Dirección</b></label>
-                                        <input type="text" class="form-control" th:field="*{direccion}">
-                                        <div class="text-danger" th:if="${#fields.hasErrors('direccion')}"
-                                             th:errors="*{direccion}"></div>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Coordenadas</b></label>
-                                        <input type="text" class="form-control" th:field="*{coordenadas}">
-                                        <div class="text-danger" th:if="${#fields.hasErrors('coordenadas')}"
-                                             th:errors="*{coordenadas}"></div>
-                                    </div>
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Teléfono</b></label>
-                                        <input type="text" class="form-control" th:field="*{telefono}">
-                                        <div class="text-danger" th:if="${#fields.hasErrors('telefono')}"
-                                             th:errors="*{telefono}"></div>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Número de Salas</b></label>
-                                        <input type="text" class="form-control" th:field="*{numerosalas}">
-                                        <div class="text-danger" th:if="${#fields.hasErrors('numerosalas')}"
-                                             th:errors="*{numerosalas}"></div>
-                                    </div>
-                                    <div class="col-md-6 form-group mb-3">
-                                        <label  class="col-form-label"><b>Distrito</b></label>
-                                        <select  th:field="*{iddistrito}" class="col-12" style="display: block;width: 100%;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff; background-clip: padding-box;border: 1px solid #ced4da;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                            <option th:each="distrito : ${listdistritos}"
-                                                    th:text="|${distrito.getNombre()} |"
-                                                    th:value="${distrito.getId()}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <br>
-                                <div th:if="${sede.id == 0}" class="sign__group sign__group--checkbox" style="text-align: center">
-                                    <input class="form-check-input" type="checkbox" value="1"
-                                           id="disponibilidad" name="estado">
-                                    <label for="disponibilidad">
-                                        La sede se mostrará en estado disponible una vez sea creada
-                                    </label>
-                                </div>
-
-                                <div th:unless="${sede.id == 0}" class="sign__group sign__group--checkbox" style="text-align: center">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="estado" value="1"
-                                               id="disponible" th:checked="${sede.estado == 1}">
-                                        <label class="form-check-label text-light" for="disponible">
-                                            Sede disponible
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input text-light" type="radio" name="estado" value="0"
-                                               id="nodisponible" th:checked="${sede.estado == 0}">
-                                        <label class="form-check-label text-light" for="nodisponible">
-                                            Sede no disponible
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!--Selector Imagenes-->
-                                <div class="col-md-6 col-8" style="padding-left: 10px">
-
-                                    <!--Encabezado-->
-                                    <section class="section section--first" style="margin: 0; padding:10px">
-                                        <div class="row">
-                                            <div class="col-md-9 col-6">
-                                                <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
-                                            </div>
-                                            <div class="col-md-3 col-2">
-                                                <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
-                                                    <i class="icon ion-ios-arrow-round-back"></i>
-                                                </button>
-                                                <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
-                                                    <i class="icon ion-ios-arrow-round-forward"></i>
-                                                </button>
+                                    <div class="row">
+                                        <div class="col-12" style="width: fit-content">
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                                <strong th:text="${err}"></strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>
                                         </div>
-                                    </section>
+                                    </div>
 
-                                    <div>
-                                        <div class="row align-items-center">
-                                            <div class="col-8 col-sm-8">
+                                    <div class="row">
+                                        <div class="col-md-6 col-12">
 
-                                                <!--Visor de Imagenes-->
-                                                <div class="owl-carousel photo__carousel" id="img_container">
+                                            <select id="fotos-para-eliminar" name="eliminar" hidden multiple>
 
-                                                    <div class="item" th:each="foto : ${imagenes}">
-                                                        <div th:id="|old-${foto.numero-1}|" class="card__cover">
+                                                <!--Aqui cada opcion tendria el id de una imagen del actor almacenada en DB-->
+                                                <option th:each="imagen : ${imagenes}"
+                                                        th:id="|img-${imagen.id}|"
+                                                        th:value="${imagen.id}"></option>
+                                            </select>
 
-                                                            <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
+                                            <input hidden th:field="*{id}">
+                                            <input hidden name="calificacion" th:value="${sede.calificacion == null ? 0 : sede.calificacion}">
 
-                                                            <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
-                                                                <i class="bi bi-x" style="color: white"></i>
-                                                            </a>
-                                                        </div>
+                                            <div class="sign__group">
+                                                <label for="nombre">Nombre</label>
+                                                <input class="sign__input" th:field="*{nombre}"
+                                                       th:classappend="${#fields.hasErrors('nombre')? 'is-invalid':''}"
+                                                       placeholder="Nombre" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}"
+                                                     th:errors="*{nombre}"></div>
+                                            </div>
+
+                                            <div class="sign__group">
+                                                <label for="iddistrito">Distrito</label>
+                                                <select class="sign__input" th:field="*{iddistrito}">
+                                                    <option th:each="distrito : ${listdistritos}"
+                                                            th:text="|${distrito.getNombre()} |"
+                                                            th:value="${distrito.getId()}"
+                                                            th:selected="${sede.iddistrito != null && distrito.id == sede.iddistrito.id}"></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="sign__group">
+                                                <label for="coordenadas">Coordenadas</label>
+                                                <input class="sign__input" th:field="*{coordenadas}"
+                                                       th:classappend="${#fields.hasErrors('coordenadas')? 'is-invalid':''}"
+                                                       placeholder="Coordenadas" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('coordenadas')}"
+                                                     th:errors="*{coordenadas}"></div>
+                                            </div>
+                                        </div>
+
+                                        <!--Selector Imagenes-->
+                                        <div class="col-md-6 col-12" style="padding-left: 10px">
+
+                                            <!--Encabezado-->
+                                            <section class="section section--first" style="margin: 0; padding:10px">
+                                                <div class="row">
+                                                    <div class="col-md-9 col-10">
+                                                        <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px">Imágenes</h1>
+                                                    </div>
+                                                    <div class="col-md-3 col-2">
+                                                        <button class="home__nav home__nav--prev" type="button" style="margin-right: 2px">
+                                                            <i class="icon ion-ios-arrow-round-back"></i>
+                                                        </button>
+                                                        <button class="home__nav home__nav--next" type="button" style="margin-right: 2px">
+                                                            <i class="icon ion-ios-arrow-round-forward"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
+                                            </section>
 
-                                                <!-- Boton para agregar imagenes -->
-                                                <div class="card__wrap">
-                                                    <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
-                                                        Nueva Foto
-                                                    </label>
-                                                    <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg, image/jpg"
-                                                           style="display: none" onchange="preview()" multiple >
+                                            <div class="row align-items-center">
+                                                <div class="col-12 col-sm-12">
+
+                                                    <!--Visor de Imagenes-->
+                                                    <div class="owl-carousel photo__carousel" id="img_container">
+
+                                                        <div class="item old" th:each="foto : ${imagenes}">
+                                                            <div class="card__cover">
+
+                                                                <img th:src="${foto.ruta}" style="margin-inline: auto;max-height: 150px;max-width: fit-content;">
+
+                                                                <a class="card__play" style="cursor: pointer" th:onclick="|eliminarEnDB(${foto.id})|">
+                                                                    <i class="bi bi-x" style="color: white"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Boton para agregar imagenes -->
+                                                    <div class="card__wrap">
+                                                        <label class="input__btn" for="file-input" style="margin: auto;margin-top: 5px;">
+                                                            Nueva Foto
+                                                        </label>
+                                                        <input name="imagenes" type="file" id="file-input" accept="image/png, image/jpeg"
+                                                               style="display: none" onchange="preview()" multiple>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row" style="padding-top: 30px;">
-                                    <div class="col-12" style="width: fit-content">
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
-                                            <i class="bi bi-exclamation-triangle-fill"></i>
-                                            <strong th:text="${err}"></strong>
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="sign__group">
+                                                <label for="direccion">Dirección</label>
+                                                <input class="sign__input" th:field="*{direccion}"
+                                                       th:classappend="${#fields.hasErrors('direccion')? 'is-invalid':''}"
+                                                       placeholder="Dirección" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('direccion')}"
+                                                     th:errors="*{direccion}"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12"></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-12">
+                                            <div class="sign__group">
+                                                <label for="telefono">Teléfono</label>
+                                                <input class="sign__input" th:field="*{telefono}"
+                                                       th:classappend="${#fields.hasErrors('telefono')? 'is-invalid':''}"
+                                                       placeholder="Dirección" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('direccion')}"
+                                                     th:errors="*{telefono}"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="sign__group">
+                                                <label for="numerosalas"># de Salas</label>
+                                                <input class="sign__input" th:field="*{numerosalas}"
+                                                       th:classappend="${#fields.hasErrors('numerosalas')? 'is-invalid':''}"
+                                                       placeholder="Dirección" required>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('numerosalas')}"
+                                                     th:errors="*{numerosalas}"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                    <div class="row">
+                                        <div class="d-flex justify-content-center">
+                                            <div class="sign__group sign__group--checkbox">
+                                                <input id="estado" name="estado" value="1" type="checkbox" th:checked="${sede.estado == 1}">
+                                                <label for="estado">Sede Disponible</label>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <br>
-                                <div style="display: flex;justify-content: center">
-                                    <button class="sign__btn" type="submit"><a style="color: white" th:href="@{/admin/sedes/lista}">Cancelar</a></button>
-                                    <button style="border-radius: 20px;margin-left: 80px; margin-top: 30px;" th:text="${sede.id == 0? 'Registrar': 'Actualizar'}" class="sign__btn" type="submit"><a style="color: white" >Registrar</a></button>
-                                </div>
+                                    <br>
 
+                                    <div class="row">
+                                        <div class="col-6" style="justify-content: center">
+                                            <a th:href="@{/admin/sedes}" class="cancel__btn">Cancelar</a>
+                                        </div>
+
+                                        <div class="col-6" style="justify-content: center">
+                                            <button class="sign__btn" type="submit">Guardar
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                                <!-- end authorization form -->
                             </div>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="popup" class="overlay">
-        <div class="row">
-            <div class="col-12">
-                <div class="sign__content">
-                    <form action="#" class="sign__form">
-                        <a href="index.html" class="sign__logo">
-                            <img th:src="@{img/tele.PNG}" alt="logo">
-                        </a>
-                        <div class="sign__group">
-                            <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de editar esta Sede?</h5>
                         </div>
-                        <a th:href="@{/editarSede}" class="cancel__btn">Cancelar</a>
-                        <a href="#" class="sign__btn">Continuar</a>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
         <div th:replace="fragments/footer :: js(~{::script})">
 

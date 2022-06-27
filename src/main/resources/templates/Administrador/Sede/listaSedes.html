@@ -6,48 +6,9 @@
                 color: #000000;
             }
 
-            #map0 {
+            .mapa {
                 height: 150px;
                 width: 150px;
-            }
-            #map1 {
-                height: 150px;
-                width: 150px;
-            }
-            #map2 {
-                height: 150px;
-                width: 150px;
-            }
-            #map3 {
-                height: 150px;
-                width: 150px;
-            }
-            #map4 {
-                height: 150px;
-                width: 150px;
-            }
-            #map5 {
-                height: 150px;
-                width: 150px;
-            }
-
-            #map6 {
-                height: 150px;
-                width: 150px;
-            }
-
-            /*
-             * Optional: Makes the sample page fill the window.
-             */
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            #latlng {
-                width: 225px;
             }
         </style>
     </head>
@@ -76,39 +37,15 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
                             <i class="bi bi-check-circle-fill"></i>
-                            <strong>Sede creada exitosamente</strong>
+                            <strong th:text="${msg}"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '1')}">
-                            <i class="bi bi-check-circle-fill"></i>
-                            <strong>Sede actualizada exitosamente</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '-1')}">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            <strong>Ocurrio un error al momento de querer editar</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
+
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${err != null}">
                             <i class="bi bi-info-circle-fill"></i>
-                            <strong>Se ha eliminado la sede exitosamente</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '3')}">
-                            <i class="bi bi-info-circle-fill"></i>
-                            <strong>No se puede borrar una sede que no existe"</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '4')}">
-                            <i class="bi bi-info-circle-fill"></i>
-                            <strong>Hubo un error al borrar una sede</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '5')}">
-                            <i class="bi bi-info-circle-fill"></i>
-                            <strong>No puede borrar una Sede que tenga salas y un operador</strong>
+                            <strong th:text="${err}"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
@@ -183,10 +120,8 @@
                                         </button>
                                     </td>
                                     <td>
-                                        <button>
-                                            <a class="circulo_botones" href="#popup">
-                                                <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getIdsede().getId()})|" th:src="@{/img/iconTrash2.png}">
-                                            </a>
+                                        <button class="circulo_botones">
+                                            <img style="height: 27px;margin-left: 11px;margin-top: 11px;" th:onclick="|advertencia(${foto.getIdsede().getId()})|" th:src="@{/img/iconTrash2.png}">
                                         </button>
                                     </td>
                                 </tr>
@@ -208,12 +143,12 @@
                     <div class="sign__content">
                         <form action="#" class="sign__form">
                             <a class="sign__logo">
-                                <img th:src="@{img/tele.png}" alt="">
+                                <img th:src="@{/img/tele.png}" alt="">
                             </a>
                             <div class="sign__group">
                                 <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">¿Estás seguro de borrar esta Sede?</h5>
                             </div>
-                            <a th:href="@{/admin}" class="sign__btn">Cancelar</a>
+                            <button type="button" th:onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</button>
                             <a href="#" class="sign__btn">Continuar</a>
                         </form>
                     </div>
@@ -226,106 +161,9 @@
                 function advertencia(idsede) {
                     let popup = document.getElementById('popup');
 
-                    popup.getElementsByTagName("a").item(2).href = [[@{'/admin/sedes/borrar?idsede='}]] + idsede;
+                    popup.getElementsByTagName("a")[1].href = [[@{'/admin/sedes/borrar?idsede='}]] + idsede;
                     popup.style.display = 'block';
                 }
-                function initMap() {
-                    const geocoder = new google.maps.Geocoder();
-                    const infowindow = new google.maps.InfoWindow();
-                    if (document.getElementById("map0")) {
-                        const map0 = new google.maps.Map(document.getElementById("map0"), {
-                            zoom: 8,
-                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
-                        });
-                        var latlonga0=document.getElementById('map0').getAttribute("data-latlong")
-                        geocodeLatLng(geocoder, map0, infowindow,latlonga0);
-                    }
-                    if (document.getElementById("map1")) {
-                        const map1 = new google.maps.Map(document.getElementById("map1"), {
-                            zoom: 8,
-                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
-                        });
-                        var latlonga1 = document.getElementById('map1').getAttribute("data-latlong")
-                        geocodeLatLng(geocoder, map1, infowindow,latlonga1);
-                    }
-
-
-                    if (document.getElementById("map2")) {
-                        const map2 = new google.maps.Map(document.getElementById("map2"), {
-                            zoom: 8,
-                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
-                        });
-                        var latlonga2 = document.getElementById('map2').getAttribute("data-latlong")
-                        geocodeLatLng(geocoder, map2, infowindow,latlonga2);
-                    }
-                    if (document.getElementById("map3")) {
-                        const map3 = new google.maps.Map(document.getElementById("map3"), {
-                            zoom: 8,
-                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
-                        });
-                        var latlonga3 = document.getElementById('map3').getAttribute("data-latlong")
-                        geocodeLatLng(geocoder, map3, infowindow,latlonga3);
-                    }
-                    if (document.getElementById("map4")){
-                        const map4 = new google.maps.Map(document.getElementById("map4"), {
-                            zoom: 8,
-                            center: { lat: -12.043644056140575, lng: -77.04265001225203 },
-                        });
-                        var latlonga4=document.getElementById('map4').getAttribute("data-latlong")
-                        geocodeLatLng(geocoder, map4, infowindow,latlonga4);
-                    }
-
-                    if (document.getElementById("map5")) {
-                        const map5 = new google.maps.Map(document.getElementById("map5"), {
-                            zoom: 8,
-                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
-                        });
-                        var latlonga5 = document.getElementById('map5').getAttribute("data-latlong")
-                        geocodeLatLng(geocoder, map5, infowindow,latlonga5);
-                    }
-
-                    if (document.getElementById("map6")) {
-                        const map6 = new google.maps.Map(document.getElementById("map6"), {
-                            zoom: 8,
-                            center: {lat: -12.043644056140575, lng: -77.04265001225203},
-                        });
-                        var latlonga6 = document.getElementById('map6').getAttribute("data-latlong")
-                        geocodeLatLng(geocoder, map6, infowindow,latlonga6);
-                    }
-
-
-                }
-
-                function geocodeLatLng(geocoder, map, infowindow,latlnga) {
-                    const input = latlnga
-                    const latlngStr = input.split(",", 2);
-                    const latlng = {
-                        lat: parseFloat(latlngStr[0]),
-                        lng: parseFloat(latlngStr[1]),
-                    };
-
-                    geocoder
-                        .geocode({ location: latlng })
-                        .then((response) => {
-                            if (response.results[0]) {
-                                map.setZoom(10);
-
-                                const marker = new google.maps.Marker({
-                                    position: latlng,
-                                    map: map,
-                                });
-
-                                // infowindow.setContent(response.results[0].formatted_address);
-                                // infowindow.open(map, marker);
-                            } else {
-                                window.alert("No results found");
-                            }
-                        })
-                        .catch((e) => window.alert("Geocoder failed due to: " + e));
-                }
-
-                window.initMap = initMap;
-
             </script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

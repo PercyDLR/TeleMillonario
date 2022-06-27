@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -124,172 +125,175 @@ public class SedeController {
                               @RequestParam(value="imagenes") MultipartFile[] imagenes,
                               RedirectAttributes attr, Model model) throws IOException {
 
+        // Se buscan errores de validación
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getFieldError());
+            model.addAttribute("err","Bubo un problema en el formulario");
+
             model.addAttribute("listdistritos",distritoRepository.findAll());
+            model.addAttribute("sede", sede);
             return "Administrador/Sede/editarSedes";
-        } else {
-            //VALIDACIONES Fotos
+        }
 
-            //Se verifica que se haya subido al menos una foto al crear un formulario
-            if(sede.getId()==0 && imagenes[0].getContentType().equals("application/octet-stream")){
+        //-----------------------------------------------
+        //      Validación de los Datos enviados
+        //-----------------------------------------------
+        long tamanho = 0;
 
-                model.addAttribute("err","Se debe de tener al menos 1 imagen");
-                model.addAttribute("listdistritos",distritoRepository.findAll());
-                return "Administrador/Sede/editarSedes";
+        for (MultipartFile img : imagenes){
 
-            }
-            //Se verifica que la sede no se quede sin fotos al eliminar en el form de editar
-            int cantidadfotos = fotoRepository.buscarFotosSede(sede.getId()).size();
-            if(cantidadfotos==1 && !ids[0].equals("a")){
-                model.addAttribute("err","Se debe de tener al menos 1 imagen");
-                model.addAttribute("listdistritos",distritoRepository.findAll());
-                Optional<Sede> optSedeEncon = sedeRepository.findById(sede.getId());
-                Sede sedeencon = optSedeEncon.get();
-                model.addAttribute("sede", sedeencon);
+            // Se verifica que los archivos enviados sean imágenes
+            switch(img.getContentType()){
 
-                List<Foto> fotos = fotoRepository.buscarFotosSede(sede.getId());
+                case "application/octet-stream":
+                case "image/jpeg":
+                case "image/png":
+                    tamanho += img.getSize();
 
-                model.addAttribute("imagenes", fotos);
-                return "Administrador/Sede/editarSedes";
-            }
+                    // Se verifica que el tamaño no sea superior a 20 MB
+                    if (tamanho > 1048576*20){
+                        model.addAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
 
-
-            long tamanho = 0;
-            for (MultipartFile img : imagenes){
-
-                // Se verifica que los archivos enviados sean imágenes
-                switch(img.getContentType()){
-
-                    case "application/octet-stream":
-                    case "image/jpeg":
-                    case "image/png":
-                        tamanho += img.getSize();
-
-                        // Se verifica que el tamaño no sea superior a 20 MB
-                        if (tamanho > 1048576*20){
-                            model.addAttribute("err","Se superó la capacidad de imagen máxima de 20MB");
-                            model.addAttribute("listdistritos",distritoRepository.findAll());
-                            if (sede.getId() != 0) {
-                                Optional<Sede> optSedeEncon = sedeRepository.findById(sede.getId());
-                                Sede sedeencon = optSedeEncon.get();
-                                model.addAttribute("sede", sedeencon);
-
-                                List<Foto> fotos = fotoRepository.buscarFotosSede(sede.getId());
-
-                                model.addAttribute("imagenes", fotos);
-                            }
-                            return "Administrador/Sede/editarSedes";
-                        }
-                        break;
-
-                    default:
-                        model.addAttribute("err","Solo puede subir imagenes con formato jpg ,jpeg y png");
                         model.addAttribute("listdistritos",distritoRepository.findAll());
-                        if (sede.getId() != 0) {
-                            Optional<Sede> optSedeEncon = sedeRepository.findById(sede.getId());
-                            Sede sedeencon = optSedeEncon.get();
-                            model.addAttribute("sede", sedeencon);
-
-                            List<Foto> fotos = fotoRepository.buscarFotosSede(sede.getId());
-
-                            model.addAttribute("imagenes", fotos);
+                        if (sede.getId() != 0){
+                            model.addAttribute("imagenes",fotoRepository.buscarFotosSede(sede.getId()));
                         }
                         return "Administrador/Sede/editarSedes";
+                    }
+                    break;
 
+                default:
+                    model.addAttribute("err","Solo se deben de enviar imágenes");
+
+                    model.addAttribute("listdistritos",distritoRepository.findAll());
+                    if (sede.getId() != 0){
+                        model.addAttribute("imagenes",fotoRepository.buscarFotosSede(sede.getId()));
+                    }
+                    return "Administrador/Sede/editarSedes";
+            }
+        }
+
+        //-----------------------------------------------
+        //         Guardado de Datos de la Sede
+        //-----------------------------------------------
+        try {
+            sede = sedeRepository.save(sede);
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            attr.addFlashAttribute("err","Hubo un problema al guardar los datos de la Sede");
+            return "redirect:/admin/sedes/lista";
+        }
+
+        //-----------------------------------------------
+        //    Validación de Fotos a Eliminar en la DB
+        //-----------------------------------------------
+
+        // Número de fotos Ya Guardadas en la DB
+        int fotosGuardadas = 0;
+        List<Foto> fotosParaEliminar = new ArrayList<>();
+
+        // Se obtienen las fotos guardadas en DB
+        List<Foto> fotosEnDB = fotoRepository.buscarFotosSede(sede.getId());
+        fotosGuardadas = fotosEnDB.size();
+
+        for(int i = 0; i < fotosEnDB.size(); i++){
+            boolean fotoBorrada = false;
+
+            Foto fotoEnDB = fotosEnDB.get(i);
+
+            for(int j = 0; j < ids.length; j++) {
+                try{
+                    int id = Integer.parseInt(ids[j]);
+
+                    // Se compara el ID de la foto en DB con el de la foto que se quiere remover
+                    if (fotoEnDB.getId() == id){
+
+                        fotosParaEliminar.add(fotoEnDB);
+
+                        fotosGuardadas--;
+                        fotoBorrada = true;
+                        break;
+                    }
+
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                    break;
                 }
             }
+            // Cuando se elimina una foto todos los números posteriores se corren por 1
+            int fotosEliminadas = fotosEnDB.size() - fotosGuardadas;
 
+            if(!fotoBorrada && fotosEliminadas > 0){
+                fotoEnDB.setNumero(fotoEnDB.getNumero()-fotosEliminadas);
+                fotoRepository.save(fotoEnDB);
+            }
+        }
 
-            Persona persona = (Persona) session.getAttribute("usuario");
-            if (sede.getId() == 0) {
-                attr.addFlashAttribute("msg", "0");
+        // Verifica que la casilla de imágenes no se vaya a quedar vacía
+        if (fotosGuardadas + imagenes.length == 1 && imagenes[0].getContentType().equals("application/octet-stream")) {
+            model.addAttribute("err", "Se debe de tener al menos 1 imagen");
 
-                //agregar imagenes
+            model.addAttribute("listdistritos",distritoRepository.findAll());
+            model.addAttribute("imagenes", fotoRepository.buscarFotosSede(sede.getId()));
+            return "Administrador/Sede/editarSedes";
+        }
 
-                sedeRepository.save(sede);
-                //se busca el id del objeto sede creado
-                Sede sedeCreada=sedeRepository.findTopByOrderByIdDesc();
-                System.out.println("\nImágenes a Agregar: " + imagenes.length);
-                if(!imagenes[0].getOriginalFilename().equals("")){
-                    int i =0;
-                    for(MultipartFile img : imagenes){
-                        System.out.println("Nombre: " + img.getOriginalFilename());
-                        System.out.println("Tipo: " + img.getContentType());
-                        MultipartFile file_aux = fileService.formatearArchivo(img,"foto");
-                        if(fileService.subirArchivo(file_aux)){
-                            System.out.println("Archivo subido correctamente");
-                            Foto foto = new Foto();
-                            foto.setEstado(1);
-                            foto.setIdpersona(persona);
-                            foto.setIdsede(sedeCreada);
-                            foto.setNumero(i);
-                            foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
-                            fotoRepository.save(foto);
-                        }else{
-                            System.out.println("El archivo"+img.getOriginalFilename()+"No se pude subir de manera correcta");
-                        }
-                        i++;
-                    }
+        // Elimina las fotos
+        for (Foto foto : fotosParaEliminar){
+            // Borrado de la DB
+            fotoRepository.delete(foto);
 
+            // Borrado del fileService
+            String ruta = foto.getRuta();
+            String nombreFoto = ruta.substring(ruta.lastIndexOf('/') + 1);
+
+            fileService.eliminarArchivo(nombreFoto);
+        }
+
+        // Regresa si no se han agregado más fotos
+        if(imagenes[0].getContentType().equals("application/octet-stream")) {
+            attr.addFlashAttribute("msg", "Sede Guardada Exitosamente");
+            return "redirect:/admin/sedes/lista";
+        }
+
+        //-----------------------------------------------
+        //            Agregar Foto a la DB
+        //-----------------------------------------------
+
+        // Se guarda imagen por imagen (en ese orden se les dará número)
+        for(int i = 0; i< imagenes.length; i++){
+            MultipartFile img = imagenes[i];
+            try {
+                // Se almacenan los datos en un objeto Foto
+                Foto foto = new Foto();
+                foto.setEstado(1);
+                foto.setIdsede(sede);
+                foto.setNumero(fotosGuardadas + i);
+
+                // Guardar en el Servidor
+                MultipartFile imgRenombrada = fileService.formatearArchivo(img, "sede");
+                if(fileService.subirArchivo(imgRenombrada)){
+
+                    // Si se guarda exitosamente, se obtiene el url de la foto
+                    foto.setRuta(fileService.obtenerUrl(imgRenombrada.getOriginalFilename()));
+                } else {
+                    attr.addFlashAttribute("err","No se pudo conectar con el Contenedor De Archivos");
+                    return "redirect:/admin/sedes/lista";
                 }
 
-                return "redirect:/admin/sedes/lista";
-            } else {
+                // Guardado en la DB
+                System.out.println(imgRenombrada.getOriginalFilename());
+                fotoRepository.save(foto);
 
-                //eliminar imagenes
-                System.out.println("Imágenes a Eliminar: " + ids.length);
-                if(!ids[0].equals("a")){
-                    for(String id : ids){
-                        System.out.println("ID: " + id);
-                        int idfoto= Integer.parseInt(id);
-
-                        Foto fot=fotoRepository.findById(idfoto).get();
-                        String [] urlfoto=fot.getRuta().split("/telemillonario/");
-                        String nombrefoto= urlfoto[1];
-                        fileService.eliminarArchivo(nombrefoto);
-                        fotoRepository.deleteById(idfoto);
-
-                    }
-
-                }
-
-
-                //agregar imagenes
-                Sede sedeCreada=sedeRepository.findById(sede.getId()).get();
-                System.out.println("\nImágenes a Agregar: " + imagenes.length);
-                if(!imagenes[0].getOriginalFilename().equals("")){
-                    Integer i=fotoRepository.NummaxFotoSede(sede.getId());
-                    if(i==null){
-                        i=0;
-                    }else{
-                        i=i+1;
-                    }
-                    for(MultipartFile img : imagenes){
-                        System.out.println("Nombre: " + img.getOriginalFilename());
-                        System.out.println("Tipo: " + img.getContentType());
-                        MultipartFile file_aux = fileService.formatearArchivo(img,"foto");
-                        if(fileService.subirArchivo(file_aux)){
-                            System.out.println("Archivo subido correctamente");
-                            Foto foto = new Foto();
-                            foto.setEstado(1);
-                            foto.setIdpersona(persona);
-                            foto.setIdsede(sedeCreada);
-                            foto.setNumero(i);
-                            foto.setRuta(fileService.obtenerUrl(file_aux.getOriginalFilename()));
-                            fotoRepository.save(foto);
-                        }else{
-                            System.out.println("El archivo"+img.getOriginalFilename()+"No se pude subir de manera correcta");
-                        }
-                        i++;
-                    }
-
-                }
-
-                sedeRepository.save(sede);
-                attr.addFlashAttribute("msg", "1");
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                attr.addFlashAttribute("err", "Hubo un problema al guardar las Imagenes");
                 return "redirect:/admin/sedes/lista";
             }
         }
+        attr.addFlashAttribute("msg","Sede Guardada Exitosamente");
+        return "redirect:/admin/sedes/lista";
     }
 
     @GetMapping("/borrar")
