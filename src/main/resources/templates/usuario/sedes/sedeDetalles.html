@@ -135,13 +135,13 @@
 
                 <div class="row text-center">
                     <div class="col-12" style="text-align: center">
-                        <h1 class="details__title" style="font-size: 3rem">
+                        <h1 class="details__title" style="font-size: 3rem; margin-bottom: 15px;">
                             <b th:text="${sede.nombre}"></b>
                         </h1>
 
-                        <h1 class="details__title" style="font-size: 2.5rem" th:text="${sede.iddistrito.nombre}"></h1>
+                        <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 15px;" th:text="${sede.iddistrito.nombre}"></h1>
 
-                        <span class="card__rate" style="font-size: 2rem">
+                        <span class="card__rate" style="font-size: 1.5rem">
                             <i class="icon ion-ios-star"></i>
                             <span th:text="${sede.calificacion == null ? '--': sede.calificacion}"></span>
                         </span>
