@@ -2311,6 +2311,7 @@ ul {
   top: 0;
   left: 0;
   width: 40px;
+  height: 35px;
   border-radius: 50%;
 }
 .reviews__name {
