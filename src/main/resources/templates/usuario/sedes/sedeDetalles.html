@@ -320,7 +320,7 @@
                                         <div class="reviews__autor">
                                             <img class="reviews__avatar" th:src="${resenia.value}" alt="img-perfil">
                                             <span class="reviews__name" th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|"></span>
-                                            <span class="reviews__time" th:text="${resenia.key.fechaHora}">24.06.2002, 17:53</span>
+                                            <span class="reviews__time" th:text="${#temporals.format(resenia.key.fechaHora, 'dd.MM.yyyy, HH:mm')}">24.06.2002, 17:53</span>
 
                                             <span class="reviews__rating">
                                                 <i class="icon ion-ios-star"></i>
