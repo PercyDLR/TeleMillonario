@@ -2152,10 +2152,14 @@ public class UsuarioController {
                                       RedirectAttributes redirectAttributes){
 
         List<Funcionelenco> listaFuncionElenco = funcionElencoRepository.buscarFuncionElenco(idFuncion);
+        LocalDateTime fechaHora = LocalDateTime.now();
+
+        // Verificaciones
         System.out.println("Id funcion: " + idFuncion);
         System.out.println("Id Obra: " + idobra);
         System.out.println("Calificacion obra: " + calificacionObra);
         System.out.println("Calificacion sede: " + calificacionSede);
+
         for (int a : calificacionActores) {
             System.out.println("Calificacion Actor: " + a);
         }
@@ -2164,7 +2168,6 @@ public class UsuarioController {
         }
 
         Persona usuario = (Persona) httpSession.getAttribute("usuario");
-
 
         //Validacion para verificar si ha completado la calificacion de la obra y sede + sus reseñas
 
@@ -2176,7 +2179,6 @@ public class UsuarioController {
 
 
         //guardamos la calificacion y reseña para la obra
-
         if(calificacionObra!=0 ){
             Calificaciones calfReseOBra= new Calificaciones();
 
@@ -2184,6 +2186,7 @@ public class UsuarioController {
             calfReseOBra.setComentario(descripcion);
             calfReseOBra.setEstado(1);
             calfReseOBra.setPersona(usuario);
+            calfReseOBra.setFechaHora(fechaHora);
             calfReseOBra.setObra(obraRepository.findById(idobra).get());
             calificacionesRepository.save(calfReseOBra);
         }
@@ -2202,6 +2205,7 @@ public class UsuarioController {
             calfReseSede.setCalificacion(calificacionSede);
             calfReseSede.setComentario(descripcionsede);
             calfReseSede.setEstado(1);
+            calfReseSede.setFechaHora(fechaHora);
             calfReseSede.setPersona(usuario);
             calfReseSede.setSede(sedeRepository.findById(idsede).get());
 
@@ -2236,6 +2240,7 @@ public class UsuarioController {
                 calificaciones.setCalificacion(calificacionActores.get(i));
                 calificaciones.setPersona(usuario);
                 calificaciones.setEstado(1);
+                calificaciones.setFechaHora(fechaHora);
                 calificaciones.setElenco(act);
                 calificacionesRepository.save(calificaciones);
                 //Guardar promedio calif actor en tabla persona
@@ -2248,13 +2253,6 @@ public class UsuarioController {
             i++;
         }
 
-
-
-
-
-//        for (int calificacionDirector : calificacionDirectores) {
-//            System.out.println("Calificacion Director: " + calificacionDirector);
-//        }
         //guardamos la calificacion para los directores
         int j=0;
         for (Persona dir : listaDirectores) {
@@ -2264,6 +2262,7 @@ public class UsuarioController {
                 calificaciones.setPersona(usuario);
                 calificaciones.setEstado(1);
                 calificaciones.setElenco(dir);
+                calificaciones.setFechaHora(fechaHora);
                 calificacionesRepository.save(calificaciones);
                 //Guardar promedio calif director en tabla persona
                 Double direcprom=calificacionesRepository.PromCalificacionPersonaElenco(dir.getId());

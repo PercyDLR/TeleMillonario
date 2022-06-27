@@ -232,13 +232,14 @@
                             <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
                                 <div class="card-header" id="headingOne">
                                     <button type="button" th:data-target="|#funciones-${sede.key.id}|"
-                                            data-toggle="collapse" aria-expanded="true" th:aria-controls="|funciones-${sede.key.id}|">
+                                            data-toggle="collapse" th:aria-expanded="${sede.key.id == sedeSeleccionada}" th:aria-controls="|funciones-${sede.key.id}|">
                                         <span th:text="${sede.key.nombre}"></span>
                                         <span th:text="|${sede.key.direccion}, ${sede.key.iddistrito.nombre}|"></span>
                                     </button>
                                 </div>
 
-                                <div th:id="|funciones-${sede.key.id}|" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div th:id="|funciones-${sede.key.id}|" class="collapse" th:classappend="${sede.key.id == sedeSeleccionada ? 'show' : ''}"
+                                     aria-labelledby="headingOne" data-parent="#accordion">
                                     <div class="card-body">
                                         <div class="grid">
                                             <button type="button" class="form__btn funcion" th:each="funcion : ${sede.value}"
@@ -360,11 +361,11 @@
             </section>
 
             <!-- Reseñas -->
-            <section class="pb-5" th:if="${reseniasconfoto.size()!=0}">
-                <div class="content__head" style="margin-bottom: 0">
+            <section class="pb-5" th:if="${reseniasconfoto.size()!=0}" style="background-color: #2b2b31">
+                <div class="content__head">
                     <div class="container">
                         <div class="row">
-                            <div class="col-12  pt-2 pb-3">
+                            <div class="col-12 pt-2 pb-3">
                                 <!-- content title -->
                                 <h2 class="content__title">Reseñas</h2>
                                 <!-- end content title -->
@@ -375,41 +376,26 @@
 
                 <div class="container">
                     <div class="row">
+                        <!-- reviews -->
+                        <div class="col-12">
+                            <div class="reviews">
+                                <ul class="reviews__list">
+                                    <li class="reviews__item" th:each="resenia : ${reseniasconfoto}">
+                                        <div class="reviews__autor">
+                                            <img class="reviews__avatar" th:src="${resenia.value}" alt="img-perfil">
+                                            <span class="reviews__name" th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|"></span>
+                                            <span class="reviews__time" th:text="${resenia.key.fechaHora}">24.06.2002, 17:53</span>
 
-                        <!--testimonials-box-container----->
-                        <div class="testimonial-box-container">
-
-                            <!--Box1----->
-                            <div class="testimonial-box"  th:each="resenia : ${reseniasconfoto}">
-                                <!--top----->
-                                <div class="box-top">
-                                    <!--perfil----->
-                                    <div class="profile">
-                                        <!--img----->
-                                        <div class="profile-img">
-                                            <img th:src="${resenia.value}">
+                                            <span class="reviews__rating">
+                                                <i class="icon ion-ios-star"></i>
+                                                <span th:text="${resenia.key.calificacion}"></span>
+                                            </span>
                                         </div>
-                                        <!--nombre usuario----->
-                                        <div class="name-user">
-                                            <strong th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|">Joaquin Orellana</strong>
-                                        </div>
-                                    </div>
-
-                                    <!--reviews----->
-                                    <div class="reviews">
-                                        <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.key.getCalificacion())}"></i>
-
-
-                                    </div>
-                                </div>
-                                <div class="client-comment">
-                                    <p th:text="${resenia.key.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
-                                </div>
-
+                                        <p class="reviews__text" th:text="${resenia.key.comentario}"></p>
+                                    </li>
+                                </ul>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </section>

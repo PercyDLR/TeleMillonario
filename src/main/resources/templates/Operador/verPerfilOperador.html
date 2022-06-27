@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="fragments/header :: head('Perfil Operador',~{::style})">
+        <style>
+            input.sign__input:disabled{
+                color: white;
+            }
+            div.sign__group input{
+                width: 1000px;
+                max-width: calc(100% - 5rem);
+            }
+            .perfil{
+                height: 150px;
+                max-height: 150px;
+                max-width: fit-content;
+            }
+            #img_container img {
+                margin: 5px;
+                width: 160px;
+                object-fit:cover
+            }
+        </style>
+    </head>
+
+    <body class="body">
+        <div th:replace="fragments/navbar :: operador('Perfil')"></div>
+
+        <div class="sign content" style="padding: 0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="sign__content" style="margin-top: 70px">
+
+                            <!-- authorization form -->
+                            <div class="sign__form" th:object="${usuario}">
+                                <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;">
+                                    Mi Perfil
+                                </h3>
+
+                                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == 0)}">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <strong>Usuario editado correctamente</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == -1)}">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <strong>Ocurrio un error al momento de querer editar</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == -2)}">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <strong>Hubo un problema con la imagen enviada</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12" style="width: fit-content">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong th:text="${err}"></strong>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5">
+                                    <div class="col-md-8 col-12">
+
+                                        <div class="sign__group">
+                                            <input hidden th:field="*{id}">
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="nombres">Nombres</label>
+                                            <input class="sign__input"
+                                                   th:value="*{nombres}" id="nombres" disabled>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="apellidos">Apellidos</label>
+                                            <input class="sign__input"
+                                                   th:value="*{apellidos}" id="apellidos" disabled>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="dni">DNI&ensp;&ensp;&ensp;&ensp;&ensp;</label>
+                                            <input class="sign__input"
+                                                   th:value="*{dni}" id="dni" disabled>
+                                        </div>
+
+                                        <div class="sign__group">
+                                            <label for="correo">Correo &ensp;&ensp;</label>
+                                            <input class="sign__input"
+                                                   th:value="*{correo}" id="correo" disabled>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <!--Selector Imagenes-->
+                                    <div class="col-md-4 col-12" style="padding-left: 10px">
+
+                                        <!--Encabezado-->
+                                        <section class="section section--first" style="margin: 0; padding:10px">
+                                            <div class="row">
+                                                <div class="col-12" style="padding-left: 15px">
+                                                    <h1 class="details__title" style="font-size: 1.5rem; margin-bottom: 5px; text-align: center">
+                                                        Foto</h1>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-12" style="padding-left: 10px">
+
+                                                    <!--Visor de Imagenes-->
+                                                    <div id="img_container" style="text-align: center">
+                                                        <img class="perfil" th:src="${session.fotoPerfil}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-6" style="justify-content: center">
+                                        <a th:href="@{/operador/funciones}" class="cancel__btn">Volver</a>
+                                    </div>
+
+                                    <div class="col-6" style="justify-content: center">
+                                        <a class="sign__btn" th:href="@{/operador/perfil/editar}">
+                                            Editar</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- end authorization form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
+    </body>
+</html>

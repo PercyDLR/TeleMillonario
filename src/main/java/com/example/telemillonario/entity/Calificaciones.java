@@ -1,6 +1,8 @@
 package com.example.telemillonario.entity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "calificaciones")
@@ -31,10 +33,20 @@ public class Calificaciones {
     @JoinColumn(name = "idsede")
     private Sede sede;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idelenco")
     private Persona elenco;
+
+    @Column(name = "fechaHora")
+    private LocalDateTime fechaHora;
+
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
 
     public Persona getElenco() {
         return elenco;
