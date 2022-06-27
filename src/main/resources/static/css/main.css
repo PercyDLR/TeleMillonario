@@ -980,10 +980,10 @@ ul {
 .home__title b {
   font-weight: 700;
 }
-.home__carousel .item {
+.home__carousel .item, .home__carousel2 .item {
   margin-top: 25px;
 }
-.home__carousel .card {
+.home__carousel .card, .home__carousel2 .card {
   margin-bottom: 0;
 }
 .home__nav {
@@ -1006,7 +1006,7 @@ ul {
 .home__nav i:before {
   line-height: 24px;
 }
-.home__nav--prev {
+.home__nav--prev, .home__nav2--prev {
   right: 60px;
 }
 .home__nav:hover {
@@ -1025,7 +1025,7 @@ ul {
   .home__title {
     font-size: 32px;
   }
-  .home__carousel .item {
+  .home__carousel .item, .home__carousel2 .item {
     margin-top: 30px;
   }
 }

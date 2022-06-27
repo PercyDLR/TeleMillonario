@@ -257,7 +257,8 @@
                 <div class="row">
 
                     <form id="form-compra" method="get" th:action="@{/compra}">
-                        <div sec:authorize="isAuthenticated()" class="row justify-content-center mt-3">
+
+                        <div class="row justify-content-center mt-3">
                             <select id="funcion-seleccionada" name="idFuncion" style="width: 0" hidden>
                                 <th:block th:each="sede : ${funcionesDeLaSede}">
                                     <option th:each="funcion : ${sede.value}"
@@ -270,7 +271,17 @@
                             </select>
 
                             <div class="col-12" id="divCompra" style="display: none">
-                                <div class="row" style="align-items: center">
+
+                                <div sec:authorize="isAnonymous()" class="row justify-content-center">
+                                    <span style="font-size: 20px; text-align: center; color: white; margin-bottom: 10px">
+                                        Inicie Sesión para Continuar con la Compra
+                                    </span>
+                                    <a th:href="@{/login}" class="filter__btn">
+                                        Iniciar Sesión
+                                    </a>
+                                </div>
+
+                                <div sec:authorize="isAuthenticated()" class="row" style="align-items: center">
                                     <div class="col-md-4 col-6" style="color: white; text-align: center">
                                         <ul>
                                             <li id="boletosRestantes"></li>
@@ -310,18 +321,10 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </form>
-
-                    <div sec:authorize="isAnonymous()" class="row justify-content-center my-5">
-                        <span style="font-size: 20px; text-align: center; color: white">No está logueado</span>
-                        <a th:href="@{/login}" class="filter__btn">
-                            Iniciar Sesión
-                        </a>
-                    </div>
                 </div>
             </div>
 
@@ -384,7 +387,7 @@
                                         <div class="reviews__autor">
                                             <img class="reviews__avatar" th:src="${resenia.value}" alt="img-perfil">
                                             <span class="reviews__name" th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|"></span>
-                                            <span class="reviews__time" th:text="${resenia.key.fechaHora}">24.06.2002, 17:53</span>
+                                            <span class="reviews__time" th:text="${#temporals.format(resenia.key.fechaHora, 'dd.MM.yyyy, HH:mm')}">24.06.2002, 17:53</span>
 
                                             <span class="reviews__rating">
                                                 <i class="icon ion-ios-star"></i>

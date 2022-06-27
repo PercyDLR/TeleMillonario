@@ -141,7 +141,7 @@
                             <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
 
                             <div class="price__item">
-                                <span th:text="|Porcentaje de Asistencia: ${funcionMasVista.pasistencia != null ? funcionMasVista.pasistencia : '0'}%|"></span>
+                                <span th:text="|Porcentaje de Asistencia: ${funcionMenosVista.pasistencia != null ? funcionMenosVista.pasistencia : '0'}%|"></span>
                             </div>
                         </div>
                     </div>
@@ -210,17 +210,17 @@
                         <div class="price price--premium">
 
                             <div class="price__item price__item--first">
-                                <button class="home__nav home__nav--prev" type="button">
+                                <button class="home__nav home__nav2--prev" type="button">
                                     <i class="icon ion-ios-arrow-round-back"></i>
                                 </button>
 
-                                <button class="home__nav home__nav--next" type="button">
+                                <button class="home__nav home__nav2--next" type="button">
                                     <i class="icon ion-ios-arrow-round-forward"></i>
                                 </button>
                                 <span style="max-width: 71%">Mejores Directores</span>
                             </div>
 
-                            <div class="owl-carousel photo__carousel mt-3">
+                            <div class="owl-carousel photo__carousel2 mt-3">
 
                                 <div class="item" th:each="director : ${directoresMejorCalificados}">
                                     <div class="card__cover">

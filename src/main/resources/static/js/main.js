@@ -25,7 +25,7 @@ $(document).ready(function () {
 		}
 	});
 
-	$('.home__carousel').owlCarousel({
+	$('.home__carousel, .home__carousel2').owlCarousel({
 		mouseDrag: false,
 		touchDrag: true,
 		dots: false,
@@ -51,11 +51,12 @@ $(document).ready(function () {
 			},
 		}
 	});
-	$('.photo__carousel').owlCarousel({
+	$('.photo__carousel, .photo__carousel2').owlCarousel({
 		loop: true,
 		smartSpeed: 600,
 		margin: 60,
-		items: 1
+		items: 1,
+		autoplay: true,
 	});
 
 	$('.home__nav--next').on('click', function () {
@@ -64,6 +65,14 @@ $(document).ready(function () {
 	$('.home__nav--prev').on('click', function () {
 		$('.home__carousel, .home__bg, .photo__carousel').trigger('prev.owl.carousel');
 	});
+
+	$('.home__nav2--next').on('click', function () {
+		$('.home__carousel2, .photo__carousel2').trigger('next.owl.carousel');
+	});
+	$('.home__nav2--prev').on('click', function () {
+		$('.home__carousel2, .photo__carousel2').trigger('prev.owl.carousel');
+	});
+
 
 	$(window).on('resize', function () {
 		var itemHeight = $('.home__bg').height();
