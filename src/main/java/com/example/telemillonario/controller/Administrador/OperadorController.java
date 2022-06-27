@@ -7,6 +7,8 @@ import com.example.telemillonario.repository.RolRepository;
 import com.example.telemillonario.repository.SedeRepository;
 import com.example.telemillonario.validation.Operador;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,8 +16,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +35,9 @@ public class OperadorController {
     PersonaRepository personaRepository;
     @Autowired
     SedeRepository sedeRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @GetMapping("")
     public String listarOperadores(Model model) {
@@ -149,7 +158,7 @@ public class OperadorController {
     }
 
     @PostMapping(value = "/guardar")
-    public String guardarOperador(@ModelAttribute("operador") @Validated(Operador.class) Persona operador, BindingResult bindingResult, RedirectAttributes attr, Model model) {
+    public String guardarOperador(@ModelAttribute("operador") @Validated(Operador.class) Persona operador, BindingResult bindingResult, RedirectAttributes attr, Model model,HttpServletRequest request) {
         try {
             Integer id = operador.getId();
             if (id != null) {
@@ -208,7 +217,11 @@ public class OperadorController {
                         operador.setIdrol(rol);
                         operador.setContrasenia("$2a$10$hE1dT9Lj6ppwAT0mg9mb8.xEsZPstCA5nNK2xqTHLNyvmVZU7zRYW");
                         personaRepository.save(operador);
-                        attr.addFlashAttribute("msg2", "Se creo de el operador de manera exitosa");
+                        attr.addFlashAttribute("msg2", "Se creo el operador de manera exitosa y se envió un correo de confirmacion ");
+                        try {
+                            sendEmailSuccessRegistration(operador.getCorreo(),operador.getIdsede().getNombre(),request);
+                        } catch (MessagingException | UnsupportedEncodingException e) {
+                        }
                         return "redirect:/admin/operadores";
                     }
                 }
@@ -246,4 +259,39 @@ public class OperadorController {
             return "redirect:/admin/operadores/";
         }
     }
+
+
+    private void sendEmailSuccessRegistration(String correo, String nombresede, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        String path="http://"+request.getServerName()+":"+request.getServerPort()+"/login";
+
+//        String longin = "http://localhost:8080/login";
+
+        helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
+        helper.setTo(correo);
+
+        String subject = "¡Bienvenido a Telemillonario!";
+
+        String content = "<p>Cordiales Saludos: </p>"
+                + "<p>El administrador ha creado su cuenta para que gestione la sede "+nombresede +" </p>"
+                + "<p>Ahora usted podrá realizar lo siguiente: </p>"
+                + "<p> - Programar o modificar una funcion en la sede <p>"
+                + "<p> - Gestionar las salas en donde se realizan las funciones<p>"
+                + "<p> - Ver y exportar las estadisticas relacionadas a las funciones de la sede<p>"
+                + "<p> - Gestionar las reseñas de la sede<p>"
+                + "<p>Ingrese sesión mediante el siguiente <b><a href=" + path +">enlace</a></b><p>"
+                + "<p> <b>Usuario:</b> "+correo+"<p>"
+                + "<p> <b>Contraseña:</b> 123456<p>"
+                + "<p> Por motivos de seguridad, se recomienda cambiar su contraseña brindada por defecto<p>";
+
+
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+        mailSender.send(message);
+
+    }
+
 }

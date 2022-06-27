@@ -192,7 +192,7 @@ public class LoginController {
     public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult,
                                    @RequestParam(value = "recontrasenia", required = false) String recontrasenia,
                                    @RequestParam(value = "google", required = false) Integer google,
-                                   Model model,
+                                   Model model,HttpServletRequest request,
                                    RedirectAttributes a) throws InterruptedException, IOException, MessagingException {
 
         System.out.println("------------------------------------------------------------------");
@@ -302,7 +302,7 @@ public class LoginController {
             a.addFlashAttribute("msg", 1);
 
             try {
-                sendEmailSuccessRegistration(usuario.getCorreo());
+                sendEmailSuccessRegistration(usuario.getCorreo(),request);
             } catch (MessagingException | UnsupportedEncodingException e) {
             }
 
@@ -385,7 +385,7 @@ public class LoginController {
     }
 
     @PostMapping("/resetearContrasenia")
-    public String reseteadaDeContrasenia(@RequestParam("token") String tokensito,@RequestParam("password") String password,@RequestParam("repassword") String confirmarContrasena,RedirectAttributes redirectAttributes){
+    public String reseteadaDeContrasenia(@RequestParam("token") String tokensito,@RequestParam("password") String password,@RequestParam("repassword") String confirmarContrasena,HttpServletRequest request,RedirectAttributes redirectAttributes){
 
         if(tokensito.equalsIgnoreCase("")){
             return "redirect:/anErrorHasOcurred";
@@ -422,7 +422,7 @@ public class LoginController {
 
                     //Envio de correo donde le indica que su contraseña se cambio exitosamente
                     try {
-                        sendEmailSuccessRegistration(personita.getCorreo());
+                        sendEmailSuccessRegistration(personita.getCorreo(),request);
                     } catch (MessagingException | UnsupportedEncodingException e) {
                         return "redirect:/anErrorHasOcurred";
                     }
@@ -466,11 +466,12 @@ public class LoginController {
 
     }
 
-    private void sendEmailSuccessRegistration(String correo) throws MessagingException, UnsupportedEncodingException {
+    private void sendEmailSuccessRegistration(String correo,HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        String longin = "http://localhost:8080/login";
+        String urlpath="http://"+request.getServerName()+":"+request.getServerPort()+"/login";
+//        String longin = "http://localhost:8080/login";
 
         helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
         helper.setTo(correo);
@@ -483,7 +484,7 @@ public class LoginController {
                 + "<p> - Acceso a la compra de boletos y visualización de su carrito de compras<p>"
                 + "<p> - Acceso a su historial de compras, junto a las funciones a las que ha asistido<p>"
                 + "<p> - Calificar la obra a la que ha asistido, a su director y a sus actores"
-                + "<p>Ingrese sesión mediante el siguiente <b><a href=" + longin +">enlace</a></b><p>";
+                + "<p>Ingrese sesión mediante el siguiente <b><a href=" + urlpath +">enlace</a></b><p>";
 
         helper.setSubject(subject);
         helper.setText(content,true);
