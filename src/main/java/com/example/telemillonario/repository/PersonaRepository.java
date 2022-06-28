@@ -86,7 +86,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
             "order by\n" +
             "(case when ?2 = 1 then nombres end),\n" +
             "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end)" +
+            "(case when ?2 = 3 then calificacion end) DESC\n" +
             "limit ?3, ?4")
     List<Persona> buscarDirectoresFiltros(String busqueda, int filtro, int paginaxdirectores, int directores);
 
@@ -95,7 +95,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
             "order by\n" +
             "(case when ?2 = 1 then nombres end),\n" +
             "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end);")
+            "(case when ?2 = 3 then calificacion end) DESC;")
     List<Persona> cantidadDirectoresFiltro(String busqueda, int filtro);
 
 
@@ -105,7 +105,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
             "order by\n" +
             "(case when ?2 = 1 then nombres end),\n" +
             "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end)" +
+            "(case when ?2 = 3 then calificacion end) DESC\n" +
             "limit ?3, ?4")
     List<Persona> buscarActoresFiltros(String busqueda, int filtro, int paginaxactores, int actores);
 
@@ -114,7 +114,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
             "order by\n" +
             "(case when ?2 = 1 then nombres end),\n" +
             "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end);")
+            "(case when ?2 = 3 then calificacion end) DESC;")
     List<Persona> cantidadActoresFiltro(String busqueda, int filtro);
 
 }
