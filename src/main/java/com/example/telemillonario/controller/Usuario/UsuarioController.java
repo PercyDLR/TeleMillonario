@@ -2291,7 +2291,7 @@ public class UsuarioController {
         ArrayList<Pago> listaPagosValidos = new ArrayList<>();
         double pago = 0;
         for (Pago p : listaPagos) {
-            if (p.getEstado() == 0) {
+            if (p.getEstado() != 0) {
                 pago = pago + p.getIdcompra().getMontoTotal();
                 listaPagosValidos.add(p);
             }
