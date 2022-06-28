@@ -205,6 +205,8 @@ public class LoginController {
         Matcher matcherApellidos = pattern1.matcher(usuario.getApellidos());
         boolean errorApellido = matcherApellidos.find();
 
+        System.out.println(matcherNombres.find());
+        System.out.println(matcherApellidos.find());
 
         if(errorNombre == false){
             errorNombre = true;
@@ -317,7 +319,7 @@ public class LoginController {
     }
 
     @PostMapping("/cambioPassword")
-    public String processForgotPasswordForm(@RequestParam("correo") String correo,RedirectAttributes redirectAttributes){
+    public String processForgotPasswordForm(@RequestParam("correo") String correo,RedirectAttributes redirectAttributes,HttpServletRequest request){
 
         Persona persona = personaRepository.findByCorreo(correo);
 
@@ -334,14 +336,18 @@ public class LoginController {
 
                 //Generamos el link para el reseteo de contraseña
 
-                String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
-
-                try {
+                //String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
+                String resetPasswordLink = "http://"+request.getServerName()+":"+request.getServerPort()+"/resetPassword?token=" + token;
+            try {
                     sendEmail(correo,resetPasswordLink);
 
-                    String user = "root";
+                    /*String user = "root";
                     String password = "root";
-                    String url = "jdbc:mysql://localhost:3306/telemillonario";
+                    String url = "jdbc:mysql://localhost:3306/telemillonario";*/
+
+                    String user = "adminsito";
+                    String password = "Telemillonariogrupo2";
+                    String url = "jdbc:mysql://bdtelemillonario.mysql.database.azure.com:3306/telemillonario";
 
                     String sentenciaSQL = "CREATE EVENT telemillonario.eventoborrar"+persona.getId()+"\n ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 15 minute DO UPDATE telemillonario.persona SET passwordtoken = '' WHERE persona.correo = ?;";
                     try (Connection conn = DriverManager.getConnection(url, user, password);
@@ -404,9 +410,13 @@ public class LoginController {
                 if (password.equals(confirmarContrasena)) {
 
                     try {
-                        String user = "root";
+                        /*String user = "root";
                         String pass = "root";
-                        String url = "jdbc:mysql://localhost:3306/telemillonario";
+                        String url = "jdbc:mysql://localhost:3306/telemillonario";*/
+
+                        String user = "adminsito";
+                        String pass = "Telemillonariogrupo2";
+                        String url = "jdbc:mysql://bdtelemillonario.mysql.database.azure.com:3306/telemillonario";
 
                         String sentenciaSQL = "DROP EVENT IF EXISTS telemillonario.eventoborrar" + personita.getId() + ";";
                         try (Connection conn = DriverManager.getConnection(url, user, pass);
