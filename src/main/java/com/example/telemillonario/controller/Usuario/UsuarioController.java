@@ -1063,7 +1063,7 @@ public class UsuarioController {
             redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar por lo menos una reserva");
             return "redirect:/carritoPrueba";
         }
-        if((listaReservasStr == null || listaCantidadBoletosStr == null) && carrito.size()==0){
+        if((listaReservasStr == null || listaCantidadBoletosStr == null) || carrito.size()==0){
             redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar por lo menos una reserva");
             return "redirect:/carritoPrueba";
             //return "redirect:/anErrorHasOcurred";
