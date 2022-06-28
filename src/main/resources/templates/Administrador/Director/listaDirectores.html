@@ -84,7 +84,12 @@
                                     <tr th:each="director : ${listaDirectores}">
                                         <th th:text="${director.id}"></th>
                                         <td th:text="${director.nombres + ' ' + director.apellidos}"></td>
-                                        <td>★★★</td>
+                                        <td>
+                                            <span class="reviews__rating" style="position: relative">
+                                                <i class="icon ion-ios-star"></i>
+                                                <span th:text="${director.calificacion == null ? '0.0' : director.calificacion}"></span>
+                                            </span>
+                                        </td>
 
                                         <td>
                                             <button>

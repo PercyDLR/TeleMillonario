@@ -236,18 +236,23 @@
                                         <a th:href="@{/admin/obras}" class="header__nav-link"
                                            th:classappend="${seccion=='obras' ? 'header__nav-link--active' : ''}" >Obras</a>
                                     </li>
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/admin/actores}" class="header__nav-link"
-                                           th:classappend="${seccion=='actores' ? 'header__nav-link--active' : ''}" >Actores</a>
-                                    </li>
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/admin/directores}" class="header__nav-link"
-                                           th:classappend="${seccion=='directores' ? 'header__nav-link--active' : ''}" >Directores</a>
-                                    </li>
                                     <li class="header__nav-item">
                                         <a th:href="@{/admin/clientes/lista}" class="header__nav-link"
                                            th:classappend="${seccion=='clientes' ? 'header__nav-link--active' : ''}" >Clientes</a>
+                                    </li>
+
+                                    <li class="dropdown header__nav-item">
+                                        <a class="dropdown-toggle header__nav-link header__nav-link--more" href="#" role="button"
+                                           id="dropdownMenuMore" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                           th:classappend="${#arrays.contains({'actores','directores'},seccion) ? 'header__nav-link--active' : ''}">
+                                            <i class="icon ion-ios-more"></i>
+                                        </a>
+
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuMore">
+                                            <li><a th:href="@{/admin/actores}">Actores</a></li>
+                                            <li><a th:href="@{/admin/directores}">Directores</a></li>
+                                        </ul>
                                     </li>
 
                                     <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>

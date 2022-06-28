@@ -224,7 +224,7 @@ public class ActorController {
 
         // Regresa si no se han agregado más fotos
         if(imagenes[0].getContentType().equals("application/octet-stream")) {
-            attr.addFlashAttribute("msg", "Director Guardado Exitosamente");
+            attr.addFlashAttribute("msg", "Actor Guardado Exitosamente");
             return "redirect:/admin/actores";
         }
 

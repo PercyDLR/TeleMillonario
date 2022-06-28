@@ -82,7 +82,12 @@
                                 <tr th:each="actor : ${listaActores}">
                                     <th th:text="${actor.id}"></th>
                                     <td th:text="${actor.nombres + ' ' + actor.apellidos}"></td>
-                                    <td>★★★</td>
+                                    <td>
+                                        <span class="reviews__rating" style="position: relative">
+                                            <i class="icon ion-ios-star"></i>
+                                            <span th:text="${actor.calificacion == null ? '0.0' : actor.calificacion}"></span>
+                                        </span>
+                                    </td>
                                     <td>
                                         <button>
                                             <a class="circulo_botones" th:href="@{'/admin/actores/editar?id='+${actor.id}}">

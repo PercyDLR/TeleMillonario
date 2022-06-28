@@ -62,9 +62,8 @@
                                                         th:value="${imagen.id}"></option>
                                             </select>
 
-                                            <div class="sign__group">
-                                                <input hidden th:field="*{id}">
-                                            </div>
+                                            <input hidden th:field="*{id}">
+                                            <input hidden name="calificacion" th:value="${actor.calificacion == null ? 0 : actor.calificacion}">
 
                                             <div class="sign__group">
                                                 <label for="nombres">Nombre</label>
