@@ -21,7 +21,7 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
     @Query(nativeQuery = true, value = "select fo.* from fotos fo " +
             "inner join funcion fu on fu.idobra = fo.idobra " +
             "inner join sala s on (s.id = fu.idsala) " +
-            "where s.idsede=5 and fo.numero=0")
+            "where s.idsede=?1 and fo.numero=0")
     List<Foto> buscarFotoObrasPorSede(int idsede);
 
     @Query(nativeQuery = true, value = "select * from fotos fo inner join obra o on (fo.idfuncion=o.id) where " +
