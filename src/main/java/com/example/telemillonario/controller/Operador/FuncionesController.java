@@ -86,7 +86,7 @@ public class FuncionesController {
         List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSede(persona.getIdsede().getId(), (int) funcionesporpagina * pagina, (int) funcionesporpagina);
         List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(persona.getIdsede().getId());
 
-        HashMap<Funcion, Foto> funcionesConFoto = new HashMap<>();
+        LinkedHashMap<Funcion, Foto> funcionesConFoto = new LinkedHashMap<>();
 
         for (Funcion funcion : listFunciones) {
             for (Foto foto : listFotosObra) {
