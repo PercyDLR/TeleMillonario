@@ -55,10 +55,26 @@ public class DirectoresController {
             fil = 0;
         }
 
-        List<Persona> cantDirectores = personaRepository.cantidadDirectoresFiltro(busqueda.toLowerCase(), fil);
-        List<Persona> listaDirectores = personaRepository.buscarDirectoresFiltros(busqueda.toLowerCase(), fil, directoresxpagina*pagina, directoresxpagina);
+        List<Persona> cantDirectores = new ArrayList<>();
+        List<Persona> listaDirectores = new ArrayList<>();
+        if (fil == 1) {
+            cantDirectores = personaRepository.cantidadDirectores1(busqueda.toLowerCase());
+            listaDirectores = personaRepository.buscarDirectores1(busqueda.toLowerCase(), directoresxpagina * pagina, directoresxpagina);
+        } else if (fil == 2) {
+            cantDirectores = personaRepository.cantidadDirectores2(busqueda.toLowerCase());
+            listaDirectores = personaRepository.buscarDirectores2(busqueda.toLowerCase(), directoresxpagina * pagina, directoresxpagina);
+        } else if (fil == 3) {
+            cantDirectores = personaRepository.cantidadDirectores3(busqueda.toLowerCase());
+            listaDirectores = personaRepository.buscarDirectores3(busqueda.toLowerCase(), directoresxpagina * pagina, directoresxpagina);
+        } else {
+            cantDirectores = personaRepository.cantidadDirectores(busqueda.toLowerCase());
+            listaDirectores = personaRepository.buscarDirectores(busqueda.toLowerCase(), directoresxpagina * pagina, directoresxpagina);
+        }
+
+        System.out.println(cantDirectores.size());
         List<Foto> listaFotosDirectores = new ArrayList<>();
         for (Persona p : listaDirectores) {
+            System.out.println("ID del director: " + p.getId());
             listaFotosDirectores.add(fotoRepository.fotoDirector(p.getId()));
         }
         System.out.println("Tamanio lista fotos: " + listaFotosDirectores.size());
@@ -69,7 +85,7 @@ public class DirectoresController {
         model.addAttribute("listaFotos", listaFotosDirectores);
 
         model.addAttribute("pagActual", pagina);
-        model.addAttribute("pagTotal", (int) Math.ceil(cantDirectores.size() / directoresxpagina));
+        model.addAttribute("pagTotal", (int) Math.ceil((float) cantDirectores.size() / (float) directoresxpagina));
         return "usuario/directores/listaDirectores";
 
     }

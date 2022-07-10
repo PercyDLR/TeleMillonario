@@ -55,12 +55,28 @@ public class ActoresController {
             fil = 0;
         }
 
-        List<Persona> cantActores = personaRepository.cantidadActoresFiltro(busqueda.toLowerCase(), fil);
+        List<Persona> cantActores = new ArrayList<>();
+        List<Persona> listaActores = new ArrayList<>();
+        if (fil == 1) {
+            cantActores = personaRepository.cantidadActores1(busqueda.toLowerCase());
+            listaActores = personaRepository.buscarActores1(busqueda.toLowerCase(), actoresxpagina * pagina, actoresxpagina);
+        } else if (fil == 2) {
+            cantActores = personaRepository.cantidadActores2(busqueda.toLowerCase());
+            listaActores = personaRepository.buscarActores2(busqueda.toLowerCase(), actoresxpagina * pagina, actoresxpagina);
+        } else if (fil == 3) {
+            cantActores = personaRepository.cantidadActores3(busqueda.toLowerCase());
+            listaActores = personaRepository.buscarActores3(busqueda.toLowerCase(), actoresxpagina * pagina, actoresxpagina);
+        } else {
+            cantActores = personaRepository.cantidadActores(busqueda.toLowerCase());
+            listaActores = personaRepository.buscarActores(busqueda.toLowerCase(), actoresxpagina * pagina, actoresxpagina);
+        }
 
-        List<Persona> listaActores = personaRepository.buscarActoresFiltros(busqueda.toLowerCase(), fil, actoresxpagina * pagina, actoresxpagina);
+        System.out.println(actoresxpagina*pagina);
+        System.out.println(actoresxpagina);
 
         List<Foto> listaFotosActores = new ArrayList<>();
         for (Persona p : listaActores) {
+            System.out.println("ID del actor: " + p.getId());
             listaFotosActores.add(fotoRepository.fotoActor(p.getId()));
         }
 
@@ -70,7 +86,7 @@ public class ActoresController {
         model.addAttribute("listaFotos", listaFotosActores);
 
         model.addAttribute("pagActual", pagina);
-        model.addAttribute("pagTotal", (int) Math.ceil(cantActores.size() / actoresxpagina));
+        model.addAttribute("pagTotal", (int) Math.ceil((float) cantActores.size() / (float) actoresxpagina));
         return "usuario/actores/listaActores";
 
     }

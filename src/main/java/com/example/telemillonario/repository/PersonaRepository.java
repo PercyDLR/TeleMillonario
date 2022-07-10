@@ -83,38 +83,86 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     //Director
     @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
             "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
-            "order by\n" +
-            "(case when ?2 = 1 then nombres end),\n" +
-            "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end) DESC\n" +
-            "limit ?3, ?4")
-    List<Persona> buscarDirectoresFiltros(String busqueda, int filtro, int paginaxdirectores, int directores);
+            "limit ?2, ?3")
+    List<Persona> buscarDirectores(String busqueda, int paginaxdirectores, int directores);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)")
+    List<Persona> cantidadDirectores(String busqueda);
 
     @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
             "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
-            "order by\n" +
-            "(case when ?2 = 1 then nombres end),\n" +
-            "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end) DESC;")
-    List<Persona> cantidadDirectoresFiltro(String busqueda, int filtro);
+            "order by nombres")
+    List<Persona> buscarDirectores1(String busqueda, int paginaxdirectores, int directores);
 
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by nombres")
+    List<Persona> cantidadDirectores1(String busqueda);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by nombres DESC\n" +
+            "limit ?2, ?3")
+    List<Persona> buscarDirectores2(String busqueda, int paginaxdirectores, int directores);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by nombres DESC")
+    List<Persona> cantidadDirectores2(String busqueda);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by calificacion DESC\n" +
+            "limit ?2, ?3")
+    List<Persona> buscarDirectores3(String busqueda, int paginaxdirectores, int directores);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 4) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by calificacion DESC")
+    List<Persona> cantidadDirectores3(String busqueda);
 
     //Actores
     @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
             "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
-            "order by\n" +
-            "(case when ?2 = 1 then nombres end),\n" +
-            "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end) DESC\n" +
-            "limit ?3, ?4")
-    List<Persona> buscarActoresFiltros(String busqueda, int filtro, int paginaxactores, int actores);
+            "limit ?2, ?3")
+    List<Persona> buscarActores(String busqueda, int paginaxactores, int actores);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)")
+    List<Persona> cantidadActores(String busqueda);
 
     @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
             "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
-            "order by\n" +
-            "(case when ?2 = 1 then nombres end),\n" +
-            "(case when ?2 = 2 then nombres end) DESC,\n" +
-            "(case when ?2 = 3 then calificacion end) DESC;")
-    List<Persona> cantidadActoresFiltro(String busqueda, int filtro);
+            "order by nombres\n" +
+            "limit ?2, ?3")
+    List<Persona> buscarActores1(String busqueda, int paginaxactores, int actores);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by nombres")
+    List<Persona> cantidadActores1(String busqueda);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by nombres DESC\n" +
+            "limit ?2, ?3")
+    List<Persona> buscarActores2(String busqueda, int paginaxactores, int actores);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by nombres DESC")
+    List<Persona> cantidadActores2(String busqueda);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by calificacion DESC\n" +
+            "limit ?2, ?3")
+    List<Persona> buscarActores3(String busqueda, int paginaxactores, int actores);
+
+    @Query(nativeQuery = true, value = "Select * from telemillonario.persona\n" +
+            "where (idrol = 5) and (estado = 1) and (lower(concat(nombres,' ',apellidos)) like %?1%)\n" +
+            "order by calificacion DESC")
+    List<Persona> cantidadActores3(String busqueda);
 
 }
