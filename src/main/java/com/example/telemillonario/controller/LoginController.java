@@ -180,7 +180,7 @@ public class LoginController {
 
                 //Se regresa a la anterior url sólo si es usuario
                 if(urlAnterior.contains("crearCuenta") || urlAnterior.contains("validacionSignUp") ||
-                        urlAnterior.contains("login") || urlAnterior.contains("cambiar")){
+                        urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword")){
                     return "redirect:/";
                 }
                 return "redirect:" + urlAnterior;

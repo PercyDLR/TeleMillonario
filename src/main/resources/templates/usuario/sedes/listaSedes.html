@@ -15,6 +15,11 @@
                 aspect-ratio: 9 / 13;
             }
 
+            .sign__group{
+                padding-inline: 5px;
+            }
+
+
         </style>
     </head>
     <body class="body">
@@ -41,7 +46,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-md-5 col-sm-6 col-12 sign__group">
 
-                                    <input type="text" class="search_input"
+                                    <input type="search" class="search_input"
                                            placeholder="Busque una sede" name="busqueda"
                                            th:value="${busqueda}" maxlength="100">
                                 </div>
@@ -52,8 +57,8 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                                    <button type="submit" class="form__btn" style="width: 80%; margin: 0;">
+                                <div class="col-md-2 col-6" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                                    <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>

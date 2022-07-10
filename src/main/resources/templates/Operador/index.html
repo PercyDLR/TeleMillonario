@@ -3,9 +3,6 @@
 
     <head th:replace="fragments/header :: head('Funciones',~{::style})">
         <style>
-            input::placeholder {
-                color: #000000;
-            }
             .price img{
                 object-fit: cover;
                 object-position: 50% 50%;
@@ -54,20 +51,15 @@
 
             <form method="post" th:action="@{/operador/funciones/buscar}">
                 <div class="row justify-content-center" style="margin-top: 50px">
-                    <div class="col-md-8 col-12">
 
-                        <div class="input-group d-flex justify-content-center" style="margin-bottom: 5px">
-                            <input type="text" placeholder="Buscar Función por Nombre" th:value="${parametro != null ? parametro : ''}" name="parametro" class="src" style="width: inherit;color: #000000">
-                        </div>
+                    <div class="col-md-10 col-12 sign__group">
+                        <input type="search" class="search_input" placeholder="Buscar Función por Nombre" th:value="${parametro != null ? parametro : ''}" name="parametro">
                     </div>
-                    <div class="col-md-4 col-12">
 
-                        <div class="d-flex justify-content-center">
-                            <button type="submit" class="filter__btn">
-                                <a>Buscar</a>
-                            </button>
-                        </div>
-
+                    <div class="col-md-2 col-6" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                        <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
+                            <i class="bi bi-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>

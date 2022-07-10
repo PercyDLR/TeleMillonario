@@ -26,63 +26,27 @@
 
         <div class="content" style="padding-bottom: 0">
             <div class="container my-5">
-                <div class="row text-center">
-                        <div class="col-12">
-                            <h1 class="details__title" style="margin-bottom: 10px;" th:text="|${actor.nombres} ${actor.apellidos}|"></h1>
-                            <i class="icon ion-ios-star" style="color: #ff5860"></i>
-                            <span class="card__rate" style="margin-bottom: 30px;" th:text="${actor.calificacion == null ? '-': actor.calificacion}">
-                                                        8.4
-                                                    </span>
-                        </div>
 
-                        <div class="col-12 col-xl-12">
-                            <div class="card card--details">
-                                <div class="row">
-                                    <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4">
-                                    </div>
-                                    <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4" style="padding-left: 55px;padding-right: 20px;">
-                                        <div class="card__cover">
-                                            <img th:src="${listaFotos.get(0).ruta}" alt="foto">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="row text-center">
+                    <div class="col-12">
+                        <h1 class="details__title" style="margin-bottom: 10px;" th:text="|${actor.nombres} ${actor.apellidos}|"></h1>
+                        <i class="icon ion-ios-star" style="color: #ff5860"></i>
+                        <span class="card__rate" style="margin-bottom: 30px;" th:text="${actor.calificacion == null ? '-': actor.calificacion}">8.4</span>
+                    </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-12">
+                        <div class="owl-carousel home__carousel">
+                            <div class="item" th:each="foto : ${listaFotos}">
+                                <img th:src="${foto.ruta}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- FOTOS -->
-            <section class="mt-5 pb-5" style="background-color: #2b2b31">
-                <div class="content__head" style="margin-bottom: 0">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12  pt-2 pb-3">
-                                <!-- content title -->
-                                <h2 class="content__title">Fotos</h2>
-                                <!-- end content title -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container">
-                    <div class="row">
-
-                        <div class="col-12">
-                            <div class="owl-carousel home__carousel">
-                                <div class="item" th:each="foto : ${listaFotos}">
-                                    <img th:src="${foto.ruta}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mt-5 pb-5">
+            <section style="background: url(../../img/section/section.jpg) center center / cover no-repeat">
                 <div class="content__head" style="margin-bottom: 0">
                     <div class="container">
                         <div class="row">
@@ -112,7 +76,7 @@
                                     <div class="row justify-content-center">
                                         <div class="col-lg-4 col-12 sign__group">
 
-                                            <input type="text" class="search_input"
+                                            <input type="search" class="search_input"
                                                    placeholder="Busque una Obra" name="busqueda"
                                                    th:value="${busqueda}" maxlength="100">
                                         </div>
@@ -133,7 +97,7 @@
                                         </div>
 
                                         <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                                            <button type="submit" class="form__btn" style="width: 50%; margin: 0;">
+                                            <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
                                                 <i class="bi bi-search"></i>
                                             </button>
                                         </div>

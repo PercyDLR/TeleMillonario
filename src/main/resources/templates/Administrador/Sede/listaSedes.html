@@ -2,10 +2,6 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
     <head th:replace="fragments/header :: head('Lista Sedes',~{::style})">
         <style>
-            input::placeholder {
-                color: #000000;
-            }
-
             .mapa {
                 height: 150px;
                 width: 150px;
@@ -53,30 +49,24 @@
 
                 <form method="post" th:action="@{/admin/sedes/buscar}">
                     <div class="row justify-content-center">
-                        <div class="col-md-6 col-12">
+                        <div class="col-md-6 col-12 sign__group">
+                            <input type="search" name="parametro" placeholder="Buscar Sede" class="search_input"
+                                   th:value="${parametro == null ? 'Ingrese lo que desea buscar' : parametro}">
 
-                            <div class="input-group d-flex justify-content-center" style="margin-top: 50px">
-                                <div class="box" style="margin-bottom: 30px">
-                                    <input type="text" name="parametro" placeholder="Buscar Sede" class="src" style="width: 300px;color: #000000"
-                                           th:value="${parametro == null ? 'Ingrese lo que desea buscar' : parametro}">
-                                </div>
-                            </div>
                         </div>
-                        <div class="col-lg-6 col-12">
-                            <div class="input-group" style="margin-top: 50px">
+                        <div class="col-lg-4 col-md-6 col-12 sign__group">
 
-                                <select  class="col-md-6 col-6 form-select" name="buscador" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                    <option>Filtrar por:</option>
-                                    <option th:selected="${buscador eq 'nombre'}" value="nombre">Nombre</option>
-                                    <option th:selected="${buscador eq 'distrito'}" value="distrito">Distrito</option>
-                                </select>
+                            <select class="search_input" name="buscador">
+                                <option>Filtrar por:</option>
+                                <option th:selected="${buscador eq 'nombre'}" value="nombre">Nombre</option>
+                                <option th:selected="${buscador eq 'distrito'}" value="distrito">Distrito</option>
+                            </select>
+                        </div>
 
-                                <div class="col-md-6 col-6 d-flex justify-content-center">
-                                    <button type="submit" class="filter__btn" style="margin-top:6px;">
-                                        <a>Buscar</a>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="col-lg-2 col-6" style="margin: 0; padding: 0">
+                            <button type="submit" class="form__btn" style="width: 80%; margin: 0;">
+                                <i class="bi bi-search"></i>
+                            </button>
                         </div>
                     </div>
                 </form>

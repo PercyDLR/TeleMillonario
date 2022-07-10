@@ -168,6 +168,13 @@
                         </div>
 
                         <div class="accordion" id="accordion">
+
+                            <div th:if="${funcionesDeLaSede.size() < 1}" class="d-flex justify-content-center">
+                                <span style="color: white; font-size: 1.5rem; margin-top: 80px">
+                                    Lo siento, no hay obras disponibles
+                                </span>
+                            </div>
+
                             <div class="accordion__card" th:each="sede, i : ${funcionesDeLaSede}">
                                 <div class="card-header" id="headingOne">
                                     <button type="button" th:data-target="|#funciones-${sede.key.id}|"
