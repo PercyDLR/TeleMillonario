@@ -18,11 +18,6 @@
             .sign__group{
                 padding-inline: 5px;
             }
-            .sign__input{
-                border: solid 1px #61616c;
-                width: 100%;
-                border-radius: 5px;
-            }
 
         </style>
     </head>
@@ -41,21 +36,21 @@
                     </div>
 
                     <div class="col-12">
-                        <h1 class="home__title"><b>DIRECTORES</b></h1>
+                        <h1 class="home__title">Descubra a los <b>DIRECTORES</b> que hacen todo esto posible</h1>
                     </div>
 
                     <!--<div class="col-12">-->
                     <div class="col-12 my-5">
                         <form method="post" th:action="@{/directores/BusquedaYFiltros}">
                             <div class="row justify-content-center">
-                                <div class="col-lg-5 col-12 sign__group">
+                                <div class="col-md-5 col-12 sign__group">
 
-                                    <input type="text" class="sign__input"
+                                    <input type="text" class="search_input"
                                            placeholder="Busque un director" name="busqueda"
                                            th:value="${busqueda}" maxlength="100">
                                 </div>
-                                <div class="col-lg-5 col-md-5 col-6 sign__group">
-                                    <select class="sign__input" name="filtro">
+                                <div class="col-md-5 col-12 sign__group">
+                                    <select class="search_input" name="filtro">
                                         <option th:selected="${filtro == ''}" value="">Sin filtros</option>
                                         <option th:selected="${filtro == '1'}" value="1">Ordernar por nombre ascendentemente</option>
                                         <option th:selected="${filtro == '2'}" value="2">Ordernar por nombre descendentemente</option>

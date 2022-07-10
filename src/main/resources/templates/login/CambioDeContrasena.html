@@ -15,10 +15,11 @@
                                         <img th:src="@{/img/tele.png}" alt="logo">
                                     </a>
 
-                                    <h1 style="font-size: 40px">
+                                    <h1>
                                         <span style="font-family: 'Barlow', sans-serif; color:#ffffff">Cambio de </span>
                                         <span style="font-family: 'Barlow', sans-serif; color:#e64166">Contraseña</span>
                                     </h1>
+
                                     <h4 th:if="${msgexito != null}" th:text="${msgexito}" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
                                     <h4 th:if="${msgexito != null}" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;">
                                         Su enlace expirará en <span id="timer" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></span> minutos, por lo que deberá cambiar su contraseña lo más pronto posible

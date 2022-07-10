@@ -485,7 +485,7 @@ public class UsuarioController {
 
             }
         } else {
-            redirectAttributes.addFlashAttribute("mensajeError", "Ya no hay stock disponible");
+            redirectAttributes.addFlashAttribute("mensajeError", "No hay suficiente stock para realizar la reseva");
             return "redirect:/cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
         }
     }

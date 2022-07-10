@@ -130,17 +130,17 @@ div.cuenta{
 }
 
 /* Quitar el color blanco al autocompletar */
-input.sign__input:-webkit-autofill{
+input:-webkit-autofill{
   -webkit-text-fill-color: #fff !important;
   box-shadow: 0 0 0 30px #2b2b31 inset !important;
   transition: box-shadow 0ms;
 }
-input.sign__input:-webkit-autofill:focus{
+input:-webkit-autofill:focus{
   -webkit-text-fill-color: #fff !important;
   box-shadow: 0 0 10px 0 rgba(255,88,96,0.5),
   0 0 0 30px #2b2b31 inset !important;
 }
-input.sign__input:autofill {
+input:autofill {
   background: #2b2b31;
   color: #fff;
 }
@@ -225,6 +225,22 @@ input[type=number] {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Imput para la busqueda */
+.search_input{
+  background-color: #2b2b31;
+  border: solid 1px #61616c;
+  height: 50px;
+  position: relative;
+  color: #fff;
+  font-size: 15px;
+  width: 100%;
+  border-radius: 5px;
+  padding: 0 20px;
+  letter-spacing: 0.2px;
+  font-family: 'Open Sans', sans-serif;
+  transition: box-shadow 0.25s ease-out;
 }
 
 /*==============================
@@ -2609,8 +2625,8 @@ input.sign__input:disabled , input.sign__input:disabled{
   color: rgba(255,255,255,0.5);
 }
 
-input.sign__input:hover, select.sign__input:hover, textarea.sign__input:hover,
-input.sign__input:focus, select.sign__input:focus, textarea.sign__input:focus{
+.sign__input:hover, .sign__input:focus,
+.search_input:hover, .search_input:focus{
   border: solid #ff55a5 1px;
   box-shadow: 0 0 10px 0 rgba(255,88,96,0.5);
 }

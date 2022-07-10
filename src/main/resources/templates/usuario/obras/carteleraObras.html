@@ -18,11 +18,6 @@
             .sign__group{
                 padding-inline: 5px;
             }
-            .sign__input{
-                border: solid 1px #61616c;
-                width: 100%;
-                border-radius: 5px;
-            }
 
         </style>
     </head>
@@ -50,12 +45,12 @@
                             <div class="row justify-content-center">
                                 <div class="col-lg-4 col-12 sign__group">
 
-                                    <input type="text" class="sign__input"
+                                    <input type="text" class="search_input"
                                            placeholder="Busque una Obra" name="busqueda"
                                            th:value="${busqueda}" maxlength="100">
                                 </div>
                                 <div class="col-lg-3 col-md-5 col-6 sign__group">
-                                    <select class="sign__input" name="genero">
+                                    <select class="search_input" name="genero">
                                         <option th:selected="${genero == ''}" value="">Todos los géneros</option>
                                         <option th:each="g : ${generos}" th:value="${g.getId()}"
                                                 th:text="${g.getNombre()}"
@@ -64,7 +59,7 @@
                                 </div>
                                 <div class="col-lg-3 col-md-5 col-6 sign__group">
 
-                                    <select class="sign__input" name="restriccionEdad">
+                                    <select class="search_input" name="restriccionEdad">
                                         <option value="" th:selected="${restriccionEdad == ''}">Para toda la familia</option>
                                         <option value="1" th:selected="${restriccionEdad == '1'}">Con contenido sensible</option>
                                     </select>
