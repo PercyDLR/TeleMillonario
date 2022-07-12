@@ -6,6 +6,21 @@
         .sign__input{
             width: 100%;
         }
+
+        .mostrar {
+            color: rgba(255,255,255,0.5);
+            font-size: 20px;
+            position: absolute;
+            top: 20%;
+            right: 20px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .mostrar:hover::before {
+            color: #de5073;
+            box-shadow:  0 0 10px 1px rgb(255 88 96 / 50%), inset 0 0 20px 3px rgb(184 89 94 / 38%);
+        }
+
     </style>
 </head>
 
@@ -90,8 +105,13 @@
                                 <div class="col-md-6 col-12">
                                     <div class="sign__group">
                                         <label for="contrasenia">Contraseña</label>
-                                        <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" autocomplete="new-password" id="contrasenia" required maxlength="200" th:value="${usuario.getContrasenia()}"
+
+                                        <div style="position: relative">
+                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" autocomplete="new-password" id="contrasenia" required maxlength="200"
                                                th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
+                                            <i class="mostrar bi bi-eye-fill"></i>
+                                        </div>
+
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
                                              th:errors="*{contrasenia}"></div>
                                     </div>
@@ -100,7 +120,12 @@
                                 <div class="col-md-6 col-12">
                                     <div class="sign__group">
                                         <label for="recontrasenia">Confirmar Contraseña</label>
-                                        <input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" th:value="${recontrasenia}" name="recontrasenia" required maxlength="200" autocomplete="new-password" th:hidden="${google eq 1}">
+
+                                        <div style="position: relative">
+                                            <input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" name="recontrasenia" required maxlength="200" autocomplete="new-password" th:hidden="${google eq 1}">
+                                            <i class="mostrar bi bi-eye-fill"></i>
+                                        </div>
+
                                         <div class="invalid-feedback" id="coindicencia">Las contraseñas no coinciden</div>
                                         <div class="invalid-feedback d-block" th:if="${(errRecontrasenia != null) && (errRecontrasenia eq 1)}">Ambos campos de contraseña deben ser llenados</div>
                                     </div>
@@ -139,9 +164,19 @@
 
 		</script>
 
-		<!--
-
-		-->
+        <script>
+            $('.mostrar').click(function (){
+                if(this.classList.contains('bi-eye-fill')){
+                    this.classList.replace('bi-eye-fill','bi-eye-slash-fill')
+                    console.log(this.previousElementSibling)
+                    this.previousElementSibling.type = 'text';
+                } else{
+                    this.classList.replace('bi-eye-slash-fill','bi-eye-fill')
+                    console.log(this.previousElementSibling)
+                    this.previousElementSibling.type = 'password';
+                }
+            })
+        </script>
 
 	</div>
 </body>
