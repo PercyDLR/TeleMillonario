@@ -1,7 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-    <head th:replace="fragments/header :: head('Creación de Cuenta',_)"></head>
+    <head th:replace="fragments/header :: head('Creación de Cuenta',~{::style})">
+        <style>
+            .mostrar {
+                color: rgba(255,255,255,0.5);
+                font-size: 20px;
+                position: absolute;
+                top: 20%;
+                right: 20px;
+                transition: 0.2s ease-in-out;
+            }
+
+            .mostrar:hover::before {
+                color: #de5073;
+                box-shadow:  0 0 10px 1px rgb(255 88 96 / 50%), inset 0 0 20px 3px rgb(184 89 94 / 38%);
+            }
+        </style>
+    </head>
 
     <body class="body">
 
@@ -45,13 +61,23 @@
                                 </div>
 
                                 <div class="sign__group">
-                                    <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" id="contrasenia" required maxlength="200"
+
+                                    <div style="position: relative">
+                                        <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" id="contrasenia" required maxlength="200"
                                            th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
+                                        <i class="mostrar bi bi-eye-fill"></i>
+                                    </div>
+
                                     <div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}"
                                          th:errors="*{contrasenia}"></div>
                                 </div>
                                 <div class="sign__group">
-                                    <input type="password" class="sign__input" placeholder="Confirmar Contraseña" name="recontrasenia" required maxlength="200">
+
+                                    <div style="position: relative">
+                                        <input type="password" class="sign__input" placeholder="Confirmar Contraseña" name="recontrasenia" required maxlength="200">
+                                        <i class="mostrar bi bi-eye-fill"></i>
+                                    </div>
+
                                     <div class="invalid-feedback" id="coindicencia">Las contraseñas no coinciden</div>
                                 </div>
 
@@ -83,7 +109,20 @@
                     }
                     return true;
                 }
+            </script>
 
+            <script>
+                $('.mostrar').click(function (){
+                    if(this.classList.contains('bi-eye-fill')){
+                        this.classList.replace('bi-eye-fill','bi-eye-slash-fill')
+                        console.log(this.previousElementSibling)
+                        this.previousElementSibling.type = 'text';
+                    } else{
+                        this.classList.replace('bi-eye-slash-fill','bi-eye-fill')
+                        console.log(this.previousElementSibling)
+                        this.previousElementSibling.type = 'password';
+                    }
+                })
             </script>
         </div>
     </body>

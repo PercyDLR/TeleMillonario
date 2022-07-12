@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasAuthority("Administrador")
                 .antMatchers("/operador/**").hasAuthority("Operador")
-                .antMatchers("/calificarObra", "/historialPrueba").hasAuthority("Usuario")
+                .antMatchers("/calificarObra", "/historial").hasAuthority("Usuario")
                 .antMatchers("/perfil/**").hasAnyAuthority("Operador","Usuario","ROLE_USER")
                 .antMatchers("/","/cartelera/*","/sedes/*","/actores/*","/directores/*").access("hasAuthority('Usuario') || isAnonymous() || hasAuthority('ROLE_USER')")
                 .anyRequest().permitAll().and()
