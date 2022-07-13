@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="fragments/header :: head('Inicio de Sesión',~{::style})">
-    <style>
-        .mostrar {
-            color: rgba(255,255,255,0.5);
-            font-size: 20px;
-            position: absolute;
-            top: 20%;
-            right: 20px;
-            transition: 0.2s ease-in-out;
-        }
-
-        .mostrar:hover::before {
-            color: #de5073;
-            box-shadow:  0 0 10px 1px rgb(255 88 96 / 50%), inset 0 0 20px 3px rgb(184 89 94 / 38%);
-        }
-    </style>
-</head>
+<head th:replace="fragments/header :: head('Inicio de Sesión',_)"></head>
 
 <body class="body">
 	<div class="content" style="padding: 0">
