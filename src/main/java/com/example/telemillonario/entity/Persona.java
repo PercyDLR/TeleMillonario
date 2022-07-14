@@ -21,10 +21,12 @@ public class Persona implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Pattern(regexp = "[a-zA-Z]", message = "El nombre no puede estar compuesto por caracteres especiales")
     @NotEmpty(message = "Los nombres no pueden estar vacíos",groups = {Usuario.class ,Operador.class, Elenco.class})
     @Column(name = "nombres", length = 100)
     private String nombres;
 
+    @Pattern(regexp = "[a-zA-Z]", message = "El apellido no puede estar compuesto por caracteres especiales")
     @NotEmpty(message = "Los apellidos no pueden estar vacíos", groups = {Usuario.class ,Operador.class, Elenco.class})
     @Column(name = "apellidos", length = 100)
     private String apellidos;
@@ -86,6 +88,17 @@ public class Persona implements Serializable {
 
     @Column(name = "passwordtoken")
     private String passwordToken;
+
+    @Column(name = "oauth2")
+    private Integer oauth2;
+
+    public Integer getOauth2() {
+        return oauth2;
+    }
+
+    public void setOauth2(Integer oauth2) {
+        this.oauth2 = oauth2;
+    }
 
     public String getPasswordToken() {
         return passwordToken;

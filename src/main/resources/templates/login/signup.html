@@ -38,6 +38,7 @@
 							</a>
 
 							<input type="number" name="google" th:value="${google}" hidden>
+                            <input type="number" name="oauth2" th:value="${usuario.getOauth2()}" hidden>
 
                             <div class="row">
                                <div class="col-md-6 col-12">
@@ -107,7 +108,7 @@
                                         <label for="contrasenia">Contraseña</label>
 
                                         <div style="position: relative">
-                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" autocomplete="new-password" id="contrasenia" required maxlength="200"
+                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:hidden="${google eq 1}" autocomplete="new-password" id="contrasenia" required maxlength="200"
                                                th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
                                             <i class="mostrar bi bi-eye-fill"></i>
                                         </div>

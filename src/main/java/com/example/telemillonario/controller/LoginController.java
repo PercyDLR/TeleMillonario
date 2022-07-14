@@ -93,21 +93,23 @@ public class LoginController {
         if (persona == null){
             Rol rol = new Rol(2,1,"Usuario");
             personita.setIdrol(rol);
+            personita.setOauth2(1);
             personita.setContrasenia("123456789abcdefg"); //Campo password
             model.addAttribute("recontrasenia","123456789abcdefg");
             model.addAttribute("usuario",personita);
             model.addAttribute("google", 1);
-            /*
-             * Faltarian fecha de nacimiento, dni, direccion y estado
-             * */
             return "login/signup";
-        }else if (persona.getCorreo().equals(personita.getCorreo()) && persona.getContrasenia().equals(password)){
-            /*Aca debe ir mensaje de error*/
+        }else if (persona.getCorreo().equals(personita.getCorreo()) && (persona.getOauth2() == 0)){
+            try {
+                redirectAttributes.addFlashAttribute("msg2", 1);
+                session.invalidate();
+                request.logout();
+                return "login/signin";
+            }catch (Exception e){
+
+            }
             return "redirect:/login";
-        }else if (persona.getCorreo().equals(personita.getCorreo())){
-            /*Aca se ingresa al sistema*/
-            //redirectAttributes.addAttribute("username",email);
-            //redirectAttributes.addAttribute("password","123456789abcdefg");
+        }else if (persona.getCorreo().equals(personita.getCorreo()) && (persona.getOauth2() == 1)){
             session.setAttribute("usuario",persona);
             return "redirect:/redirectByRole";
 
