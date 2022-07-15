@@ -38,7 +38,8 @@
 							</a>
 
 							<input type="number" name="google" th:value="${google}" hidden>
-                            <input type="number" name="oauth2" th:value="${usuario.getOauth2()}" hidden>
+                            <input type="number" name="oauth2" th:if="${google eq 1}" th:value="${usuario.getOauth2()}" hidden>
+                            <input type="number" name="oauth2" th:unless="${google eq 1}" value="0" hidden>
 
                             <div class="row">
                                <div class="col-md-6 col-12">
@@ -106,9 +107,8 @@
                                 <div class="col-md-6 col-12">
                                     <div class="sign__group">
                                         <label for="contrasenia">Contraseña</label>
-
                                         <div style="position: relative">
-                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:hidden="${google eq 1}" autocomplete="new-password" id="contrasenia" required maxlength="200"
+                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:hidden="${google eq 1}" th:value="${usuario.getContrasenia()}" autocomplete="new-password" id="contrasenia" required maxlength="200"
                                                th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
                                             <i class="mostrar bi bi-eye-fill"></i>
                                         </div>
@@ -123,7 +123,7 @@
                                         <label for="recontrasenia">Confirmar Contraseña</label>
 
                                         <div style="position: relative">
-                                            <input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" name="recontrasenia" required maxlength="200" autocomplete="new-password" th:hidden="${google eq 1}">
+                                            <input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" name="recontrasenia" th:value="${recontrasenia}" required maxlength="200" autocomplete="new-password" th:hidden="${google eq 1}">
                                             <i class="mostrar bi bi-eye-fill"></i>
                                         </div>
 

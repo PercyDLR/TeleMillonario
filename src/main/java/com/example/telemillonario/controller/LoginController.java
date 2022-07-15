@@ -183,7 +183,7 @@ public class LoginController {
 
                 //Se regresa a la anterior url sólo si es usuario
                 if(urlAnterior.contains("crearCuenta") || urlAnterior.contains("validacionSignUp") ||
-                        urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword")){
+                        urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword") || urlAnterior.contains("cambioDeContrasenia")){
                     return "redirect:/";
                 }
                 return "redirect:" + urlAnterior;
@@ -233,6 +233,7 @@ public class LoginController {
         if (recontrasenia.equals("") || recontrasenia == null || contraseniaDiferente == false) {
             model.addAttribute("errRecontrasenia", 1);
             errorRecontrasenia = true;
+            System.out.println("error contrasenia");
         }
 
         //Validacion Fecha de Nacimiento
@@ -243,12 +244,14 @@ public class LoginController {
         if (period.getYears() < 0 || period.getMonths() < 0 || (period.getDays() <= 0 && (period.getYears() < 0 || period.getMonths() < 0))) {
             model.addAttribute("errDate", -1);
             errorNacimiento = true;
+            System.out.print("error nacimiento");
         }
 
         //Validacion DNI
         DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
         boolean errDNI = true;
         if(datosPersona.getSuccess().equalsIgnoreCase("true")){
+            System.out.println("error dni");
             String nombresUpperCase = usuario.getNombres();
             String cadenaNormalize = Normalizer.normalize(nombresUpperCase,Normalizer.Form.NFD);
             nombresUpperCase = cadenaNormalize.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
@@ -261,7 +264,10 @@ public class LoginController {
             if(ApellidosAPI.contains(apellidosUpperCase) && NombresAPI.contains(nombresUpperCase)){
                 errDNI = false;
             }
-
+            if(usuario.getOauth2() == 1){
+                errDNI = false;
+                System.out.println("error dni2");
+            }
         }
 
         boolean coincidencias = false;
@@ -274,6 +280,7 @@ public class LoginController {
             if (p.getCorreo() != null && p.getCorreo().equals(usuario.getCorreo())) {
                 coincidencias = true;
                 model.addAttribute("errCorreo", 1);
+                System.out.println("error de correo");
             }
         }
 
