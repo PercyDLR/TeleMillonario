@@ -11,6 +11,19 @@
 					<div class="col-12">
 						<div class="sign__content">
 
+
+							<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg eq 1)}" style="position: absolute; left: 800px; top: 550px">
+								<i class="bi bi-check-circle-fill"></i>
+								<strong>Usuario creado correctamente</strong>
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+
+							<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg2 != null) && (msg2 eq 1)}" style="position: absolute; left: 800px; top: 550px">
+								<i class="bi bi-check-circle-fill"></i>
+								<strong>Cuenta no fue registrada usando google oauth </strong>
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+
 							<form class="sign__form" th:action="@{/processLogin}" method="POST">
 								<a th:href="@{/}" class="sign__logo">
 									<img th:src="@{/img/tele.png}" alt="logo">
@@ -34,7 +47,7 @@
 
 								<span class="sign__text" style="text-align: center">¿No tienes una cuenta?<a th:href="@{/crearCuenta}"><span style="margin-right: 5px"></span>Regístrate</a></span>
 								<span class="sign__text" style="margin-top: 5px;">ó</span>
-								<a class="sign__btn__google" href="/oauth2/authorization/google" style="margin-top: 5px;"><img th:src="@{/img/iconGoogle.png}" alt="Google" width="20px" height="20px" style="margin-top: 0px;margin-right: 9px;">Regístrate con Google</a>
+								<a class="sign__btn__google" href="/oauth2/authorization/google" style="margin-top: 5px;"><img th:src="@{/img/iconGoogle.png}" alt="Google" width="20px" height="20px" style="margin-top: 0px;margin-right: 9px;">Inicia session con Google</a>
 
 								<span class="sign__text"><a th:href="@{/cambioDeContrasenia}">¿Olvidaste tu contraseña?</a></span>
 							</form>
