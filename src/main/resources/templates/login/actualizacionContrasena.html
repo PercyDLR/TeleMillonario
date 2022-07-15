@@ -34,7 +34,7 @@
 
                                     <div class="sign__group">
                                         <input type="password"style="text-align:center;width: 400px" name="repassword" class="sign__input" placeholder="Repita su nueva contraseña">
-                                        <div class="invalid-feedback d'block" th:if="${(msg1 != null)}" th:text="${msg1}"></div>
+                                        <div class="invalid-feedback d-block" th:if="${(msg1 != null)}" th:text="${msg1}"></div>
                                         <div class="invalid-feedback d-block" th:if="${(msg2 != null)}" th:text="${msg2}"></div>
                                     </div>
 
@@ -54,7 +54,7 @@
                                     <h4 th:if="${msgexitoso != null}" th:text="${msgexitoso}" style="margin-top: 5px;color:#e64166;font-size: 18px;letter-spacing: 0.2px;font-family: 'Open Sans', sans-serif;"></h4>
 
 
-                                    <a th:href="@{/login}" type="button" class="sign__btn"><span style="margin-right: 15px"></span>Iniciar Sesión</a>
+                                    <span class="sign__text"><a th:href="@{/login}">Iniciar Sesión</a></span>
 
                                 </form>
                             </div>

@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="fragments/header :: head('Inicio de Sesión',~{::style})">
-    <style>
-        .mostrar {
-            color: rgba(255,255,255,0.5);
-            font-size: 20px;
-            position: absolute;
-            top: 20%;
-            right: 20px;
-            transition: 0.2s ease-in-out;
-        }
-
-        .mostrar:hover::before {
-            color: #de5073;
-            box-shadow:  0 0 10px 1px rgb(255 88 96 / 50%), inset 0 0 20px 3px rgb(184 89 94 / 38%);
-        }
-    </style>
-</head>
+<head th:replace="fragments/header :: head('Inicio de Sesión',_)"></head>
 
 <body class="body">
 	<div class="content" style="padding: 0">
@@ -26,6 +10,7 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="sign__content">
+
 
 							<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg eq 1)}" style="position: absolute; left: 800px; top: 550px">
 								<i class="bi bi-check-circle-fill"></i>
@@ -43,6 +28,13 @@
 								<a th:href="@{/}" class="sign__logo">
 									<img th:src="@{/img/tele.png}" alt="logo">
 								</a>
+
+								<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg eq 1)}">
+									<i class="bi bi-check-circle-fill"></i>
+									<strong>Usuario creado correctamente</strong>
+									<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								</div>
+
 								<div class="sign__group">
 									<input type="text" class="sign__input" name="username" placeholder="Correo" autofocus>
 								</div>

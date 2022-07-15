@@ -26,6 +26,7 @@ public class Persona implements Serializable {
     @Column(name = "nombres", length = 100)
     private String nombres;
 
+
     //@Pattern(regexp = "^[a-zA-Z]", message = "El apellido no puede estar compuesto por caracteres especiales")
     @NotEmpty(message = "Los apellidos no pueden estar vacíos", groups = {Usuario.class ,Operador.class, Elenco.class})
     @Column(name = "apellidos", length = 100)

@@ -12,128 +12,128 @@
         </style>
     </head>
 
-<body class="body">
-    <div th:replace="fragments/navbar :: operador('funciones')"></div>
+    <body class="body">
+        <div th:replace="fragments/navbar :: operador('funciones')"></div>
 
-    <div class="content" style="margin-top: 15px">
-        <div class="container" style="margin-bottom: 30px">
+        <div class="content" style="margin-top: 15px">
+            <div class="container" style="margin-bottom: 30px">
 
-            <div class="row">
-                <div class="col-md-10 col-12" style="margin-top: 30px;">
-                    <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3rem">
-                        Programación de Funciones
-                    </h1>
-                </div>
-
-                <div class="col-md-2 col-12 d-flex justify-content-center">
-                    <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
-                        <a th:href="@{/operador/funciones/crear}">
-                            <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
-                        </a>
-                    </button>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <strong th:text="${msg}"></strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        <strong th:text="${err}"></strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-
-            <form method="post" th:action="@{/operador/funciones/buscar}">
-                <div class="row justify-content-center" style="margin-top: 50px">
-
-                    <div class="col-md-10 col-12 sign__group">
-                        <input type="search" class="search_input" placeholder="Buscar Función por Nombre" th:value="${parametro != null ? parametro : ''}" name="parametro">
+                <div class="row">
+                    <div class="col-md-10 col-12" style="margin-top: 30px;">
+                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3rem">
+                            Programación de Funciones
+                        </h1>
                     </div>
 
-                    <div class="col-md-2 col-6" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                        <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
-                            <i class="bi bi-search"></i>
+                    <div class="col-md-2 col-12 d-flex justify-content-center">
+                        <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
+                            <a th:href="@{/operador/funciones/crear}">
+                                <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
+                            </a>
                         </button>
                     </div>
                 </div>
-            </form>
 
-            <br>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong th:text="${msg}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong th:text="${err}"></strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="row" >
-                <div class="col-12 col-md-6 col-lg-4 my-4" th:each="funcion : ${funcionesConFoto}">
+                <form method="post" th:action="@{/operador/funciones/buscar}">
+                    <div class="row justify-content-center" style="margin-top: 50px">
 
-                    <div class="price price--premium">
-                        <div class="price__item price__item--first">
-                            <span th:text="${funcion.key.idobra.nombre}"></span>
-                            <span th:text="|Sala ${funcion.key.idsala.numero}|"></span>
+                        <div class="col-md-10 col-12 sign__group">
+                            <input type="search" class="search_input" placeholder="Buscar Función por Nombre" th:value="${parametro != null ? parametro : ''}" name="parametro">
                         </div>
 
-                        <img class="card-img-top mt-3" th:src="${funcion.value.ruta}" th:alt="${funcion.key.idobra.nombre}">
+                        <div class="col-md-2 col-6" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                            <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
 
-                        <div class="price__item"><span th:text="|Restricción de Edad: ${funcion.key.idobra.restriccionedad == 1 ? 'Sí':'No'}|"></span></div>
-                        <div class="price__item"><span th:text="|Precio: S/${funcion.key.precioentrada}|"></span></div>
-                        <div class="price__item"><span th:text="|Fecha: ${funcion.key.fecha}|"></span></div>
-                        <div class="price__item"><span th:text="|Hora: ${funcion.key.inicio}|"></span></div>
-                        <div class="price__item"><span th:text="|Stock: ${funcion.key.stockentradas}|"></span></div>
+                <br>
 
-                        <div class="row">
-                            <div class="col-6">
-                                <a th:href="@{'/operador/funciones/editar?idfuncion=' + ${funcion.key.id}}" class="price__btn">Editar</a>
+                <div class="row" >
+                    <div class="col-12 col-md-6 col-lg-4 my-4" th:each="funcion : ${funcionesConFoto}">
+
+                        <div class="price price--premium">
+                            <div class="price__item price__item--first">
+                                <span th:text="${funcion.key.idobra.nombre}"></span>
+                                <span th:text="|Sala ${funcion.key.idsala.numero}|"></span>
                             </div>
-                            <div class="col-6">
-                                <a class="cancel__btn" type="button" th:onclick="|advertencia(${funcion.key.id})|">Eliminar</a>
+
+                            <img class="card-img-top mt-3" th:src="${funcion.value.ruta}" th:alt="${funcion.key.idobra.nombre}">
+
+                            <div class="price__item"><span th:text="|Restricción de Edad: ${funcion.key.idobra.restriccionedad == 1 ? 'Sí':'No'}|"></span></div>
+                            <div class="price__item"><span th:text="|Precio: S/${funcion.key.precioentrada}|"></span></div>
+                            <div class="price__item"><span th:text="|Fecha: ${funcion.key.fecha}|"></span></div>
+                            <div class="price__item"><span th:text="|Hora: ${funcion.key.inicio}|"></span></div>
+                            <div class="price__item"><span th:text="|Stock: ${funcion.key.stockentradas}|"></span></div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <a th:href="@{'/operador/funciones/editar?idfuncion=' + ${funcion.key.id}}" class="price__btn">Editar</a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="cancel__btn" type="button" th:onclick="|advertencia(${funcion.key.id})|">Eliminar</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <br>
+
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/funciones/lista?')"></div>
             </div>
-
-            <br>
-
-            <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/funciones/lista?')"></div>
         </div>
-    </div>
 
-    <div id="popup" class="overlay">
-        <div class="row">
-            <div class="col-12">
-                <div class="sign__content">
-                    <form action="#" class="sign__form">
-                        <a class="sign__logo">
-                            <img th:src="@{/img/tele.png}" alt="logo">
-                        </a>
-                        <div class="sign__group">
-                            <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
-                                ¿Estás seguro de querer borrar esta Funcion?</h5>
-                        </div>
-                        <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
-                        <a id="borrar" class="sign__btn">Borrar Funcion</a>
-                    </form>
+        <div id="popup" class="overlay">
+            <div class="row">
+                <div class="col-12">
+                    <div class="sign__content">
+                        <form action="#" class="sign__form">
+                            <a class="sign__logo">
+                                <img th:src="@{/img/tele.png}" alt="logo">
+                            </a>
+                            <div class="sign__group">
+                                <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                    ¿Estás seguro de querer borrar esta Funcion?</h5>
+                            </div>
+                            <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
+                            <a id="borrar" class="sign__btn">Borrar Funcion</a>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div th:replace="fragments/footer :: js(~{::script})">
-        <script th:inline="javascript">
-            function advertencia(idfuncion) {
-                let popup = document.getElementById('popup');
+        <div th:replace="fragments/footer :: js(~{::script})">
+            <script th:inline="javascript">
+                function advertencia(idfuncion) {
+                    let popup = document.getElementById('popup');
 
-                popup.getElementsByTagName("a").item(2).href = [[@{'/operador/funciones/borrar?idfuncion='}]] + idfuncion;
-                popup.style.display = 'block';
-            }
+                    popup.getElementsByTagName("a").item(2).href = [[@{'/operador/funciones/borrar?idfuncion='}]] + idfuncion;
+                    popup.style.display = 'block';
+                }
 
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                crossorigin="anonymous">
-        </script>
-    </div>
-</body>
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous">
+            </script>
+        </div>
+    </body>
 </html>
