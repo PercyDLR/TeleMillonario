@@ -1,20 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Lista Clientes',~{::style})">
-        <style>
-            input::placeholder {
-                color: #000000;
-            }
-            .sign__input{
-                border-radius: 5px;
-                border: solid 1px #61616c;
-            }
-
-            .cancel__btn, .form__btn{
-                margin-top: 0;
-            }
-        </style>
-    </head>
+    <head th:replace="fragments/header :: head('Lista Clientes',_)"></head>
 
     <body class="body">
         <!-- header -->
@@ -25,7 +11,7 @@
             <div  class="container" style="margin-bottom: 30px">
 
                 <div class="row">
-                    <div class="col-md-12 col-12" style="margin-top: 30px;">
+                    <div class="col-12" style="margin-top: 30px;">
                         <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3.5rem">
                             Listado de Clientes
                         </h1>
@@ -35,39 +21,34 @@
 
                 <form method="post" th:action="@{/admin/clientes/buscar}">
                     <div class="row justify-content-center">
-                        <div class="col-md-6 col-12">
-                            <div class="input-group d-flex justify-content-center" style="margin-top: 50px">
-                                <div class="box" style="margin-bottom: 30px">
-                                    <input type="text" name="parametro" placeholder="Buscar Cliente" class="src" style="width: 300px;color: #000000"
-                                           th:value="${parametro == null ? '' : parametro}">
-                                </div>
-                            </div>
+
+                        <div class="col-md-6 col-12 sign__group">
+                            <input type="search" class="search_input" name="parametro" placeholder="Buscar Cliente"
+                                   th:value="${parametro == null ? '' : parametro}">
                         </div>
-                        <div class="col-lg-6 col-12">
-                            <div class="input-group" style="margin-top: 50px">
 
-                                <select name="buscador" class="col-md-6 col-6 form-select" style="margin-top:9px;height: calc(1.5em + 0.75rem + 2px);padding: 0.375rem 0.75rem;color: #495057;border-radius: 0.25rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                                    <option  hidden>Selecciona un filtro:</option>
-                                    <option th:selected="${buscador eq 'Dni'}" value="Dni" >Dni</option>
-                                    <option th:selected="${buscador eq 'Nombre'}" value="Nombre">Nombre</option>
-                                    <option th:selected="${buscador eq 'Apellido'}" value="Apellido">Apellido</option>
-                                    <option th:selected="${buscador eq 'Numero'}" value="Numero">Número</option>
-                                    <option th:selected="${buscador eq 'Sede'}" value="Sede">Sede</option>
-                                </select>
+                        <div class="col-md-4 col-12 sign__group">
+                            <select name="buscador" class="search_input">
+                                <option  hidden>Selecciona un filtro:</option>
+                                <option th:selected="${buscador eq 'Dni'}" value="Dni" >Dni</option>
+                                <option th:selected="${buscador eq 'Nombre'}" value="Nombre">Nombre</option>
+                                <option th:selected="${buscador eq 'Apellido'}" value="Apellido">Apellido</option>
+                                <option th:selected="${buscador eq 'Numero'}" value="Numero">Número</option>
+                                <option th:selected="${buscador eq 'Sede'}" value="Sede">Sede</option>
+                            </select>
+                        </div>
 
-                                <div class="col-md-6 col-6 d-flex justify-content-center">
-                                    <button type="submit" class="filter__btn" style="margin-top:6px;">
-                                        <a>Buscar</a>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="col-md-2 col-6 d-flex justify-content-center" style="margin: 0; padding: 0">
+                            <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
+                                <i class="bi bi-search"></i>
+                            </button>
                         </div>
                     </div>
                 </form>
 
                 <div class="row">
 
-                    <div class="col-md-12 col-12" style="margin-top: 50px; overflow-x: auto">
+                    <div class="col-12" style="margin-top: 50px; overflow-x: auto">
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>

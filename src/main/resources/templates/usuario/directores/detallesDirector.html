@@ -18,40 +18,6 @@
             .sign__group{
                 padding-inline: 5px;
             }
-            .sign__input{
-                border: solid 1px #61616c;
-                width: 100%;
-                border-radius: 5px;
-            }
-
-            #accordion{
-                height: 220px;
-                max-height: 220px;
-                overflow-y: auto;
-                border: solid 2px rgba(0,0,0,0.05);
-            }
-
-            .funciones-header{
-                padding-inline: 10px;
-            }
-
-            #divCompra{
-                padding: 4rem 1rem;
-                background-color: #28282d;
-                box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%);
-                position: relative;
-            }
-            #divCompra::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 2px;
-                display: block;
-                background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
-                box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
-            }
         </style>
 
     </head>
@@ -64,23 +30,15 @@
                     <div class="col-12">
                         <h1 class="details__title" style="margin-bottom: 10px;" th:text="|${director.nombres} ${director.apellidos}|"></h1>
                         <i class="icon ion-ios-star" style="color: #ff5860"></i>
-                        <span class="card__rate" style="margin-bottom: 30px;" th:text="${director.calificacion == null ? '-': director.calificacion}">
-                                                        8.4
-                                                    </span>
+                        <span class="card__rate" style="margin-bottom: 30px;" th:text="${director.calificacion == null ? '-': director.calificacion}">8.4</span>
                     </div>
+                </div>
 
-                    <div class="col-12 col-xl-12">
-                        <div class="card card--details">
-                            <div class="row">
-                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4">
-                                </div>
-                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4" style="padding-left: 55px;padding-right: 20px;">
-                                    <div class="card__cover">
-                                        <img th:src="${listaFotos.get(0).ruta}" alt="foto">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-4">
-                                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="owl-carousel home__carousel">
+                            <div class="item" th:each="foto : ${listaFotos}">
+                                <img th:src="${foto.ruta}">
                             </div>
                         </div>
                     </div>
@@ -88,35 +46,7 @@
 
             </div>
 
-            <!-- FOTOS -->
-            <section class="mt-5 pb-5" style="background-color: #2b2b31">
-                <div class="content__head" style="margin-bottom: 0">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12  pt-2 pb-3">
-                                <!-- content title -->
-                                <h2 class="content__title">Fotos</h2>
-                                <!-- end content title -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container">
-                    <div class="row">
-
-                        <div class="col-12">
-                            <div class="owl-carousel home__carousel">
-                                <div class="item" th:each="foto : ${listaFotos}">
-                                    <img th:src="${foto.ruta}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mt-5 pb-5">
+            <section style="background: url(../../img/section/section.jpg) center center / cover no-repeat">
                 <div class="content__head" style="margin-bottom: 0">
                     <div class="container">
                         <div class="row">
@@ -146,12 +76,12 @@
                                     <div class="row justify-content-center">
                                         <div class="col-lg-4 col-12 sign__group">
 
-                                            <input type="text" class="sign__input"
+                                            <input type="search" class="search_input"
                                                    placeholder="Busque una Obra" name="busqueda"
                                                    th:value="${busqueda}" maxlength="100">
                                         </div>
                                         <div class="col-lg-3 col-md-5 col-6 sign__group">
-                                            <select class="sign__input" name="genero">
+                                            <select class="search_input" name="genero">
                                                 <option th:selected="${genero == ''}" value="">Todos los géneros</option>
                                                 <option th:each="g : ${generos}" th:value="${g.getId()}"
                                                         th:text="${g.getNombre()}"
@@ -160,14 +90,14 @@
                                         </div>
                                         <div class="col-lg-3 col-md-5 col-6 sign__group">
 
-                                            <select class="sign__input" name="restriccionEdad">
+                                            <select class="search_input" name="restriccionEdad">
                                                 <option value="" th:selected="${restriccionEdad == ''}">Para toda la familia</option>
                                                 <option value="1" th:selected="${restriccionEdad == '1'}">Con contenido sensible</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                                            <button type="submit" class="form__btn" style="width: 50%; margin: 0;">
+                                            <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
                                                 <i class="bi bi-search"></i>
                                             </button>
                                         </div>

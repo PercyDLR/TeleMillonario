@@ -60,10 +60,11 @@
                 <div class="row">
 
                     <div class="col-12">
-                        <h1 class="home__title" style="text-transform: none">Historial de compras</h1>
-                        <h1 class="home__title" style="text-transform: none; font-size: 20px">Usted podrá cancelar su compra hasta 1h antes de inicio de la función</h1>
+                        <h1 class="home__title" style="text-transform: none; font-weight: 700; font-size: 2rem">Historial de compras</h1>
+                        <h1 class="home__title" style="text-transform: none; font-size: 1.5rem">Usted podrá cancelar su compra hasta 1h antes de inicio de la función</h1>
                     </div>
-                    <div class="col-12 mt-4">
+
+                    <div class="col-12 mt-5">
                         <form method="post" th:action="@{/BusquedaYFiltros}">
                             <div class="row justify-content-center">
                                 <div class="col-md-10 col-12 sign__group">
@@ -76,8 +77,8 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                                    <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.25rem;">
+                                <div class="col-md-2 col-6" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                                    <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem;">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
@@ -89,8 +90,8 @@
                         <table class="accordion__list" style="text-align: center;display: inline-table;">
                             <thead>
                                 <tr>
-                                    <th>Fecha y hora de pago</th>
-                                    <th>Fecha de la funcion</th>
+                                    <th>Fecha pago</th>
+                                    <th>Fecha función</th>
                                     <th>Obra</th>
                                     <th>Estado</th>
                                     <th></th>
@@ -161,9 +162,9 @@
                                                         <th style="padding-bottom: 9px;">Sala</th>
                                                         <th style="padding-bottom: 9px;">Boletos comprados</th>
                                                         <th style="padding-bottom: 9px;">Costo total</th>
-                                                        <th style="padding-bottom: 9px;">Hora de inicio</th>
-                                                        <th style="padding-bottom: 9px;">Hora de fin</th>
-                                                        <th style="padding-bottom: 9px;">Duracion</th>
+                                                        <th style="padding-bottom: 9px;">Hora inicio</th>
+                                                        <th style="padding-bottom: 9px;">Hora fin</th>
+                                                        <th style="padding-bottom: 9px;">Duración</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -192,7 +193,7 @@
                         </table>
                     </div>
                 </div>
-                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/historialPrueba?filtro='+${filtro}+'&')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/historial?filtro='+${filtro}+'&')"></div>
             </div>
         </div>
         <br>

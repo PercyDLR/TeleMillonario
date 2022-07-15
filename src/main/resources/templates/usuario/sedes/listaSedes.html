@@ -18,11 +18,7 @@
             .sign__group{
                 padding-inline: 5px;
             }
-            .sign__input{
-                border: solid 1px #61616c;
-                width: 100%;
-                border-radius: 5px;
-            }
+
 
         </style>
     </head>
@@ -48,21 +44,21 @@
                     <div class="col-12 my-5">
                         <form method="post" th:action="@{/sedes/BusquedaYFiltros}">
                             <div class="row justify-content-center">
-                                <div class="col-md-5 col-sm-6 col-12">
+                                <div class="col-md-5 col-sm-6 col-12 sign__group">
 
-                                    <input type="text" class="sign__input"
+                                    <input type="search" class="search_input"
                                            placeholder="Busque una sede" name="busqueda"
                                            th:value="${busqueda}" maxlength="100">
                                 </div>
-                                <div class="col-md-5 col-sm-6 col-12">
-                                    <select class="sign__input" name="filtro">
+                                <div class="col-md-5 col-sm-6 col-12 sign__group">
+                                    <select class="search_input" name="filtro">
                                         <option th:selected="${filtro == 0}" value="">Seleccione un distrito</option>
                                         <option th:each="d : ${listaDistritos}" th:selected="${filtro == d.id}" th:value="${d.id}" th:text="${d.nombre}"></option>
                                     </select>
                                 </div>
 
-                                <div class="col-md-2 col-12" style="display: flex;justify-content: center; margin: 0; padding: 0">
-                                    <button type="submit" class="form__btn" style="width: 80%; margin: 0;">
+                                <div class="col-md-2 col-6" style="display: flex;justify-content: center; margin: 0; padding: 0">
+                                    <button type="submit" class="form__btn" style="width: 80%; margin: 0; font-size: 1.1rem">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>

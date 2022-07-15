@@ -43,6 +43,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.Normalizer;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -180,7 +181,7 @@ public class LoginController {
 
                 //Se regresa a la anterior url sólo si es usuario
                 if(urlAnterior.contains("crearCuenta") || urlAnterior.contains("validacionSignUp") ||
-                        urlAnterior.contains("login") || urlAnterior.contains("cambiar")){
+                        urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword")){
                     return "redirect:/";
                 }
                 return "redirect:" + urlAnterior;
@@ -304,7 +305,8 @@ public class LoginController {
             a.addFlashAttribute("msg", 1);
 
             try {
-                sendEmailSuccessRegistration(usuario.getCorreo(),request);
+                String content = obtenerContentCreacionCuenta(usuario,request);
+                sendEmailSuccessRegistration(usuario.getCorreo(),content);
             } catch (MessagingException | UnsupportedEncodingException e) {
             }
 
@@ -334,7 +336,6 @@ public class LoginController {
 
                 usuarioService.updateResetPassword(token,correo);
 
-                //Generamos el link para el reseteo de contraseña
 
                 //String resetPasswordLink  = "http://localhost:8080/" + "resetPassword?token=" + token;
                 String resetPasswordLink = "http://"+request.getServerName()+":"+request.getServerPort()+"/resetPassword?token=" + token;
@@ -430,9 +431,10 @@ public class LoginController {
                     usuarioService.updatePassword(personita, password);
                     redirectAttributes.addFlashAttribute("msgexitoso", "Su contraseña se ha cambiado satisfactoriamente.");
 
-                    //Envio de correo donde le indica que su contraseña se cambio exitosamente
                     try {
-                        sendEmailSuccessRegistration(personita.getCorreo(),request);
+                        String urlpath="http://"+request.getServerName()+":"+request.getServerPort()+"/login";
+                        sendEmailChangePassSuccesfully(personita.getCorreo(),urlpath);
+
                     } catch (MessagingException | UnsupportedEncodingException e) {
                         return "redirect:/anErrorHasOcurred";
                     }
@@ -463,11 +465,7 @@ public class LoginController {
 
         String subject = "Link para cambiar contraseña";
 
-        String content = "<p>Cordiales Saludos: </p>"
-                + "<p>Se ha realizado una solicitud para el cambio de contraseña </p>"
-                + "<p>Haga click en el siguiente link para cambiar su contraseña </p>"
-                + "<p><b><a href="+ resetPasswordLink + ">Cambiar contraseña</a></b></p>"
-                + "<p>Ignorar este mensaje , si usted no ha solicitado dicho cambio.</p>";
+        String content = obtenerContentCambioPass(resetPasswordLink);
 
         helper.setSubject(subject);
         helper.setText(content,true);
@@ -476,30 +474,40 @@ public class LoginController {
 
     }
 
-    private void sendEmailSuccessRegistration(String correo,HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+    private void sendEmailSuccessRegistration(String correo,String content) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        String urlpath="http://"+request.getServerName()+":"+request.getServerPort()+"/login";
-//        String longin = "http://localhost:8080/login";
+
 
         helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
         helper.setTo(correo);
 
         String subject = "¡Bienvenido a Telemillonario!";
 
-        String content = "<p>Cordiales Saludos: </p>"
-                + "<p>Usted se ha registrado exitosamente a nuestra plataforma </p>"
-                + "<p>Ahora usted podrá realizar lo siguiente: </p>"
-                + "<p> - Acceso a la compra de boletos y visualización de su carrito de compras<p>"
-                + "<p> - Acceso a su historial de compras, junto a las funciones a las que ha asistido<p>"
-                + "<p> - Calificar la obra a la que ha asistido, a su director y a sus actores"
-                + "<p>Ingrese sesión mediante el siguiente <b><a href=" + urlpath +">enlace</a></b><p>";
+        helper.setSubject(subject);
+        helper.setText(content,true);
+
+        mailSender.send(message);
+
+    }
+
+    private void sendEmailChangePassSuccesfully(String correo,String link)throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+
+        helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
+        helper.setTo(correo);
+
+        String subject = "Cambio Exitoso de Contraseña";
+
+        String content = obtenerContentCambioExitosoPass(link);
 
         helper.setSubject(subject);
         helper.setText(content,true);
 
-        //mailSender.send(message);
+        mailSender.send(message);
 
     }
 
@@ -510,7 +518,500 @@ public class LoginController {
         return "error";
     }
 
+    private String obtenerContentCambioExitosoPass(String link){
+        String content = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "\n" +
+                "    <head>\n" +
+                "        <title></title>\n" +
+                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" +
+                "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
+                "        <style type=\"text/css\">\n" +
+                "            @media screen {\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* CLIENT-SPECIFIC STYLES */\n" +
+                "            body,\n" +
+                "            table,\n" +
+                "            td,\n" +
+                "            a {\n" +
+                "                -webkit-text-size-adjust: 100%;\n" +
+                "                -ms-text-size-adjust: 100%;\n" +
+                "            }\n" +
+                "\n" +
+                "            table,\n" +
+                "            td {\n" +
+                "                mso-table-lspace: 0pt;\n" +
+                "                mso-table-rspace: 0pt;\n" +
+                "            }\n" +
+                "\n" +
+                "            img {\n" +
+                "                -ms-interpolation-mode: bicubic;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* RESET STYLES */\n" +
+                "            img {\n" +
+                "                border: 0;\n" +
+                "                height: auto;\n" +
+                "                line-height: 100%;\n" +
+                "                outline: none;\n" +
+                "                text-decoration: none;\n" +
+                "            }\n" +
+                "\n" +
+                "            table {\n" +
+                "                border-collapse: collapse !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            body {\n" +
+                "                height: 100% !important;\n" +
+                "                margin: 0 !important;\n" +
+                "                padding: 0 !important;\n" +
+                "                width: 100% !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* iOS BLUE LINKS */\n" +
+                "            a[x-apple-data-detectors] {\n" +
+                "                color: inherit !important;\n" +
+                "                text-decoration: none !important;\n" +
+                "                font-size: inherit !important;\n" +
+                "                font-family: inherit !important;\n" +
+                "                font-weight: inherit !important;\n" +
+                "                line-height: inherit !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* MOBILE STYLES */\n" +
+                "            @media screen and (max-width:600px) {\n" +
+                "                h1 {\n" +
+                "                    font-size: 32px !important;\n" +
+                "                    line-height: 32px !important;\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* ANDROID CENTER FIX */\n" +
+                "            div[style*=\"margin: 16px 0;\"] {\n" +
+                "                margin: 0 !important;\n" +
+                "            }\n" +
+                "        </style>\n" +
+                "    </head>\n" +
+                "\n" +
+                "    <body style=\"background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;\">\n" +
+                "        <div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
+                "            <div>\n" +
+                "                <div class=\"wide-content-host\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td align=\"center\" valign=\"top\" style=\"padding: 40px 10px 40px 10px;\"> </td>\n" +
+                "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                           <tr>\n" +
+                "                                <td height=\"80\" style='background-color: #2b2b31;'>\n" +
+                "                                    <img data-imagetype=\"AttachmentByCid\"  naturalheight=\"0\" naturalwidth=\"0\" src='https://telemillonariocontainer.blob.core.windows.net/telemillonario/tele.png' alt=\"logo_cinemark\" style=\"width: 250px; margin: 0px auto; display: block; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
+                "                                </td>\n" +
+                "                           </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td bgcolor=\"#f4f4f4\" align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td bgcolor=\"#ffffff\" align=\"left\" style=\"padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;\">\n" +
+                "                                    <p style=\"margin: 0;\">Cordiales Saludos:</p>\n" +
+                "                                    <br>\n" +
+                "                                    <p style=\"margin: 0;\">Su contraseña ha sido cambiado satisfactoriamente. Haga click en el siguiente enlace para poder iniciar sesión.</p>\n" +
+                "                                    <br>\n" +
+                "                                </td>\n" +
+                "                            </tr>\n" +
+                "                            <tr>\n" +
+                "                               <center><button align='center' style='border-radius: 3px; background-color:#ff5860'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Iniciar Sesión</a></button></center>\n" +
+                "                            </tr>\n"+
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "    </body>\n" +
+                "\n" +
+                "</html>";
 
+        return  content;
+    }
+
+    private String obtenerContentCambioPass(String link){
+        String content = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "\n" +
+                "    <head>\n" +
+                "        <title></title>\n" +
+                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" +
+                "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
+                "        <style type=\"text/css\">\n" +
+                "            @media screen {\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* CLIENT-SPECIFIC STYLES */\n" +
+                "            body,\n" +
+                "            table,\n" +
+                "            td,\n" +
+                "            a {\n" +
+                "                -webkit-text-size-adjust: 100%;\n" +
+                "                -ms-text-size-adjust: 100%;\n" +
+                "            }\n" +
+                "\n" +
+                "            table,\n" +
+                "            td {\n" +
+                "                mso-table-lspace: 0pt;\n" +
+                "                mso-table-rspace: 0pt;\n" +
+                "            }\n" +
+                "\n" +
+                "            img {\n" +
+                "                -ms-interpolation-mode: bicubic;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* RESET STYLES */\n" +
+                "            img {\n" +
+                "                border: 0;\n" +
+                "                height: auto;\n" +
+                "                line-height: 100%;\n" +
+                "                outline: none;\n" +
+                "                text-decoration: none;\n" +
+                "            }\n" +
+                "\n" +
+                "            table {\n" +
+                "                border-collapse: collapse !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            body {\n" +
+                "                height: 100% !important;\n" +
+                "                margin: 0 !important;\n" +
+                "                padding: 0 !important;\n" +
+                "                width: 100% !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* iOS BLUE LINKS */\n" +
+                "            a[x-apple-data-detectors] {\n" +
+                "                color: inherit !important;\n" +
+                "                text-decoration: none !important;\n" +
+                "                font-size: inherit !important;\n" +
+                "                font-family: inherit !important;\n" +
+                "                font-weight: inherit !important;\n" +
+                "                line-height: inherit !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* MOBILE STYLES */\n" +
+                "            @media screen and (max-width:600px) {\n" +
+                "                h1 {\n" +
+                "                    font-size: 32px !important;\n" +
+                "                    line-height: 32px !important;\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* ANDROID CENTER FIX */\n" +
+                "            div[style*=\"margin: 16px 0;\"] {\n" +
+                "                margin: 0 !important;\n" +
+                "            }\n" +
+                "        </style>\n" +
+                "    </head>\n" +
+                "\n" +
+                "    <body style=\"background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;\">\n" +
+                "        <div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
+                "            <div>\n" +
+                "                <div class=\"wide-content-host\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td align=\"center\" valign=\"top\" style=\"padding: 40px 10px 40px 10px;\"> </td>\n" +
+                "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                           <tr>\n" +
+                "                                <td height=\"80\" style='background-color: #2b2b31;'>\n" +
+                "                                    <img data-imagetype=\"AttachmentByCid\"  naturalheight=\"0\" naturalwidth=\"0\" src='https://telemillonariocontainer.blob.core.windows.net/telemillonario/tele.png' alt=\"logo_cinemark\" style=\"width: 250px; margin: 0px auto; display: block; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
+                "                                </td>\n" +
+                "                           </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td bgcolor=\"#f4f4f4\" align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td bgcolor=\"#ffffff\" align=\"left\" style=\"padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;\">\n" +
+                "                                    <p style=\"margin: 0;\">Cordiales Saludos:</p>\n" +
+                "                                    <br>\n" +
+                "                                    <p style=\"margin: 0;\">Se ha realizado una solicitud para el cambio de contraseña. Haga click en el siguiente enlace para realizar su cambio.</p>\n" +
+                "                                    <br>\n" +
+                "                                    <p style=\"margin: 0;\">Ignorar este mensaje si usted no ha solicitado dicho cambio.</p>\n" +
+                "                                </td>\n" +
+                "                            </tr>\n" +
+                "                            <tr>\n" +
+                "                               <center><button align='center' style='border-radius: 3px; background-color:#ff5860'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Cambiar Contraseña</a></button></center>\n" +
+                "                            </tr>\n"+
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "    </body>\n" +
+                "\n" +
+                "</html>";
+
+        return  content;
+    }
+
+
+    private String obtenerContentCreacionCuenta(Persona usuario,HttpServletRequest request){
+        String urlpath="http://"+request.getServerName()+":"+request.getServerPort()+"/login";
+        String content = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "\n" +
+                "    <head>\n" +
+                "        <title></title>\n" +
+                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" +
+                "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
+                "        <style type=\"text/css\">\n" +
+                "            @media screen {\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* CLIENT-SPECIFIC STYLES */\n" +
+                "            body,\n" +
+                "            table,\n" +
+                "            td,\n" +
+                "            a {\n" +
+                "                -webkit-text-size-adjust: 100%;\n" +
+                "                -ms-text-size-adjust: 100%;\n" +
+                "            }\n" +
+                "\n" +
+                "            table,\n" +
+                "            td {\n" +
+                "                mso-table-lspace: 0pt;\n" +
+                "                mso-table-rspace: 0pt;\n" +
+                "            }\n" +
+                "\n" +
+                "            img {\n" +
+                "                -ms-interpolation-mode: bicubic;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* RESET STYLES */\n" +
+                "            img {\n" +
+                "                border: 0;\n" +
+                "                height: auto;\n" +
+                "                line-height: 100%;\n" +
+                "                outline: none;\n" +
+                "                text-decoration: none;\n" +
+                "            }\n" +
+                "\n" +
+                "            table {\n" +
+                "                border-collapse: collapse !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            body {\n" +
+                "                height: 100% !important;\n" +
+                "                margin: 0 !important;\n" +
+                "                padding: 0 !important;\n" +
+                "                width: 100% !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* iOS BLUE LINKS */\n" +
+                "            a[x-apple-data-detectors] {\n" +
+                "                color: inherit !important;\n" +
+                "                text-decoration: none !important;\n" +
+                "                font-size: inherit !important;\n" +
+                "                font-family: inherit !important;\n" +
+                "                font-weight: inherit !important;\n" +
+                "                line-height: inherit !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* MOBILE STYLES */\n" +
+                "            @media screen and (max-width:600px) {\n" +
+                "                h1 {\n" +
+                "                    font-size: 32px !important;\n" +
+                "                    line-height: 32px !important;\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* ANDROID CENTER FIX */\n" +
+                "            div[style*=\"margin: 16px 0;\"] {\n" +
+                "                margin: 0 !important;\n" +
+                "            }\n" +
+                "        </style>\n" +
+                "    </head>\n" +
+                "\n" +
+                "    <body style=\"background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;\">\n" +
+                "        <div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
+                "            <div>\n" +
+                "                <div class=\"wide-content-host\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td align=\"center\" valign=\"top\" style=\"padding: 40px 10px 40px 10px;\"> </td>\n" +
+                "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                           <tr>\n" +
+                "                                <td height=\"80\" style='background-color: #2b2b31;'>\n" +
+                "                                    <img data-imagetype=\"AttachmentByCid\"  naturalheight=\"0\" naturalwidth=\"0\" src='https://telemillonariocontainer.blob.core.windows.net/telemillonario/tele.png' alt=\"logo_cinemark\" style=\"width: 250px; margin: 0px auto; display: block; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
+                "                                </td>\n" +
+                "                           </tr>\n" +
+                "                           <tr>\n" +
+                "                              <td height=\"80\" bgcolor=\"#ff5860\" style=\"padding:0 20px\">\n" +
+                "                                  <h2 style=\"font-family:'Arial',sans-serif; font-weight:500; font-size:20px; margin:0 0 5px\">\n" +
+                "                                      <center><span style=\"color:#fff;text-transform:uppercase; font-family:'Arial',sans-serif\">¡ Bienvenide "+usuario.getNombres()+' '+usuario.getApellidos()+ " ! </span></center>\n" +
+                "                                  </h2>\n" +
+                "                              </td>\n" +
+                "                           </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td bgcolor=\"#f4f4f4\" align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td bgcolor=\"#ffffff\" align=\"left\" style=\"padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;\">\n" +
+                "                                    <p style=\"margin: 0;\">Usted se ha registrado exitosamente a nuestra plataforma. Ahora podra realizar lo siguiente:</p>\n" +
+                "                                    <br>\n" +
+                "                                    <p style=\"margin: 0;\">1. Acceso a la compra de boletos y visualización de su carrito de compras</p>\n" +
+                "                                    <br>\n" +
+                "                                    <p style=\"margin: 0;\">2. Acceso a su historial de compras, junto a las funciones a las que ha asistido</p>\n" +
+                "                                    <br>\n" +
+                "                                    <p style=\"margin: 0;\">3. Calificar la obra a la que ha asistido, a su director y a sus actores</p>\n" +
+                "                                </td>\n" +
+                "                            </tr>\n" +
+                "                            <tr>\n" +
+                "                                <td bgcolor=\"#ffffff\" align=\"left\">\n" +
+                "                                    <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+                "                                        <tr>\n" +
+                "                                            <td bgcolor=\"#ffffff\" align=\"center\" style=\"padding: 20px 30px 60px 30px;\">\n" +
+                "                                                <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+                "                                                    <tr>\n" +
+                "                                                        <td align=\"center\" style=\"border-radius: 3px;\" bgcolor='#ff5860'><a href='"+urlpath+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Iniciar Sesión</a></td>\n" +
+                "                                                    </tr>\n" +
+                "                                                </table>\n" +
+                "                                            </td>\n" +
+                "                                        </tr>\n" +
+                "                                    </table>\n" +
+                "                                </td>\n" +
+                "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "    </body>\n" +
+                "\n" +
+                "</html>";
+        return content;
+    }
 }
 
 

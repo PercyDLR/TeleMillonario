@@ -27,7 +27,8 @@
 								</div>
 								<div class="sign__group" style="margin-bottom: 0">
 									<input type="password" autocomplete="current-password" id="current-password" name="password" class="sign__input" placeholder="Contraseña">
-								</div>
+                                    <i class="mostrar bi bi-eye-fill"></i>
+                                </div>
 								<div class="invalid-feedback d-block" th:if="${param.error}" style="text-align: center">Correo o contraseña incorrectos</div>
 								<button class="sign__btn" type="submit">Ingresar</button>
 
@@ -48,6 +49,19 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 				integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 				crossorigin="anonymous"></script>
+        <script>
+            $('.mostrar').click(function (){
+                if(this.classList.contains('bi-eye-fill')){
+                    this.classList.replace('bi-eye-fill','bi-eye-slash-fill')
+                    console.log(this.previousElementSibling)
+                    this.previousElementSibling.type = 'text';
+                } else{
+                    this.classList.replace('bi-eye-slash-fill','bi-eye-fill')
+                    console.log(this.previousElementSibling)
+                    this.previousElementSibling.type = 'password';
+                }
+            })
+        </script>
 	</div>
 </body>
 

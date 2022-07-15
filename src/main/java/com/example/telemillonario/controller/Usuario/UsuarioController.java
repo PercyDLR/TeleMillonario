@@ -178,7 +178,7 @@ public class UsuarioController {
                 funcionRepository.save(funcion);
 
                 model.addAttribute("compraBorradaExitosamente","Se ha eliminado la compra exitosamente.La devolucion de su dinero se realizara en los proximos minutos");
-                return "redirect:/historialPrueba";
+                return "redirect:/historial";
                 //return "usuario/carrito/historialComprasUsuario";
 
             }else{
@@ -485,7 +485,7 @@ public class UsuarioController {
 
             }
         } else {
-            redirectAttributes.addFlashAttribute("mensajeError", "Ya no hay stock disponible");
+            redirectAttributes.addFlashAttribute("mensajeError", "No hay suficiente stock para realizar la reseva");
             return "redirect:/cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
         }
     }
@@ -875,7 +875,7 @@ public class UsuarioController {
                             }
 
                             redirectAttributes.addFlashAttribute("compraExitosa", "Se ha realizado su compra correctamente.");
-                            return "redirect:/historialPrueba";
+                            return "redirect:/historial";
 
                         } else {
                             String mensaje = response.getBody().getMsg();
@@ -1431,7 +1431,7 @@ public class UsuarioController {
                     }
 
                     redirectAttributes.addFlashAttribute("compraExitosa", "Se ha realizado su compra correctamente.");
-                    return "redirect:/historialPrueba";
+                    return "redirect:/historial";
 
                 } else {
                     redirectAttributes.addFlashAttribute("mensajeError",response.getBody().getMsg());
@@ -1835,8 +1835,8 @@ public class UsuarioController {
 
     int comprasxpagina = 9;
 
-    @GetMapping("/historialPrueba")
-    String historialPrueba(Model model, HttpSession session,
+    @GetMapping("/historial")
+    String historial(Model model, HttpSession session,
                            @RequestParam(value = "pag",defaultValue = "0") String pag,
                            @RequestParam(value = "filtro", required = false, defaultValue = "0") String filtro) {
         Compra compraEnProceso = (Compra) session.getAttribute("compraEnProceso");
@@ -2005,7 +2005,7 @@ public class UsuarioController {
     String busqueda(@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
                     @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
 
-        return "redirect:/historialPrueba?filtro=" + filtro + "&pag=" + pag;
+        return "redirect:/historial?filtro=" + filtro + "&pag=" + pag;
     }
 
     @GetMapping("/actualizarEstadoCompra")
@@ -2043,7 +2043,7 @@ public class UsuarioController {
                 }
             }
         }
-        return "redirect:/historialPrueba";
+        return "redirect:/historial";
     }
 
     @GetMapping("/calificarObra")
@@ -2056,7 +2056,7 @@ public class UsuarioController {
             System.out.println();
             if (compra.getEstado().equals("Cancelado") || compra.getEstado().equals("Vigente")) {
                 redirectAttributes.addFlashAttribute("noDejarCalificar", "Esta función no puede ser calificada");
-                return "redirect:/historialPrueba";
+                return "redirect:/historial";
             } else {
                 //Evaluacion si el usuario en sesion ya
                 Persona persona = (Persona) httpSession.getAttribute("usuario");
@@ -2132,11 +2132,11 @@ public class UsuarioController {
                     return "usuario/calificacion";
                 } else {
                     redirectAttributes.addFlashAttribute("noDejarCalificar", "Usted ya ha calificado esta función");
-                    return "redirect:/historialPrueba";
+                    return "redirect:/historial";
                 }
             }
         }
-        return "redirect:/historialPrueba";
+        return "redirect:/historial";
     }
 
 
@@ -2279,7 +2279,7 @@ public class UsuarioController {
 
         redirectAttributes.addFlashAttribute("mensajeExito", "Calificación de la función realizada");
 
-        return "redirect:/historialPrueba";
+        return "redirect:/historial";
     }
 
 

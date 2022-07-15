@@ -2,13 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head th:replace="fragments/header :: head('Reportes',~{::style})">
         <style>
-
-            .sign__input{
-                border: solid 1px #61616c;
-                width: 100%;
-                border-radius: 5px;
-            }
-
             .price__item--first span:first-child{
                 max-width: 100%;
             }
@@ -28,7 +21,6 @@
             .owl-dots{
                 height: 0;
             }
-
         </style>
     </head>
 
@@ -59,7 +51,7 @@
                             <div class="row justify-content-center">
 
                                 <div class="col-md-4 col-6 sign__group">
-                                    <select id="periodicidad" class="sign__input" name="periodicidad">
+                                    <select id="periodicidad" class="search_input" name="periodicidad">
                                         <option value="" th:selected="${periodicidad != null && periodicidad.equals('')}">Todo</option>
                                         <option value="Mensual" th:selected="${periodicidad != null && periodicidad.equals('Mensual')}">Mensual</option>
                                         <option value="Anual" th:selected="${periodicidad != null && periodicidad.equals('Anual')}">Anual</option>
@@ -67,15 +59,15 @@
                                 </div>
 
                                 <div class="col-md-4 col-6 sign__group">
-                                    <select id="periodo" class="sign__input" name="periodo" th:data-periodo="${periodo != null ? periodo : ''}">
+                                    <select id="periodo" class="search_input" name="periodo" th:data-periodo="${periodo != null ? periodo : ''}">
                                     </select>
                                 </div>
 
                                 <div class="col-md-4 col-12" style="display: flex;justify-content: space-around">
-                                    <button type="submit" class="form__btn" style="width: 40%; margin: 0; font-size: 1.25rem;">
+                                    <button type="submit" class="form__btn" style="width: 40%; margin: 0; font-size: 1.1rem;">
                                         <i class="bi bi-search"></i>
                                     </button>
-                                    <button id="btn-reporte" type="button" class="form__btn" style="width: 40%; margin: 0; font-size: 1.5rem;">
+                                    <button id="btn-reporte" type="button" class="form__btn" style="width: 40%; margin: 0; font-size: 1.1rem;">
                                         <i class="bi bi-file-earmark-spreadsheet-fill"></i>
                                     </button>
                                 </div>
