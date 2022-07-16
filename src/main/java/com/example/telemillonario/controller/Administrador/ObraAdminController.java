@@ -72,6 +72,14 @@ public class ObraAdminController {
         return "Administrador/Obra/listaObras";
     }
 
+    @PostMapping(value = {"/buscar"})
+    public String buscarSede(@RequestParam("busqueda") String busqueda,
+                             @RequestParam(value = "pag",required = false) String pag, RedirectAttributes attr){
+
+        return "redirect:/admin/obras?busqueda="+busqueda+"&pag="+pag;
+    }
+
+
     @GetMapping(value = {"/crear"})
     public String crearSedeForm(@ModelAttribute("obra") Obra obra, Model model){
         // Listas para los selectores

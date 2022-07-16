@@ -111,8 +111,8 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "limit ?2,?3")
     List<Foto> listadoObrasFotoAdmin(int estado, int pag, int salasporpag);
 
-    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra from fotos fo inner join obra o on (fo.idfuncion=o.id) where " +
-            " fo.estado=?1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra limit ?3,?4")
+    @Query(nativeQuery = true, value = "select any_value(fo.id) as id,fo.estado,any_value(fo.ruta) as ruta,any_value(fo.numero) as numero,any_value(fo.idpersona) as idpersona,any_value(fo.idsede) as idsede,any_value(fo.idobra) as idobra from fotos fo inner join obra o on (fo.idobra=o.id) where " +
+            " fo.estado=?1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra limit ?3,?4 ")
     List<Foto> buscarObrasFotoPorNombreAdmin(int estado,String nombre,int pag, int salasporpag);
 
     @Query(nativeQuery = true, value = "select * from telemillonario.fotos where " +

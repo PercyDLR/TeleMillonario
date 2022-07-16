@@ -23,8 +23,8 @@ public interface ObraRepository extends JpaRepository<Obra, Integer> {
 
 
     @Query(nativeQuery = true, value = "Select count(*) from " +
-            "(select any_value(fo.id) from telemillonario.fotos fo inner join obra o on (fo.idfuncion=o.id) where " +
-            "fo.estado=?1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra")
+            "(select any_value(fo.id) from telemillonario.fotos fo inner join obra o on (fo.idobra=o.id) where " +
+            "fo.estado=?1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra) as Result")
     Integer cantObrasTotalFiltrAdmin(int estado,String nombre);
 
 

@@ -325,16 +325,18 @@ public class FuncionesController {
 
             }
 
+            if(funcion.getId()==null){
+                //validamos si las horas son iguales
+                if (value==0){
+                    // Retorna los valores ingresados
+                    retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
-            //validamos si las horas son iguales
-            if (value==0){
-                // Retorna los valores ingresados
-                retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
+                    model.addAttribute("msgfecha", "Ya existe una obra con la misma hora de inicio en la sala "+funcion.getIdsala().getNumero());
 
-                model.addAttribute("msgfecha", "Ya existe una obra con la misma hora de inicio en la sala "+funcion.getIdsala().getNumero());
-
-                return "Operador/crearFuncion";
+                    return "Operador/crearFuncion";
+                }
             }
+
 
         }
 

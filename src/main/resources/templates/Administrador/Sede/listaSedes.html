@@ -33,9 +33,9 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg != null}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${msg1 != null}">
                             <i class="bi bi-check-circle-fill"></i>
-                            <strong th:text="${msg}"></strong>
+                            <strong th:text="${msg1}"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
@@ -44,8 +44,47 @@
                             <strong th:text="${err}"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong>Sede creada exitosamente</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '1')}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong>Sede actualizada exitosamente</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '-1')}">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>Ocurrio un error al momento de querer editar</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '2')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>Se ha eliminado la sede exitosamente</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '3')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>No se puede borrar una sede que no existe"</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '4')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>Hubo un error al borrar una sede</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '5')}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>No puede borrar una Sede que tenga salas y un operador asignado</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     </div>
                 </div>
+
+
+
 
                 <form method="post" th:action="@{/admin/sedes/buscar}">
                     <div class="row justify-content-center">

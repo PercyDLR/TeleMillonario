@@ -28,10 +28,22 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     List<Funcion> buscarFuncionesPorSede( int idsede, int pag, int salasporpag);
 
 
+    //fecha hoy
     @Query(nativeQuery = true, value = "select f.* from funcion f\n" +
             "            inner join sala s on (s.id = f.idsala)\n" +
             "            where f.estado=1 and s.idsede=?1 and f.idsala=?2 and fecha=curdate() order by f.inicio ")
     List<Funcion> buscarFuncionesPorSedeySala( int idsede,int idsala);
+
+    @Query(nativeQuery = true, value = "select f.* from funcion f\n" +
+            "            inner join sala s on (s.id = f.idsala)\n" +
+            "            where f.estado=1 and s.idsede=?1 and f.idsala=?2 and fecha>=curdate() order by f.inicio ")
+    List<Funcion> buscarFuncionesPorSedeySalaparaValidar( int idsede,int idsala);
+
+    @Query(nativeQuery = true, value = "select f.* from funcion f\n" +
+            "            inner join sala s on (s.id = f.idsala)\n" +
+            "            where f.estado=1 and fecha>=curdate() order by f.inicio ")
+    List<Funcion> buscarFuncionesparaValidarTotal();
+
 
 
     @Query(nativeQuery = true, value = "select * from telemillonario.funcion where " +
