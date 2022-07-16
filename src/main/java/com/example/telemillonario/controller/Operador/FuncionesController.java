@@ -493,11 +493,12 @@ public class FuncionesController {
             funcionABorrar.setEstado(0);
             funcionRepository.save(funcionABorrar);
 
-            attr.addFlashAttribute("msg1", "Funcion borrada exitosamente");
+            attr.addFlashAttribute("msg", "Funcion borrada exitosamente");
 
         } catch (NumberFormatException e) {
             attr.addFlashAttribute("msg", "El ID de la función es inválido");
         }
+
         return "redirect:/operador/funciones";
     }
 }
