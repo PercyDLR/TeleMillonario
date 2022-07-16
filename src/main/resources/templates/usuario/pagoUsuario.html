@@ -12,12 +12,14 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="sign__content">
-                                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${mensajeError != null}">
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                    <strong th:text="${mensajeError}"></strong>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
                                 <form class="sign__form" th:action="@{'/pago'}" method="POST" th:object="${datosTarjeta}">
+
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${mensajeError != null}">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        <strong th:text="${mensajeError}"></strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+
                                     <div class="sign__group">
                                         <input type="text" class="sign__input" id="idFuncion" name="idFuncion" th:value="${compraEnProceso.getFuncion().getId()}" hidden>
                                     </div>
