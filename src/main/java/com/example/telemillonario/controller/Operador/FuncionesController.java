@@ -183,6 +183,12 @@ public class FuncionesController {
 
             // Datos de la funcion
             funcion = funcionEnDB.get();
+            //Verificamos si la fecha de la funcion por lo menos es el dia actual para poder editar
+            LocalDate Today = LocalDate.now();
+            if (funcion.getFecha().compareTo(Today) < 0){
+                attr.addFlashAttribute("msg","No se puede editar una función cuya fecha ya paso");
+                return "redirect:/operador/funciones";
+            }
             long duracion = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
             String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
 
