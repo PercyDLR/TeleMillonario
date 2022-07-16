@@ -5,6 +5,8 @@ import com.example.telemillonario.entity.Rol;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.repository.RolRepository;
 import com.example.telemillonario.repository.SedeRepository;
+import com.example.telemillonario.service.DatosAPI;
+import com.example.telemillonario.service.DniAPI;
 import com.example.telemillonario.validation.Operador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
 
@@ -206,6 +209,33 @@ public class OperadorController {
                         model.addAttribute("msg","El DNI ingresado ya existe");
                         return "Administrador/Operador/agregarOperadores";
                     }else{
+                        //**********************************************************
+                        //Validacion DNI
+                        DatosAPI datosPersona = DniAPI.consulta(operador.getDni());
+                        boolean errDNI = true;
+                        if(datosPersona.getSuccess().equalsIgnoreCase("true")){
+                            String nombresUpperCase = operador.getNombres();
+                            String cadenaNormalize = Normalizer.normalize(nombresUpperCase,Normalizer.Form.NFD);
+                            nombresUpperCase = cadenaNormalize.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+                            String apellidosUpperCase = operador.getApellidos();
+                            String cadenaNormalize2 = Normalizer.normalize(apellidosUpperCase,Normalizer.Form.NFD);
+                            apellidosUpperCase = cadenaNormalize2.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+                            String ApellidosUpperCase = nombresUpperCase + " " + apellidosUpperCase;
+                            String ApellidosAPI = datosPersona.getApellido_paterno() + " " + datosPersona.getApellido_materno();
+                            String NombresAPI = datosPersona.getNombres();
+                            if(ApellidosAPI.contains(apellidosUpperCase) && NombresAPI.contains(nombresUpperCase)){
+                                errDNI = false;
+                            }
+                        }
+
+                        if(errDNI == true){
+                            model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
+                            model.addAttribute("msg","Verifique el DNI ingresado");
+                            return "Administrador/Operador/agregarOperadores";
+                        }
+
+                        //**********************************************************
+
                         //configuración en activo
                         operador.setEstado(1);
                         //Creación de rol
