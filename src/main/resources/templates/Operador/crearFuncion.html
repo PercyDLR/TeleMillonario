@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Crear Funcion',~{::style})">
+    <head th:replace="fragments/header :: head(${funcion.id == null ? 'Crear función' : 'Editar función'},~{::style})">
 
         <style>
                 .select2-container--default .select2-selection--single .select2-selection__arrow {

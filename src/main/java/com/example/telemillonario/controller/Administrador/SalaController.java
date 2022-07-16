@@ -179,7 +179,7 @@ public class SalaController {
 
         for(String palabra : palabras){
             // Ignoraq monosilabos
-            if(palabra.length() > 2) {
+            if(palabra.length() > 3) {
                 identificador = identificador.concat(palabra.substring(0, 1));
             }
         }

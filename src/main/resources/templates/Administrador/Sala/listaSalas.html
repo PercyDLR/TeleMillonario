@@ -10,22 +10,6 @@
             <div  class="container" style="margin-bottom: 30px">
 
                 <div class="row">
-                    <div class="col-md-10 col-12" style="margin-top: 30px;">
-                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3.5rem"
-                            th:text="|Sede ${sede.nombre}-Salas|">Sede: Gran Teatro Nacional
-                        </h1>
-                    </div>
-
-                    <div class="col-md-2 col-12 d-flex justify-content-center">
-                        <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
-                            <a th:href="@{'/admin/salas/nuevaSala?idsede=' + ${sede.id}}">
-                                <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
-                            </a>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="col-12">
                         <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg == '0')}">
                             <i class="bi bi-check-circle-fill"></i>
@@ -52,6 +36,22 @@
                             <strong th:text="|No puede crear mas salas debido a que alcanzó la cantidad máxima|"></strong>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row my-4">
+                    <div class="col-md-10 col-12" style="margin-top: 30px;">
+                        <h1 class="details__title" style="text-align: center;margin-bottom: 30px;margin-top: 10px;font-size: 3.5rem"
+                            th:text="|Sede ${sede.nombre} - Salas|">Sede: Gran Teatro Nacional
+                        </h1>
+                    </div>
+
+                    <div class="col-md-2 col-12 d-flex justify-content-center">
+                        <button style="cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva sala">
+                            <a th:href="@{'/admin/salas/nuevaSala?idsede=' + ${sede.id}}">
+                                <img style="height: 55px;margin-top:6px;" th:src="@{/img/iconAdd.png}">
+                            </a>
+                        </button>
                     </div>
                 </div>
 
@@ -105,7 +105,7 @@
 
                                     <td th:text="${sala.estado == 1 ? 'Disponible' : 'No Disponible' }">Disponible</td>
 
-                                    <td><a class="circulo_botones" th:href="@{'/admin/salas/editarSalas?id=' + ${sala.id}}">
+                                    <td><a class="circulo_botones" th:href="@{'/admin/salas/editarSalas?id=' + ${sala.id}}" style="margin-inline: auto">
                                         <img style="height: 33px;margin-left: 9px;margin-top: 9px;" th:src="@{/img/iconEdit2.png}"></a></td>
 
                                     <td><a class="circulo_visibilidad" th:title="${sala.estado == 1 ? 'Inhabilitar Sala':'Habilitar Sala'}"

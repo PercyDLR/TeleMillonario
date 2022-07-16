@@ -11,6 +11,7 @@ import com.example.telemillonario.repository.RolRepository;
 import com.example.telemillonario.service.DatosAPI;
 import com.example.telemillonario.service.DniAPI;
 import com.example.telemillonario.service.UsuarioService;
+import com.example.telemillonario.validation.Usuario;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -195,8 +197,17 @@ public class LoginController {
     public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult,
                                    @RequestParam(value = "recontrasenia", required = false) String recontrasenia,
                                    @RequestParam(value = "google", required = false) Integer google,
-                                   Model model,HttpServletRequest request,
+                                   Model model, HttpServletRequest request,
                                    RedirectAttributes a) throws InterruptedException, IOException, MessagingException {
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("recontrasenia","123456789abcdefg");
+            if (google != null && google == 1) {
+                model.addAttribute("google", 1);
+            }
+
+            return "login/signup";
+        }
 
         System.out.println("------------------------------------------------------------------");
         //Validacion nombre
@@ -285,7 +296,7 @@ public class LoginController {
         }
 
         //if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI || errorNombre || errorApellido){
-        if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
+        if(coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
             }
@@ -301,6 +312,7 @@ public class LoginController {
             if(errorApellido == true){
                 model.addAttribute("errApellido", errorApellido);
             }*/
+            model.addAttribute("recontrasenia","123456789abcdefg");
             return "login/signup";
         } else {
 
