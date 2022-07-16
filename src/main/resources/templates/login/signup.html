@@ -6,6 +6,9 @@
         .sign__input{
             width: 100%;
         }
+        input:read-only{
+            color: rgba(255,255,255,0.5);
+        }
     </style>
 </head>
 
@@ -30,8 +33,8 @@
                                <div class="col-md-6 col-12">
                                    <div class="sign__group">
                                        <label for="nombres">Nombres</label>
-                                       <input type="text" class="sign__input" placeholder="Nombres" id="nombres" name="nombres" th:value="${usuario.getNombres()}" required autofocus maxlength="100"
-                                              th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}" th:hidden="${google eq 1}">
+                                       <input type="text" class="sign__input" placeholder="Nombres" id="nombres" name="nombres" th:value="*{nombres}" maxlength="100"
+                                              th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}" th:readonly="${google eq 1}" required autofocus>
                                        <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
                                             th:errors="*{nombres}"></div>
                                        <!--div class="invalid-feedback d-block" th:if="${(errNombre != null) && (errNombre == true)}">Los nombres no pueden contener caracteres.</div-->
@@ -60,19 +63,24 @@
                                    <div class="sign__group">
                                        <label for="apellidos">Apellidos</label>
                                        <input type="text" class="sign__input" placeholder="Apellidos" id="apellidos" name="apellidos" th:value="${usuario.getApellidos()}" required maxlength="100"
-                                              th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}" th:hidden="${google eq 1}">
+                                              th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}" th:readonly="${google eq 1}">
                                        <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
                                             th:errors="*{apellidos}"></div>
                                        <!--div class="invalid-feedback d-block" th:if="${(errApellido != null) && (errApellido == true)}">Los apellidos no pueden contener caracteres.</div-->
                                    </div>
 
-                                   <div class="sign__group">
+                                   <div class="sign__group" th:unless="${google eq 1}">
                                        <label for="correo">Correo</label>
                                        <input type="email" class="sign__input" placeholder="Correo" id="correo" autocomplete="username" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
-                                              th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}" th:hidden="${google eq 1}">
-                                       <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
+                                              th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}">
+                                       <div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
                                             th:errors="*{correo}"></div>
-                                       <div th:unless="${google eq 1}" class="invalid-feedback d-block" th:if="${(errCorreo != null) && (errCorreo eq 1)}">El correo ingresado ya está en uso</div>
+                                       <div class="invalid-feedback d-block" th:if="${(errCorreo != null) && (errCorreo eq 1)}">El correo ingresado ya está en uso</div>
+                                   </div>
+
+                                   <div th:if="${google eq 1}">
+                                       <input type="email" class="sign__input" placeholder="Correo" id="correo" autocomplete="username" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
+                                              th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}" hidden>
                                    </div>
 
                                    <div class="sign__group">
@@ -80,20 +88,25 @@
                                        <input type="date" class="sign__input" placeholder="Fecha de Nacimiento" id="nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')" required>
                                        <div class="invalid-feedback d-block" th:if="${(errDate != null) && (errDate eq -1)}">La fecha ingresada debe ser hasta un dia antes de la fecha actual</div>
                                    </div>
+
+                                   <div class="sign__group" th:if="${google eq 1}">
+                                       <label for="direccion">Dirección</label>
+                                       <input type="text" class="sign__input" placeholder="Dirección" id="direccion" name="direccion" th:value="${usuario.getDireccion()}" required maxlength="100">
+                                   </div>
                                </div>
 
-                                <div class="col-12">
+                                <div class="col-12" th:unless="${google eq 1}">
                                     <div class="sign__group">
                                         <label for="direccion">Dirección</label>
                                         <input type="text" class="sign__input" placeholder="Dirección" id="direccion" name="direccion" th:value="${usuario.getDireccion()}" required maxlength="100">
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-6 col-12" th:unless="${google eq 1}">
                                     <div class="sign__group">
                                         <label for="contrasenia">Contraseña</label>
                                         <div style="position: relative">
-                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:hidden="${google eq 1}" th:value="${usuario.getContrasenia()}" autocomplete="new-password" id="contrasenia" required maxlength="200"
+                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:value="${usuario.getContrasenia()}" autocomplete="new-password" id="contrasenia" required maxlength="200"
                                                th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
                                             <i class="mostrar bi bi-eye-fill"></i>
                                         </div>
@@ -103,18 +116,27 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-6 col-12" th:unless="${google eq 1}">
                                     <div class="sign__group">
                                         <label for="recontrasenia">Confirmar Contraseña</label>
 
                                         <div style="position: relative">
-                                            <input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia" name="recontrasenia" th:value="${recontrasenia}" required maxlength="200" autocomplete="new-password" th:hidden="${google eq 1}">
+                                            <input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia"
+                                                   name="recontrasenia" th:value="${recontrasenia}" required maxlength="200" autocomplete="new-password">
                                             <i class="mostrar bi bi-eye-fill"></i>
                                         </div>
 
                                         <div class="invalid-feedback" id="coindicencia">Las contraseñas no coinciden</div>
                                         <div class="invalid-feedback d-block" th:if="${(errRecontrasenia != null) && (errRecontrasenia eq 1)}">Ambos campos de contraseña deben ser llenados</div>
                                     </div>
+                                </div>
+
+                                <div class="col-12" th:if="${google eq 1}">
+
+                                    <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:value="${usuario.getContrasenia()}" autocomplete="new-password" id="contrasenia" required maxlength="200"
+                                           th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}" hidden>
+                                    <input type="password" class="sign__input" placeholder="Confirmar Contraseña" id="recontrasenia"
+                                           name="recontrasenia" th:value="${recontrasenia}" required maxlength="200" autocomplete="new-password" hidden>
                                 </div>
                             </div>
 
@@ -136,6 +158,9 @@
 			document.getElementById('nacimiento').max = d.toISOString().split("T")[0] ;
 
 			function Validate() {
+                // Asigna los nombres y apellidos correctos (por si los intentan modificar
+
+
 				var password = document.getElementById("contrasenia").value;
 				var confirmPassword = document.getElementById("recontrasenia").value;
 				var x = document.getElementById("coindicencia");
