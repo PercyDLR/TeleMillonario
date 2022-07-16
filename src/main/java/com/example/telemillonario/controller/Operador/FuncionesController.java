@@ -54,6 +54,9 @@ public class FuncionesController {
     FileService fileService;
 
     @Autowired
+    CompraRepository compraRepository;
+
+    @Autowired
     FotoRepository fotoRepository;
 
     @Autowired
@@ -186,7 +189,7 @@ public class FuncionesController {
             //Verificamos si la fecha de la funcion por lo menos es el dia actual para poder editar
             LocalDate Today = LocalDate.now();
             if (funcion.getFecha().compareTo(Today) < 0){
-                attr.addFlashAttribute("msg","No se puede editar una función cuya fecha ya paso");
+                attr.addFlashAttribute("err","No se puede editar una función cuya fecha ya paso");
                 return "redirect:/operador/funciones";
             }
             long duracion = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
@@ -480,6 +483,13 @@ public class FuncionesController {
             }
 
             Funcion funcionABorrar = funcion.get();
+            LocalDate Today = LocalDate.now();
+            List<Compra> listCompra = compraRepository.buscarCompraPorFuncion(funcionABorrar.getId());
+            System.out.println(listCompra.isEmpty());
+            if (funcionABorrar.getFecha().compareTo(Today) < 0 || !listCompra.isEmpty()){
+                attr.addFlashAttribute("err","No se puede borrar una función cuya fecha ya paso o ya se adquirieron boletos");
+                return "redirect:/operador/funciones";
+            }
             funcionABorrar.setEstado(0);
             funcionRepository.save(funcionABorrar);
 

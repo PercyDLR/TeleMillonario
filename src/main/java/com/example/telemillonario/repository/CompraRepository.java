@@ -45,6 +45,9 @@ public interface CompraRepository extends JpaRepository<Compra,Integer> {
             "limit ?2,?3 ")
     List<Compra> buscarCompraPorDni(String nombre,int pag, int salasporpag);
 
+    @Query(nativeQuery = true,value = "select * from telemillonario.compra where idfuncion = ?1")
+    List<Compra> buscarCompraPorFuncion(Integer id);
+
     @Query(nativeQuery = true,value = "select count(*) from telemillonario.compra c\n" +
             "inner join telemillonario.pago p on (p.idcompra = c.id)\n" +
             "inner join telemillonario.persona per on (per.id = c.idpersona)\n" +
