@@ -253,7 +253,7 @@ public class SedeController {
 
         // Regresa si no se han agregado más fotos
         if(imagenes[0].getContentType().equals("application/octet-stream")) {
-            attr.addFlashAttribute("msg", "Sede Guardada Exitosamente");
+            attr.addFlashAttribute("msg1", "Sede Guardada Exitosamente");
             return "redirect:/admin/sedes/lista";
         }
 
@@ -292,7 +292,7 @@ public class SedeController {
                 return "redirect:/admin/sedes/lista";
             }
         }
-        attr.addFlashAttribute("msg","Sede Guardada Exitosamente");
+        attr.addFlashAttribute("msg1","Sede Guardada Exitosamente");
         return "redirect:/admin/sedes/lista";
     }
 

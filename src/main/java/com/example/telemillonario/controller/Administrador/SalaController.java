@@ -1,9 +1,11 @@
 package com.example.telemillonario.controller.Administrador;
 
 
+import com.example.telemillonario.entity.Funcion;
 import com.example.telemillonario.entity.Sala;
 import com.example.telemillonario.entity.Sede;
 import com.example.telemillonario.repository.DistritoRepository;
+import com.example.telemillonario.repository.FuncionRepository;
 import com.example.telemillonario.repository.SalaRepository;
 import com.example.telemillonario.repository.SedeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class SalaController {
     @Autowired
     DistritoRepository distritoRepository;
 
+    @Autowired
+    FuncionRepository funcionRepository;
     // Variables Importantes (Afuera para más orden)
 //    int idsede=7;
     float salasporpagina=5;
@@ -157,21 +161,43 @@ public class SalaController {
     }
 
     @GetMapping("/disponibilidad")
-    public String disponibilidadSala(@RequestParam("id") int id,@RequestParam(value = "idsede",required = false) String idsede, RedirectAttributes a) {
-        Optional<Sala> optionalSala = salaRepository.findById(id);
-        if (optionalSala.isPresent()) {
-            Sala sala = optionalSala.get();
-            if (sala.getEstado() == 1) {
-                sala.setEstado(0);
-                salaRepository.save(sala);
-            } else {
-                sala.setEstado(1);
-                salaRepository.save(sala);
+    public String disponibilidadSala(@RequestParam("id") int id,@RequestParam(value = "idsede",required = false) String idsede,Model model, RedirectAttributes a) {
+
+        try {
+            int sedeid=Integer.parseInt(idsede);
+            //validacion si hay funciones programadas en una determinada sala
+            List<Funcion> listFuncValidar = funcionRepository.buscarFuncionesPorSedeySalaparaValidar(sedeid, id);
+            if (listFuncValidar.size()==0){
+                Optional<Sala> optionalSala = salaRepository.findById(id);
+                if (optionalSala.isPresent()) {
+                    Sala sala = optionalSala.get();
+                    if (sala.getEstado() == 1) {
+                        sala.setEstado(0);
+                        salaRepository.save(sala);
+                    } else {
+                        sala.setEstado(1);
+                        salaRepository.save(sala);
+                    }
+                    a.addFlashAttribute("msg", "2");
+                    a.addFlashAttribute("identificador", sala.getIdentificador());
+                }
+                return "redirect:/admin/salas?idsede="+idsede;
+
+            }else{
+                a.addFlashAttribute("msg", "3");
+                return "redirect:/admin/salas?idsede="+idsede;
             }
-            a.addFlashAttribute("msg", "2");
-            a.addFlashAttribute("identificador", sala.getIdentificador());
+
+
+
+
+        }catch (NumberFormatException nfe){
+            model.addAttribute("status",404);
+            model.addAttribute("error","");
+            return "error";
         }
-        return "redirect:/admin/salas?idsede="+idsede;
+
+
     }
 
     private String genIdentificador(String[] palabras, int numeroSala){

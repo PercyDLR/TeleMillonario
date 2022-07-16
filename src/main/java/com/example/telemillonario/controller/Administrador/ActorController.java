@@ -1,9 +1,9 @@
 package com.example.telemillonario.controller.Administrador;
 
-import com.example.telemillonario.entity.Foto;
-import com.example.telemillonario.entity.Persona;
-import com.example.telemillonario.entity.Rol;
+import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.FotoRepository;
+import com.example.telemillonario.repository.FuncionElencoRepository;
+import com.example.telemillonario.repository.FuncionRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.validation.Elenco;
@@ -31,6 +31,12 @@ public class ActorController {
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    FuncionRepository funcionRepository;
+
+    @Autowired
+    FuncionElencoRepository funcionElencoRepository;
 
     //Variables Importantes
     float actoresxpagina=8;
@@ -111,7 +117,7 @@ public class ActorController {
         long tamanho = 0;
 
         for (MultipartFile img : imagenes){
-
+            System.out.println(img.getContentType());
             // Se verifica que los archivos enviados sean imágenes
             switch(img.getContentType()){
 
@@ -268,10 +274,37 @@ public class ActorController {
     }
 
     @GetMapping(value = "/borrar")
-    public String borrarOperador(@RequestParam("id") String str_id, RedirectAttributes attr){
+    public String borrarActor(@RequestParam("id") String str_id, RedirectAttributes attr){
 
         try{
             int id = Integer.parseInt(str_id);
+
+            //validacion si el actor pertenece al elenco de una funcion programada
+
+            List<Funcion> listFuncValidarTotal = funcionRepository.buscarFuncionesparaValidarTotal();
+
+            List<Funcionelenco> listfuncionelencoTotal=funcionElencoRepository.findAll();
+
+            List<Funcionelenco> listfuncelencoValidar = new ArrayList<>();
+
+            for (Funcionelenco fe: listfuncionelencoTotal){
+                for (Funcion func: listFuncValidarTotal){
+
+                    //comparamos
+                    if(fe.getIdfuncion().getId()==func.getId()){
+                        listfuncelencoValidar.add(fe);
+                    }
+                }
+
+            }
+
+            for (Funcionelenco felenval :listfuncelencoValidar){
+                if(felenval.getIdpersona().getId()==id){
+                    attr.addFlashAttribute("err", "El actor con ID: "+id+" no se puede borrar ya que es parte del elenco de una funcion programada");
+                    return "redirect:/admin/actores/";
+                }
+            }
+
 
             if(personaRepository.existsById(id)){
                 Optional<Persona> aux = personaRepository.findById(id);

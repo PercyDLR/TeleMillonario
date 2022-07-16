@@ -23,7 +23,6 @@ import java.util.List;
 @RequestMapping("/admin/clientes")
 public class ClienteController {
 
-
     @Autowired
     PersonaRepository personaRepository;
 

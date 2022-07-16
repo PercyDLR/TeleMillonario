@@ -1,9 +1,9 @@
 package com.example.telemillonario.controller.Administrador;
 
-import com.example.telemillonario.entity.Foto;
-import com.example.telemillonario.entity.Persona;
-import com.example.telemillonario.entity.Rol;
+import com.example.telemillonario.entity.*;
 import com.example.telemillonario.repository.FotoRepository;
+import com.example.telemillonario.repository.FuncionElencoRepository;
+import com.example.telemillonario.repository.FuncionRepository;
 import com.example.telemillonario.repository.PersonaRepository;
 import com.example.telemillonario.service.FileService;
 import com.example.telemillonario.validation.Elenco;
@@ -31,6 +31,12 @@ public class DirectorController {
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    FuncionRepository funcionRepository;
+
+    @Autowired
+    FuncionElencoRepository funcionElencoRepository;
 
     //Variables Importantes
     float directoresxpagina=8;
@@ -279,6 +285,34 @@ public class DirectorController {
 
         try{
             int id = Integer.parseInt(str_id);
+
+            //validacion si el actor pertenece al elenco de una funcion programada
+
+            List<Funcion> listFuncValidarTotal = funcionRepository.buscarFuncionesparaValidarTotal();
+
+            List<Funcionelenco> listfuncionelencoTotal=funcionElencoRepository.findAll();
+
+            List<Funcionelenco> listfuncelencoValidar = new ArrayList<>();
+
+            for (Funcionelenco fe: listfuncionelencoTotal){
+                for (Funcion func: listFuncValidarTotal){
+
+                    //comparamos
+                    if(fe.getIdfuncion().getId()==func.getId()){
+                        listfuncelencoValidar.add(fe);
+                    }
+                }
+
+            }
+
+            for (Funcionelenco felenval :listfuncelencoValidar){
+                if(felenval.getIdpersona().getId()==id){
+                    attr.addFlashAttribute("err", "El director con ID: "+id+" no se puede borrar ya que es parte del elenco de una funcion programada");
+                    return "redirect:/admin/actores/";
+                }
+            }
+
+
 
             if(personaRepository.existsById(id)){
                 Optional<Persona> aux = personaRepository.findById(id);

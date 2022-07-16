@@ -99,7 +99,7 @@ public class FileService {
         String nombre = nombreBase+"_"+random.nextInt(20000)+
                 lowerCaseLetters.charAt(random.nextInt(26))+
                 capitalCaseLetters.charAt(random.nextInt(26))+
-                file.getOriginalFilename().split("\\.")[0].charAt(random.nextInt(file.getOriginalFilename().length()-4))+
+                file.getOriginalFilename().split("\\.")[0].charAt(random.nextInt(file.getOriginalFilename().length()-5))+
                 "."+
                 file.getOriginalFilename().split("\\.")[1];
         MultipartFile output = new MockMultipartFile(nombre,nombre,file.getContentType(),file.getBytes());

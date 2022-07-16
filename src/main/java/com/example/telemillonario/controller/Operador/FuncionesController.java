@@ -54,6 +54,9 @@ public class FuncionesController {
     FileService fileService;
 
     @Autowired
+    CompraRepository compraRepository;
+
+    @Autowired
     FotoRepository fotoRepository;
 
     @Autowired
@@ -105,6 +108,11 @@ public class FuncionesController {
         model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
         return "Operador/index";
     }
+
+
+
+
+
 
     @GetMapping(value = {"/crear"})
     public String programarFuncionesForm(@ModelAttribute("funcion") Funcion funcion, Model model, HttpSession session) {
@@ -186,7 +194,7 @@ public class FuncionesController {
             //Verificamos si la fecha de la funcion por lo menos es el dia actual para poder editar
             LocalDate Today = LocalDate.now();
             if (funcion.getFecha().compareTo(Today) < 0){
-                attr.addFlashAttribute("msg","No se puede editar una función cuya fecha ya paso");
+                attr.addFlashAttribute("err","No se puede editar una función cuya fecha ya paso");
                 return "redirect:/operador/funciones";
             }
             long duracion = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
@@ -322,16 +330,18 @@ public class FuncionesController {
 
             }
 
+            if(funcion.getId()==null){
+                //validamos si las horas son iguales
+                if (value==0){
+                    // Retorna los valores ingresados
+                    retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
-            //validamos si las horas son iguales
-            if (value==0){
-                // Retorna los valores ingresados
-                retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
+                    model.addAttribute("msgfecha", "Ya existe una obra con la misma hora de inicio en la sala "+funcion.getIdsala().getNumero());
 
-                model.addAttribute("msgfecha", "Ya existe una obra con la misma hora de inicio en la sala "+funcion.getIdsala().getNumero());
-
-                return "Operador/crearFuncion";
+                    return "Operador/crearFuncion";
+                }
             }
+
 
         }
 
@@ -480,14 +490,22 @@ public class FuncionesController {
             }
 
             Funcion funcionABorrar = funcion.get();
+            LocalDate Today = LocalDate.now();
+            List<Compra> listCompra = compraRepository.buscarCompraPorFuncion(funcionABorrar.getId());
+            System.out.println(listCompra.isEmpty());
+            if (funcionABorrar.getFecha().compareTo(Today) < 0 || !listCompra.isEmpty()){
+                attr.addFlashAttribute("err","No se puede borrar una función cuya fecha ya paso o ya se adquirieron boletos");
+                return "redirect:/operador/funciones";
+            }
             funcionABorrar.setEstado(0);
             funcionRepository.save(funcionABorrar);
 
-            attr.addFlashAttribute("msg1", "Funcion borrada exitosamente");
+            attr.addFlashAttribute("msg", "Funcion borrada exitosamente");
 
         } catch (NumberFormatException e) {
             attr.addFlashAttribute("msg", "El ID de la función es inválido");
         }
+
         return "redirect:/operador/funciones";
     }
 }
