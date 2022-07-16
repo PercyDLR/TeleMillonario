@@ -59,7 +59,7 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
     Integer contarFunciones(int idsede);
 
     @Query(nativeQuery = true, value = "select * from telemillonario.fotos fo inner join obra o on (o.id=fo.idobra) where " +
-            "fo.idsede=?1 and idobra IS NOT NULL and fo.estado=1 and fu.nombre like %?2% group by idobra")
+            "fo.idsede=?1 and idobra IS NOT NULL and fo.estado=1 and o.nombre like %?2% group by idobra")
     List<Foto> buscarFuncionesParaContarPorNombre(int idsede,String parametro);
 
 

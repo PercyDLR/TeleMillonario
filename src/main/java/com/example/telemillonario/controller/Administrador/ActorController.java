@@ -117,7 +117,7 @@ public class ActorController {
         long tamanho = 0;
 
         for (MultipartFile img : imagenes){
-
+            System.out.println(img.getContentType());
             // Se verifica que los archivos enviados sean imágenes
             switch(img.getContentType()){
 
