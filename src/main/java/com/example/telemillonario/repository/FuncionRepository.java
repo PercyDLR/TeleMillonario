@@ -96,10 +96,10 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     @Query(nativeQuery = true, value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and funcion.fecha <= curdate() and funcion.estado=1  order by pasistencia limit 1;")
+            "where s.idsede=?1 and funcion.fecha <= curdate() and funcion.estado=1  order by pasistencia desc limit 1;")
     EstadisticaFuncionDto obtenerFuncionMasVistaxSede(int idsede);
     //funcion menos vista
-    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
+    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
             "where s.idsede=?1 and funcion.fecha <= curdate() and funcion.estado=1 order by pasistencia asc limit 1")
