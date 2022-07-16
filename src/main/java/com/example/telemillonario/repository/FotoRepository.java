@@ -53,8 +53,9 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "where idobra=?1 and estado=1 order by numero  ")
     List<Foto> buscarFotosFuncion(int idfuncion);
 
-    @Query(nativeQuery = true, value = "select count(DISTINCT idobra) from telemillonario.fotos where " +
-            "idsede=?1 and idobra IS NOT NULL and estado=1")
+    @Query(nativeQuery = true, value = "select count(*) from funcion f " +
+            "inner join sala s on (s.id = f.idsala) " +
+            "where f.estado=1 and s.idsede=?1")
     Integer contarFunciones(int idsede);
 
     @Query(nativeQuery = true, value = "select * from telemillonario.fotos fo inner join obra o on (o.id=fo.idobra) where " +
