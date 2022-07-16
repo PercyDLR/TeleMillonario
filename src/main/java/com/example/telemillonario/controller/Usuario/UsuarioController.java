@@ -936,7 +936,7 @@ public class UsuarioController {
                 long minutes = duration.toMinutes();
                 boolean estaATiempo = true;
 
-                if (minutes > 15) {
+                if (minutes > 1) { //Cambiar a 15
                     estaATiempo = false;
                 }
 
@@ -979,13 +979,7 @@ public class UsuarioController {
             if (reservasBorrarCarrito.size() == 0) {
                 return "usuario/carrito/carritoComprasUsuario";
             } else {
-                String content = "<p>Cordiales Saludos: </p>"
-                        + "<p>Debido al tiempo prudente dado para que terminara su reserva , se procedio a eliminar de su carrito las siguientes reservas:</p>";
-
-                for (Compra compra : reservasBorrarCarrito) {
-                    String lineaHTML = "<p>- Funcion de la obra:" + compra.getFuncion().getIdobra().getNombre() + " " + ",con hora de inicio:" + compra.getFuncion().getInicio() + " " + " y con una cantidad de boletos de:" + compra.getCantidad() + "</p>";
-                    content = content + lineaHTML;
-                }
+                String content = obtenerContentSendReservasBorradas(reservasBorrarCarrito);
 
                 Persona persona = (Persona) session.getAttribute("usuario");
                 String correo = persona.getCorreo();
@@ -1000,6 +994,192 @@ public class UsuarioController {
             }
         }
 
+    }
+
+    private String obtenerContentSendReservasBorradas(ArrayList<Compra> reservasBorrarCarrito){
+        ArrayList<String> URL = new ArrayList<>();
+        for (Compra c : reservasBorrarCarrito) {
+            URL.add(fotoRepository.fotoObra(c.getFuncion().getIdobra().getId()));
+        }
+        String content = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "\n" +
+                "    <head>\n" +
+                "        <title></title>\n" +
+                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" +
+                "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
+                "        <style type=\"text/css\">\n" +
+                "            @media screen {\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: normal;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 400;\n" +
+                "                    src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');\n" +
+                "                }\n" +
+                "\n" +
+                "                @font-face {\n" +
+                "                    font-family: 'Lato';\n" +
+                "                    font-style: italic;\n" +
+                "                    font-weight: 700;\n" +
+                "                    src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* CLIENT-SPECIFIC STYLES */\n" +
+                "            body,\n" +
+                "            table,\n" +
+                "            td,\n" +
+                "            a {\n" +
+                "                -webkit-text-size-adjust: 100%;\n" +
+                "                -ms-text-size-adjust: 100%;\n" +
+                "            }\n" +
+                "\n" +
+                "            table,\n" +
+                "            td {\n" +
+                "                mso-table-lspace: 0pt;\n" +
+                "                mso-table-rspace: 0pt;\n" +
+                "            }\n" +
+                "\n" +
+                "            img {\n" +
+                "                -ms-interpolation-mode: bicubic;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* RESET STYLES */\n" +
+                "            img {\n" +
+                "                border: 0;\n" +
+                "                height: auto;\n" +
+                "                line-height: 100%;\n" +
+                "                outline: none;\n" +
+                "                text-decoration: none;\n" +
+                "            }\n" +
+                "\n" +
+                "            table {\n" +
+                "                border-collapse: collapse !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            body {\n" +
+                "                height: 100% !important;\n" +
+                "                margin: 0 !important;\n" +
+                "                padding: 0 !important;\n" +
+                "                width: 100% !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* iOS BLUE LINKS */\n" +
+                "            a[x-apple-data-detectors] {\n" +
+                "                color: inherit !important;\n" +
+                "                text-decoration: none !important;\n" +
+                "                font-size: inherit !important;\n" +
+                "                font-family: inherit !important;\n" +
+                "                font-weight: inherit !important;\n" +
+                "                line-height: inherit !important;\n" +
+                "            }\n" +
+                "\n" +
+                "            /* MOBILE STYLES */\n" +
+                "            @media screen and (max-width:600px) {\n" +
+                "                h1 {\n" +
+                "                    font-size: 32px !important;\n" +
+                "                    line-height: 32px !important;\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            /* ANDROID CENTER FIX */\n" +
+                "            div[style*=\"margin: 16px 0;\"] {\n" +
+                "                margin: 0 !important;\n" +
+                "            }\n" +
+                "        </style>\n" +
+                "    </head>\n" +
+                "\n" +
+                "    <body style=\"background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;\">\n" +
+                "        <div tabindex=\"-1\" class=\"YE9Rk customScrollBar\" data-is-scrollable=\"true\">\n" +
+                "            <div>\n" +
+                "                <div class=\"wide-content-host\">\n" +
+                "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td align=\"center\" valign=\"top\" style=\"padding: 40px 10px 40px 10px;\"> </td>\n" +
+                "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td  align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                           <tr>\n" +
+                "                                <td height=\"80\" style='background-color: #2b2b31;'>\n" +
+                "                                    <img data-imagetype=\"AttachmentByCid\"  naturalheight=\"0\" naturalwidth=\"0\" src='https://telemillonariocontainer.blob.core.windows.net/telemillonario/tele.png' alt=\"logo_cinemark\" style=\"width: 250px; margin: 0px auto; display: block; cursor: pointer; min-width: auto; min-height: auto;\" crossorigin=\"use-credentials\" class=\"ADIae\">\n" +
+                "                                </td>\n" +
+                "                           </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                    <td bgcolor=\"#f4f4f4\" align=\"center\" style=\"padding: 0px 10px 0px 10px;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td bgcolor=\"#ffffff\" align=\"left\" style=\"padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;\">\n" +
+                "                                    <p style=\"margin: 0;\">Cordiales Saludos:</p>\n" +
+                "                                    <br>\n" +
+                "                                    <p style=\"margin-bottom: 20px;\">Debido al tiempo prudente dado para que terminara su reserva , se procedio a eliminar de su carrito las siguientes reservas:</p>\n";
+
+        int i = 0;
+        for(Compra compra1 : reservasBorrarCarrito){
+            System.out.println(compra1.getFuncion().getIdobra().getNombre());
+            System.out.println(compra1.getFuncion().getFecha());
+            System.out.println(compra1.getFuncion().getInicio());
+            content = content +
+                    "                                                                        <div class=\"x_cover-container\" style=\"float:left; margin-right:15px; max-width:250px; overflow:hidden\">\n" +
+                    "                                                                            <img data-imagetype=\"External\" src='"+URL.get(i)+"' alt=\"img_movie\" style='max-width:120px;height:130px'>\n" +
+                    "                                                                        </div>\n" +
+                    "                                                                        <div class=\"x_text-details\" style=\"display:block\">\n" +
+                    "                                                                            <span style=\"display:block; margin-bottom:8px\">"+compra1.getFuncion().getIdobra().getNombre()+"</span>\n" +
+                    "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Fecha: </strong>"+compra1.getFuncion().getFecha()+" </span>\n" +
+                    "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Hora: </strong>"+compra1.getFuncion().getInicio()+"</span>\n" +
+                    "                                                                            <span style=\"display:block; margin-bottom:8px\"><strong>Boletos reservados: </strong>"+compra1.getCantidad()+"</span>\n" +
+                    "                                                                        </div>\n" ;
+            i = i +1;
+        }
+                content = content +
+                "                                    <br>\n" +
+                "                                </td>\n" +
+                "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                            <td  align=\"center\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
+                "                            <tr>\n" +
+                "                                <td align=\"center\" valign=\"top\" style=\"padding: 40px 10px 40px 10px;\"> </td>\n" +
+                "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "            </table>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "    </body>\n" +
+                "\n" +
+                "</html>";
+
+        return  content;
     }
 
     @GetMapping("/borrarReserva")

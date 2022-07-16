@@ -47,6 +47,7 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -677,11 +678,18 @@ public class LoginController {
                 "                                    <br>\n" +
                 "                                    <p style=\"margin: 0;\">Su contraseña ha sido cambiado satisfactoriamente. Haga click en el siguiente enlace para poder iniciar sesión.</p>\n" +
                 "                                    <br>\n" +
+                "                                    <center><button align='center' style='border-radius: 3px; background-color:#ff5860; margin-top: 10px'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Iniciar Sesión</a></button></center>\n" +
                 "                                </td>\n" +
                 "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+        "                            <td  align=\"center\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                 "                            <tr>\n" +
-                "                               <center><button align='center' style='border-radius: 3px; background-color:#ff5860'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Iniciar Sesión</a></button></center>\n" +
-                "                            </tr>\n"+
+                "                                <td align=\"center\" valign=\"top\" style=\"padding: 40px 10px 40px 10px;\"> </td>\n" +
+                "                            </tr>\n" +
                 "                        </table>\n" +
                 "                    </td>\n" +
                 "                </tr>\n" +
@@ -835,11 +843,19 @@ public class LoginController {
                 "                                    <p style=\"margin: 0;\">Se ha realizado una solicitud para el cambio de contraseña. Haga click en el siguiente enlace para realizar su cambio.</p>\n" +
                 "                                    <br>\n" +
                 "                                    <p style=\"margin: 0;\">Ignorar este mensaje si usted no ha solicitado dicho cambio.</p>\n" +
+                "                                    <br>\n" +
+                "                                    <center><button align='center' style='border-radius: 3px; background-color:#ff5860; margin-top: 10px'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Iniciar Sesión</a></button></center>\n" +
                 "                                </td>\n" +
                 "                            </tr>\n" +
+                "                        </table>\n" +
+                "                    </td>\n" +
+                "                </tr>\n" +
+                "                <tr>\n" +
+                "                            <td  align=\"center\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width: 600px;\">\n" +
                 "                            <tr>\n" +
-                "                               <center><button align='center' style='border-radius: 3px; background-color:#ff5860'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Cambiar Contraseña</a></button></center>\n" +
-                "                            </tr>\n"+
+                "                                <td align=\"center\" valign=\"top\" style=\"padding: 40px 10px 40px 10px;\"> </td>\n" +
+                "                            </tr>\n" +
                 "                        </table>\n" +
                 "                    </td>\n" +
                 "                </tr>\n" +
