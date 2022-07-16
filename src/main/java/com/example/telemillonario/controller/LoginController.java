@@ -11,6 +11,7 @@ import com.example.telemillonario.repository.RolRepository;
 import com.example.telemillonario.service.DatosAPI;
 import com.example.telemillonario.service.DniAPI;
 import com.example.telemillonario.service.UsuarioService;
+import com.example.telemillonario.validation.Usuario;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -93,21 +95,23 @@ public class LoginController {
         if (persona == null){
             Rol rol = new Rol(2,1,"Usuario");
             personita.setIdrol(rol);
+            personita.setOauth2(1);
             personita.setContrasenia("123456789abcdefg"); //Campo password
             model.addAttribute("recontrasenia","123456789abcdefg");
             model.addAttribute("usuario",personita);
             model.addAttribute("google", 1);
-            /*
-             * Faltarian fecha de nacimiento, dni, direccion y estado
-             * */
             return "login/signup";
-        }else if (persona.getCorreo().equals(personita.getCorreo()) && persona.getContrasenia().equals(password)){
-            /*Aca debe ir mensaje de error*/
+        }else if (persona.getCorreo().equals(personita.getCorreo()) && (persona.getOauth2() == 0)){
+            try {
+                redirectAttributes.addFlashAttribute("msg2", 1);
+                session.invalidate();
+                request.logout();
+                return "login/signin";
+            }catch (Exception e){
+
+            }
             return "redirect:/login";
-        }else if (persona.getCorreo().equals(personita.getCorreo())){
-            /*Aca se ingresa al sistema*/
-            //redirectAttributes.addAttribute("username",email);
-            //redirectAttributes.addAttribute("password","123456789abcdefg");
+        }else if (persona.getCorreo().equals(personita.getCorreo()) && (persona.getOauth2() == 1)){
             session.setAttribute("usuario",persona);
             return "redirect:/redirectByRole";
 
@@ -181,7 +185,7 @@ public class LoginController {
 
                 //Se regresa a la anterior url sólo si es usuario
                 if(urlAnterior.contains("crearCuenta") || urlAnterior.contains("validacionSignUp") ||
-                        urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword")){
+                        urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword") || urlAnterior.contains("cambioDeContrasenia")){
                     return "redirect:/";
                 }
                 return "redirect:" + urlAnterior;
@@ -193,8 +197,17 @@ public class LoginController {
     public String validacionSignUp(@ModelAttribute("usuario") @Valid Persona usuario, BindingResult bindingResult,
                                    @RequestParam(value = "recontrasenia", required = false) String recontrasenia,
                                    @RequestParam(value = "google", required = false) Integer google,
-                                   Model model,HttpServletRequest request,
+                                   Model model, HttpServletRequest request,
                                    RedirectAttributes a) throws InterruptedException, IOException, MessagingException {
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("recontrasenia","123456789abcdefg");
+            if (google != null && google == 1) {
+                model.addAttribute("google", 1);
+            }
+
+            return "login/signup";
+        }
 
         System.out.println("------------------------------------------------------------------");
         //Validacion nombre
@@ -231,6 +244,7 @@ public class LoginController {
         if (recontrasenia.equals("") || recontrasenia == null || contraseniaDiferente == false) {
             model.addAttribute("errRecontrasenia", 1);
             errorRecontrasenia = true;
+            System.out.println("error contrasenia");
         }
 
         //Validacion Fecha de Nacimiento
@@ -241,12 +255,14 @@ public class LoginController {
         if (period.getYears() < 0 || period.getMonths() < 0 || (period.getDays() <= 0 && (period.getYears() < 0 || period.getMonths() < 0))) {
             model.addAttribute("errDate", -1);
             errorNacimiento = true;
+            System.out.print("error nacimiento");
         }
 
         //Validacion DNI
         DatosAPI datosPersona = DniAPI.consulta(usuario.getDni());
         boolean errDNI = true;
         if(datosPersona.getSuccess().equalsIgnoreCase("true")){
+            System.out.println("error dni");
             String nombresUpperCase = usuario.getNombres();
             String cadenaNormalize = Normalizer.normalize(nombresUpperCase,Normalizer.Form.NFD);
             nombresUpperCase = cadenaNormalize.replaceAll("[^\\p{ASCII}]", "").toUpperCase();
@@ -259,7 +275,10 @@ public class LoginController {
             if(ApellidosAPI.contains(apellidosUpperCase) && NombresAPI.contains(nombresUpperCase)){
                 errDNI = false;
             }
-
+            if(usuario.getOauth2() == 1){
+                errDNI = false;
+                System.out.println("error dni2");
+            }
         }
 
         boolean coincidencias = false;
@@ -272,11 +291,12 @@ public class LoginController {
             if (p.getCorreo() != null && p.getCorreo().equals(usuario.getCorreo())) {
                 coincidencias = true;
                 model.addAttribute("errCorreo", 1);
+                System.out.println("error de correo");
             }
         }
 
         //if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI || errorNombre || errorApellido){
-        if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
+        if(coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
             }
@@ -292,6 +312,7 @@ public class LoginController {
             if(errorApellido == true){
                 model.addAttribute("errApellido", errorApellido);
             }*/
+            model.addAttribute("recontrasenia","123456789abcdefg");
             return "login/signup";
         } else {
 

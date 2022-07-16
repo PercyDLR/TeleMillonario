@@ -161,7 +161,7 @@
                                                 <label for="telefono">Teléfono</label>
                                                 <input class="sign__input" th:field="*{telefono}"
                                                        th:classappend="${#fields.hasErrors('telefono')? 'is-invalid':''}"
-                                                       placeholder="Dirección" required>
+                                                       placeholder="Teléfono" required>
                                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('direccion')}"
                                                      th:errors="*{telefono}"></div>
                                             </div>
@@ -172,7 +172,7 @@
                                                 <label for="numerosalas"># de Salas</label>
                                                 <input class="sign__input" th:field="*{numerosalas}"
                                                        th:classappend="${#fields.hasErrors('numerosalas')? 'is-invalid':''}"
-                                                       placeholder="Dirección" required>
+                                                       placeholder="# de Salas" required>
                                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('numerosalas')}"
                                                      th:errors="*{numerosalas}"></div>
                                             </div>

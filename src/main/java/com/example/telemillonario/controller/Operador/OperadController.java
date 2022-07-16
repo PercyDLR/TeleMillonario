@@ -1,9 +1,10 @@
 package com.example.telemillonario.controller.Operador;
 
 import com.example.telemillonario.entity.Foto;
+import com.example.telemillonario.entity.Funcion;
 import com.example.telemillonario.entity.Persona;
-import com.example.telemillonario.repository.FotoRepository;
-import com.example.telemillonario.repository.PersonaRepository;
+import com.example.telemillonario.entity.Sala;
+import com.example.telemillonario.repository.*;
 import com.example.telemillonario.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Controller
@@ -30,6 +32,16 @@ public class OperadController {
 
     @Autowired
     PersonaRepository personaRepository;
+
+
+    @Autowired
+    SedeRepository sedeRepository;
+
+    @Autowired
+    SalaRepository salaRepository;
+
+    @Autowired
+    FuncionRepository funcionRepository;
 
     @GetMapping("/perfil")
     public String verPerfilUsuario(@ModelAttribute("usuario") Persona usuario, Model model, HttpSession session) {
@@ -136,4 +148,41 @@ public class OperadController {
 
 
     }
+
+    float salasporpagina = 6;
+    @GetMapping("/salas")
+    public String funcionesSalas(Model model,@RequestParam(value = "pag", required = false) String pag, HttpSession session) {
+
+        int pagina;
+
+        try {
+            pagina = Integer.parseInt(pag);
+        } catch (Exception e) {
+            pagina = 0;
+        }
+
+        Persona usuarioSesion = (Persona) session.getAttribute("usuario");
+        int idsede=usuarioSesion.getIdsede().getId();
+
+        LinkedHashMap<Sala, List<Funcion>> salasConFunciones = new LinkedHashMap<>();
+        List<Sala> listSalas = salaRepository.buscarSalasSedexpag(idsede, 1,(int) salasporpagina * pagina, (int) salasporpagina);
+
+        for (Sala sala: listSalas ){
+            List<Funcion> funcionesSala = funcionRepository.buscarFuncionesPorSedeySala(idsede, sala.getId());
+            salasConFunciones.put(sala,funcionesSala);
+        }
+
+
+        int cantSalas=salaRepository.buscarSalasTotal(idsede,1).size();
+
+        LocalDate fechahoy = LocalDate.now();
+        model.addAttribute("fechactual",fechahoy);
+        model.addAttribute("listadosalasconfunc",salasConFunciones);
+        model.addAttribute("pagActual", pagina);
+        model.addAttribute("pagTotal", (int) Math.ceil(cantSalas / salasporpagina));
+
+        return "Operador/vistaSalas";
+    }
+
+
 }

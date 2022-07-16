@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/header :: head('Crear Funcion',~{::style})">
+    <head th:replace="fragments/header :: head(${funcion.id == null ? 'Crear función' : 'Editar función'},~{::style})">
 
         <style>
                 .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -115,7 +115,7 @@
                             <!-- authorization form -->
                             <form class="sign__form" method="post" th:object="${funcion}" th:action="@{/operador/funciones/guardar}" enctype="multipart/form-data">
                                 <h3 style="text-align: center; color: #FFFFFF; font-size: 3rem; font-family: 'Open Sans', sans-serif;"
-                                    th:text="${funcion.id == 0 ? 'Crear función' : 'Editar función'}"></h3>
+                                    th:text="${funcion.id == null ? 'Crear función' : 'Editar función'}"></h3>
 
                                 <div class="row">
                                     <div class="col-12" style="width: fit-content">
