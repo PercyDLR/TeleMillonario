@@ -105,7 +105,8 @@ public class ReporteService {
                 hoja.getRow(index).createCell(7).setCellValue(balanceDto.getPreciounitario());
                 hoja.getRow(index).createCell(8).setCellValue(balanceDto.getStock());
                 hoja.getRow(index).createCell(9).setCellValue(balanceDto.getAsistencia());
-                hoja.getRow(index).createCell(10).setCellValue(balanceDto.getCalificacion());
+                //Corrección
+                hoja.getRow(index).createCell(10).setCellValue(balanceDto.getCalificacion()==null?0.0:balanceDto.getCalificacion());
                 hoja.getRow(index).createCell(11).setCellValue(balanceDto.getRestriccion()==1?"Si":"No");
                 hoja.getRow(index).createCell(12).setCellValue((((float) balanceDto.getAsistencia())/balanceDto.getStock())*100);
                 hoja.getRow(index).createCell(13).setCellValue(balanceDto.getAsistencia()*balanceDto.getPreciounitario());
