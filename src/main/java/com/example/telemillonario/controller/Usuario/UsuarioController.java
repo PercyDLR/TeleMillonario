@@ -770,6 +770,7 @@ public class UsuarioController {
                         model.addAttribute("foto",listaFotos);
                         List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
                         model.addAttribute("listaGeneros",listaGeneros);
+                        System.out.println(bindingResult.getAllErrors());
                         return "usuario/pagoUsuario";
                     } else {
                         RestTemplate restTemplate = new RestTemplate();
@@ -1456,6 +1457,8 @@ public class UsuarioController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
+        System.out.println("Estoy enviando el correo");
+
         helper.setFrom("TeleMillonario@gmail.com","TeleMillonario");
         helper.setTo(correo);
 
@@ -2029,8 +2032,15 @@ public class UsuarioController {
                     redirectAttributes.addFlashAttribute("noCancelarPorHora", "Ha pasado la hora límite para cancelar su compra");
                 } else {
                     compraRepository.actualizacionEstadoCompra("Cancelado",persona.getId(), idCompra);
+
+                    if (funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getStockentradas() == 0) {
+                        funcionRepository.getById(optionalCompra.get().getFuncion().getId()).setEstado(1);
+                        funcionRepository.save(funcionRepository.getById(optionalCompra.get().getFuncion().getId()));
+                    }
+
                     funcionRepository.actualizacionCantidadBoletos(optionalCompra.get().getCantidad() + funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getStockentradas(), funcionRepository.getById(optionalCompra.get().getFuncion().getId()).getId());
                     pagoRepository.cancelarPago(idCompra);
+
                     redirectAttributes.addFlashAttribute("exitoCancelar", "Su compra ha sido cancelada exitosamente");
 
                     String content = sendContentBorrarCompra(pagoRepository.encontrarPagoPorIdCompra(idCompra));

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Controller
@@ -261,7 +263,29 @@ public class ObraController {
 
                 for (Sala sa : listaSalasDeSede) {
                     List<Funcion> listaFunciones = funcionRepository.listaFuncionesConObra(id, s.getId(), sa.getId());
-                    funcionesDeLaSede.put(s, listaFunciones);
+                    List<Funcion> listaFuncionesAEnviar = new ArrayList<>();
+                    boolean funcionAMostrar = true;
+                    for (Funcion f : listaFunciones) {
+                        System.out.println(f.getIdsala().getIdsede().getNombre());
+                            LocalDate fechaActual = LocalDate.now();
+                            if (fechaActual.compareTo(f.getFecha()) > 0) { //Fecha ya paso, no debe mostrarse la funcion
+                                funcionAMostrar = false;
+                            } else if (fechaActual.compareTo(f.getFecha()) == 0) { //Fecha es hoy
+                                LocalTime tiempoActual = LocalTime.now();
+                                if (tiempoActual.compareTo(f.getFin()) > 0) { //Ya acabo la funcion, no debe mosstrarse la funcion
+                                    funcionAMostrar = false;
+                                }
+                            }
+                        System.out.println(funcionAMostrar);
+                            if (funcionAMostrar) {
+                                listaFuncionesAEnviar.add(f);
+                            }
+                            funcionAMostrar = true;
+                    }
+
+                    if (listaFuncionesAEnviar.size() != 0) {
+                        funcionesDeLaSede.put(s, listaFuncionesAEnviar);
+                    }
                 }
             }
 
