@@ -36,6 +36,12 @@ public interface SalaRepository extends JpaRepository<Sala,Integer> {
             "idsede=?1 and (estado=?2)")
     List<Sala> buscarSalasTotal(int sede, int estado);
 
+    @Query(nativeQuery = true, value = "select * from telemillonario.sala where " +
+            "idsede=?1 and estado=?2 " +
+            "limit ?3,?4")
+    List<Sala> buscarSalasSedexpag(int sede,int estado, int pag, int salasporpag);
+
+
     @Query(nativeQuery = true, value = "SELECT count(*) FROM telemillonario.sala where idsede=?1 ")
     Integer valCantSal(int idsede);
 

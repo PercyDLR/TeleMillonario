@@ -217,6 +217,11 @@ public class FuncionesController {
         Persona persona = (Persona) session.getAttribute("usuario");
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
+
+
+
+
+
         //-----------------------------------------------
         //    Validación de Datos Ingresados
         //-----------------------------------------------
@@ -280,6 +285,51 @@ public class FuncionesController {
 
             return "Operador/crearFuncion";
         }
+
+
+        //-----------------------------------------------
+        //    Validación de funcion con misma hora inicio en una sala
+        //-----------------------------------------------
+        Persona usuarioSesion = (Persona) session.getAttribute("usuario");
+        int idsede=usuarioSesion.getIdsede().getId();
+        //hora inicio
+        LocalTime horavalidar = fecha.toLocalTime();
+
+        List<Funcion> funcionesSala = funcionRepository.buscarFuncionesPorSedeySala(idsede,funcion.getIdsala().getId());
+        for (Funcion func: funcionesSala){
+            int value= horavalidar.compareTo(func.getInicio());
+
+            LocalTime horafinfuncion =func.getFin();
+            //validamos si la hora de la funcion esta dentro del rango de duracion de una funcion existente en una sala
+            if (value>0){
+
+                int value1= horavalidar.compareTo(func.getFin());
+
+                if(value1==-1){
+                    // Retorna los valores ingresados
+                    retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
+
+                    model.addAttribute("msgfecha", "La hora de inicio no puede estar dentro del horario de una funcion en la sala"+funcion.getIdsala().getNumero());
+
+                    return "Operador/crearFuncion";
+                }
+
+            }
+
+
+            //validamos si las horas son iguales
+            if (value==0){
+                // Retorna los valores ingresados
+                retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
+
+                model.addAttribute("msgfecha", "Ya existe una obra con la misma hora de inicio en la sala "+funcion.getIdsala().getNumero());
+
+                return "Operador/crearFuncion";
+            }
+
+        }
+
+
 
         //-----------------------------------------------
         //          Guardar datos de la Función
