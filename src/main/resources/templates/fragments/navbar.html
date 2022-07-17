@@ -79,9 +79,9 @@
                                             <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
                                                 <li><a th:href="@{/perfil}">Perfil</a></li>
                                                 <li><a th:href="@{/historial}">Historial</a></li>
-                                                <li><a href="#" th:if="${session.carritoDeComprasDeUsuario != null && session.carritoDeComprasDeUsuario.size() != 0}" onclick="advertencia()">
+                                                <li><a href="#" th:if="${session.cantReservas != null && session.cantReservas > 0}" onclick="advertencia()">
                                                     Cerrar Sesión</a></li>
-                                                <li><a href="#" th:unless="${session.carritoDeComprasDeUsuario != null && session.carritoDeComprasDeUsuario.size() != 0}" onclick="document.getElementById('form-logout').submit()">
+                                                <li><a href="#" th:unless="${session.cantReservas != null && session.cantReservas > 0}" onclick="document.getElementById('form-logout').submit()">
                                                     Cerrar Sesión</a></li>
                                             </ul>
                                         </li>
@@ -118,7 +118,7 @@
                     </div>
                 </div>
 
-                <div id="popup" class="overlay">
+                <div id="popup" class="overlay" th:if="${session.cantReservas != null && session.cantReservas > 0}">
                     <div class="row">
                         <div class="col-12">
                             <div class="sign__content">
@@ -127,19 +127,31 @@
                                         <img th:src="@{/img/tele.png}" alt="logo">
                                     </a>
                                     <div class="sign__group">
-                                        <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                        <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900; margin-bottom: 40px">
                                             Espere, aún hay reservas presentes en su carrito</h5>
 
-                                        <div th:each="reserva : ${session.carritoDeComprasDeUsuario.values()}">
-                                            <div class="x_text-details" style="display:block; margin-top: 20px">
-                                                <strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getFuncion().getIdobra().getNombre()}"></span></strong>
-                                                <strong>Fecha: </strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getFuncion().getFecha()}"></span>
-                                                <strong>Hora: </strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getFuncion().getInicio()}"></span>
-                                                <strong>Boletos reservados: </strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getCantidad()}"></span>
-                                            </div>
+                                        <div th:if="${session.cantReservas > 0}" id="scroller" class="container">
+                                                <table class="accordion__list" style="text-align: center;display: inline-table;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nombre de la obra</th>
+                                                            <th>Fecha de la función</th>
+                                                            <th>Hora inicio</th>
+                                                            <th>Boletos reservados</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:each="reserva : ${session.carritoDeComprasDeUsuario.values()}" th:unless="${reserva.getEstado() == 'Borrado'}">
+                                                            <td class="align-middle" style="padding-bottom: 9px;" th:text="${reserva.getFuncion().getIdobra().getNombre()}"></td>
+                                                            <td class="align-middle" style="padding-bottom: 9px;" th:text="${reserva.getFuncion().getFecha()}"></td>
+                                                            <td class="align-middle" style="padding-bottom: 9px;" th:text="${reserva.getFuncion().getInicio()}"></td>
+                                                            <td class="align-middle" style="padding-bottom: 9px;" th:text="${reserva.getCantidad()}"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                         </div>
 
-                                        <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                        <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900; margin-top: 40px">
                                             Una vez cierre su sesión, sus reservas sin comprar serán eliminadas. ¿En verdad quiere cerrar sesión?
                                         </h5>
                                     </div>

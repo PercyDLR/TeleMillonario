@@ -482,8 +482,8 @@ public class UsuarioController {
                     carrito.put(llavesCarrito,reserva);
                     //carrito.put(fechaDeReservaCompra,reserva);
                     session.setAttribute("carritoDeComprasDeUsuario", carrito);
-                    redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente.Puede encontrarla " +
-                            "dirigiendose a su carrito de compras.");
+                    redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente. Puede encontrarla " +
+                            "dirigiéndose a su carrito de compras.");
 
                     int cant = (int) session.getAttribute("cantReservas");
                     System.out.println(cant);
@@ -1674,7 +1674,7 @@ public class UsuarioController {
         } else {
             ArrayList<String> mensajes = new ArrayList<>();
             for (Compra compra : reservasBorrarCarrito) {
-                mensajes.add("No hay stock disponible para la Funcion con Obra : "+compra.getFuncion().getIdobra().getNombre()+", con horario de inicio:"+compra.getFuncion().getInicio()+", y con hora fin:"+compra.getFuncion().getFin());
+                mensajes.add("No hay stock disponible para la Funcion con Obra: "+compra.getFuncion().getIdobra().getNombre()+", con horario de inicio: "+compra.getFuncion().getInicio()+", y con hora fin: "+compra.getFuncion().getFin());
             }
             redirectAttributes.addFlashAttribute("ReservasSinStock", mensajes);
             return "redirect:/carritoPrueba";

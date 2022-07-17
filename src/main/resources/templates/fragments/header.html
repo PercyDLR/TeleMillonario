@@ -70,6 +70,14 @@
                 visibility: hidden;
                 display: none;
             }
+
+            #scroller{
+                overflow-x: hidden;
+                overflow-y: auto;
+                position: relative;
+                max-height: 15vh;
+                padding-right: 0;
+            }
         </style>
         <th:block th:replace="${extra}"/>
 
