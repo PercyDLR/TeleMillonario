@@ -95,6 +95,9 @@
                                        class="header__sign-in" style="margin-left: auto"> <!--th:href="@{/carrito}" -->
                                         <i class="bi bi-cart2"></i>
                                         <span>Carrito</span>
+                                        <button type="button" style="background-color: white" class="btn btn-default btn-circle" th:if="${session.cantReservas != null}" th:text="${session.cantReservas}">
+                                            <i class="fa fa-check"></i>
+                                        </button>
                                     </a>
                                 </div>
                                 <!-- end header auth -->

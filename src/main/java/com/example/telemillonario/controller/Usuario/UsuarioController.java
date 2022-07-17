@@ -411,6 +411,13 @@ public class UsuarioController {
                     session.setAttribute("carritoDeComprasDeUsuario", carritoDeComprasDeUsuario);
                     redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente.Puede encontrarla " +
                             "dirigiendose a su carrito de compras.");
+
+                    int cant = (int) session.getAttribute("cantReservas");
+                    System.out.println(cant);
+                    cant = cant + 1;
+                    System.out.println(cant);
+                    session.setAttribute("cantReservas",cant);
+
                     return "redirect:/cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
 
                 }
@@ -477,6 +484,13 @@ public class UsuarioController {
                     session.setAttribute("carritoDeComprasDeUsuario", carrito);
                     redirectAttributes.addFlashAttribute("reservaExitosa", "Se ha realizado su reserva correctamente.Puede encontrarla " +
                             "dirigiendose a su carrito de compras.");
+
+                    int cant = (int) session.getAttribute("cantReservas");
+                    System.out.println(cant);
+                    cant = cant + 1;
+                    System.out.println(cant);
+                    session.setAttribute("cantReservas",cant);
+
                     return "redirect:/cartelera/DetallesObra?id=" + funcion.getIdobra().getId();
                 }
             } else {
@@ -990,6 +1004,10 @@ public class UsuarioController {
                     return "redirect:/anErrorHasOcurred";
                 }
 
+                int cant = (int) session.getAttribute("cantReservas");
+                cant = cant -reservasBorrarCarrito.size();
+                session.setAttribute("cantReservas",cant);
+
                 return "usuario/carrito/carritoComprasUsuario";
             }
         }
@@ -1225,12 +1243,19 @@ public class UsuarioController {
                     carrito.put(llaveBorrar,compra);
                     session.setAttribute("carritoDeComprasDeUsuario", carrito);
                     redirectAttributes.addFlashAttribute("reservaEliminada", "Su reserva se ha eliminado satisfactoriamente");
+
+                    int cant = (int) session.getAttribute("cantReservas");
+                    cant = cant - 1;
+                    session.setAttribute("cantReservas",cant);
+
                 }else{
                     redirectAttributes.addFlashAttribute("mensajeError", "La reserva ya ha sido cancelada");
                 }
                 break;
             }
         }
+
+
         return "redirect:/carritoPrueba";
     }
 
@@ -1632,6 +1657,10 @@ public class UsuarioController {
                         System.out.println("No se pudo mandar el correo");
                         return "redirect:/anErrorHasOcurred";
                     }
+
+                    int cant = (int) session.getAttribute("cantReservas");
+                    cant = cant - listaReservas.size();
+                    session.setAttribute("cantReservas",cant);
 
                     redirectAttributes.addFlashAttribute("compraExitosa", "Se ha realizado su compra correctamente.");
                     return "redirect:/historial";
