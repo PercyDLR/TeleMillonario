@@ -30,16 +30,29 @@
                             <input type="number" name="oauth2" th:unless="${google eq 1}" value="0" hidden>
 
                             <div class="row">
-                               <div class="col-md-6 col-12">
+                                <div class="col-md-6 col-12">
                                    <div class="sign__group">
                                        <label for="nombres">Nombres</label>
                                        <input type="text" class="sign__input" placeholder="Nombres" id="nombres" name="nombres" th:value="*{nombres}" maxlength="100"
-                                              th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}" th:readonly="${google eq 1}" required autofocus>
+                                              th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}" required autofocus>
                                        <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
                                             th:errors="*{nombres}"></div>
                                        <!--div class="invalid-feedback d-block" th:if="${(errNombre != null) && (errNombre == true)}">Los nombres no pueden contener caracteres.</div-->
                                    </div>
+                                </div>
 
+                                <div class="col-md-6 col-12">
+                                    <div class="sign__group">
+                                        <label for="apellidos">Apellidos</label>
+                                        <input type="text" class="sign__input" placeholder="Apellidos" id="apellidos" name="apellidos" th:value="${usuario.getApellidos()}" required maxlength="100"
+                                               th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}">
+                                        <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
+                                             th:errors="*{apellidos}"></div>
+                                        <!--div class="invalid-feedback d-block" th:if="${(errApellido != null) && (errApellido == true)}">Los apellidos no pueden contener caracteres.</div-->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12">
                                    <div class="sign__group">
                                        <label for="dni">DNI</label>
                                        <input type="text" class="sign__input" placeholder="DNI" id="dni" name="dni" th:value="${usuario.getDni()}" required maxlength="8"
@@ -48,7 +61,23 @@
                                             th:errors="*{dni}"></div>
                                        <div class="invalid-feedback d-block" th:if="${(errDni != null) && (errDni eq 1)}">El dni ingresado ya está en uso</div>
                                    </div>
+                                </div>
 
+                                <input th:if="${google eq 1}" type="email" class="sign__input" placeholder="Correo" id="correo" autocomplete="username" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
+                                           th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}" hidden>
+
+                                <div class="col-md-6 col-12" th:unless="${google eq 1}">
+                                    <div class="sign__group">
+                                        <label for="correo">Correo</label>
+                                        <input type="email" class="sign__input" placeholder="Correo" id="correo" autocomplete="username" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
+                                               th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
+                                             th:errors="*{correo}"></div>
+                                        <div class="invalid-feedback d-block" th:if="${(errCorreo != null) && (errCorreo eq 1)}">El correo ingresado ya está en uso</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12">
                                    <div class="sign__group">
                                        <label for="telefono">Teléfono</label>
                                        <input type="text" class="sign__input" placeholder="Teléfono" id="telefono" name="telefono" th:value="${usuario.getTelefono()}" required maxlength="9"
@@ -56,44 +85,22 @@
                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('telefono')}"
                                             th:errors="*{telefono}"></div>
                                    </div>
-
                                </div>
 
-                               <div class="col-md-6 col-12">
-                                   <div class="sign__group">
-                                       <label for="apellidos">Apellidos</label>
-                                       <input type="text" class="sign__input" placeholder="Apellidos" id="apellidos" name="apellidos" th:value="${usuario.getApellidos()}" required maxlength="100"
-                                              th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}" th:readonly="${google eq 1}">
-                                       <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
-                                            th:errors="*{apellidos}"></div>
-                                       <!--div class="invalid-feedback d-block" th:if="${(errApellido != null) && (errApellido == true)}">Los apellidos no pueden contener caracteres.</div-->
-                                   </div>
-
-                                   <div class="sign__group" th:unless="${google eq 1}">
-                                       <label for="correo">Correo</label>
-                                       <input type="email" class="sign__input" placeholder="Correo" id="correo" autocomplete="username" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
-                                              th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}">
-                                       <div class="invalid-feedback" th:if="${#fields.hasErrors('correo')}"
-                                            th:errors="*{correo}"></div>
-                                       <div class="invalid-feedback d-block" th:if="${(errCorreo != null) && (errCorreo eq 1)}">El correo ingresado ya está en uso</div>
-                                   </div>
-
-                                   <div th:if="${google eq 1}">
-                                       <input type="email" class="sign__input" placeholder="Correo" id="correo" autocomplete="username" name="correo" th:value="${usuario.getCorreo()}" required maxlength="100"
-                                              th:classappend="${#fields.hasErrors('correo')?'is-invalid':''}" hidden>
-                                   </div>
-
+                                <div class="col-md-6 col-12">
                                    <div class="sign__group">
                                        <label for="nacimiento">Fecha de Nacimiento</label>
                                        <input type="date" class="sign__input" placeholder="Fecha de Nacimiento" id="nacimiento" name="nacimiento" th:value="${usuario.getNacimiento()}" onfocus="(this.type='date')" required>
                                        <div class="invalid-feedback d-block" th:if="${(errDate != null) && (errDate eq -1)}">La fecha ingresada debe ser hasta un dia antes de la fecha actual</div>
                                    </div>
+                                </div>
 
-                                   <div class="sign__group" th:if="${google eq 1}">
+                                <div class="col-md-6 col-12" th:if="${google eq 1}">
+                                   <div class="sign__group">
                                        <label for="direccion">Dirección</label>
                                        <input type="text" class="sign__input" placeholder="Dirección" id="direccion" name="direccion" th:value="${usuario.getDireccion()}" required maxlength="100">
                                    </div>
-                               </div>
+                                </div>
 
                                 <div class="col-12" th:unless="${google eq 1}">
                                     <div class="sign__group">
