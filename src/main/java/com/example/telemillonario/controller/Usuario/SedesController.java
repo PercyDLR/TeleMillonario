@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
@@ -48,7 +49,7 @@ public class SedesController {
     public String listaSedesUsuario(Model model,
                                     @RequestParam(value = "busqueda",defaultValue = "") String busqueda,
                                     @RequestParam(value = "pag",defaultValue = "0") String pag,
-                                    @RequestParam(value = "filtro", required = false, defaultValue = "0") String filtro){
+                                    @RequestParam(value = "filtro", required = false, defaultValue = "0") String filtro, HttpSession session){
         //lista de sedes habilitadas
         int pagina;
         int estado=1;
@@ -108,7 +109,7 @@ public class SedesController {
                         @RequestParam(value = "restriccionEdad", required = false, defaultValue = "") String restriccionEdad,
                         @RequestParam(value = "genero", required = false, defaultValue = "") String genero,
                         @RequestParam(value = "busqueda", required = false, defaultValue = "") String busqueda,
-                        @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
+                        @RequestParam(value = "pag", required = false, defaultValue = "0") String pag, HttpSession session) {
 
         int pagina;
         try {

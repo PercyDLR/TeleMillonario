@@ -82,7 +82,7 @@ public class UsuarioController {
     CalificacionesRepository calificacionesRepository;
 
     @GetMapping("")
-    public String paginaPrincipal(Model model){
+    public String paginaPrincipal(Model model, HttpSession session){
         List<Obra> listaObras = obraRepository.obtenerObrasDestacadasPaginaPrincipal();
         model.addAttribute("listaObras",listaObras);
 
@@ -936,7 +936,7 @@ public class UsuarioController {
                 long minutes = duration.toMinutes();
                 boolean estaATiempo = true;
 
-                if (minutes > 1) { //Cambiar a 15
+                if (minutes > 15) { //Cambiar a 15
                     estaATiempo = false;
                 }
 

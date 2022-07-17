@@ -56,7 +56,7 @@ public class ObraController {
                                         @RequestParam(value = "restriccionEdad", required = false, defaultValue = "") String restriccionEdad,
                                         @RequestParam(value = "genero", required = false, defaultValue = "") String genero,
                                         @RequestParam(value = "busqueda", required = false, defaultValue = "") String busqueda,
-                                        @RequestParam(value = "pag", required = false, defaultValue = "0") String pag) {
+                                        @RequestParam(value = "pag", required = false, defaultValue = "0") String pag, HttpSession session) {
 
         System.out.println("Valores recibidos en POST:");
         System.out.println("restriccionedad: " + restriccionEdad);

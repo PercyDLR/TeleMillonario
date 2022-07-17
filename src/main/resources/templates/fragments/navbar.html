@@ -1,117 +1,162 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
     <head>
         <meta charset="UTF-8">
         <title>Navbars</title>
     </head>
     <body>
+        <div th:fragment="usuario(seccion)">
+            <header class="header">
+                <form id="form-logout" th:action="@{/logout}" method="post" hidden></form>
+                <div class="header__wrap" style="box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%)">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="header__content">
+                                    <!-- header logo -->
+                                    <a th:href="@{/}" class="header__logo" style="width: 12rem">
+                                        <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
+                                    </a>
+                                    <!-- end header logo -->
 
-        <header class="header" th:fragment="usuario(seccion)">
-            <form id="form-logout" th:action="@{/logout}" method="post" hidden></form>
-            <div class="header__wrap" style="box-shadow: 0 5px 25px 0 rgb(0 0 0 / 30%)">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="header__content">
-                                <!-- header logo -->
-                                <a th:href="@{/}" class="header__logo" style="width: 12rem">
-                                    <img style="margin-top: 0;margin-inline: 5px;max-width: 11rem" th:src="@{/img/tele.png}" alt="logo">
-                                </a>
-                                <!-- end header logo -->
+                                    <!-- header nav -->
+                                    <ul class="header__nav" style="height: auto;">
+                                        <li class="header__nav-item">
+                                            <a  th:href="@{/}" class="header__nav-link"
+                                                th:classappend="${seccion=='inicio' ? 'header__nav-link--active' : ''}">Inicio</a>
+                                        </li>
 
-                                <!-- header nav -->
-                                <ul class="header__nav" style="height: auto;">
-                                    <li class="header__nav-item">
-                                        <a  th:href="@{/}" class="header__nav-link"
-                                            th:classappend="${seccion=='inicio' ? 'header__nav-link--active' : ''}">Inicio</a>
-                                    </li>
+                                        <li class="header__nav-item">
+                                            <a th:href="@{/cartelera}" class="header__nav-link"
+                                               th:classappend="${seccion=='cartelera' ? 'header__nav-link--active' : ''}" >Cartelera</a>
+                                        </li>
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/cartelera}" class="header__nav-link"
-                                           th:classappend="${seccion=='cartelera' ? 'header__nav-link--active' : ''}" >Cartelera</a>
-                                    </li>
+                                        <li class="header__nav-item">
+                                            <a th:href="@{/sedes}" class="header__nav-link"
+                                               th:classappend="${seccion=='sedes' ? 'header__nav-link--active' : ''}" >Sedes</a>
+                                        </li>
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/sedes}" class="header__nav-link"
-                                           th:classappend="${seccion=='sedes' ? 'header__nav-link--active' : ''}" >Sedes</a>
-                                    </li>
+                                        <li class="header__nav-item">
+                                            <a th:href="@{/actores}" class="header__nav-link"
+                                               th:classappend="${seccion=='actores' ? 'header__nav-link--active' : ''}" >Actores</a>
+                                        </li>
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/actores}" class="header__nav-link"
-                                           th:classappend="${seccion=='actores' ? 'header__nav-link--active' : ''}" >Actores</a>
-                                    </li>
+                                        <li class="header__nav-item">
+                                            <a th:href="@{/directores}" class="header__nav-link"
+                                               th:classappend="${seccion=='directores' ? 'header__nav-link--active' : ''}" >Directores</a>
+                                        </li>
 
-                                    <li class="header__nav-item">
-                                        <a th:href="@{/directores}" class="header__nav-link"
-                                           th:classappend="${seccion=='directores' ? 'header__nav-link--active' : ''}" >Directores</a>
-                                    </li>
+                                        <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>
+                                    </ul>
+                                    <!-- end header nav -->
 
-                                    <li class="header__nav-item" style="margin-right: auto; margin-bottom: auto"></li>
-                                </ul>
-                                <!-- end header nav -->
+                                    <!-- Cuenta -->
+                                    <ul class="header__nav cuenta" style="height: auto;">
+                                        <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px; margin-rigth: 10px">
+                                            <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                                <img style="height: 50px; width: 50px; margin-top: 0;border-radius: 50%; object-fit:cover" th:src="${session.fotoPerfil}"></a>
 
-                                <!-- Cuenta -->
-                                <ul class="header__nav cuenta" style="height: auto;">
-                                    <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin: 5px; margin-rigth: 10px">
-                                        <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                            <img style="height: 50px; width: 50px; margin-top: 0;border-radius: 50%; object-fit:cover" th:src="${session.fotoPerfil}"></a>
-
-                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
-                                            <li><a th:href="@{/perfil}">Perfil</a></li>
+                                            <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown1">
+                                                <li><a th:href="@{/perfil}">Perfil</a></li>
                                                 <li><a th:href="@{/historial}">Historial</a></li>
-                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
-                                                Cerrar Sesión</a></li>
-                                        </ul>
-                                    </li>
+                                                <li><a href="#" onclick="advertencia()">
+                                                    Cerrar Sesión</a></li>
+                                            </ul>
+                                        </li>
 
-                                    <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin-bottom: 0">
-                                        <a role="button" id="dropdown4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <div class="cuenta" style="color: white">
-                                                <span th:text="${session.usuario.nombres}"></span>
-                                            </div>
+                                        <li sec:authorize="isAuthenticated()" class="header__nav-item" style="margin-bottom: 0">
+                                            <a role="button" id="dropdown4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <div class="cuenta" style="color: white">
+                                                    <span th:text="${session.usuario.nombres}"></span>
+                                                </div>
 
-                                            <div class="cuenta" style="color: rgba(255,255,255,0.5)">
-                                                <span th:text="${session.usuario.apellidos}"></span>
-                                            </div>
+                                                <div class="cuenta" style="color: rgba(255,255,255,0.5)">
+                                                    <span th:text="${session.usuario.apellidos}"></span>
+                                                </div>
+                                            </a>
+
+                                            <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
+                                                <li><a th:href="@{/perfil}">Perfil</a></li>
+                                                <li><a th:href="@{/historial}">Historial</a></li>
+                                                <li><a href="#" th:if="${session.carritoDeComprasDeUsuario != null && session.carritoDeComprasDeUsuario.size() != 0}" onclick="advertencia()">
+                                                    Cerrar Sesión</a></li>
+                                                <li><a href="#" th:unless="${session.carritoDeComprasDeUsuario != null && session.carritoDeComprasDeUsuario.size() != 0}" onclick="document.getElementById('form-logout').submit()">
+                                                    Cerrar Sesión</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="header__nav-item" style="width: 0">
+                                    </ul>
+
+                                    <!-- header auth -->
+                                    <div class="header__auth" style="margin-left: 0">
+                                        <a sec:authorize="isAnonymous()" th:href="@{/login}" class="header__sign-in">
+                                            <i class="icon ion-ios-log-in"></i>
+                                            <span>Iniciar Sesión</span>
                                         </a>
+                                        <a sec:authorize="isAuthenticated()" th:href="@{/carritoPrueba}"
+                                           class="header__sign-in" style="margin-left: auto"> <!--th:href="@{/carrito}" -->
+                                            <i class="bi bi-cart2"></i>
+                                            <span>Carrito</span>
+                                        </a>
+                                    </div>
+                                    <!-- end header auth -->
 
-                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdown2">
-                                            <li><a th:href="@{/perfil}">Perfil</a></li>
-                                            <li><a th:href="@{/historial}">Historial</a></li>
-                                            <li><a href="#" onclick="document.getElementById('form-logout').submit()">
-                                                Cerrar Sesión</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="header__nav-item" style="width: 0">
-                                </ul>
-
-                                <!-- header auth -->
-                                <div class="header__auth" style="margin-left: 0">
-                                    <a sec:authorize="isAnonymous()" th:href="@{/login}" class="header__sign-in">
-                                        <i class="icon ion-ios-log-in"></i>
-                                        <span>Iniciar Sesión</span>
-                                    </a>
-                                    <a sec:authorize="isAuthenticated()" th:href="@{/carritoPrueba}"
-                                       class="header__sign-in" style="margin-left: auto"> <!--th:href="@{/carrito}" -->
-                                        <i class="bi bi-cart2"></i>
-                                        <span>Carrito</span>
-                                    </a>
+                                    <!-- header menu btn -->
+                                    <button class="header__btn" type="button">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </button>
+                                    <!-- end header menu btn -->
                                 </div>
-                                <!-- end header auth -->
-
-                                <!-- header menu btn -->
-                                <button class="header__btn" type="button">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
-                                <!-- end header menu btn -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
+
+                <div id="popup" class="overlay">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="sign__content">
+                                <form action="#" class="sign__form">
+                                    <a class="sign__logo">
+                                        <img th:src="@{/img/tele.png}" alt="logo">
+                                    </a>
+                                    <div class="sign__group">
+                                        <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                            Espere, aún hay reservas presentes en su carrito</h5>
+
+                                        <div th:each="reserva : ${session.carritoDeComprasDeUsuario.values()}">
+                                            <div class="x_text-details" style="display:block; margin-top: 20px">
+                                                <strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getFuncion().getIdobra().getNombre()}"></span></strong>
+                                                <strong>Fecha: </strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getFuncion().getFecha()}"></span>
+                                                <strong>Hora: </strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getFuncion().getInicio()}"></span>
+                                                <strong>Boletos reservados: </strong><span style="display:block; margin-bottom:8px; color: white;font-size: 5rem;font-size: 18px;font-family: 'Open Sans';font-weight: 900;" th:text="${reserva.getCantidad()}"></span>
+                                            </div>
+                                        </div>
+
+                                        <h5 style="color: white;font-size: 5rem;font-size: 25px;font-family: 'Open Sans';font-weight: 900;">
+                                            Una vez cierre su sesión, sus reservas sin comprar serán eliminadas. ¿En verdad quiere cerrar sesión?
+                                        </h5>
+                                    </div>
+                                    <a style="color: white;cursor: pointer" onclick="document.getElementById('popup').style.display = 'none'" class="sign__btn">Cancelar</a>
+                                    <a id="borrar" onclick = "document.getElementById('form-logout').submit()" class="sign__btn">Cerrar sesión</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script th:inline="javascript">
+                    function advertencia() {
+                        let popup = document.getElementById('popup');
+                        popup.style.display = 'block';
+                    }
+
+                </script>
+            </header>
+        </div>
 
         <header class="header" th:fragment="operador(seccion)">
             <form id="form-logout" th:action="@{/logout}" method="post"></form>
