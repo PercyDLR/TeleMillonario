@@ -43,7 +43,7 @@
                     <div class="row justify-content-center mt-5">
 
                         <div class="col-md-6 col-12 sign__group">
-                            <input type="search" name="nombre" class="search_input" placeholder="Buscar por Nombre">
+                            <input type="search" name="nombre" th:value="${busqueda}" class="search_input" placeholder="Buscar por Nombre">
                         </div>
 
                         <div class="col-md-4 col-12 sign__group">
@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <br>
-                <div th:replace="fragments/paginacion :: paginacion(0,${paginacion},'/admin/operadores?')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${paginacion},'/admin/operadores/listar?')"></div>
             </div>
         </div>
 

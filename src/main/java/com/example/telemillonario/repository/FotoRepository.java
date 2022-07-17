@@ -24,6 +24,14 @@ public interface FotoRepository extends JpaRepository<Foto,Integer> {
             "where s.idsede=?1 and fo.numero=0")
     List<Foto> buscarFotoObrasPorSede(int idsede);
 
+
+    @Query(nativeQuery = true, value = "select fo.* from fotos fo " +
+            "inner join funcion fu on fu.idobra = fo.idobra " +
+            "inner join sala s on (s.id = fu.idsala) inner join obra o on (o.id=fo.idobra)  " +
+            "where s.idsede=?1 and fo.numero=0 and fo.estado=1 and lower(o.nombre) like %?2%")
+    List<Foto> buscarFotoObrasPorSedePorNombre(int idsede,String nombre);
+
+
     @Query(nativeQuery = true, value = "select * from fotos fo inner join obra o on (fo.idfuncion=o.id) where " +
             "fo.idsede=?1 and fo.estado=1 and lower(o.nombre) like %?2% and fo.idobra IS NOT NULL  group by fo.idobra limit ?3,?4")
     List<Foto> buscarFotoFuncionesPorPag(int idsede,String nombre,int pag, int salasporpag);

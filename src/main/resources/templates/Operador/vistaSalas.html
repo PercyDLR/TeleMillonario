@@ -14,7 +14,7 @@
         </style>
     </head>
 
-    <body class="body">
+    <body class="body" onload="mueveReloj()">
         <div th:replace="fragments/navbar :: operador('salas')"></div>
 
 
@@ -38,11 +38,10 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <div class="section__wrap" style="margin-top: 30px">
+                            <div style="margin-top: 30px;display: flex;justify-content: right" >
+                                <h4 style="color: white;margin-top: 10px">Fecha actual:</h4>
+                                <input  style="color: white;font-size: 20px;margin-bottom: 10px" class="sign__input" disabled id="fechaout" />
 
-                                <h4 th:text="|Fecha hoy: ${fechactual}|" class="details__title" >
-
-                                </h4>
 
                             </div>
                         </div>
@@ -87,7 +86,7 @@
                 <!-- Fin Salas-->
 
                 <!-- Paginacion-->
-                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/salas?')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/salas/listar?')"></div>
                 <!-- Fin Paginacion-->
 
             </div>
@@ -95,6 +94,42 @@
 
 
         <div th:replace="fragments/footer :: js(~{::script})">
+
+            <script>
+                function mueveReloj(){
+
+                    momentoActual = new Date()
+                    dia = momentoActual.getDate()
+                    año = momentoActual.getFullYear()
+                    mes = momentoActual.getMonth() + 1
+                    hora = momentoActual.getHours()
+                    minuto = momentoActual.getMinutes()
+                    segundo = momentoActual.getSeconds()
+
+                    if (hora < 10 ){
+                        hora = "0" + hora
+                    }
+                    if (minuto < 10 ){
+                        minuto = "0" + minuto
+                    }
+                    if (segundo < 10 ){
+                        segundo = "0" + segundo
+                    }
+
+                    if (dia < 10 ){
+                        dia = "0" + dia
+                    }
+                    if (mes < 10 ){
+                        mes = "0" + mes
+                    }
+
+                    horaImprimible = año + "-" + mes + "-" + dia + " " + hora + ":" + minuto + ":" + segundo
+
+                    document.getElementById('fechaout').value = horaImprimible
+
+                    timeout = setTimeout("mueveReloj()",1000)
+                }
+            </script>
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

@@ -55,14 +55,15 @@ public class OperadorController {
             model.addAttribute("paginacion",(operadores.size()/cantidad_por_pagina)+1);
         }
         model.addAttribute("listaSede", sedeRepository.findAll());
+        model.addAttribute("pagActual",0);
         model.addAttribute("listaOperadores", operadores);
         //Usar en caso se requiera
         //model.addAttribute("listaOperadores",operadores.subList(1,cantidad_por_pagina));
         return "Administrador/Operador/listaOperadores";
     }
 
-    @GetMapping(value = {"/listar","/listar/{num}"})
-    public String listarPorPagina(@PathVariable("num") Optional<String> num,Model model,RedirectAttributes attr){
+    @GetMapping(value = {"/listar","/listar/a"})
+    public String listarPorPagina(@RequestParam(value = "pag", required = false) Optional<String> num,Model model,RedirectAttributes attr){
         if(num.isPresent()){
             try{
                 //verificar si el numero se encuentra dentro del rango de la paginacion
@@ -79,10 +80,11 @@ public class OperadorController {
                     List<Persona> operadores = personaRepository.listarOperadores();
                     List<Persona> operadores_filtrados = operadores.subList((cantidad_por_pagina*(num_pagina-1)+1),(cantidad_por_pagina*(num_pagina-1)+cantidad_por_pagina+1));
                     model.addAttribute("listaOperadores",operadores_filtrados);
+                    model.addAttribute("pagActual",num_pagina);
                     model.addAttribute("paginacion",num_paginas);
                     return "Administrador/Operador/listaOperadores";
                 }else{
-                    attr.addFlashAttribute("msg","Debe ingresar un numero de página entre"+1+" y "+num_paginas);
+//                    attr.addFlashAttribute("msg","Debe ingresar un numero de página entre"+1+" y "+num_paginas);
                     return "redirect:/admin/operadores";
                 }
             }catch (Exception e){
@@ -132,6 +134,7 @@ public class OperadorController {
                 model.addAttribute("listaOperadores",personaRepository.listarOperadoresPorFiltroyNombre(nombre,filtro));
 
             }
+            model.addAttribute("busqueda",nombre);
             return "Administrador/Operador/listaOperadores";
         }
     }

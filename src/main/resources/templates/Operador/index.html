@@ -97,7 +97,7 @@
 
                 <br>
 
-                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/funciones/lista?')"></div>
+                <div th:replace="fragments/paginacion :: paginacion(${pagActual},${pagTotal},'/operador/funciones/lista?parametro='+${parametro}+'&')"></div>
             </div>
         </div>
 

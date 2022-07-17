@@ -74,43 +74,170 @@ public class FuncionesController {
     float funcionesporpagina = 6;
 
     @GetMapping(value = {"", "/", "/lista"})
-    public String listadoFunciones(Model model, @RequestParam(value = "pag", required = false) String pag, HttpSession session) {
+    public String listadoFunciones(Model model, @RequestParam(value="parametro",required = false,defaultValue = "") String parametro,
+                                   @RequestParam(value = "pag", required = false) String pag, HttpSession session) {
 
-        int pagina;
+        if (!parametro.equals("")){
 
-        try {
-            pagina = Integer.parseInt(pag);
-        } catch (Exception e) {
-            pagina = 0;
-        }
+            try {
+                if (parametro.equals("")) { // verifica que no esté vacío
+//                    attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
+                    return "redirect:/operador/funciones";
+                } else {
+                    model.addAttribute("parametro", parametro);
+                    parametro = parametro.toLowerCase();
 
-        Persona persona = (Persona) session.getAttribute("usuario");
+                    int pagina;
 
-        List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSede(persona.getIdsede().getId(), (int) funcionesporpagina * pagina, (int) funcionesporpagina);
-        List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(persona.getIdsede().getId());
+                    try {
+                        pagina = Integer.parseInt(pag);
+                    } catch (Exception e) {
+                        pagina = 0;
+                    }
 
-        LinkedHashMap<Funcion, Foto> funcionesConFoto = new LinkedHashMap<>();
+                    Persona persona = (Persona) session.getAttribute("usuario");
 
-        for (Funcion funcion : listFunciones) {
-            for (Foto foto : listFotosObra) {
-                if (foto.getIdobra() == funcion.getIdobra()) {
-                    funcionesConFoto.put(funcion, foto);
-                    break;
+//                List<Foto> listfuncfoto = fotoRepository.buscarFotoFuncionesPorNombre(persona.getIdsede().getId(), parametro, (int) funcionesporpagina * pagina, (int) funcionesporpagina);
+//                List<Foto> listfunctotal = fotoRepository.buscarFuncionesParaContarPorNombre(persona.getIdsede().getId(), parametro);
+
+                    List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSedeUsuar(persona.getIdsede().getId(),parametro, (int) funcionesporpagina * pagina, (int) funcionesporpagina);
+                    List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSedePorNombre(persona.getIdsede().getId(),parametro);
+                    List<Funcion> listFuncionesTotal = funcionRepository.buscarFuncionesPorSedeUsuarParaContar(persona.getIdsede().getId(),parametro);
+
+
+                    LinkedHashMap<Funcion, Foto> funcionesConFotoPorNombre = new LinkedHashMap<>();
+
+                    for (Funcion funcion : listFunciones) {
+                        for (Foto foto : listFotosObra) {
+                            if (foto.getIdobra() == funcion.getIdobra()) {
+                                funcionesConFotoPorNombre.put(funcion, foto);
+                                break;
+                            }
+                        }
+                    }
+
+
+
+                    int cantFunc = listFuncionesTotal.size();
+                    model.addAttribute("funcionesConFoto", funcionesConFotoPorNombre);
+
+                    model.addAttribute("pagActual", pagina);
+                    model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
+
+                    return "Operador/index";
+                }
+            } catch (Exception e) {
+//                attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
+                return "redirect:/operador/funciones";
+            }
+
+        }else{
+
+            int pagina;
+
+            try {
+                pagina = Integer.parseInt(pag);
+            } catch (Exception e) {
+                pagina = 0;
+            }
+
+            Persona persona = (Persona) session.getAttribute("usuario");
+
+            List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSede(persona.getIdsede().getId(), (int) funcionesporpagina * pagina, (int) funcionesporpagina);
+            List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSede(persona.getIdsede().getId());
+
+            LinkedHashMap<Funcion, Foto> funcionesConFoto = new LinkedHashMap<>();
+
+            for (Funcion funcion : listFunciones) {
+                for (Foto foto : listFotosObra) {
+                    if (foto.getIdobra() == funcion.getIdobra()) {
+                        funcionesConFoto.put(funcion, foto);
+                        break;
+                    }
                 }
             }
+
+            int cantFunc = fotoRepository.contarFunciones(persona.getIdsede().getId());
+
+            model.addAttribute("funcionesConFoto", funcionesConFoto);
+
+            model.addAttribute("pagActual", pagina);
+            model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
+            return "Operador/index";
         }
 
-        int cantFunc = fotoRepository.contarFunciones(persona.getIdsede().getId());
 
-        model.addAttribute("funcionesConFoto", funcionesConFoto);
 
-        model.addAttribute("pagActual", pagina);
-        model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
-        return "Operador/index";
+
+    }
+
+
+    @PostMapping("/buscar")
+    public String busquedaFuncion(@RequestParam(value="parametro",defaultValue = "") String parametro,
+                    @RequestParam(value = "pag",required = false) String pag,
+                    RedirectAttributes attr){
+
+        return "redirect:/operador/funciones?parametro="+parametro+"&pag="+pag;
     }
 
 
 
+//    @PostMapping("/buscar")
+//    public String buscarFuncion(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr, @RequestParam(value = "pag", required = false) String pag, HttpSession session) {
+//
+//        try {
+//            if (parametro.equals("")) { // verifica que no esté vacío
+//                attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
+//                return "redirect:/operador/funciones";
+//            } else {
+//                model.addAttribute("parametro", parametro);
+//                parametro = parametro.toLowerCase();
+//
+//                int pagina;
+//
+//                try {
+//                    pagina = Integer.parseInt(pag);
+//                } catch (Exception e) {
+//                    pagina = 0;
+//                }
+//
+//                Persona persona = (Persona) session.getAttribute("usuario");
+//
+////                List<Foto> listfuncfoto = fotoRepository.buscarFotoFuncionesPorNombre(persona.getIdsede().getId(), parametro, (int) funcionesporpagina * pagina, (int) funcionesporpagina);
+////                List<Foto> listfunctotal = fotoRepository.buscarFuncionesParaContarPorNombre(persona.getIdsede().getId(), parametro);
+//
+//                List<Funcion> listFunciones = funcionRepository.buscarFuncionesPorSedeUsuar(persona.getIdsede().getId(),parametro, (int) funcionesporpagina * pagina, (int) funcionesporpagina);
+//                List<Foto> listFotosObra = fotoRepository.buscarFotoObrasPorSedePorNombre(persona.getIdsede().getId(),parametro);
+//                List<Funcion> listFuncionesTotal = funcionRepository.buscarFuncionesPorSedeUsuarParaContar(persona.getIdsede().getId(),parametro);
+//
+//
+//                LinkedHashMap<Funcion, Foto> funcionesConFotoPorNombre = new LinkedHashMap<>();
+//
+//                for (Funcion funcion : listFunciones) {
+//                    for (Foto foto : listFotosObra) {
+//                        if (foto.getIdobra() == funcion.getIdobra()) {
+//                            funcionesConFotoPorNombre.put(funcion, foto);
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//
+//
+//                int cantFunc = listFuncionesTotal.size();
+//                System.out.println(cantFunc);
+//                model.addAttribute("funcionesConFoto", funcionesConFotoPorNombre);
+//
+//                model.addAttribute("pagActual", pagina);
+//                model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
+//
+//                return "Operador/index";
+//            }
+//        } catch (Exception e) {
+//            attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
+//            return "redirect:/operador/funciones";
+//        }
+//    }
 
 
 
@@ -438,43 +565,7 @@ public class FuncionesController {
     }
 
 
-    @PostMapping("/buscar")
-    public String buscarFuncion(Model model, @RequestParam("parametro") String parametro, RedirectAttributes attr, @RequestParam(value = "pag", required = false) String pag, HttpSession session) {
 
-        try {
-            if (parametro.equals("")) { // verifica que no esté vacío
-                attr.addFlashAttribute("msg", "La búsqueda no debe estar vacía.");
-                return "redirect:/operador/funciones";
-            } else {
-                model.addAttribute("parametro", parametro);
-                parametro = parametro.toLowerCase();
-
-                int pagina;
-
-                try {
-                    pagina = Integer.parseInt(pag);
-                } catch (Exception e) {
-                    pagina = 0;
-                }
-
-                Persona persona = (Persona) session.getAttribute("usuario");
-
-                List<Foto> listfuncfoto = fotoRepository.buscarFotoFuncionesPorNombre(persona.getIdsede().getId(), parametro, (int) funcionesporpagina * pagina, (int) funcionesporpagina);
-                List<Foto> listfunctotal = fotoRepository.buscarFuncionesParaContarPorNombre(persona.getIdsede().getId(), parametro);
-                int cantFunc = listfunctotal.size();
-
-                model.addAttribute("listfunc", listfuncfoto);
-
-                model.addAttribute("pagActual", pagina);
-                model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
-
-                return "Operador/index";
-            }
-        } catch (Exception e) {
-            attr.addFlashAttribute("msg", "La búsqueda no debe contener caracteres extraños.");
-            return "redirect:/operador/funciones";
-        }
-    }
 
 
     @GetMapping("/borrar")

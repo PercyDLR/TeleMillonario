@@ -3,6 +3,7 @@ package com.example.telemillonario.repository;
 import com.example.telemillonario.dto.BalanceDto;
 import com.example.telemillonario.dto.EstadisticaFuncionDto;
 import com.example.telemillonario.dto.EstadisticasPersonaDto;
+import com.example.telemillonario.entity.Foto;
 import com.example.telemillonario.entity.Funcion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -71,6 +72,12 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
             "where f.estado=1 and s.idsede=?1 and lower(o.nombre) like %?2% " +
             "limit ?3,?4")
     List<Funcion> buscarFuncionesPorSedeUsuar( int idsede,String nombre, int pag, int salasporpag);
+
+    @Query(nativeQuery = true, value = "select f.* from funcion f " +
+            "inner join sala s on (s.id = f.idsala) inner join obra o on (o.id=f.idobra) " +
+            "where f.estado=1 and s.idsede=?1 and lower(o.nombre) like %?2% ")
+    List<Funcion> buscarFuncionesPorSedeUsuarParaContar( int idsede,String nombre);
+
 
 
     @Query(nativeQuery = true, value = "select f.* from funcion f " +
