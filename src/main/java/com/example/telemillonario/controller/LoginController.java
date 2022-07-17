@@ -181,14 +181,12 @@ public class LoginController {
                 }
 
                 session.setAttribute("fotoPerfil",fotoPerfil);
-
+                session.setAttribute("cantReservas",0);
                 //Se regresa a la anterior url sólo si es usuario
                 if(urlAnterior.contains("crearCuenta") || urlAnterior.contains("validacionSignUp") ||
                         urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword") || urlAnterior.contains("cambioDeContrasenia")){
                     return "redirect:/";
                 }
-
-                session.setAttribute("cantReservas",0);
 
                 return "redirect:" + urlAnterior;
         }
