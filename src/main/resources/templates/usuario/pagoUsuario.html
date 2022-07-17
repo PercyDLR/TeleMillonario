@@ -20,12 +20,13 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
 
-                                    <div class="sign__group">
-                                        <input type="text" class="sign__input" id="idFuncion" name="idFuncion" th:value="${compraEnProceso.getFuncion().getId()}" hidden>
+                                    <div class="sign__logo">
+                                        <img th:src="@{/img/tele.png}" alt="logo">
                                     </div>
-                                    <div class="sign__group">
-                                        <input type="text" class="sign__input" id="cantBoletos" name="cantBoletos" th:value="${compraEnProceso.getCantidad()}" hidden>
-                                    </div>
+
+                                    <input type="text" class="sign__input" id="idFuncion" name="idFuncion" th:value="${compraEnProceso.getFuncion().getId()}" hidden>
+                                    <input type="text" class="sign__input" id="cantBoletos" name="cantBoletos" th:value="${compraEnProceso.getCantidad()}" hidden>
+
                                     <div class="sign__group">
                                         <input type="text" class="sign__input" th:field="*{numeroTarjeta}" name="numeroTarjeta" placeholder="Número de tarjeta" th:classappend="${#fields.hasErrors('numeroTarjeta')?'is-invalid':''}">
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('numeroTarjeta')}"
@@ -68,19 +69,19 @@
                                             <label class="form-check-label text-light" for="nombresTitular3">
                                                 Diners Club
                                             </label>
-
                                         </div>
+
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('nombresTitular')}"
                                              th:errors="*{nombresTitular}"></div>
                                     </div>
 
-
-                                    <a class="sign__btn" th:href="@{'/cartelera/DetallesObra?id=' + ${compraEnProceso.getFuncion().getIdobra().getId()}}">Cancelar</a>
-                                    <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
-                                    <div style="background-color: white;margin-top: 20px">
+                                    <div style="background-color: white; width: fit-content; margin-inline: auto">
                                         <img style="width: 120px" src="https://enclave.rae.es/sites/default/files/visa_mastercard.png" alt="logo">
                                         <img style="width: 120px" src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Diners_Club_Logo3.svg" alt="logo">
                                     </div>
+
+                                    <a class="sign__btn" th:href="@{'/cartelera/DetallesObra?id=' + ${compraEnProceso.getFuncion().getIdobra().getId()}}">Cancelar</a>
+                                    <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
 
 
                                 </form>
