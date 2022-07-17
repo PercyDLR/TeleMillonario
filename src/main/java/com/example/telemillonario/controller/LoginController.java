@@ -845,7 +845,7 @@ public class LoginController {
                 "                                    <br>\n" +
                 "                                    <p style=\"margin: 0;\">Ignorar este mensaje si usted no ha solicitado dicho cambio.</p>\n" +
                 "                                    <br>\n" +
-                "                                    <center><button align='center' style='border-radius: 3px; background-color:#ff5860; margin-top: 10px'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Iniciar Sesión</a></button></center>\n" +
+                "                                    <center><button align='center' style='border-radius: 3px; background-color:#ff5860; margin-top: 10px'><a href='"+link+"' target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; display: inline-block;\">Actualizar</a></button></center>\n" +
                 "                                </td>\n" +
                 "                            </tr>\n" +
                 "                        </table>\n" +

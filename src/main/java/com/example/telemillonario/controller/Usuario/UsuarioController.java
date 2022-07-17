@@ -1435,6 +1435,7 @@ public class UsuarioController {
 
         if(reservas.length != cantidad.length){
             redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
+
             return "redirect:/carritoPrueba";
         }
 
