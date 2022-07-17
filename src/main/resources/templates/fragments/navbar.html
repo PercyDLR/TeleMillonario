@@ -86,7 +86,7 @@
                                 </ul>
 
                                 <!-- header auth -->
-                                <div class="header__auth" style="margin-left: 0">
+                                <div class="header__auth" style="margin-left: 0; position: relative">
                                     <a sec:authorize="isAnonymous()" th:href="@{/login}" class="header__sign-in">
                                         <i class="icon ion-ios-log-in"></i>
                                         <span>Iniciar Sesión</span>
@@ -95,10 +95,10 @@
                                        class="header__sign-in" style="margin-left: auto"> <!--th:href="@{/carrito}" -->
                                         <i class="bi bi-cart2"></i>
                                         <span>Carrito</span>
-                                        <button type="button" style="background-color: white" class="btn btn-default btn-circle" th:if="${session.cantReservas != null}" th:text="${session.cantReservas}">
-                                            <i class="fa fa-check"></i>
-                                        </button>
                                     </a>
+                                    <div th:if="${session.cantReservas != null && session.cantReservas > 0}"
+                                            th:text="${session.cantReservas}" class="contador-carrito">
+                                    </div>
                                 </div>
                                 <!-- end header auth -->
 

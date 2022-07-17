@@ -50,7 +50,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .usersByUsernameQuery("SELECT correo, contrasenia,estado FROM persona WHERE correo = ?")
                 .authoritiesByUsernameQuery("SELECT persona.correo,rol.nombre FROM persona INNER JOIN rol ON ( persona.idrol = rol.id ) WHERE persona.correo = ? and persona.estado = 1");
-        
-
     }
 }

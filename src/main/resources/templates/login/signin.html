@@ -11,19 +11,6 @@
 					<div class="col-12">
 						<div class="sign__content">
 
-
-							<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg != null) && (msg eq 1)}" style="position: absolute; left: 800px; top: 550px">
-								<i class="bi bi-check-circle-fill"></i>
-								<strong>Usuario creado correctamente</strong>
-								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-							</div>
-
-							<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg2 != null) && (msg2 eq 1)}" style="position: absolute; left: 800px; top: 550px">
-								<i class="bi bi-check-circle-fill"></i>
-								<strong>Cuenta no fue registrada usando google oauth </strong>
-								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-							</div>
-
 							<form class="sign__form" th:action="@{/processLogin}" method="POST">
 								<a th:href="@{/}" class="sign__logo">
 									<img th:src="@{/img/tele.png}" alt="logo">
@@ -34,6 +21,11 @@
 									<strong>Usuario creado correctamente</strong>
 									<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 								</div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${(msg2 != null) && (msg2 eq 1)}" style="position: absolute; left: 800px; top: 550px">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <strong>Cuenta no fue registrada usando google oauth </strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
 
 								<div class="sign__group">
 									<input type="text" class="sign__input" name="username" placeholder="Correo" autofocus>

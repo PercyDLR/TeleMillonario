@@ -149,8 +149,14 @@
                     <div class="row" style="width: 100%">
                         <div id="funciones" class="col-lg-9 col-12">
 
-                            <h3 class="home__title mb-3">Elija las Reservas a Comprar</h3>
-                            <div id="scroller" class="container">
+                            <div th:unless="${session.cantReservas > 0}" class="d-flex justify-content-center">
+                                <span style="color: white; font-size: 1.5rem; margin-block: 10%; text-align: center">
+                                    Su carrito está vacío. Realiza algunas reservas y vuelva para realizar algunas compras
+                                </span>
+                            </div>
+
+                            <h3 th:if="${session.cantReservas > 0}" class="home__title mb-3">Elija las Reservas a Comprar</h3>
+                            <div th:if="${session.cantReservas > 0}" id="scroller" class="container">
                                 <div class="row mt-3 funcion-container selected" th:each="reservas , i: ${session.carritoDeComprasDeUsuario}"
                                      th:if="${reservas.getValue().getEstado() != 'Borrado'}" th:data-id="${reservas.value.funcion.id}">
                                     <div class="col-md-4 col-sm-6 col-12 ">

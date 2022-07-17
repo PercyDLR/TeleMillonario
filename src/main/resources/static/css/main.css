@@ -36,6 +36,23 @@ Primary use:	FlixGo Template
 /*==============================
 	Personalizado
 ==============================*/
+.contador-carrito {
+  position: absolute;
+  top: -25%;
+  right: -12px;
+  background-color: #2b2b31;
+  border: 1px solid #df5076;
+  border-radius: 50%;
+  color: rgba(255,255,255,0.75);
+  box-shadow: 0 0 10px 0 rgb(255 88 96 / 50%);
+  height: 25px;
+  width: 25px;
+  line-height: 25px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
 a, a:hover {
   transition: .3s all ease;
   text-decoration: none !important;
