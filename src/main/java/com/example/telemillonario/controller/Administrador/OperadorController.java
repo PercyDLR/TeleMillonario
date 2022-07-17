@@ -164,6 +164,7 @@ public class OperadorController {
     public String guardarOperador(@ModelAttribute("operador") @Validated(Operador.class) Persona operador, BindingResult bindingResult, RedirectAttributes attr, Model model,HttpServletRequest request) {
         try {
             Integer id = operador.getId();
+            System.out.println(id);
             if (id != null) {
             //if (personaRepository.existsById(id)) {
                 //Editar Operador
@@ -210,6 +211,14 @@ public class OperadorController {
                         return "Administrador/Operador/agregarOperadores";
                     }else{
                         //**********************************************************
+                        //Validar Correo
+                        Persona Personabuscada = personaRepository.findByCorreo(operador.getCorreo());
+
+                        if (Personabuscada != null){
+                            model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
+                            attr.addFlashAttribute("err","No se puede crear un operador con un correo ya registrado");
+                            return "Administrador/Operador/agregarOperadores";
+                        }
                         //Validacion DNI
                         DatosAPI datosPersona = DniAPI.consulta(operador.getDni());
                         boolean errDNI = true;
@@ -258,6 +267,7 @@ public class OperadorController {
             }
         } catch (Exception e) {
             //attr.addFlashAttribute("msg", "Envió un ID inválido");
+            System.out.println(e.getMessage());
             model.addAttribute("listaSedes", sedeRepository.findByEstado(1));
             return "Administrador/Operador/editarOperadores";//solo será valido cuando se encuentre en el formulario de editar
         }

@@ -29,6 +29,11 @@
                                     <strong th:text="${msg}"></strong>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${err != null}">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    <strong th:text="${err}"></strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
 
                                 <div class="sign__group mt-5">
                                     <label for="dni">DNI&ensp;&ensp;&ensp;&ensp;&ensp;</label>
