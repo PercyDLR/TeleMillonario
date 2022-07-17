@@ -232,9 +232,9 @@ public class FuncionesController {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
 
-
-
-
+        for (String a : idactor) {
+            System.out.println(a);
+        }
 
         //-----------------------------------------------
         //    Validación de Datos Ingresados
@@ -382,13 +382,13 @@ public class FuncionesController {
 
         // Se obtiene el elenco de la función
         List<Funcionelenco> elencoEnDB = funcionElencoRepository.buscarFuncionElenco(funcion.getId());
+
         List<Integer> elencoSeleccionado = new ArrayList<>();
 
         // Se comparan los datos de elenco ingresados con los de la DB
         int maxSeleccionados = Math.max(idactor.length, iddirector.length);
 
         for (int ii = 0; ii < maxSeleccionados; ii++) {
-
             boolean actorCoincide = false;
             boolean directorCoincide = false;
 
@@ -413,11 +413,12 @@ public class FuncionesController {
                 funcelen.setIdfuncion(funcion);
                 funcelen.setEstado(1);
                 funcionElencoRepository.save(funcelen);
-
-            } else if (ii < idactor.length && !actorCoincide) {
+            }
+            if (ii < idactor.length && !actorCoincide) {
                 Funcionelenco funcelen = new Funcionelenco();
                 int idsdictint = Integer.parseInt(idactor[ii]);
                 funcelen.setIdpersona(personaRepository.findById(idsdictint).get());
+                System.out.println("Actor a guardar: " + personaRepository.findById(idsdictint).get().getNombres());
                 funcelen.setIdfuncion(funcion);
                 funcelen.setEstado(1);
                 funcionElencoRepository.save(funcelen);

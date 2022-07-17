@@ -914,7 +914,7 @@ public class UsuarioController {
 
     }
 
-    @GetMapping("/carritoPrueba")
+    @GetMapping("/carrito")
     public String carritoUsuario(HttpSession session,Model model) {
         LinkedHashMap<Map<Integer,String>,Compra> carrito = (LinkedHashMap<Map<Integer,String>, Compra>) session.getAttribute("carritoDeComprasDeUsuario");
         List<Obragenero> listaGeneros = obraGeneroRepository.findAll();
@@ -1212,7 +1212,7 @@ public class UsuarioController {
 
         if (carrito == null) {
             redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar reservas");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
 
@@ -1222,11 +1222,11 @@ public class UsuarioController {
             idReserva = Integer.parseInt(idReservaStr);
             if (idReserva <= 0 || (idReserva > carrito.size())) {
                 redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
-                return "redirect:/carritoPrueba";
+                return "redirect:/carrito";
             }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "La compra no existe");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
 
@@ -1256,7 +1256,7 @@ public class UsuarioController {
         }
 
 
-        return "redirect:/carritoPrueba";
+        return "redirect:/carrito";
     }
 
 
@@ -1268,7 +1268,7 @@ public class UsuarioController {
         Persona persona = (Persona) session.getAttribute("usuario");
         if (carrito == null) {
             redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar por lo menos una reserva");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
         System.out.println("lista de reservas : "+listaReservasStr);
@@ -1284,12 +1284,12 @@ public class UsuarioController {
 
         if(todasReservasBorradas == true){
             redirectAttributes.addFlashAttribute("mensajeError", "Debe adicionar por lo menos una reserva");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
         if((listaReservasStr == null || listaCantidadBoletosStr == null)){
             redirectAttributes.addFlashAttribute("mensajeError", "Debe seleccionar por lo menos una reserva");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
             //return "redirect:/anErrorHasOcurred";
         }
 
@@ -1299,7 +1299,7 @@ public class UsuarioController {
         if(reservas.length != cantidad.length){
             System.out.println("entre aca 1");
             redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
         ArrayList<Integer> listaReservas = new ArrayList<>();
@@ -1312,7 +1312,7 @@ public class UsuarioController {
                 if(valorReserva <= 0 || valorReserva>carrito.size()){
                     System.out.println("entre aca 2");
                     redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-                    return "redirect:/carritoPrueba";
+                    return "redirect:/carrito";
                 }
 
                 valorCantidad = Integer.parseInt(cantidad[i]);
@@ -1320,7 +1320,7 @@ public class UsuarioController {
                 if(valorCantidad <= 0){
                     System.out.println("entre aca 3");
                     redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-                    return "redirect:/carritoPrueba";
+                    return "redirect:/carrito";
                 }
 
                 listaReservas.add(valorReserva);
@@ -1330,7 +1330,7 @@ public class UsuarioController {
         }catch (NumberFormatException j){
             System.out.println("entre aca 4");
             redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
         for(int k : listaReservas){
@@ -1342,7 +1342,7 @@ public class UsuarioController {
 
                 if(repetidas > 1){
                     redirectAttributes.addFlashAttribute("mensajeError", "La reservas no se pueden repetir");
-                    return "redirect:/carritoPrueba";
+                    return "redirect:/carrito";
                 }
             }
         }
@@ -1360,7 +1360,7 @@ public class UsuarioController {
                     Compra compra = carrito.get(llave);
                     if(compra.getEstado().equals("Borrado")){
                         redirectAttributes.addFlashAttribute("mensajeError", "Verifique de que la(s) reserva(s) exista(n)");
-                        return "redirect:/carritoPrueba";
+                        return "redirect:/carrito";
                     }
 
                     Optional<Funcion> funcion1 = funcionRepository.findById(compra.getFuncion().getId());
@@ -1404,7 +1404,7 @@ public class UsuarioController {
                 mensajes.add("No hay stock disponible para la Funcion con Obra : "+compra.getFuncion().getIdobra().getNombre()+", con horario de inicio:"+compra.getFuncion().getInicio()+", y con hora fin:"+compra.getFuncion().getFin());
             }
             redirectAttributes.addFlashAttribute("ReservasSinStock", mensajes);
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
     }
@@ -1435,8 +1435,7 @@ public class UsuarioController {
 
         if(reservas.length != cantidad.length){
             redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
         ArrayList<Integer> listaReservas = new ArrayList<>();
@@ -1448,14 +1447,14 @@ public class UsuarioController {
                 valorReserva = Integer.parseInt(reservas[i]);
                 if(valorReserva <= 0 || valorReserva>carrito.size()){
                     redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-                    return "redirect:/carritoPrueba";
+                    return "redirect:/carrito";
                 }
 
                 valorCantidad = Integer.parseInt(cantidad[i]);
 
                 if(valorCantidad <= 0){
                     redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-                    return "redirect:/carritoPrueba";
+                    return "redirect:/carrito";
                 }
 
                 listaReservas.add(valorReserva);
@@ -1464,7 +1463,7 @@ public class UsuarioController {
 
         }catch (NumberFormatException j){
             redirectAttributes.addFlashAttribute("mensajeError", "Error al Procesar la Compra");
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
 
@@ -1477,7 +1476,7 @@ public class UsuarioController {
 
                 if(repetidas > 1){
                     redirectAttributes.addFlashAttribute("mensajeError", "La reservas no se pueden repetir");
-                    return "redirect:/carritoPrueba";
+                    return "redirect:/carrito";
                 }
             }
         }
@@ -1495,7 +1494,7 @@ public class UsuarioController {
                     Compra compra = carrito.get(llave);
                     if(compra.getEstado().equals("Borrado")){
                         redirectAttributes.addFlashAttribute("mensajeError", "Verifique de que la(s) reserva(s) exista(n)");
-                        return "redirect:/carritoPrueba";
+                        return "redirect:/carrito";
                     }
 
                     Optional<Funcion> funcion1 = funcionRepository.findById(compra.getFuncion().getId());
@@ -1678,7 +1677,7 @@ public class UsuarioController {
                 mensajes.add("No hay stock disponible para la Funcion con Obra: "+compra.getFuncion().getIdobra().getNombre()+", con horario de inicio: "+compra.getFuncion().getInicio()+", y con hora fin: "+compra.getFuncion().getFin());
             }
             redirectAttributes.addFlashAttribute("ReservasSinStock", mensajes);
-            return "redirect:/carritoPrueba";
+            return "redirect:/carrito";
         }
 
     }
@@ -2787,8 +2786,8 @@ public class UsuarioController {
     @GetMapping("/pagoPrueba")
     String pagoPrueba() { return "usuario/pagoUsuario";}
 
-    @GetMapping("/carritoPrueba")
-    String carritoPrueba() {
+    @GetMapping("/carrito")
+    String carrito() {
         return "usuario/carrito/carritoComprasUsuario";
     }*/
 
