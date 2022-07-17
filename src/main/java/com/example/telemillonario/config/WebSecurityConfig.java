@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasAuthority("Administrador")
                 .antMatchers("/operador/**").hasAuthority("Operador")
-                .antMatchers("/calificarObra", "/historial").hasAuthority("Usuario")
+                .antMatchers("/calificarObra", "/historial").access("hasAuthority('Usuario')|| hasAuthority('ROLE_USER')")
                 .antMatchers("/perfil/**").hasAnyAuthority("Operador","Usuario","ROLE_USER")
                 .antMatchers("/","/cartelera/*","/sedes/*","/actores/*","/directores/*").access("hasAuthority('Usuario') || isAnonymous() || hasAuthority('ROLE_USER')")
                 .anyRequest().permitAll().and()
@@ -50,7 +50,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .usersByUsernameQuery("SELECT correo, contrasenia,estado FROM persona WHERE correo = ?")
                 .authoritiesByUsernameQuery("SELECT persona.correo,rol.nombre FROM persona INNER JOIN rol ON ( persona.idrol = rol.id ) WHERE persona.correo = ? and persona.estado = 1");
-        
-
     }
 }

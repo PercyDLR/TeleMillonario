@@ -96,10 +96,10 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     @Query(nativeQuery = true, value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and funcion.fecha <= curdate() and funcion.estado=1  order by pasistencia limit 1;")
+            "where s.idsede=?1 and funcion.fecha <= curdate() and funcion.estado=1  order by pasistencia desc limit 1;")
     EstadisticaFuncionDto obtenerFuncionMasVistaxSede(int idsede);
     //funcion menos vista
-    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/funcion.stockentradas)*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
+    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
             "where s.idsede=?1 and funcion.fecha <= curdate() and funcion.estado=1 order by pasistencia asc limit 1")
@@ -150,49 +150,49 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
            "inner join sala s on funcion.idsala = s.id\n" +
            "inner join fotos f on o.id = f.idobra\n" +
-           "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by pasistencia desc limit 1")
+           "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and funcion.fecha<=curdate() and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by pasistencia desc limit 1")
    Optional<EstadisticaFuncionDto> obtenerFuncionMasVistaxMesxSede(int sede,int mes);
    //funcion menos vista por mes
    @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
            "inner join sala s on funcion.idsala = s.id\n" +
            "inner join fotos f on o.id = f.idobra\n" +
-           "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by pasistencia asc limit 1")
+           "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and funcion.fecha<=curdate() and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by pasistencia asc limit 1")
    Optional<EstadisticaFuncionDto> obtenerFuncionMenosVistaxMesxSede(int sede,int mes);
    //funcion mejor calificada por mes
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by calificacion desc limit 1")
+            "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and funcion.fecha<=curdate() and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by calificacion desc limit 1")
     Optional<EstadisticaFuncionDto> obtenerFuncionMejorCalificadaxMesxSede(int sede,int mes);
     //funciones agrupadas segun su concurrencia por mes
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid,f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and f.ruta = (select fotos.ruta from fotos where fotos.idobra=o.id limit 1) and MONTH(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by pasistencia desc")
+            "where s.idsede=?1 and f.ruta = (select fotos.ruta from fotos where fotos.idobra=o.id limit 1) and MONTH(funcion.fecha)=?2 and funcion.fecha<=curdate() and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 order by pasistencia desc")
     Optional<List<EstadisticaFuncionDto>> obtenerFuncionesMejorCalificadasxMesxSede(int sede,int mes);
     //funcion mas vista por AÑO
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and funcion.estado=1 order by pasistencia desc limit 1")
+            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and funcion.fecha<=curdate() and funcion.estado=1 order by pasistencia desc limit 1")
     Optional<EstadisticaFuncionDto> obtenerFuncionMasVistaxAnioxSede(int sede,int anio);
     //funcion menos vista por AÑO
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and funcion.estado=1 order by pasistencia asc limit 1")
+            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and funcion.fecha<=curdate() and funcion.estado=1 order by pasistencia asc limit 1")
     Optional<EstadisticaFuncionDto> obtenerFuncionMenosVistaxAñoxSede(int sede,int anio);
     //funcion mejor calificada por AÑO
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid, f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and funcion.estado=1 order by calificacion desc limit 1")
+            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and funcion.fecha<=curdate() and funcion.estado=1 order by calificacion desc limit 1")
     Optional<EstadisticaFuncionDto> obtenerFuncionMejorCalificadaxAnioxSede(int sede,int anio);
     //funciones agrupadas segun su concurrencia por AÑO
     @Query(nativeQuery = true,value = "select o.nombre as nombre,funcion.id as funcionid,o.id as obraid,round((funcion.cantidadasistentes/(funcion.stockentradas+funcion.cantidadasistentes))*100,0) as pasistencia,o.calificacion,s.idsede as sedeid,f.ruta as url from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join sala s on funcion.idsala = s.id\n" +
             "inner join fotos f on o.id = f.idobra\n" +
-            "where s.idsede=?1 and f.ruta = (select fotos.ruta from fotos where fotos.idobra=o.id limit 1) and YEAR(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and funcion.estado=1 order by pasistencia desc")
+            "where s.idsede=?1 and f.ruta = (select fotos.ruta from fotos where fotos.idobra=o.id limit 1) and YEAR(funcion.fecha)=?2 and funcion.fecha<=curdate() and funcion.estado=1 order by pasistencia desc")
     Optional<List<EstadisticaFuncionDto>> obtenerFuncionesMejorCalificadasxAnioxSede(int sede,int anio);
     //queries para el reporte de excel
     @Query(nativeQuery = true,value = "select s2.nombre as sede,funcion.id as funcionid,o.id as obraid,o.nombre as nombre,s.numero as salanumero,funcion.fecha as fecha,funcion.inicio as horainicio,funcion.fin as horafin,funcion.precioentrada as preciounitario,funcion.stockentradas as stock,funcion.cantidadasistentes as asistencia,o.calificacion as calificacion,o.restriccionedad as restriccion from funcion inner join obra o on funcion.idobra = o.id\n" +
@@ -204,13 +204,13 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
     @Query(nativeQuery = true,value = "select s2.nombre as sede,funcion.id as funcionid,o.id as obraid,o.nombre as nombre,s.numero as salanumero,funcion.fecha as fecha,funcion.inicio as horainicio,funcion.fin as horafin,funcion.precioentrada as preciounitario,funcion.stockentradas as stock,funcion.cantidadasistentes as asistencia,o.calificacion as calificacion,o.restriccionedad as restriccion from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join  sala s on funcion.idsala = s.id\n" +
             "inner join sede s2 on s.idsede = s2.id\n" +
-            "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 ")
+            "where s.idsede=?1 and MONTH(funcion.fecha)=?2 and funcion.fecha<=curdate() and YEAR(funcion.fecha)=YEAR(curdate()) and funcion.estado=1 ")
     Optional<List<BalanceDto>> obtenerBalancexSedexMes(int sede,int mes);
     //query segun año
     @Query(nativeQuery = true,value = "select s2.nombre as sede,funcion.id as funcionid,o.id as obraid,o.nombre as nombre,s.numero as salanumero,funcion.fecha as fecha,funcion.inicio as horainicio,funcion.fin as horafin,funcion.precioentrada as preciounitario,funcion.stockentradas as stock,funcion.cantidadasistentes as asistencia,o.calificacion as calificacion,o.restriccionedad as restriccion from funcion inner join obra o on funcion.idobra = o.id\n" +
             "inner join  sala s on funcion.idsala = s.id\n" +
             "inner join sede s2 on s.idsede = s2.id\n" +
-            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and MONTH(funcion.fecha)<=MONTH(curdate()) and funcion.estado=1 ")
+            "where s.idsede=?1 and YEAR(funcion.fecha)=?2 and funcion.fecha<=curdate() and funcion.estado=1")
     Optional<List<BalanceDto>> obtenerBalancexSedexAnio(int sede,int anio);
 
     @Transactional

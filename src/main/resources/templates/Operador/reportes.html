@@ -21,6 +21,18 @@
             .owl-dots{
                 height: 0;
             }
+
+            .accordion__list tbody td{
+                padding: 10px;
+                max-width: 50px;
+            }
+            td:first-child {
+                text-align: left;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
         </style>
     </head>
 
@@ -64,7 +76,7 @@
                                 </div>
 
                                 <div class="col-md-4 col-12" style="display: flex;justify-content: space-around">
-                                    <button type="submit" class="form__btn" style="width: 40%; margin: 0; font-size: 1.1rem;">
+                                    <button id="btn-busqueda" type="button" class="form__btn" style="width: 40%; margin: 0; font-size: 1.1rem;">
                                         <i class="bi bi-search"></i>
                                     </button>
                                     <button id="btn-reporte" type="button" class="form__btn" style="width: 40%; margin: 0; font-size: 1.1rem;">
@@ -189,9 +201,21 @@
                             </div>
 
                             <div class="mt-3" style="max-height: 100%; width: 100%; overflow-y: auto">
-                                <div class="price__item" th:each="funcion : ${funcionesPorcentajeAsistencia}">
-                                    <span th:text="|${funcion.nombre}: ${funcion.pasistencia}%|"></span>
-                                </div>
+
+                                <table class="accordion__list" style="text-align: center;display: inline-table;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 80%">Función</th>
+                                            <th style="width: 20%">Asistencia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="funcion : ${funcionesPorcentajeAsistencia}">
+                                            <td th:text="${funcion.nombre}"></td>
+                                            <td th:text="|${funcion.pasistencia}%|"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -250,6 +274,7 @@
                 const periodicidad = document.getElementById("periodicidad")
                 const periodo = document.getElementById("periodo")
                 const btnReporte = document.getElementById("btn-reporte")
+                const btnBusqueda = document.getElementById("btn-busqueda")
 
                 // Se rellenan los periodos
                 rellenarPeriodo(true)
@@ -260,6 +285,12 @@
                 // Habilita la opción de exportar
                 btnReporte.addEventListener("click", function (){
                     form.action = "/operador/reportes/exportar"
+                    form.submit()
+                })
+
+                // Habilita la opción de exportar
+                btnBusqueda.addEventListener("click", function (){
+                    form.action = "/operador/reportes"
                     form.submit()
                 })
 
@@ -301,7 +332,7 @@
 
                         default:
                             let opt = document.createElement('option')
-                                opt.value = ""
+                            opt.value = ""
                             opt.innerHTML = "Todo"
                             periodo.appendChild(opt)
                     }

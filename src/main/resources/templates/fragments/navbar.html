@@ -88,19 +88,22 @@
                                         <li class="header__nav-item" style="width: 0">
                                     </ul>
 
-                                    <!-- header auth -->
-                                    <div class="header__auth" style="margin-left: 0">
-                                        <a sec:authorize="isAnonymous()" th:href="@{/login}" class="header__sign-in">
-                                            <i class="icon ion-ios-log-in"></i>
-                                            <span>Iniciar Sesión</span>
-                                        </a>
-                                        <a sec:authorize="isAuthenticated()" th:href="@{/carritoPrueba}"
-                                           class="header__sign-in" style="margin-left: auto"> <!--th:href="@{/carrito}" -->
-                                            <i class="bi bi-cart2"></i>
-                                            <span>Carrito</span>
-                                        </a>
+                                <!-- header auth -->
+                                <div class="header__auth" style="margin-left: 0; position: relative">
+                                    <a sec:authorize="isAnonymous()" th:href="@{/login}" class="header__sign-in">
+                                        <i class="icon ion-ios-log-in"></i>
+                                        <span>Iniciar Sesión</span>
+                                    </a>
+                                    <a sec:authorize="isAuthenticated()" th:href="@{/carritoPrueba}"
+                                       class="header__sign-in" style="margin-left: auto"> <!--th:href="@{/carrito}" -->
+                                        <i class="bi bi-cart2"></i>
+                                        <span>Carrito</span>
+                                    </a>
+                                    <div th:if="${session.cantReservas != null && session.cantReservas > 0}"
+                                            th:text="${session.cantReservas}" class="contador-carrito">
                                     </div>
-                                    <!-- end header auth -->
+                                </div>
+                                <!-- end header auth -->
 
                                     <!-- header menu btn -->
                                     <button class="header__btn" type="button">

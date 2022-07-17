@@ -47,11 +47,9 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Optional;
 
 @Controller
 public class LoginController {
@@ -189,6 +187,9 @@ public class LoginController {
                         urlAnterior.contains("login") || urlAnterior.contains("cambiar") || urlAnterior.contains("sucessPassword") || urlAnterior.contains("cambioDeContrasenia")){
                     return "redirect:/";
                 }
+
+                session.setAttribute("cantReservas",0);
+
                 return "redirect:" + urlAnterior;
         }
     }
