@@ -201,8 +201,9 @@ public class LoginController {
                                    RedirectAttributes a) throws InterruptedException, IOException, MessagingException {
 
         if(bindingResult.hasErrors()){
-            model.addAttribute("recontrasenia","123456789abcdefg");
+
             if (google != null && google == 1) {
+                model.addAttribute("recontrasenia","123456789abcdefg");
                 model.addAttribute("google", 1);
             }
 
@@ -285,7 +286,7 @@ public class LoginController {
         List<Persona> listaPersonas = personaRepository.findAll();
         for (Persona p : listaPersonas) {
             if (p.getDni() != null && p.getDni().equals(usuario.getDni())) {
-                model.addAttribute("errDni", errDNI);
+                model.addAttribute("errDni", 1);
                 coincidencias = true;
             }
             if (p.getCorreo() != null && p.getCorreo().equals(usuario.getCorreo())) {
@@ -302,7 +303,7 @@ public class LoginController {
             }
 
             if(errDNI == true){
-                model.addAttribute("errDni", errDNI);
+                model.addAttribute("errDni", 1);
             }
 
             /*if(errorNombre == true){
@@ -312,7 +313,7 @@ public class LoginController {
             if(errorApellido == true){
                 model.addAttribute("errApellido", errorApellido);
             }*/
-            model.addAttribute("recontrasenia","123456789abcdefg");
+            //model.addAttribute("recontrasenia","123456789abcdefg");
             return "login/signup";
         } else {
 
