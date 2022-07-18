@@ -160,7 +160,7 @@ public class FuncionesController {
             int cantFunc = fotoRepository.contarFunciones(persona.getIdsede().getId());
 
             model.addAttribute("funcionesConFoto", funcionesConFoto);
-
+            model.addAttribute("parametro", parametro);
             model.addAttribute("pagActual", pagina);
             model.addAttribute("pagTotal", (int) Math.ceil(cantFunc / funcionesporpagina));
             return "Operador/index";
@@ -250,7 +250,9 @@ public class FuncionesController {
         model.addAttribute("listDirectores", personaRepository.listarDirectores());
         model.addAttribute("listGeneros", generoRepository.findAll());
         model.addAttribute("fechaactual", LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
-
+        System.out.println(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        System.out.println(LocalTime.now());
+        System.out.println(LocalDateTime.now());
         // Listas vacias para evitar errores
         ArrayList<Integer> listaVacia = new ArrayList<>();
         model.addAttribute("generosFuncion", listaVacia);
