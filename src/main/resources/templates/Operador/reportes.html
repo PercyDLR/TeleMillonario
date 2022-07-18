@@ -124,8 +124,9 @@
 
                             <img class="card-img-top mt-3" th:src="*{url}" th:alt="*{nombre}">
 
+
                             <div class="price__item">
-                                <span th:text="|Calificación Promedio: *{calificacion}|"></span>
+                                <span th:text="|Calificación Promedio: ${funcionMasVista.calificacion != null ? funcionMasVista.calificacion :'0.0' }|"></span>
                             </div>
                         </div>
                     </div>
