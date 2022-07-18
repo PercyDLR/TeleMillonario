@@ -1009,7 +1009,7 @@ public class LoginController {
                 "                           <tr>\n" +
                 "                              <td height=\"80\" bgcolor=\"#ff5860\" style=\"padding:0 20px\">\n" +
                 "                                  <h2 style=\"font-family:'Arial',sans-serif; font-weight:500; font-size:20px; margin:0 0 5px\">\n" +
-                "                                      <center><span style=\"color:#fff;text-transform:uppercase; font-family:'Arial',sans-serif\">¡ Bienvenide "+usuario.getNombres()+' '+usuario.getApellidos()+ " ! </span></center>\n" +
+                "                                      <center><span style=\"color:#fff;text-transform:uppercase; font-family:'Arial',sans-serif\">¡ Bienvenido "+usuario.getNombres()+' '+usuario.getApellidos()+ " ! </span></center>\n" +
                 "                                  </h2>\n" +
                 "                              </td>\n" +
                 "                           </tr>\n" +

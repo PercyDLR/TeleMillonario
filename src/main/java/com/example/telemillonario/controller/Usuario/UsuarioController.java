@@ -2155,16 +2155,22 @@ public class UsuarioController {
             LocalTime inicio = c.getFuncion().getInicio();
             LocalTime fin = c.getFuncion().getFin();
             Duration duracion = Duration.between(inicio, fin);
+            System.out.println("Duracion: " + duracion);
+            System.out.println("Duracion en segundos: " + duracion.getSeconds());
             Long duracionHora = duracion.getSeconds()/(60*60);
+            System.out.println("Duracion hora: " + duracionHora);
             String duracionHoraStr = duracionHora.toString();
             if (duracionHora < 10) {
                 duracionHoraStr = "0" + duracionHora.toString();
             }
-            Long duracionMinutos = duracion.getSeconds()%60;
+            System.out.println("Duracion hora Str: " + duracionHoraStr);
+            Long duracionMinutos = duracion.getSeconds()/60;
+            System.out.println("Duracion minutos: " + duracionMinutos);
             String duracionMinutosStr = duracionMinutos.toString();
             if (duracionMinutos < 10) {
                 duracionMinutosStr = "0" + duracionMinutos.toString();
             }
+            System.out.println("Duracion minutos Str: " + duracionMinutosStr);
             duracionFuncioncompra.put(c, duracionHoraStr + ":" + duracionMinutosStr + "h");
         }
 
