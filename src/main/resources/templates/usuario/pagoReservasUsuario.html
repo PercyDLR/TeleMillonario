@@ -15,12 +15,14 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                                 <form class="sign__form" th:action="@{'/pagoReservasCarrito'}" method="POST" th:object="${datosTarjeta}">
-                                    <div class="sign__group">
-                                        <input type="text" class="sign__input" id="listaReservas" name="listaReservas" th:value="${listaReservas}" hidden>
+                                    <div class="sign__logo">
+                                        <img th:src="@{/img/tele.png}" alt="logo">
                                     </div>
-                                    <div class="sign__group">
-                                        <input type="text" class="sign__input" id="listaCantidadBoletos" name="listaCantidadBoletos" th:value="${listaCantidadBoletos}" hidden>
-                                    </div>
+
+
+                                    <input type="text" id="listaReservas" name="listaReservas" th:value="${listaReservas}" hidden>
+                                    <input type="text" id="listaCantidadBoletos" name="listaCantidadBoletos" th:value="${listaCantidadBoletos}" hidden>
+
                                     <div class="sign__group">
                                         <input type="text" class="sign__input" th:field="*{numeroTarjeta}" name="numeroTarjeta" placeholder="Número de tarjeta" th:classappend="${#fields.hasErrors('numeroTarjeta')?'is-invalid':''}">
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('numeroTarjeta')}"
@@ -67,12 +69,13 @@
                                              th:errors="*{nombresTitular}"></div>
                                     </div>
 
-                                    <a class="sign__btn" th:href="@{'/carrito'}">Cancelar</a>
-                                    <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
-                                    <div style="background-color: white;margin-top: 20px">
+                                    <div style="background-color: white; width: fit-content; margin-inline: auto">
                                         <img style="width: 120px" src="https://enclave.rae.es/sites/default/files/visa_mastercard.png" alt="logo">
                                         <img style="width: 120px" src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Diners_Club_Logo3.svg" alt="logo">
                                     </div>
+
+                                    <a class="sign__btn" th:href="@{'/carrito'}">Cancelar</a>
+                                    <button class="sign__btn" type="submit" style="display: inline">Pagar</button>
                                 </form>
                             </div>
                         </div>
