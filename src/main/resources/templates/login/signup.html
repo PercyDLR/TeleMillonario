@@ -37,7 +37,7 @@
                                               th:classappend="${#fields.hasErrors('nombres')?'is-invalid':''}" required autofocus>
                                        <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('nombres')}"
                                             th:errors="*{nombres}"></div>
-                                       <!--div class="invalid-feedback d-block" th:if="${(errNombre != null) && (errNombre == true)}">Los nombres no pueden contener caracteres.</div-->
+                                       <div class="invalid-feedback d-block" th:if="${(CaracterEspecialEncontradoNombre != null) && (CaracterEspecialEncontradoNombre eq 1)}">Los nombres no pueden contener caracteres especiales</div>
                                    </div>
                                 </div>
 
@@ -48,7 +48,7 @@
                                                th:classappend="${#fields.hasErrors('apellidos')?'is-invalid':''}">
                                         <div th:unless="${google eq 1}" class="invalid-feedback" th:if="${#fields.hasErrors('apellidos')}"
                                              th:errors="*{apellidos}"></div>
-                                        <!--div class="invalid-feedback d-block" th:if="${(errApellido != null) && (errApellido == true)}">Los apellidos no pueden contener caracteres.</div-->
+                                        <div class="invalid-feedback d-block" th:if="${(CaracterEspecialEncontradoApellido != null) && (CaracterEspecialEncontradoApellido eq 1)}">Los apellidos no pueden contener caracteres especiales</div>
                                     </div>
                                 </div>
 

@@ -202,12 +202,25 @@ public class LoginController {
 
         if(bindingResult.hasErrors()){
 
+            System.out.println("Binding has errors");
             if (google != null && google == 1) {
                 model.addAttribute("recontrasenia","123456789abcdefg");
                 model.addAttribute("google", 1);
             }
 
             return "login/signup";
+        }
+
+        Pattern pattern = Pattern.compile("[^A-Za-z0-9]$");
+        Matcher match1 = pattern.matcher(usuario.getNombres());
+        Matcher match2 = pattern.matcher(usuario.getApellidos());
+        boolean caracterEspecialEncontradoNombre = match1.find();
+        boolean caracterEspecialEncontradoapellido = match2.find();
+        if (caracterEspecialEncontradoNombre) {
+            model.addAttribute("CaracterEspecialEncontradoNombre", 1);
+        }
+        if (caracterEspecialEncontradoapellido) {
+            model.addAttribute("CaracterEspecialEncontradoApellido", 1);
         }
 
         System.out.println("------------------------------------------------------------------");
@@ -298,7 +311,7 @@ public class LoginController {
         }
 
         //if(bindingResult.hasErrors() || coincidencias || errorRecontrasenia || errorNacimiento || errDNI || errorNombre || errorApellido){
-        if(coincidencias || errorRecontrasenia || errorNacimiento || errDNI){
+        if(coincidencias || errorRecontrasenia || errorNacimiento || errDNI || caracterEspecialEncontradoNombre || caracterEspecialEncontradoapellido){
             if (google != null && google == 1) {
                 model.addAttribute("google", 1);
             }
