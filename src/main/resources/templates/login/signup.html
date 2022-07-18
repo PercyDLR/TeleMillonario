@@ -59,7 +59,8 @@
                                               th:classappend="${#fields.hasErrors('dni')?'is-invalid':''}">
                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('dni')}"
                                             th:errors="*{dni}"></div>
-                                       <div class="invalid-feedback d-block" th:if="${(errDni != null) && (errDni eq 1)}">El dni ingresado ya está en uso</div>
+                                       <div class="invalid-feedback d-block" th:if="${(errDniExistencia != null) && (errDniExistencia eq 1)}">El dni ingresado ya está en uso</div>
+                                       <div class="invalid-feedback d-block" th:if="${(errDni != null) && (errDni eq 1)}">Verifique que el dni ingresado sea el suyo</div>
                                    </div>
                                 </div>
 
@@ -113,7 +114,7 @@
                                     <div class="sign__group">
                                         <label for="contrasenia">Contraseña</label>
                                         <div style="position: relative">
-                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" autocomplete="new-password" id="contrasenia" required maxlength="200"
+                                            <input type="password" class="sign__input" placeholder="Contraseña" name="contrasenia" th:value="${usuario.getContrasenia()}" autocomplete="new-password" id="contrasenia" required maxlength="200"
                                                th:classappend="${#fields.hasErrors('contrasenia')?'is-invalid':''}">
                                             <!--th:value="${usuario.getContrasenia()}"-->
                                             <i class="mostrar bi bi-eye-fill"></i>

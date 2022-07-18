@@ -285,8 +285,9 @@ public class LoginController {
         boolean coincidencias = false;
         List<Persona> listaPersonas = personaRepository.findAll();
         for (Persona p : listaPersonas) {
+            System.out.println(p.getDni());
             if (p.getDni() != null && p.getDni().equals(usuario.getDni())) {
-                model.addAttribute("errDni", 1);
+                model.addAttribute("errDniExistencia", 1);
                 coincidencias = true;
             }
             if (p.getCorreo() != null && p.getCorreo().equals(usuario.getCorreo())) {
@@ -313,6 +314,13 @@ public class LoginController {
             if(errorApellido == true){
                 model.addAttribute("errApellido", errorApellido);
             }*/
+            if (google != null && google == 1) {
+                model.addAttribute("recontrasenia","123456789abcdefg");
+                model.addAttribute("google", 1);
+            } else {
+                usuario.setContrasenia("");
+                model.addAttribute("recontrasenia", "");
+            }
             //model.addAttribute("recontrasenia","123456789abcdefg");
             return "login/signup";
         } else {
