@@ -60,7 +60,8 @@
                                 <div class="col-lg-3 col-md-5 col-6 sign__group">
 
                                     <select class="search_input" name="restriccionEdad">
-                                        <option value="" th:selected="${restriccionEdad == ''}">Para toda la familia</option>
+                                        <option value="" th:selected="${restriccionEdad == ''}">Sin restricción de edad</option>
+                                        <option value="0" th:selected="${restriccionEdad == '0'}">Para toda la familia</option>
                                         <option value="1" th:selected="${restriccionEdad == '1'}">Con contenido sensible</option>
                                     </select>
                                 </div>
