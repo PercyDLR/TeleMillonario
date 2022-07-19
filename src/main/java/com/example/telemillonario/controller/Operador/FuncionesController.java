@@ -305,6 +305,12 @@ public class FuncionesController {
 
         System.out.println(now);
 
+        String pruebafecha = "2022-07-21T23:54";
+        LocalDateTime pruebafechadatetime=LocalDateTime.parse(pruebafecha);
+
+        System.out.println("FECHAA PRUEBa: "+pruebafechadatetime.plusMinutes(15));
+
+
 
         // Se verifica que el ID sea un número
         int idfuncion = 0;
@@ -324,7 +330,9 @@ public class FuncionesController {
 
             // Datos de la funcion
             funcion = funcionEnDB.get();
-
+            System.out.println(funcion.getInicio());
+            System.out.println(funcion.getFin());
+            System.out.println("resta:"+ChronoUnit.MINUTES.between(funcion.getInicio(),funcion.getFin()));
             //Verificamos si la fecha de la funcion por lo menos es el dia actual para poder editar
             LocalDate Today = LocalDate.now();
             String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
@@ -445,31 +453,71 @@ public class FuncionesController {
         int idsede = usuarioSesion.getIdsede().getId();
         //hora inicio
         LocalTime horavalidar = fecha.toLocalTime();
+        LocalDateTime fechamasiniciodatetime=LocalDateTime.parse(fechamasinicio);
+        //hora fin
+        LocalTime horafin=horavalidar.plusMinutes(duracionInt);
+        LocalDateTime fechafin=fechamasiniciodatetime.plusMinutes(duracionInt);
 
-        List<Funcion> funcionesSala = funcionRepository.buscarFuncionesPorSedeySala(idsede,funcion.getIdsala().getId());
+        //se hace una pequeña validacion para ver que la funcion sea para el mismo dia (hora que inicia y hora que acabe mismo dia)
+        int valid=fechamasiniciodatetime.toLocalDate().compareTo(fechafin.toLocalDate());
+        if(valid!=0){
+            // Retorna los valores ingresados
+            retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
+
+            model.addAttribute("msgduracion", "Debe escoger una duración adecuada para que la funcion acabe el mismo día de inicio ");
+
+            return "Operador/crearFuncion";
+        }
+
+
+
+        List<Funcion> funcionesSala = funcionRepository.buscarFuncionesPorSedeySalaparaValidar(idsede,funcion.getIdsala().getId());
         for (Funcion func: funcionesSala){
-            int value = horavalidar.compareTo(func.getInicio());
+            String fechamasiniciofuncbuscada = func.getFecha().toString() + "T" + func.getInicio().toString();
+            LocalDateTime fechamasiniciofuncbuscadadatetime=LocalDateTime.parse(fechamasiniciofuncbuscada);
+            int value = fechamasiniciodatetime.compareTo(fechamasiniciofuncbuscadadatetime);
 
             LocalTime horafinfuncion = func.getFin();
+
             //validamos si la hora de la funcion esta dentro del rango de duracion de una funcion existente en una sala
+            String fechafinfuncbusq = func.getFecha().toString() + "T" + func.getFin().toString();
             if (value > 0) {
 
-                int value1 = horavalidar.compareTo(func.getFin());
+                int value1 = fechamasiniciodatetime.compareTo(LocalDateTime.parse(fechafinfuncbusq));
 
                 if (value1 == -1) {
-                    // Retorna los valores ingresados
-                    retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
-                    model.addAttribute("msgfecha", "La hora de inicio no puede estar dentro del horario de una funcion en la sala" + funcion.getIdsala().getNumero());
+                    if(funcion.getId()!=func.getId()){
+                        // Retorna los valores ingresados
+                        retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
-                    return "Operador/crearFuncion";
+                        model.addAttribute("msgfecha", "La hora de inicio no puede estar dentro del horario de una funcion en la sala" + funcion.getIdsala().getNumero());
+
+                        return "Operador/crearFuncion";
+                    }
+
                 }
 
             }
+            //validamos que la hora fin no este dentro de algun rango de alguna funcion programada
 
-            if (funcion.getId() == null) {
-                //validamos si las horas son iguales
-                if (value == 0) {
+            int validfechafin= fechafin.compareTo(fechamasiniciofuncbuscadadatetime);
+            int validfechafinconini=fechamasiniciofuncbuscadadatetime.compareTo(fechamasiniciodatetime);
+            if(validfechafin>0 && validfechafinconini>0){
+                if(funcion.getId()!=func.getId()){
+                    // Retorna los valores ingresados
+                    retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
+
+                    model.addAttribute("msgduracion", "Escoga una duracion correcta para que no exista cruce con alguna funcion programada en la sala " + funcion.getIdsala().getNumero());
+
+                    return "Operador/crearFuncion";
+                }
+            }
+
+            //validamos si las horas son iguales
+            if (value == 0) {
+
+                if(funcion.getId()!=func.getId()){
                     // Retorna los valores ingresados
                     retornarValoresYSelect(model, funcion, persona, idactor, iddirector, duracion, fechamasinicio);
 
@@ -477,7 +525,9 @@ public class FuncionesController {
 
                     return "Operador/crearFuncion";
                 }
+
             }
+
         }
 
         //-----------------------------------------------
