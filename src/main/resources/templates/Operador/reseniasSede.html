@@ -76,23 +76,42 @@
                 transition: all ease 0.3s;
             }
 
+            .comments__actions{
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+                background-color: #28282d;
+                padding: 15px 20px;
+                border-top: 1px solid rgba(255,255,255,0.05);
+                position: relative;
+            }
+
+            .comments__actions button {
+                margin: 0;
+                font-size: 12px;
+                height: 2.5rem;
+            }
+            .card__meta li span:first-child {
+                font-size: 15px;
+                position: relative;
+                background-image: -webkit-linear-gradient(0deg, #ff55a5 0%, #ff5860 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                color: #ff5860;
+                margin-right: 7px;
+            }
+
         </style>
     </head>
 
     <body class="body">
-
         <div th:replace="fragments/navbar :: operador('resenias')"></div>
 
+        <div class="content"  style="padding-bottom: 0">
 
-        <div class="container">
-            <br>
-            <br>
-            <br>
-            <br>
-            <div class="row" >
-                <!-- Teatro -->
-                <div class="col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9" style="padding-top: 20px;">
-
+            <section class="section">
+                <div class="container">
                     <div class="row">
                         <div class="col-12" style="width: fit-content">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${msg != null}">
@@ -102,128 +121,95 @@
                             </div>
                         </div>
                     </div>
-
-                    <section class="section" style="margin: 0; padding:10px">
-                        <div>
-                            <h1 class="details__title" style="font-size: 36px" th:text="${session.usuario.idsede.getNombre()}">Gran </h1>
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="details__title" th:text="${session.usuario.idsede.getNombre()}"></h1>
                         </div>
-                    </section>
-
-                    <!-- content -->
-                    <div>
-                        <div class="card card--details card--series">
-                            <div class="row align-items-center">
-                                <!-- card cover -->
-                                <div class="col-14 col-sm-14 col-lg-4 col-xl-4">
-                                    <div class="card__cover" style="text-align: center">
-                                        <img th:src="${fotosede.ruta}" th:alt="${fotosede.ruta}">
+                        <div class="col-12">
+                            <div class="card card--details card--series">
+                                <div class="row">
+                                    <!-- card cover -->
+                                    <div class="col-12 col-md-6">
+                                        <div class="card__cover">
+                                            <img style="max-width: unset" th:src="${fotosede.ruta}" alt="foto sede">
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- end card cover -->
+                                    <!-- end card cover -->
 
-                                <!-- card content -->
-                                <div class="col-12 col-sm-12 col-lg-6 col-xl-6">
-                                    <div class="card__content">
-                                        <h2 style="color: #ff3366;padding-top: 10px;font-size: 25px">Detalles:</h2>
+                                    <!-- card content -->
+                                    <div class="col-12 col-md-6">
+                                        <div class="card__content">
+                                            <div class="card__wrap">
+                                                <span class="card__rate">
+                                                    <i class="icon ion-ios-star"></i>
+                                                    <span th:text="${califpromsede==null ? 'Aún no hay calificaciones': califpromsede}"></span>
+                                                </span>
+                                            </div>
 
-                                        <br>
+                                            <ul class="card__meta">
+                                                <li><span>Dirección:</span> <span th:text="${sede.direccion}"></span></li>
+                                                <li><span>Nro. Máx. de Salas</span> <span th:text="${sede.numerosalas}"></span></li>
+                                                <li><span>Estado:</span> <span th:text="${sede.estado==1 ? ' Habilitado':' Deshabilitado'}"></span></li>
+                                            </ul>
 
-                                        <div class="card__wrap" >
-                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Calificación promedio:</h3>
-                                            <i class="icon ion-ios-star" style="color: #e8bd3c"></i>
-                                            <span class="card__rate" th:text="${califpromsede==null ? 'Aún no hay calificaciones': califpromsede}">8.4 (10.987 reseñas)</span>
+                                            <div class="b-description_readmore_wrapper js-description_readmore_wrapper" style="max-width: 682.5px;">
+                                                <div class="card__description card__description--details b-description_readmore_ellipsis"
+                                                     style="min-height: 150px; max-height: 150px; overflow: hidden;" th:text="${sede.descripcion}"></div>
+                                                <div class="b-description_readmore_button"></div>
+                                            </div>
                                         </div>
-                                        <div class="card__wrap" >
-                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Direccion:</h3>
-                                            <span class="card__rate" th:text="${sede.direccion}"></span>
-                                        </div>
-                                        <div class="card__wrap" >
-                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Nro. Salas:</h3>
-                                            <span class="card__rate" th:text="${sede.numerosalas}"></span>
-                                        </div>
-                                        <div class="card__wrap">
-                                            <h3 style="color: #ff3366;padding-top: 10px;font-size: 20px">Estado:</h3>
-                                            <span class="card__rate" th:text="${sede.estado==1 ? ' Habilitado':' Deshabilitado'}"></span>
-                                        </div>
-
                                     </div>
+                                    <!-- end card content -->
                                 </div>
-                                <!-- end card content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reseñas -->
+            <section class="pb-5" th:if="${reseniasconfoto.size()!=0}" style="background-color: #2b2b31">
+                <div class="content__head">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12  pt-2 pb-3">
+                                <!-- content title -->
+                                <h2 class="content__title" th:text="|Reseñas de ${session.usuario.idsede.nombre}|"></h2>
+                                <!-- end content title -->
                             </div>
                         </div>
                     </div>
                 </div>
 
-            </div>
-            <!-- Fin Teatro -->
-        </div>
-
-        <section class="section " style="padding: 0px">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section__wrap">
-                            <h2 class="section__title" th:text="|Reseñas de ${session.usuario.idsede.getNombre()}|">Reseñas </h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section section--first section--bg" style="margin-top: 0;padding: 0px">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section__wrap">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-        <div class="container">
-            <div class="row">
-
-                <!--testimonials-box-container----->
-                <div class="testimonial-box-container">
-
-                    <!--Box1----->
-                    <div class="testimonial-box" th:each="resenia : ${reseniasconfoto}">
-                        <!--top----->
-                        <div class="box-top">
-                            <!--perfil----->
-                            <div class="profile">
-                                <!--img----->
-                                <div class="profile-img">
-                                    <img th:src="${resenia.value}">
-                                </div>
-                                <!--nombre usuario----->
-                                <div class="name-user">
-                                    <strong th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|">Joaquin Orellana</strong>
-                                </div>
-                            </div>
-
-                            <!--reviews----->
+                <div class="container">
+                    <div class="row">
+                        <!-- reviews -->
+                        <div class="col-12">
                             <div class="reviews">
-                                <i class="icon ion-ios-star" style="color: #e3c20d" th:each="i : ${#numbers.sequence(1,resenia.key.getCalificacion())}"></i>
+                                <ul class="reviews__list">
+                                    <li class="reviews__item" th:each="resenia : ${reseniasconfoto}">
+                                        <div class="reviews__autor">
+                                            <img class="reviews__avatar" th:src="${resenia.value}" alt="img-perfil">
+                                            <span class="reviews__name" th:text="|${resenia.key.persona.nombres} ${resenia.key.persona.apellidos}|"></span>
+                                            <span class="reviews__time" th:text="${#temporals.format(resenia.key.fechaHora, 'dd.MM.yyyy, HH:mm')}">24.06.2002, 17:53</span>
 
+                                            <span class="reviews__rating">
+                                                <i class="icon ion-ios-star"></i>
+                                                <span th:text="${resenia.key.calificacion}"></span>
+                                            </span>
+                                        </div>
+                                        <p class="reviews__text" th:text="${resenia.key.comentario}"></p>
 
+                                        <div class="comments__actions">
+                                            <button class="form__btn" th:onclick="|advertencia(${resenia.key.id})|" type="button">Eliminar</button>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="client-comment">
-                            <p th:text="${resenia.key.comentario}">La obra estuvo muy buena pero el escenario no fue el mas adecuado</p>
-                        </div>
-                        <button type="button" class="btn btn-danger" style="text-align: center;margin-left: 350px">
-                            <a th:onclick="|advertencia(${resenia.key.id})|" style="color: #FFFFFF">
-                                Eliminar
-                            </a>
-                        </button>
                     </div>
-
                 </div>
-
-            </div>
+            </section>
         </div>
 
         <div id="popup" class="overlay">
