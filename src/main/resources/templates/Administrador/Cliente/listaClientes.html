@@ -78,7 +78,7 @@
 
                                     </td>
                                     <td class="align-middle" style="padding-bottom: 9px;">
-                                        <span class="badge bg-success"
+                                        <span class="badge bg-warning text-dark"
                                               th:if="${compras.estado eq 'Asistido'}"
                                               th:text="${compras.estado}">Asistido</span>
                                         <span class="badge bg-danger" th:if="${compras.estado eq 'Cancelado'}"
@@ -103,8 +103,8 @@
                                                         <th style="padding-bottom: 9px;">Sala</th>
                                                         <th style="padding-bottom: 9px;">Boletos comprados</th>
                                                         <th style="padding-bottom: 9px;">Costo total</th>
+                                                        <th style="padding-bottom: 9px;">Fecha</th>
                                                         <th style="padding-bottom: 9px;">Hora de inicio</th>
-                                                        <th style="padding-bottom: 9px;">Hora de fin</th>
                                                         <th style="padding-bottom: 9px;">Duracion</th>
                                                     </tr>
                                                 </thead>
@@ -119,9 +119,9 @@
                                                         <td class="align-middle" style="padding-bottom: 9px;"
                                                             th:text="|S/${compras.montoTotal}|"></td>
                                                         <td class="align-middle" style="padding-bottom: 9px;"
-                                                            th:text="${compras.funcion.inicio}"></td>
+                                                            th:text="${compras.funcion.fecha}"></td>
                                                         <td class="align-middle" style="padding-bottom: 9px;"
-                                                            th:text="${compras.funcion.fin}"></td>
+                                                            th:text="${compras.funcion.inicio}"></td>
                                                         <td class="align-middle" style="padding-bottom: 9px;"
                                                             th:text="${duracionFuncioncompraGeneral.get(compras)}"></td>
                                                     </tr>
