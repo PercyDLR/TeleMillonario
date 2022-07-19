@@ -301,6 +301,10 @@ public class FuncionesController {
                                       @RequestParam("idfuncion") String idStr,
                                       Model model, HttpSession session,
                                       RedirectAttributes attr) {
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+
+        System.out.println(now);
+
 
         // Se verifica que el ID sea un número
         int idfuncion = 0;
@@ -320,14 +324,18 @@ public class FuncionesController {
 
             // Datos de la funcion
             funcion = funcionEnDB.get();
+
             //Verificamos si la fecha de la funcion por lo menos es el dia actual para poder editar
             LocalDate Today = LocalDate.now();
-            if (funcion.getFecha().compareTo(Today) < 0){
-                attr.addFlashAttribute("err","No se puede editar una función cuya fecha ya paso");
+            String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
+            System.out.println("fechainicio:"+fechamasinicio);
+            LocalDateTime fechamasiniciodatetime=LocalDateTime.parse(fechamasinicio);
+            if (fechamasiniciodatetime.compareTo(now) <= 0){
+                attr.addFlashAttribute("err","No se puede editar una función cuya fecha ya paso o se está realizando");
                 return "redirect:/operador/funciones";
             }
             long duracion = funcion.getInicio().until(funcion.getFin(), ChronoUnit.MINUTES);
-            String fechamasinicio = funcion.getFecha().toString() + "T" + funcion.getInicio().toString();
+
 
             // Listas para los select
             retornarValores(model, funcion, persona);
