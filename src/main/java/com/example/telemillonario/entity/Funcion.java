@@ -48,8 +48,8 @@ public class Funcion implements Serializable {
     @JoinColumn(name = "idsala")
     private Sala idsala;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idobra", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "idobra")
     private Obra idobra;
 
     public Obra getIdobra() {

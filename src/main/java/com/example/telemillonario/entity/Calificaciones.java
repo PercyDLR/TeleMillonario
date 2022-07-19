@@ -25,8 +25,8 @@ public class Calificaciones {
     @JoinColumn(name = "idpersona")
     private Persona persona;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idobra", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "idobra")
     private Obra obra;
 
     @ManyToOne(fetch = FetchType.LAZY)
