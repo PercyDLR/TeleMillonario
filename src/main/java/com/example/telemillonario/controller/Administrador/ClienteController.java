@@ -96,7 +96,7 @@ public class ClienteController {
             if (duracionHora < 10) {
                 duracionHoraStr = "0" + duracionHora.toString();
             }
-            Long duracionMinutos = duracion.getSeconds()%60;
+            Long duracionMinutos = duracion.getSeconds()/60;
             String duracionMinutosStr = duracionMinutos.toString();
             if (duracionMinutos < 10) {
                 duracionMinutosStr = "0" + duracionMinutos.toString();
