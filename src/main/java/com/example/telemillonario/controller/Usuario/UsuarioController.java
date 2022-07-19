@@ -2081,7 +2081,12 @@ public class UsuarioController {
 
         List<Compra> listaCompras = compraRepository.historialCompras(persona.getId());
         List<Compra> listaComprasRevisadas = new ArrayList<>();
+
+        System.out.println("Hora Actual: " + LocalDateTime.now());
+
         for (Compra c : listaCompras) {
+            System.out.println(c.getFuncion().getIdobra().getNombre() + ": " + c.getFuncion().getFecha() + " " + c.getFuncion().getFin());
+
             LocalDate fechaActual = LocalDate.now();
             if (fechaActual.compareTo(c.getFuncion().getFecha()) > 0) { //Fecha ya paso, debo cambiarle a estado asistido
                 if (!c.getEstado().equals("Cancelado")){//Comparacion par que si esta cancelado no deba cambiarlo a asistido
